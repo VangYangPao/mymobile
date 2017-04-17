@@ -10,26 +10,24 @@ import { DrawerNavigator, StackNavigator } from "react-navigation";
 
 import ChatScreen from "./src/Chat";
 
-const HomeNavigator = DrawerNavigator({
-  Chat: {
-    screen: ChatScreen
+const BuyStackNavigator = StackNavigator({
+  Buy: { screen: ChatScreen }
+});
+
+const MyDrawerNavigator = DrawerNavigator({
+  BuyStack: {
+    screen: BuyStackNavigator
+  },
+  ClaimStack: {
+    screen: BuyStackNavigator
   }
 });
 
-export default (Microsurance = StackNavigator({
-  Home: { screen: HomeNavigator }
-}));
-
-// export default class Microsurance extends Component {
-//   render() {
-//     return (
-//       <AppNavigator
-//         ref={nav => {
-//           this.navigator = nav;
-//         }}
-//       />
-//     );
-//   }
-// }
+export default (Microsurance = StackNavigator(
+  {
+    Drawer: { screen: MyDrawerNavigator }
+  },
+  { headerMode: "none" }
+));
 
 AppRegistry.registerComponent("Microsurance", () => Microsurance);

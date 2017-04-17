@@ -1,16 +1,14 @@
 import { GiftedChat } from "react-native-gifted-chat";
 import React, { Component } from "react";
 import { Image, StyleSheet } from "react-native";
+import Icon from "react-native-vector-icons/MaterialIcons";
 
 export default class ChatScreen extends Component {
   static navigationOptions = {
-    title: "Chat",
-    drawerLabel: "Home",
+    title: "Buy insurance",
+    drawerLabel: "Buy insurance",
     drawerIcon: ({ tintColor }) => (
-      <Image
-        source={require("../images/logo_og.png")}
-        style={[styles.icon, { tintColor: tintColor }]}
-      />
+      <Icon name="credit-card" size={22} color={tintColor} />
     )
   };
 
@@ -25,12 +23,12 @@ export default class ChatScreen extends Component {
       messages: [
         {
           _id: 1,
-          text: "Hello developer",
+          text: "Hi I'm Carol, please choose the insurance plan you're interested in. 😄",
           createdAt: new Date(Date.UTC(2016, 7, 30, 17, 20, 0)),
           user: {
             _id: 2,
             name: "React Native",
-            avatar: "https://facebook.github.io/react/img/logo_og.png"
+            avatar: "https://www.drive.ai/images/team/Carol.png"
           }
         }
       ]
@@ -53,7 +51,6 @@ export default class ChatScreen extends Component {
         user={{
           _id: 1
         }}
-        bottomOffset={300}
       />
     );
   }
