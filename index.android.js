@@ -29,7 +29,7 @@ const BuyStackNavigator = StackNavigator({
         <Icon name="message" size={22} color={tintColor} />
       ),
       headerTitleStyle: {
-        color: colors.text
+        color: colors.primaryText,
       },
       headerLeft: (
         <TouchableOpacity
@@ -62,7 +62,7 @@ const MyDrawerNavigator = DrawerNavigator(
     contentComponent: props => <DrawerContent {...props} />,
     contentOptions: {
       activeTintColor: colors.primaryOrange,
-      inactiveTintColor: colors.text
+      inactiveTintColor: colors.primaryText
     }
   }
 );

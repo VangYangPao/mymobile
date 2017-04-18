@@ -78,7 +78,8 @@ export default class ChatScreen extends Component {
       <Bubble
         {...props}
         wrapperStyle={{
-          left: StyleSheet.flatten(styles.bubble)
+          left: StyleSheet.flatten(styles.bubbleLeft),
+          right: StyleSheet.flatten(styles.bubbleRight)
         }}
       />
     );
@@ -89,7 +90,8 @@ export default class ChatScreen extends Component {
       <MessageText
         {...props}
         textStyle={{
-          left: StyleSheet.flatten(styles.messageText)
+          left: StyleSheet.flatten(styles.messageTextLeft),
+          right: StyleSheet.flatten(styles.messageTextRight)
         }}
       />
     );
@@ -148,11 +150,17 @@ const styles = StyleSheet.create({
   assistantPosition: {
     fontSize: 15
   },
-  bubble: {
+  bubbleLeft: {
     backgroundColor: colors.primaryOrange
   },
-  messageText: {
+  messageTextLeft: {
     color: "white"
+  },
+  bubbleRight: {
+    backgroundColor: "white"
+  },
+  messageTextRight: {
+    color: colors.primaryText
   },
   container: {
     flex: 1
