@@ -1,17 +1,9 @@
 import { GiftedChat } from "react-native-gifted-chat";
 import React, { Component } from "react";
-import { Image, StyleSheet } from "react-native";
+import { Image, StyleSheet, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 export default class ChatScreen extends Component {
-  static navigationOptions = {
-    title: "Buy insurance",
-    drawerLabel: "Buy insurance",
-    drawerIcon: ({ tintColor }) => (
-      <Icon name="credit-card" size={22} color={tintColor} />
-    )
-  };
-
   constructor(props) {
     super(props);
     this.state = { messages: [] };
@@ -51,6 +43,7 @@ export default class ChatScreen extends Component {
         user={{
           _id: 1
         }}
+        renderTime={() => {}}
       />
     );
   }
