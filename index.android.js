@@ -17,15 +17,16 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 
 import ChatScreen from "./src/Chat";
 import colors from "./src/colors";
+import DrawerContent from "./src/DrawerContent";
 
 const BuyStackNavigator = StackNavigator({
   Buy: {
     screen: ChatScreen,
     navigationOptions: navigationProps => ({
-      title: "Buy insurance",
-      drawerLabel: "Buy insurance",
+      title: "Buy Policies",
+      drawerLabel: "Buy Policies",
       drawerIcon: ({ tintColor }) => (
-        <Icon name="credit-card" size={22} color={tintColor} />
+        <Icon name="message" size={22} color={tintColor} />
       ),
       headerTitleStyle: {
         color: colors.text
@@ -58,6 +59,7 @@ const MyDrawerNavigator = DrawerNavigator(
     }
   },
   {
+    contentComponent: props => <DrawerContent {...props} />,
     contentOptions: {
       activeTintColor: colors.primaryOrange,
       inactiveTintColor: colors.text
