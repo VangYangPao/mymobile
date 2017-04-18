@@ -12,23 +12,6 @@ import colors from "./colors";
 
 const IMAGE_URL = "https://www.drive.ai/images/team/Carol.png";
 
-class StartBanner extends Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    return (
-      <View style={styles.startBanner}>
-        <Image source={{ uri: IMAGE_URL }} style={styles.assistantImage} />
-        <Text style={styles.assistantName}>Carol</Text>
-        <Text style={styles.assistantPosition}>
-          Personal Insurance Assistant
-        </Text>
-      </View>
-    );
-  }
-}
 
 export default class ChatScreen extends Component {
   constructor(props) {
@@ -54,13 +37,6 @@ export default class ChatScreen extends Component {
             avatar: IMAGE_URL
           }
         },
-        {
-          type: "start",
-          _id: 1,
-          user: {
-            _id: 1
-          }
-        }
       ]
     });
   }
@@ -68,7 +44,7 @@ export default class ChatScreen extends Component {
   onSend(messages = []) {
     this.setState(previousState => {
       return {
-        messages: GiftedChat.append(previousState.messages, messages)
+        messages: previousState.messages.concat(messages)
       };
     });
   }
@@ -102,8 +78,6 @@ export default class ChatScreen extends Component {
     switch (currentMessage.type) {
       case "text":
         return <Message {...props} />;
-      case "start":
-        return <StartBanner />;
       default:
         return <Message {...props} />;
     }
@@ -132,24 +106,6 @@ export default class ChatScreen extends Component {
 const imageDim = 150;
 
 const styles = StyleSheet.create({
-  startBanner: {
-    flex: 1,
-    alignItems: "center",
-    marginBottom: 20
-  },
-  assistantImage: {
-    height: imageDim,
-    width: imageDim,
-    borderRadius: imageDim / 2,
-    marginBottom: 10
-  },
-  assistantName: {
-    fontWeight: "600",
-    fontSize: 20
-  },
-  assistantPosition: {
-    fontSize: 15
-  },
   bubbleLeft: {
     backgroundColor: colors.primaryOrange
   },
@@ -163,6 +119,8 @@ const styles = StyleSheet.create({
     color: colors.primaryText
   },
   container: {
-    flex: 1
+    flex: 1,
+    paddingTop: 12,
+    paddingBottom: 12,
   }
 });
