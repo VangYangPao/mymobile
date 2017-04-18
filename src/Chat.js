@@ -8,10 +8,10 @@ import {
 } from "react-native-gifted-chat";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
+import Plans from "./Plans";
 import colors from "./colors";
 
 const IMAGE_URL = "https://www.drive.ai/images/team/Carol.png";
-
 
 export default class ChatScreen extends Component {
   constructor(props) {
@@ -28,7 +28,7 @@ export default class ChatScreen extends Component {
       messages: [
         {
           type: "text",
-          _id: 2,
+          _id: 1,
           text: "Hi I'm Carol, please choose the insurance plan you're interested in. 😄",
           createdAt: new Date(Date.UTC(2016, 7, 30, 17, 20, 0)),
           user: {
@@ -37,6 +37,13 @@ export default class ChatScreen extends Component {
             avatar: IMAGE_URL
           }
         },
+        {
+          type: "plans",
+          _id: 2,
+          user: {
+            _id: 2
+          }
+        }
       ]
     });
   }
@@ -78,6 +85,8 @@ export default class ChatScreen extends Component {
     switch (currentMessage.type) {
       case "text":
         return <Message {...props} />;
+      case "plans":
+        return <Plans />;
       default:
         return <Message {...props} />;
     }
@@ -120,7 +129,6 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    paddingTop: 12,
-    paddingBottom: 12,
+    paddingTop: 12
   }
 });
