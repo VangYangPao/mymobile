@@ -29,7 +29,7 @@ const BuyStackNavigator = StackNavigator({
         <Icon name="message" size={22} color={tintColor} />
       ),
       headerTitleStyle: {
-        color: colors.primaryText,
+        color: colors.primaryText
       },
       headerLeft: (
         <TouchableOpacity

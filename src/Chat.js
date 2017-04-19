@@ -21,6 +21,7 @@ export default class ChatScreen extends Component {
     this.renderMessage = this.renderMessage.bind(this);
     this.renderBubble = this.renderBubble.bind(this);
     this.renderMessageText = this.renderMessageText.bind(this);
+    this.handleSelectPlan = this.handleSelectPlan.bind(this);
   }
 
   componentWillMount() {
@@ -56,6 +57,10 @@ export default class ChatScreen extends Component {
     });
   }
 
+  handleSelectPlan(planTitle) {
+    console.log(planTitle);
+  }
+
   renderBubble(props) {
     return (
       <Bubble
@@ -86,7 +91,7 @@ export default class ChatScreen extends Component {
       case "text":
         return <Message {...props} />;
       case "plans":
-        return <Plans />;
+        return <Plans onSelectPlan={this.handleSelectPlan} />;
       default:
         return <Message {...props} />;
     }
