@@ -16,16 +16,21 @@ import { DrawerNavigator, StackNavigator } from "react-navigation";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 import ChatScreen from "./src/Chat";
+import colors from "./src/colors";
+import DrawerContent from "./src/DrawerContent";
 
 const BuyStackNavigator = StackNavigator({
   Buy: {
     screen: ChatScreen,
     navigationOptions: navigationProps => ({
-      title: "Buy insurance",
-      drawerLabel: "Buy insurance",
+      title: "Buy Policies",
+      drawerLabel: "Buy Policies",
       drawerIcon: ({ tintColor }) => (
-        <Icon name="credit-card" size={22} color={tintColor} />
+        <Icon name="message" size={22} color={tintColor} />
       ),
+      headerTitleStyle: {
+        color: colors.primaryText
+      },
       headerLeft: (
         <TouchableOpacity
           onPress={() => {
@@ -36,7 +41,7 @@ const BuyStackNavigator = StackNavigator({
             name="menu"
             size={25}
             style={{ padding: 10, paddingLeft: 15 }}
-            color="black"
+            color={colors.primaryOrange}
           />
         </TouchableOpacity>
       )
@@ -44,14 +49,23 @@ const BuyStackNavigator = StackNavigator({
   }
 });
 
-const MyDrawerNavigator = DrawerNavigator({
-  BuyStack: {
-    screen: BuyStackNavigator
+const MyDrawerNavigator = DrawerNavigator(
+  {
+    BuyStack: {
+      screen: BuyStackNavigator
+    },
+    ClaimStack: {
+      screen: BuyStackNavigator
+    }
   },
-  ClaimStack: {
-    screen: BuyStackNavigator
+  {
+    contentComponent: props => <DrawerContent {...props} />,
+    contentOptions: {
+      activeTintColor: colors.primaryOrange,
+      inactiveTintColor: colors.primaryText
+    }
   }
-});
+);
 
 export default (Microsurance = StackNavigator(
   {

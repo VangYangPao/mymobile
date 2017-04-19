@@ -7,6 +7,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "babel-plugin-flow-react-proptypes": "^1.2.0",
     "firebase": "^3.7.8",
     "react": "16.0.0-alpha.6",
     "react-native": "0.43.3",
