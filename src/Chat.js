@@ -16,30 +16,6 @@ import colors from "./colors";
 // Enable playback in silence mode (iOS only)
 Sound.setCategory("Playback");
 
-// Load the sound file 'whoosh.mp3' from the app bundle
-// See notes below about preloading sounds within initialization code below.
-const whoosh = new Sound("incoming.mp3", Sound.MAIN_BUNDLE, error => {
-  if (error) {
-    console.log("failed to load the sound", error);
-    return;
-  }
-  // loaded successfully
-  console.log(
-    "duration in seconds: " +
-      whoosh.getDuration() +
-      "number of channels: " +
-      whoosh.getNumberOfChannels()
-  );
-});
-
-whoosh.play(success => {
-  if (success) {
-    console.log("successfully finished playing");
-  } else {
-    console.log("playback failed due to audio decoding errors");
-  }
-});
-
 const IMAGE_URL = "https://www.drive.ai/images/team/Carol.png";
 
 export default class ChatScreen extends Component {
@@ -51,6 +27,35 @@ export default class ChatScreen extends Component {
     this.renderBubble = this.renderBubble.bind(this);
     this.renderMessageText = this.renderMessageText.bind(this);
     this.handleSelectPlan = this.handleSelectPlan.bind(this);
+    this.incomingPopSound = new Sound(
+      "incoming.mp3",
+      Sound.MAIN_BUNDLE,
+      error => {
+        if (error) {
+          console.log("failed to load the sound", error);
+          return;
+        }
+        this.incomingPopSound.setVolume(0.75);
+      }
+    );
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    const { messages } = nextState;
+    const lastMessage = messages[messages.length - 1];
+    console.log(lastMessage);
+    if (
+      lastMessage.user._id === 2 &&
+      (lastMessage.type === "text" || lastMessage.type === "plans")
+    ) {
+      this.incomingPopSound.play(success => {
+        if (success) {
+          console.log("successfully finished playing");
+        } else {
+          console.log("playback failed due to audio decoding errors");
+        }
+      });
+    }
   }
 
   componentWillMount() {
@@ -66,7 +71,7 @@ export default class ChatScreen extends Component {
             name: "Carol",
             avatar: IMAGE_URL
           }
-        },
+        }
       ]
     });
 
@@ -77,7 +82,7 @@ export default class ChatScreen extends Component {
         ]);
         return { messages };
       });
-    }
+    };
 
     setTimeout(() => {
       this.setState(prevState => {
