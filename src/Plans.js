@@ -1,5 +1,11 @@
 import React, { Component } from "react";
-import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  Animated
+} from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 import colors from "./colors";
@@ -21,8 +27,8 @@ class Plan extends Component {
           <View style={styles.iconContainer}>
             <Icon name={this.props.iconName} style={styles.icon} />
           </View>
-          <View>
-            <Text style={styles.title} numberOfLines={2}>
+          <View style={styles.detailContainer}>
+            <Text style={styles.title} numberOfLines={1}>
               {this.props.title}
             </Text>
             <Text style={styles.subtitle}>{this.props.subtitle}</Text>
@@ -37,10 +43,23 @@ export default class Plans extends Component {
   constructor(props) {
     super(props);
     this.handleSelectPlan = this.handleSelectPlan.bind(this);
+    this.state = {
+      fadeAnim: new Animated.Value(0) // Initial value for opacity: 0
+    };
   }
 
   handleSelectPlan(planTitle) {
     this.props.onSelectPlan(planTitle);
+  }
+
+  componentDidMount() {
+    Animated.timing(
+      // Animate over time
+      this.state.fadeAnim, // The animated value to drive
+      {
+        toValue: 1 // Animate to opacity: 1, or fully opaque
+      }
+    ).start();
   }
 
   render() {
@@ -53,17 +72,17 @@ export default class Plans extends Component {
       {
         title: "Personal accident /w Weekly Indemnities",
         subtitle: "Up to $10,000",
-        iconName: "directions-car"
+        iconName: "healing"
       },
       {
         title: "Snatch theft",
         subtitle: "Up to $10,000",
-        iconName: "directions-car"
+        iconName: "account-balance-wallet"
       }
     ];
 
     return (
-      <View style={styles.container}>
+      <Animated.View style={[styles.container, { opacity: this.state.fadeAnim }]}>
         {plans.map(plan => {
           return (
             <Plan
@@ -73,7 +92,7 @@ export default class Plans extends Component {
             />
           );
         })}
-      </View>
+      </Animated.View>
     );
   }
 }
@@ -84,14 +103,17 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     marginLeft: 10,
     marginRight: 10,
-    marginTop: 5,
-    marginBottom: 5,
-    padding: 10,
+    marginTop: 7,
+    marginBottom: 7,
+    padding: 12,
     borderRadius: 3
   },
   iconContainer: {
     justifyContent: "center",
-    paddingRight: 10
+    paddingRight: 12
+  },
+  detailContainer: {
+    flex: 1
   },
   icon: {
     fontSize: 30

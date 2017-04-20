@@ -7,9 +7,14 @@ import {
   MessageText
 } from "react-native-gifted-chat";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import Spinner from "react-native-spinkit";
+import Sound from "react-native-sound";
 
 import Plans from "./Plans";
 import colors from "./colors";
+
+// Enable playback in silence mode (iOS only)
+Sound.setCategory("Playback");
 
 const IMAGE_URL = "https://www.drive.ai/images/team/Carol.png";
 
@@ -22,37 +27,89 @@ export default class ChatScreen extends Component {
     this.renderBubble = this.renderBubble.bind(this);
     this.renderMessageText = this.renderMessageText.bind(this);
     this.handleSelectPlan = this.handleSelectPlan.bind(this);
+    this.incomingPopSound = new Sound(
+      "incoming.mp3",
+      Sound.MAIN_BUNDLE,
+      error => {
+        if (error) {
+          console.log("failed to load the sound", error);
+          return;
+        }
+        this.incomingPopSound.setVolume(0.75);
+      }
+    );
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    const { messages } = nextState;
+    const lastMessage = messages[messages.length - 1];
+    console.log(lastMessage);
+    if (
+      lastMessage.user._id === 2 &&
+      (lastMessage.type === "text" || lastMessage.type === "plans")
+    ) {
+      this.incomingPopSound.play(success => {
+        if (success) {
+          console.log("successfully finished playing");
+        } else {
+          console.log("playback failed due to audio decoding errors");
+        }
+      });
+    }
   }
 
   componentWillMount() {
     this.setState({
       messages: [
         {
-          type: "text",
+          type: "loading",
           _id: 1,
-          text: "Hi I'm Carol, please choose the insurance plan you're interested in. 😄",
+          text: "loading",
           createdAt: new Date(Date.UTC(2016, 7, 30, 17, 20, 0)),
           user: {
             _id: 2,
-            name: "React Native",
+            name: "Carol",
             avatar: IMAGE_URL
-          }
-        },
-        {
-          type: "plans",
-          _id: 2,
-          user: {
-            _id: 2
           }
         }
       ]
     });
+
+    const renderPlans = () => {
+      this.setState(prevState => {
+        const messages = prevState.messages.concat([
+          { type: "plans", _id: 2, user: { _id: 2 } }
+        ]);
+        return { messages };
+      });
+    };
+
+    setTimeout(() => {
+      this.setState(prevState => {
+        setTimeout(renderPlans, 300);
+        return {
+          messages: [
+            {
+              type: "text",
+              _id: 1,
+              text: "Hi I'm Carol, please choose the insurance plan you're interested in. 😄",
+              createdAt: new Date(Date.UTC(2016, 7, 30, 17, 20, 0)),
+              user: {
+                _id: 2,
+                name: "Carol",
+                avatar: IMAGE_URL
+              }
+            }
+          ]
+        };
+      });
+    }, 1500);
   }
 
   onSend(messages = []) {
-    this.setState(previousState => {
+    this.setState(prevState => {
       return {
-        messages: previousState.messages.concat(messages)
+        messages: prevState.messages.concat(messages)
       };
     });
   }
@@ -74,6 +131,11 @@ export default class ChatScreen extends Component {
   }
 
   renderMessageText(props) {
+    if (props.currentMessage.type === "loading") {
+      return (
+        <Spinner style={styles.spinner} color="white" type="ThreeBounce" />
+      );
+    }
     return (
       <MessageText
         {...props}
@@ -106,6 +168,7 @@ export default class ChatScreen extends Component {
           user={{
             _id: 1
           }}
+          onLongPress={() => {}}
           renderTime={() => {}}
           renderDay={() => {}}
           renderBubble={this.renderBubble}
@@ -131,6 +194,12 @@ const styles = StyleSheet.create({
   },
   messageTextRight: {
     color: colors.primaryText
+  },
+  spinner: {
+    marginLeft: 15,
+    marginRight: 15,
+    marginTop: 10,
+    marginBottom: 10
   },
   container: {
     flex: 1,
