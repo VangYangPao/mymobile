@@ -17,7 +17,7 @@ class Footer extends Component {
     return (
       <View style={styles.footer}>
         <View style={styles.footerBtnContainer}>
-          <TouchableOpacity
+          {/*<TouchableOpacity
             style={[styles.footerBtn, styles.footerGoBack]}
             onPress={() => {}}
           >
@@ -26,7 +26,7 @@ class Footer extends Component {
                 GO BACK
               </Text>
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity>*/}
           <TouchableOpacity
             style={[styles.footerBtn, styles.footerPurchase]}
             activeOpacity={0.6}
