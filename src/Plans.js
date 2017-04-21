@@ -9,6 +9,7 @@ import {
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 import colors from "./colors";
+import plans from "../data/plans";
 
 class Plan extends Component {
   constructor(props) {
@@ -63,26 +64,10 @@ export default class Plans extends Component {
   }
 
   render() {
-    const plans = [
-      {
-        title: "Personal accident",
-        subtitle: "Up to $10,000",
-        iconName: "directions-car"
-      },
-      {
-        title: "Personal accident /w Weekly Indemnities",
-        subtitle: "Up to $10,000",
-        iconName: "healing"
-      },
-      {
-        title: "Snatch theft",
-        subtitle: "Up to $10,000",
-        iconName: "account-balance-wallet"
-      }
-    ];
-
     return (
-      <Animated.View style={[styles.container, { opacity: this.state.fadeAnim }]}>
+      <Animated.View
+        style={[styles.container, { opacity: this.state.fadeAnim }]}
+      >
         {plans.map(plan => {
           return (
             <Plan
