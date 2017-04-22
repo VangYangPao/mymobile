@@ -20,7 +20,7 @@ import PlanScreen from "./src/PlanScreen";
 import colors from "./src/colors";
 import DrawerContent from "./src/DrawerContent";
 
-const MENU_ICON_SIZE = 25;
+const MENU_ICON_SIZE = 30;
 const MENU_ICON_PADDING_LEFT = 15;
 const MENU_ICON_PADDING_RIGHT = 10;
 
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
   headerMenuIcon: {
     paddingLeft: MENU_ICON_PADDING_LEFT,
     paddingRight: MENU_ICON_PADDING_RIGHT,
-    color: colors.primaryOrange
+    color: colors.primaryText
   }
 });
 
