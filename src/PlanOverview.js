@@ -4,13 +4,25 @@ import {
   TouchableOpacity,
   View,
   Text,
-  ScrollView
+  ScrollView,
+  DatePickerAndroid
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 import colors from "./colors";
 
 export default class PlanOverview extends Component {
+  constructor(props) {
+    super(props);
+    this.handleSelectStartDate = this.handleSelectStartDate.bind(this);
+  }
+
+  async handleSelectStartDate() {
+    const { action, year, month, day } = await DatePickerAndroid.open({
+      date: new Date()
+    });
+  }
+
   render() {
     const plan = this.props.screenProps;
     return (
@@ -23,6 +35,28 @@ export default class PlanOverview extends Component {
             <Text style={styles.planTitle}>
               {plan.title}
             </Text>
+            <View style={styles.priceContainer}>
+              <View style={styles.price}>
+                <Text style={styles.priceCurrency}>$</Text>
+                <Text style={styles.priceAmount}>5</Text>
+              </View>
+              <Text style={styles.pricePerMonth}>PER MONTH</Text>
+            </View>
+            <View style={styles.configContainer}>
+              <Text style={styles.startDate}>Start date</Text>
+              <TouchableOpacity onPress={this.handleSelectStartDate}>
+                <View style={styles.dropdown}>
+                  <Text style={styles.dropdownDefault}>
+                    TODAY
+                  </Text>
+                  <Icon
+                    size={25}
+                    name="arrow-drop-down"
+                    style={styles.dropdownIcon}
+                  />
+                </View>
+              </TouchableOpacity>
+            </View>
           </View>
         </ScrollView>
       </View>
@@ -30,12 +64,71 @@ export default class PlanOverview extends Component {
   }
 }
 
+const priceContainerSize = 175;
+
 const styles = StyleSheet.create({
+  startDate: {
+    fontSize: 16,
+    color: colors.primaryText
+  },
+  dropdownDefault: {
+    justifyContent: "center",
+    fontSize: 16,
+    color: colors.primaryText
+  },
+  dropdownIcon: {
+    color: colors.primaryText
+  },
+  dropdown: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 5,
+    paddingHorizontal: 8,
+    borderWidth: 1,
+    borderRadius: 3,
+    borderColor: colors.borderLine
+  },
+  configContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "space-between",
+    flexDirection: "row"
+  },
+  priceContainer: {
+    alignSelf: "center",
+    alignItems: "center",
+    justifyContent: "center",
+    height: priceContainerSize,
+    width: priceContainerSize,
+    marginVertical: 20,
+    borderRadius: priceContainerSize / 2,
+    backgroundColor: colors.primaryOrange
+  },
+  price: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: -20
+  },
+  priceCurrency: {
+    paddingBottom: 10,
+    fontSize: 45,
+    color: "white"
+  },
+  priceAmount: {
+    fontSize: 60,
+    color: "white"
+  },
+  pricePerMonth: {
+    fontWeight: "500",
+    fontSize: 20,
+    color: "white"
+  },
   planTitle: {
     alignSelf: "center",
     color: colors.primaryText,
     fontFamily: "Bitter",
-    fontSize: 20
+    fontSize: 30
   },
   page: {
     position: "absolute",
