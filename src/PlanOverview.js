@@ -104,7 +104,7 @@ export default class PlanOverview extends Component {
   }
 }
 
-const priceContainerSize = 175;
+const priceContainerSize = 150;
 
 const styles = StyleSheet.create({
   startDate: {
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
   },
   priceCurrency: {
     paddingBottom: 10,
-    fontSize: 45,
+    fontSize: 40,
     color: "white"
   },
   priceAmount: {
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
   },
   pricePerMonth: {
     fontWeight: "500",
-    fontSize: 20,
+    fontSize: 16,
     color: "white"
   },
   planTitle: {
@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     paddingTop: 17,
-    elevation: 3,
+    elevation: 4,
     borderRadius: 3,
     backgroundColor: "white"
   }
