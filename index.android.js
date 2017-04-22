@@ -60,11 +60,9 @@ const MyDrawerNavigator = DrawerNavigator(
   },
   {
     contentComponent: props => {
-      console.log(props);
       if (!drawerProps) {
         drawerProps = props;
       }
-      console.log(drawerProps.get);
       return <DrawerContent {...drawerProps} />;
     },
     contentOptions: {
@@ -83,7 +81,8 @@ export default (Microsurance = StackNavigator(
 
 const styles = StyleSheet.create({
   headerTitle: {
-    fontFamily: "Courgette",
+    // fontWeight: "400",
+    // fontSize: 20,
     color: colors.primaryText,
     alignSelf: "center",
     paddingRight: MENU_ICON_PADDING_LEFT +

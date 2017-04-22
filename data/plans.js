@@ -1,6 +1,6 @@
 export default (plans = [
   {
-    title: "Personal accident",
+    title: "Personal Accident",
     subtitle: "Up to $10,000",
     iconName: "directions-car"
   },

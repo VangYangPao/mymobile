@@ -12,6 +12,7 @@ import Sound from "react-native-sound";
 
 import Plans from "./Plans";
 import colors from "./colors";
+import PLANS from "../data/plans";
 
 // Enable playback in silence mode (iOS only)
 Sound.setCategory("Playback");
@@ -20,9 +21,20 @@ const IMAGE_URL = "https://www.drive.ai/images/team/Carol.png";
 const FIRST_MSG_LOAD_TIME = 500;
 const PLANS_FADE_IN_TIME = 200;
 
+function transposePlansByTitle() {
+  var planDict = {};
+  PLANS.forEach(plan => {
+    planDict[plan.title] = plan;
+  });
+  return planDict;
+}
+
 export default class ChatScreen extends Component {
   static navigationOptions = {
     title: "Microassurance",
+    headerTitleStyle: {
+      fontFamily: "Courgette"
+    },
     drawerLabel: "Buy Policies",
     drawerIcon: ({ tintColor }) => (
       <Icon name="message" size={22} color={tintColor} />
@@ -59,9 +71,7 @@ export default class ChatScreen extends Component {
     ) {
       this.incomingPopSound.play(success => {
         if (success) {
-          console.log("successfully finished playing");
         } else {
-          console.log("playback failed due to audio decoding errors");
         }
       });
     }
@@ -124,7 +134,8 @@ export default class ChatScreen extends Component {
   }
 
   handleSelectPlan(planTitle) {
-    this.props.navigation.navigate("Plan", planTitle);
+    const plan = transposePlansByTitle()[planTitle]
+    this.props.navigation.navigate("Plan", plan);
   }
 
   renderBubble(props) {
@@ -194,7 +205,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primaryOrange
   },
   messageTextLeft: {
-    color: "white",
+    color: "white"
   },
   bubbleRight: {
     backgroundColor: "white"

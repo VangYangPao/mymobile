@@ -1,16 +1,13 @@
 import React, { Component } from "react";
-import {
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  Text
-} from "react-native";
+import { Image, StyleSheet, TouchableOpacity, View, Text } from "react-native";
 import { TabNavigator } from "react-navigation";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 import ChatScreen from "./Chat";
+import PlanOverview from "./PlanOverview";
+import PLANS from "../data/plans";
 import colors from "./colors";
+
 
 class OverviewScreen extends Component {
   render() {
@@ -34,10 +31,24 @@ class NotCoveredScreen extends Component {
   }
 }
 
+const tabStyles = {
+  tabIndicator: {
+    backgroundColor: colors.primaryOrange,
+    height: 3
+  },
+  tabLabel: {
+    fontWeight: "600"
+  },
+  tabContainer: {
+    backgroundColor: "white",
+    elevation: 5
+  }
+};
+
 const PlanTabNavigator = TabNavigator(
   {
     Overview: {
-      screen: OverviewScreen
+      screen: PlanOverview
     },
     Covered: {
       screen: CoveredScreen
@@ -50,12 +61,9 @@ const PlanTabNavigator = TabNavigator(
     tabBarOptions: {
       activeTintColor: colors.primaryOrange,
       inactiveTintColor: colors.primaryText,
-      style: { backgroundColor: "white", elevation: 5 },
-      labelStyle: { fontWeight: "600" },
-      indicatorStyle: {
-        backgroundColor: colors.primaryOrange,
-        height: 3
-      }
+      style: tabStyles.tabContainer,
+      labelStyle: tabStyles.tabLabel,
+      indicatorStyle: tabStyles.tabIndicator
     }
   }
 );
@@ -96,7 +104,6 @@ class Footer extends Component {
 export default class PlanScreen extends Component {
   static navigationOptions = ({ navigation }) => {
     const options = ChatScreen.navigationOptions;
-    options.title = navigation.state.params;
     options.headerStyle = styles.header;
     return options;
   };
@@ -104,7 +111,9 @@ export default class PlanScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <PlanTabNavigator />
+        <PlanTabNavigator
+          screenProps={this.props.navigation.state.params}
+        />
         <Footer />
       </View>
     );
@@ -112,6 +121,17 @@ export default class PlanScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+  tabIndicator: {
+    backgroundColor: colors.primaryOrange,
+    height: 3
+  },
+  tabLabel: {
+    fontWeight: "600"
+  },
+  tabContainer: {
+    backgroundColor: "white",
+    elevation: 5
+  },
   header: {
     elevation: 0
   },
