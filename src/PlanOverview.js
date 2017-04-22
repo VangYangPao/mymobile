@@ -15,16 +15,54 @@ export default class PlanOverview extends Component {
   constructor(props) {
     super(props);
     this.handleSelectStartDate = this.handleSelectStartDate.bind(this);
+
+    this.state = {
+      startDate: new Date()
+    };
   }
 
   async handleSelectStartDate() {
-    const { action, year, month, day } = await DatePickerAndroid.open({
-      date: new Date()
-    });
+    try {
+      const today = new Date();
+      const { action, year, month, day } = await DatePickerAndroid.open({
+        date: this.state.startDate,
+        minDate: new Date(),
+        mode: "spinner"
+      });
+      if (action === DatePickerAndroid.dateSetAction) {
+        this.setState({ startDate: new Date(year, month, day) });
+      }
+    } catch ({ code, message }) {
+      console.warn("Cannot open date picker", code, message);
+    }
   }
 
   render() {
+    const monthNames = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ];
+    const today = new Date();
+    const startDate = this.state.startDate;
+    const startDay = startDate.getDate();
+    const startMonth = startDate.getMonth();
+    const startYear = startDate.getFullYear();
+    const startDateIsToday =
+      today.getDate() === startDay &&
+      today.getMonth() === startMonth &&
+      today.getFullYear() === startYear;
     const plan = this.props.screenProps;
+
     return (
       <View style={styles.page}>
         <ScrollView
@@ -47,7 +85,9 @@ export default class PlanOverview extends Component {
               <TouchableOpacity onPress={this.handleSelectStartDate}>
                 <View style={styles.dropdown}>
                   <Text style={styles.dropdownDefault}>
-                    TODAY
+                    {startDateIsToday
+                      ? "TODAY"
+                      : `${startDay} ${monthNames[startMonth]}, ${startYear}`}
                   </Text>
                   <Icon
                     size={25}
