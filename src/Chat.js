@@ -22,7 +22,7 @@ const PLANS_FADE_IN_TIME = 200;
 
 export default class ChatScreen extends Component {
   static navigationOptions = {
-    title: "Buy Policies",
+    title: "Microassurance",
     drawerLabel: "Buy Policies",
     drawerIcon: ({ tintColor }) => (
       <Icon name="message" size={22} color={tintColor} />
@@ -189,14 +189,12 @@ export default class ChatScreen extends Component {
   }
 }
 
-const imageDim = 150;
-
 const styles = StyleSheet.create({
   bubbleLeft: {
     backgroundColor: colors.primaryOrange
   },
   messageTextLeft: {
-    color: "white"
+    color: "white",
   },
   bubbleRight: {
     backgroundColor: "white"

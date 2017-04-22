@@ -20,23 +20,20 @@ import PlanScreen from "./src/PlanScreen";
 import colors from "./src/colors";
 import DrawerContent from "./src/DrawerContent";
 
+const MENU_ICON_SIZE = 25;
+const MENU_ICON_PADDING_LEFT = 15;
+const MENU_ICON_PADDING_RIGHT = 10;
+
 function renderNavigation({ navigation }) {
   return {
-    headerTitleStyle: {
-      color: colors.primaryText
-    },
+    headerTitleStyle: styles.headerTitle,
     headerLeft: (
       <TouchableOpacity
         onPress={() => {
           navigation.navigate("DrawerOpen");
         }}
       >
-        <Icon
-          name="menu"
-          size={25}
-          style={{ padding: 10, paddingLeft: 15 }}
-          color={colors.primaryOrange}
-        />
+        <Icon name="menu" size={MENU_ICON_SIZE} style={styles.headerMenuIcon} />
       </TouchableOpacity>
     )
   };
@@ -59,7 +56,7 @@ const MyDrawerNavigator = DrawerNavigator(
   {
     BuyStack: {
       screen: BuyStackNavigator
-    },
+    }
   },
   {
     contentComponent: props => {
@@ -67,7 +64,7 @@ const MyDrawerNavigator = DrawerNavigator(
       if (!drawerProps) {
         drawerProps = props;
       }
-      console.log(drawerProps.get)
+      console.log(drawerProps.get);
       return <DrawerContent {...drawerProps} />;
     },
     contentOptions: {
@@ -83,5 +80,21 @@ export default (Microsurance = StackNavigator(
   },
   { headerMode: "none" }
 ));
+
+const styles = StyleSheet.create({
+  headerTitle: {
+    fontFamily: "Courgette",
+    color: colors.primaryText,
+    alignSelf: "center",
+    paddingRight: MENU_ICON_PADDING_LEFT +
+      MENU_ICON_SIZE +
+      MENU_ICON_PADDING_RIGHT
+  },
+  headerMenuIcon: {
+    paddingLeft: MENU_ICON_PADDING_LEFT,
+    paddingRight: MENU_ICON_PADDING_RIGHT,
+    color: colors.primaryOrange
+  }
+});
 
 AppRegistry.registerComponent("Microsurance", () => Microsurance);
