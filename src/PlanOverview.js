@@ -5,10 +5,14 @@ import {
   View,
   Text,
   ScrollView,
-  DatePickerAndroid
+  DatePickerAndroid,
+  InteractionManager,
+  Animated,
+  Easing
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
+import RangeSlider from "./RangeSlider";
 import colors from "./colors";
 
 export default class PlanOverview extends Component {
@@ -17,6 +21,9 @@ export default class PlanOverview extends Component {
     this.handleSelectStartDate = this.handleSelectStartDate.bind(this);
 
     this.state = {
+      renderContent: false,
+      fadeAnim: new Animated.Value(0),
+      topAnim: new Animated.Value(50),
       startDate: new Date()
     };
   }
@@ -37,7 +44,31 @@ export default class PlanOverview extends Component {
     }
   }
 
+  componentDidMount() {
+    InteractionManager.runAfterInteractions(() =>
+      this.setState({ renderContent: true }, () => {
+        Animated.parallel(
+          [
+            Animated.timing(this.state.fadeAnim, {
+              toValue: 1 // Animate to opacity: 1, or fully opaque
+            }),
+            Animated.timing(this.state.topAnim, {
+              toValue: 0
+            })
+          ],
+          {
+            duration: 500,
+          }
+        ).start();
+      })
+    );
+  }
+
   render() {
+    if (!this.state.renderContent) {
+      return <View style={styles.page} />;
+    }
+
     const monthNames = [
       "Jan",
       "Feb",
@@ -69,14 +100,19 @@ export default class PlanOverview extends Component {
           style={styles.scrollView}
           contentContainerStyle={styles.scrollViewContentContainer}
         >
-          <View style={styles.container}>
+          <Animated.View
+            style={[
+              styles.container,
+              { opacity: this.state.fadeAnim, top: this.state.topAnim }
+            ]}
+          >
             <Text style={styles.planTitle}>
               {plan.title}
             </Text>
             <View style={styles.priceContainer}>
               <View style={styles.price}>
                 <Text style={styles.priceCurrency}>$</Text>
-                <Text style={styles.priceAmount}>5</Text>
+                <Text style={styles.priceAmount}>11</Text>
               </View>
               <Text style={styles.pricePerMonth}>PER MONTH</Text>
             </View>
@@ -97,7 +133,18 @@ export default class PlanOverview extends Component {
                 </View>
               </TouchableOpacity>
             </View>
-          </View>
+            <RangeSlider
+              rangeCount={5}
+              barHeightPercent={0.045}
+              slotRadiusPercent={0.075}
+              sliderRadiusPercent={0.15}
+              style={{
+                width: 300,
+                height: 75,
+                marginTop: 15
+              }}
+            />
+          </Animated.View>
         </ScrollView>
       </View>
     );
@@ -107,6 +154,9 @@ export default class PlanOverview extends Component {
 const priceContainerSize = 150;
 
 const styles = StyleSheet.create({
+  slider: {
+    flex: 1
+  },
   startDate: {
     fontSize: 16,
     color: colors.primaryText
