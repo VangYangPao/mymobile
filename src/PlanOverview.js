@@ -8,7 +8,8 @@ import {
   DatePickerAndroid,
   InteractionManager,
   Animated,
-  Easing
+  Easing,
+  ToastAndroid
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
@@ -138,6 +139,9 @@ export default class PlanOverview extends Component {
               barHeightPercent={0.045}
               slotRadiusPercent={0.075}
               sliderRadiusPercent={0.15}
+              onChangeIndex={(index) => {
+                console.log(index)
+              }}
               style={{
                 width: 300,
                 height: 75,

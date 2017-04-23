@@ -69,14 +69,18 @@ public class RangeSliderManager extends SimpleViewManager<RangeSliderView> {
         final RangeSliderView.OnSlideListener listener = new RangeSliderView.OnSlideListener() {
             @Override
             public void onSlide(int index) {
-                Toast.makeText(
-                        reactContext,
-                        "Hi index: " + index,
-                        Toast.LENGTH_SHORT)
-                        .show();
+                RangeSliderEvent rangeSliderEvent = new RangeSliderEvent(view.getId(), index, true);
+                reactContext
+                        .getNativeModule(UIManagerModule.class)
+                        .getEventDispatcher()
+                        .dispatchEvent(rangeSliderEvent);
+//                Toast.makeText(
+//                        reactContext,
+//                        "Hi index: " + index,
+//                        Toast.LENGTH_SHORT)
+//                        .show();
             }
         };
-        Log.d(TAG, "addEvent");
         view.setOnSlideListener(listener);
     }
 }
