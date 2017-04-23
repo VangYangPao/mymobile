@@ -58,7 +58,7 @@ export default class PlanOverview extends Component {
             })
           ],
           {
-            duration: 500,
+            duration: 500
           }
         ).start();
       })
@@ -117,7 +117,7 @@ export default class PlanOverview extends Component {
               </View>
               <Text style={styles.pricePerMonth}>PER MONTH</Text>
             </View>
-            <View style={styles.configContainer}>
+            <View style={styles.startDateContainer}>
               <Text style={styles.startDate}>Start date</Text>
               <TouchableOpacity onPress={this.handleSelectStartDate}>
                 <View style={styles.dropdown}>
@@ -134,20 +134,20 @@ export default class PlanOverview extends Component {
                 </View>
               </TouchableOpacity>
             </View>
-            <RangeSlider
-              rangeCount={5}
-              barHeightPercent={0.045}
-              slotRadiusPercent={0.075}
-              sliderRadiusPercent={0.15}
-              onChangeIndex={(index) => {
-                console.log(index)
-              }}
-              style={{
-                width: 300,
-                height: 75,
-                marginTop: 15
-              }}
-            />
+            <View style={styles.configContainer}>
+              <Text style={styles.configTitle}>Compensation</Text>
+              <RangeSlider
+                values={["5k", "10k", "20k", "40k", "100k"]}
+                onValueChange={val => console.log(val)}
+              />
+            </View>
+            <View style={styles.configContainer}>
+              <Text style={styles.configTitle}>Duration</Text>
+              <RangeSlider
+                values={["2w", "4w", "3m", "6m", "12m"]}
+                onValueChange={val => console.log(val)}
+              />
+            </View>
           </Animated.View>
         </ScrollView>
       </View>
@@ -158,8 +158,15 @@ export default class PlanOverview extends Component {
 const priceContainerSize = 150;
 
 const styles = StyleSheet.create({
-  slider: {
-    flex: 1
+  configTitle: {
+    marginBottom: 20,
+    color: colors.primaryText,
+    fontSize: 20
+  },
+  configContainer: {
+    flex: 1,
+    alignItems: "center",
+    marginTop: 20
   },
   startDate: {
     fontSize: 16,
@@ -183,11 +190,12 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     borderColor: colors.borderLine
   },
-  configContainer: {
+  startDateContainer: {
     flex: 1,
     alignItems: "center",
     justifyContent: "space-between",
-    flexDirection: "row"
+    flexDirection: "row",
+    marginBottom: 20
   },
   priceContainer: {
     alignSelf: "center",
