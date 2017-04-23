@@ -8,7 +8,6 @@ import PlanOverview from "./PlanOverview";
 import PLANS from "../data/plans";
 import colors from "./colors";
 
-
 class OverviewScreen extends Component {
   render() {
     return <View><Text>test</Text></View>;
@@ -58,7 +57,9 @@ const PlanTabNavigator = TabNavigator(
     }
   },
   {
+    swipeEnabled: false,
     tabBarOptions: {
+      upperCaseLabel: true,
       activeTintColor: colors.primaryOrange,
       inactiveTintColor: colors.primaryText,
       style: tabStyles.tabContainer,
@@ -111,9 +112,7 @@ export default class PlanScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <PlanTabNavigator
-          screenProps={this.props.navigation.state.params}
-        />
+        <PlanTabNavigator screenProps={this.props.navigation.state.params} />
         <Footer />
       </View>
     );
