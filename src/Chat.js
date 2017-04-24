@@ -62,21 +62,6 @@ export default class ChatScreen extends Component {
     );
   }
 
-  componentWillUpdate(nextProps, nextState) {
-    const { messages } = nextState;
-    const lastMessage = messages[messages.length - 1];
-    if (
-      lastMessage.user._id === 2 &&
-      (lastMessage.type === "text" || lastMessage.type === "plans")
-    ) {
-      this.incomingPopSound.play(success => {
-        if (success) {
-        } else {
-        }
-      });
-    }
-  }
-
   componentWillMount() {
     this.setState({
       messages: [
@@ -100,6 +85,12 @@ export default class ChatScreen extends Component {
           { type: "plans", _id: 2, user: { _id: 2 } }
         ]);
         return { messages };
+      }, () => {
+        this.incomingPopSound.play(success => {
+          if (success) {
+          } else {
+          }
+        });
       });
     };
 
