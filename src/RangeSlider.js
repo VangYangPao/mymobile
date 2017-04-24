@@ -1,5 +1,11 @@
 import React, { PropTypes, Component } from "react";
-import { requireNativeComponent, View, StyleSheet, Text } from "react-native";
+import {
+  requireNativeComponent,
+  View,
+  StyleSheet,
+  Text,
+  PanResponder
+} from "react-native";
 
 import colors from "./colors";
 
@@ -30,6 +36,46 @@ export default class RangeSlider extends Component {
     );
   }
 
+  componentWillMount() {
+    this._panResponder = PanResponder.create({
+      // Ask to be the responder:
+      onStartShouldSetPanResponder: (evt, gestureState) => true,
+      onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
+      onMoveShouldSetPanResponder: (evt, gestureState) => true,
+      onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
+
+      onPanResponderGrant: (evt, gestureState) => {
+        if (!this.props.onGesture) return;
+        this.props.onGesture(true);
+        // The guesture has started. Show visual feedback so the user knows
+        // what is happening!
+
+        // gestureState.d{x,y} will be set to zero now
+      },
+      onPanResponderMove: (evt, gestureState) => {
+        // The most recent move distance is gestureState.move{X,Y}
+        // The accumulated gesture distance since becoming responder is
+        // gestureState.d{x,y}
+      },
+      onPanResponderTerminationRequest: (evt, gestureState) => true,
+      onPanResponderRelease: (evt, gestureState) => {
+        if (!this.props.onGesture) return;
+        this.props.onGesture(false);
+        // The user has released all touches while this view is the
+        // responder. This typically means a gesture has succeeded
+      },
+      onPanResponderTerminate: (evt, gestureState) => {
+        // Another component has become the responder, so this gesture
+        // should be cancelled
+      },
+      onShouldBlockNativeResponder: (evt, gestureState) => {
+        // Returns whether this component should block native components from becoming the JS
+        // responder. Returns true by default. Is currently only supported on android.
+        return true;
+      }
+    });
+  }
+
   render() {
     const rangeSliderProps = {
       rangeCount: this.props.values.length,
@@ -39,13 +85,17 @@ export default class RangeSlider extends Component {
     };
 
     return (
-      <View style={{ flex: 1, alignItems: "center" }}>
+      <View {...this._panResponder.panHandlers} style={styles.container}>
         <View style={styles.labels}>
           {this.props.values.map((v, idx) => {
             const activeStyle = idx === this.state.currentIndex
               ? styles.activeLabel
               : null;
-            return <Text key={v.value} style={[styles.label, activeStyle]}>{v.label}</Text>;
+            return (
+              <Text key={v.value} style={[styles.label, activeStyle]}>
+                {v.label}
+              </Text>
+            );
           })}
         </View>
         <RCTRangeSlider
@@ -74,6 +124,10 @@ const RCTRangeSlider = requireNativeComponent("RCTRangeSlider", RangeSlider, {
 });
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center"
+  },
   activeLabel: {
     fontSize: 17,
     color: colors.primaryOrange
@@ -84,7 +138,7 @@ const styles = StyleSheet.create({
   },
   labels: {
     flexDirection: "row",
-    alignItems: 'center',
+    alignItems: "center",
     justifyContent: "space-between",
     paddingLeft: BAR_WIDTH * SLOT_RADIUS_PERCENT,
     paddingRight: BAR_WIDTH * (SLOT_RADIUS_PERCENT - 0.035),

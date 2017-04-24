@@ -55,10 +55,12 @@ export default class PlanOverview extends Component {
     super(props);
     this.handleSelectStartDate = this.handleSelectStartDate.bind(this);
     this.countPricePerMonth = this.countPricePerMonth.bind(this);
+    this.handleRangeSliderGesture = this.handleRangeSliderGesture.bind(this);
 
     const plan = props.screenProps.plan;
     this.state = {
       renderContent: false,
+      scrollEnabled: true,
       fadeAnim: new Animated.Value(0),
       topAnim: new Animated.Value(50),
       startDate: new Date(),
@@ -81,6 +83,10 @@ export default class PlanOverview extends Component {
     } catch ({ code, message }) {
       console.warn("Cannot open date picker", code, message);
     }
+  }
+
+  handleRangeSliderGesture(hasOngoingGesture) {
+    this.setState({ scrollEnabled: !hasOngoingGesture });
   }
 
   componentDidMount() {
@@ -163,6 +169,7 @@ export default class PlanOverview extends Component {
     return (
       <View style={styles.page}>
         <ScrollView
+          scrollEnabled={this.state.scrollEnabled}
           style={styles.scrollView}
           contentContainerStyle={styles.scrollViewContentContainer}
         >
@@ -222,6 +229,7 @@ export default class PlanOverview extends Component {
               </Text>
               <RangeSlider
                 values={coverageAmounts}
+                onGesture={this.handleRangeSliderGesture}
                 onValueChange={val =>
                   this.setState({ coverageAmount: val.value }, () => {
                     onPricePerMonthChange(this.countPricePerMonth());
@@ -235,6 +243,7 @@ export default class PlanOverview extends Component {
               </Text>
               <RangeSlider
                 values={coverageDurations}
+                onGesture={this.handleRangeSliderGesture}
                 onValueChange={val =>
                   this.setState({ coverageDuration: val.value })}
               />
