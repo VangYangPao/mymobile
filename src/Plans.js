@@ -11,6 +11,18 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import colors from "./colors";
 import plans from "../data/plans";
 
+function addCommas(nStr) {
+    nStr += '';
+    x = nStr.split('.');
+    x1 = x[0];
+    x2 = x.length > 1 ? '.' + x[1] : '';
+    var rgx = /(\d+)(\d{3})/;
+    while (rgx.test(x1)) {
+            x1 = x1.replace(rgx, '$1' + ',' + '$2');
+    }
+    return x1 + x2;
+}
+
 class Plan extends Component {
   constructor(props) {
     super(props);
@@ -22,6 +34,9 @@ class Plan extends Component {
   }
 
   render() {
+    const highestCoverageAmount = this.props.coverageAmounts[
+      this.props.coverageAmounts.length - 1
+    ];
     return (
       <TouchableOpacity activeOpacity={0.6} onPress={this.handleSelectPlan}>
         <View style={styles.planContainer}>
@@ -32,7 +47,9 @@ class Plan extends Component {
             <Text style={styles.title} numberOfLines={1}>
               {this.props.title}
             </Text>
-            <Text style={styles.subtitle}>{this.props.subtitle}</Text>
+            <Text style={styles.subtitle}>
+              Up to ${addCommas(highestCoverageAmount)}
+            </Text>
           </View>
         </View>
       </TouchableOpacity>
