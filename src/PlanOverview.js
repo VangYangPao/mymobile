@@ -135,14 +135,14 @@ export default class PlanOverview extends Component {
               </TouchableOpacity>
             </View>
             <View style={styles.configContainer}>
-              <Text style={styles.configTitle}>Compensation</Text>
+              <Text style={styles.configTitle}>COVERAGE AMOUNTS</Text>
               <RangeSlider
                 values={["5k", "10k", "20k", "40k", "100k"]}
                 onValueChange={val => console.log(val)}
               />
             </View>
             <View style={styles.configContainer}>
-              <Text style={styles.configTitle}>Duration</Text>
+              <Text style={styles.configTitle}>COVERAGE DURATION</Text>
               <RangeSlider
                 values={["2w", "4w", "3m", "6m", "12m"]}
                 onValueChange={val => console.log(val)}
@@ -166,7 +166,11 @@ const styles = StyleSheet.create({
   configContainer: {
     flex: 1,
     alignItems: "center",
-    marginTop: 20
+    marginTop: 20,
+    marginBottom: 5,
+    paddingBottom: 15,
+    borderBottomColor: colors.softBorderLine,
+    borderBottomWidth: 1.5,
   },
   startDate: {
     fontSize: 16,
@@ -195,7 +199,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     flexDirection: "row",
-    marginBottom: 20
+    marginBottom: 5,
+    paddingBottom: 15,
+    borderBottomColor: colors.softBorderLine,
+    borderBottomWidth: 1.5,
   },
   priceContainer: {
     alignSelf: "center",
