@@ -53,6 +53,8 @@ export default class RangeSlider extends Component {
         // gestureState.d{x,y} will be set to zero now
       },
       onPanResponderMove: (evt, gestureState) => {
+        if (!this.props.onGesture) return;
+        this.props.onGesture(true);
         // The most recent move distance is gestureState.move{X,Y}
         // The accumulated gesture distance since becoming responder is
         // gestureState.d{x,y}
@@ -65,6 +67,8 @@ export default class RangeSlider extends Component {
         // responder. This typically means a gesture has succeeded
       },
       onPanResponderTerminate: (evt, gestureState) => {
+        if (!this.props.onGesture) return;
+        this.props.onGesture(false);
         // Another component has become the responder, so this gesture
         // should be cancelled
       },
