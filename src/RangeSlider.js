@@ -45,7 +45,7 @@ export default class RangeSlider extends Component {
             const activeStyle = idx === this.state.currentIndex
               ? styles.activeLabel
               : null;
-            return <Text key={v} style={[styles.label, activeStyle]}>{v}</Text>;
+            return <Text key={v.value} style={[styles.label, activeStyle]}>{v.label}</Text>;
           })}
         </View>
         <RCTRangeSlider

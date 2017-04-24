@@ -134,7 +134,7 @@ export default class ChatScreen extends Component {
   }
 
   handleSelectPlan(planTitle) {
-    const plan = transposePlansByTitle()[planTitle]
+    const plan = transposePlansByTitle()[planTitle];
     this.props.navigation.navigate("Plan", plan);
   }
 

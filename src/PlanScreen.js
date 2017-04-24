@@ -91,7 +91,7 @@ class Footer extends Component {
           >
             <View style={styles.footerBtn}>
               <Text style={[styles.footerBtnText, styles.footerPurchaseText]}>
-                PURCHASE
+                PURCHASE (${this.props.pricePerMonth}/month)
               </Text>
             </View>
           </TouchableOpacity>
@@ -109,11 +109,26 @@ export default class PlanScreen extends Component {
     return options;
   };
 
+  constructor(props) {
+    super(props);
+    const { pricePerMonth } = props.navigation.state.params;
+    this.handlePricePerMonthChange = this.handlePricePerMonthChange.bind(this);
+    this.state = { pricePerMonth };
+  }
+
+  handlePricePerMonthChange(pricePerMonth) {
+    this.setState({ pricePerMonth });
+  }
+
   render() {
+    const screenProps = {
+      plan: this.props.navigation.state.params,
+      onPricePerMonthChange: this.handlePricePerMonthChange
+    };
     return (
       <View style={styles.container}>
-        <PlanTabNavigator screenProps={this.props.navigation.state.params} />
-        <Footer />
+        <PlanTabNavigator screenProps={screenProps} />
+        <Footer pricePerMonth={this.state.pricePerMonth} />
       </View>
     );
   }

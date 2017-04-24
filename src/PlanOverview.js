@@ -23,6 +23,8 @@ class CoverageItem extends Component {
     this.handlePress = this.handlePress.bind(this);
   }
 
+  handlePress() {}
+
   render() {
     return (
       <TouchableOpacity
@@ -52,12 +54,16 @@ export default class PlanOverview extends Component {
   constructor(props) {
     super(props);
     this.handleSelectStartDate = this.handleSelectStartDate.bind(this);
+    this.countPricePerMonth = this.countPricePerMonth.bind(this);
 
+    const plan = props.screenProps.plan;
     this.state = {
       renderContent: false,
       fadeAnim: new Animated.Value(0),
       topAnim: new Animated.Value(50),
-      startDate: new Date()
+      startDate: new Date(),
+      coverageAmount: plan.coverageAmounts[0],
+      coverageDuration: plan.coverageDurations[0].inWeeks
     };
   }
 
@@ -97,6 +103,14 @@ export default class PlanOverview extends Component {
     );
   }
 
+  countPricePerMonth() {
+    const { plan } = this.props.screenProps;
+    return (
+      plan.pricePerMonth +
+      plan.coverageAmounts.indexOf(this.state.coverageAmount)
+    );
+  }
+
   render() {
     if (!this.state.renderContent) {
       return <View style={styles.page} />;
@@ -125,7 +139,17 @@ export default class PlanOverview extends Component {
       today.getDate() === startDay &&
       today.getMonth() === startMonth &&
       today.getFullYear() === startYear;
-    const plan = this.props.screenProps;
+    const { plan, onPricePerMonthChange } = this.props.screenProps;
+
+    const coverageAmounts = plan.coverageAmounts.map(a => ({
+      label: Math.floor(a / 1000) + "k",
+      value: a
+    }));
+    const coverageDurations = plan.coverageDurations.map(d => ({
+      label: d.readable,
+      value: d.inWeeks
+    }));
+    const pricePerMonth = this.countPricePerMonth();
 
     const covered = [
       { title: "Health problems", icon: "ios-medkit" },
@@ -154,7 +178,9 @@ export default class PlanOverview extends Component {
             <View style={styles.priceContainer}>
               <View style={styles.price}>
                 <Text style={styles.priceCurrency}>$</Text>
-                <Text style={styles.priceAmount}>11</Text>
+                <Text style={styles.priceAmount}>
+                  {pricePerMonth}
+                </Text>
               </View>
               <Text style={styles.pricePerMonth}>PER MONTH</Text>
             </View>
@@ -195,18 +221,22 @@ export default class PlanOverview extends Component {
                 SLIDE TO ADJUST THE AMOUNT
               </Text>
               <RangeSlider
-                values={["5k", "10k", "20k", "40k", "100k"]}
-                onValueChange={val => console.log(val)}
+                values={coverageAmounts}
+                onValueChange={val =>
+                  this.setState({ coverageAmount: val.value }, () => {
+                    onPricePerMonthChange(this.countPricePerMonth());
+                  })}
               />
             </View>
-            <View style={styles.configContainer}>
+            <View style={[styles.configContainer, { borderBottomWidth: 0 }]}>
               <Text style={styles.configTitle}>COVERAGE DURATION</Text>
               <Text style={styles.configSubtitle}>
                 SLIDE TO ADJUST THE DURATION
               </Text>
               <RangeSlider
-                values={["2w", "4w", "3m", "6m", "12m"]}
-                onValueChange={val => console.log(val)}
+                values={coverageDurations}
+                onValueChange={val =>
+                  this.setState({ coverageDuration: val.value })}
               />
             </View>
           </Animated.View>
