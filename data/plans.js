@@ -2,7 +2,7 @@ export default (plans = [
   {
     title: "Personal Accident",
     subtitle: "Up to $10,000",
-    iconName: "directions-car"
+    iconName: "directions-car",
   },
   {
     title: "Personal accident /w Weekly Indemnities",

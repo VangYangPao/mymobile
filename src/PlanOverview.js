@@ -11,10 +11,42 @@ import {
   Easing,
   ToastAndroid
 } from "react-native";
+import Ionicon from "react-native-vector-icons/Ionicons";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 import RangeSlider from "./RangeSlider";
 import colors from "./colors";
+
+class CoverageItem extends Component {
+  constructor(props) {
+    super(props);
+    this.handlePress = this.handlePress.bind(this);
+  }
+
+  render() {
+    return (
+      <TouchableOpacity
+        style={styles.coverageBtn}
+        activeOpacity={0.5}
+        onPress={this.handlePress}
+      >
+        <View style={styles.coverageItem}>
+          <View style={styles.coverageContainer}>
+            <Ionicon
+              name={this.props.icon}
+              size={30}
+              style={[
+                styles.coverageIcon,
+                !this.props.covered ? styles.notCovered : null
+              ]}
+            />
+          </View>
+          <Text style={styles.coverageTitle}>{this.props.title}</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  }
+}
 
 export default class PlanOverview extends Component {
   constructor(props) {
@@ -95,6 +127,15 @@ export default class PlanOverview extends Component {
       today.getFullYear() === startYear;
     const plan = this.props.screenProps;
 
+    const covered = [
+      { title: "Health problems", icon: "ios-medkit" },
+      { title: "Vehicle accidents", icon: "ios-car" }
+    ];
+    const notCovered = [
+      { title: "Flood", icon: "md-water" },
+      { title: "Vicious dogs", icon: "ios-paw" }
+    ];
+
     return (
       <View style={styles.page}>
         <ScrollView
@@ -135,7 +176,24 @@ export default class PlanOverview extends Component {
               </TouchableOpacity>
             </View>
             <View style={styles.configContainer}>
+              <Text style={styles.configTitle}>COVERAGE HIGHLIGHTS</Text>
+              <Text style={styles.configSubtitle}>
+                CLICK ICONS FOR MORE DETAILS
+              </Text>
+              <View style={styles.coverage}>
+                {covered.map(item => (
+                  <CoverageItem key={item.title} covered={true} {...item} />
+                ))}
+                {notCovered.map(item => (
+                  <CoverageItem key={item.title} covered={false} {...item} />
+                ))}
+              </View>
+            </View>
+            <View style={styles.configContainer}>
               <Text style={styles.configTitle}>COVERAGE AMOUNTS</Text>
+              <Text style={styles.configSubtitle}>
+                SLIDE TO ADJUST THE AMOUNT
+              </Text>
               <RangeSlider
                 values={["5k", "10k", "20k", "40k", "100k"]}
                 onValueChange={val => console.log(val)}
@@ -143,6 +201,9 @@ export default class PlanOverview extends Component {
             </View>
             <View style={styles.configContainer}>
               <Text style={styles.configTitle}>COVERAGE DURATION</Text>
+              <Text style={styles.configSubtitle}>
+                SLIDE TO ADJUST THE DURATION
+              </Text>
               <RangeSlider
                 values={["2w", "4w", "3m", "6m", "12m"]}
                 onValueChange={val => console.log(val)}
@@ -156,12 +217,44 @@ export default class PlanOverview extends Component {
 }
 
 const priceContainerSize = 150;
+const coverageContainerSize = 60;
 
 const styles = StyleSheet.create({
+  coverageBtn: {
+    flex: 0.25
+  },
+  notCovered: {
+    color: "#BDBDBD"
+  },
+  coverageTitle: {
+    textAlign: "center"
+  },
+  coverageIcon: {
+    color: "#616161"
+  },
+  coverageContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    height: coverageContainerSize,
+    width: coverageContainerSize,
+    borderRadius: coverageContainerSize / 2,
+    backgroundColor: "#F5F5F5"
+  },
+  coverageItem: {
+    alignItems: "center"
+  },
+  coverage: {
+    flexDirection: "row"
+  },
   configTitle: {
-    marginBottom: 20,
     color: colors.primaryText,
-    fontSize: 20
+    fontSize: 19,
+    fontWeight: "500"
+  },
+  configSubtitle: {
+    fontSize: 13,
+    marginTop: 5,
+    marginBottom: 20
   },
   configContainer: {
     flex: 1,
@@ -170,7 +263,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     paddingBottom: 15,
     borderBottomColor: colors.softBorderLine,
-    borderBottomWidth: 1.5,
+    borderBottomWidth: 1.5
   },
   startDate: {
     fontSize: 16,
@@ -202,7 +295,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     paddingBottom: 15,
     borderBottomColor: colors.softBorderLine,
-    borderBottomWidth: 1.5,
+    borderBottomWidth: 1.5
   },
   priceContainer: {
     alignSelf: "center",

@@ -1,5 +1,5 @@
 export default (COLORS = {
-  primaryOrange: "#F57C00",
+  primaryOrange: "#E47824",
   primaryText: "#424242",
   borderLine: "#BDBDBD",
   softBorderLine: "#EEEEEE"

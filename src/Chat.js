@@ -31,7 +31,7 @@ function transposePlansByTitle() {
 
 export default class ChatScreen extends Component {
   static navigationOptions = {
-    title: "Microassurance",
+    title: "microAssure",
     headerTitleStyle: {
       fontFamily: "Courgette"
     },

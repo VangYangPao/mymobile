@@ -75,6 +75,7 @@ const RCTRangeSlider = requireNativeComponent("RCTRangeSlider", RangeSlider, {
 
 const styles = StyleSheet.create({
   activeLabel: {
+    fontSize: 17,
     color: colors.primaryOrange
   },
   label: {
@@ -83,6 +84,7 @@ const styles = StyleSheet.create({
   },
   labels: {
     flexDirection: "row",
+    alignItems: 'center',
     justifyContent: "space-between",
     paddingLeft: BAR_WIDTH * SLOT_RADIUS_PERCENT,
     paddingRight: BAR_WIDTH * (SLOT_RADIUS_PERCENT - 0.035),
