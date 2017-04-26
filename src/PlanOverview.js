@@ -16,6 +16,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 
 import RangeSlider from "./RangeSlider";
 import colors from "./colors";
+import coverages from "../data/coverage";
 
 class CoverageItem extends Component {
   constructor(props) {
@@ -207,10 +208,10 @@ export default class PlanOverview extends Component {
               </Text>
               <View style={styles.coverage}>
                 {plan.covered.map(item => (
-                  <CoverageItem key={item.title} covered={true} {...item} />
+                  <CoverageItem key={item} covered={true} {...coverages[item]} />
                 ))}
                 {plan.notCovered.map(item => (
-                  <CoverageItem key={item.title} covered={false} {...item} />
+                  <CoverageItem key={item} covered={false} {...coverages[item]} />
                 ))}
               </View>
             </View>
@@ -237,9 +238,12 @@ export default class PlanOverview extends Component {
                 values={coverageDurations}
                 onGesture={this.handleRangeSliderGesture}
                 onValueChange={coverageDuration =>
-                  this.setState({ coverageDuration: coverageDuration.value }, () => {
-                    onPricePerMonthChange(this.countPricePerMonth());
-                  })}
+                  this.setState(
+                    { coverageDuration: coverageDuration.value },
+                    () => {
+                      onPricePerMonthChange(this.countPricePerMonth());
+                    }
+                  )}
               />
             </View>
           </Animated.View>
@@ -260,6 +264,7 @@ const styles = StyleSheet.create({
     color: "#BDBDBD"
   },
   coverageTitle: {
+    marginTop: 5,
     textAlign: "center"
   },
   coverageIcon: {

@@ -9,6 +9,7 @@ import {
 import Ionicon from "react-native-vector-icons/Ionicons";
 
 import colors from "./colors";
+import coverages from "../data/coverage";
 
 export default function coverageWrapper(covered) {
   const wrapper = props => {
@@ -24,7 +25,9 @@ export default function coverageWrapper(covered) {
 class Coverage extends Component {
   render() {
     const { plan, covered } = this.props.screenProps;
-    const items = covered ? plan.covered : plan.notCovered;
+    const itemTitles = covered ? plan.covered : plan.notCovered;
+    console.log(itemTitles);
+    const items = itemTitles.map(i => coverages[i]);
     return (
       <View style={styles.page}>
         <ScrollView
@@ -43,7 +46,11 @@ class Coverage extends Component {
                       lastIndex ? { borderBottomWidth: 0 } : null
                     ]}
                   >
-                    <Text>{item.title}</Text>
+                    <View style={styles.iconContainer}>
+                      <Ionicon name={item.icon} size={35} style={styles.icon} />
+                    </View>
+                    <Text style={styles.title}>{item.title.toUpperCase()}</Text>
+                    <Text style={styles.description}>{item.description}</Text>
                   </View>
                 );
               })}
@@ -55,8 +62,32 @@ class Coverage extends Component {
   }
 }
 
+const containerSize = 75;
+
 const styles = StyleSheet.create({
+  description: {
+    fontSize: 16,
+    textAlign: "center"
+  },
+  title: {
+    marginTop: 10,
+    marginBottom: 10,
+    fontSize: 18,
+    color: colors.primaryText
+  },
+  icon: {
+    color: colors.primaryText
+  },
+  iconContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    height: containerSize,
+    width: containerSize,
+    borderRadius: containerSize / 2,
+    backgroundColor: colors.softBorderLine
+  },
   item: {
+    alignItems: "center",
     borderBottomWidth: 1.5,
     borderBottomColor: colors.softBorderLine,
     paddingVertical: 15

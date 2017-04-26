@@ -6,14 +6,8 @@ export default (plans = [
     pricePerMonth: 8,
     coverageAmounts: [5000, 10000, 20000, 40000, 100000],
     coverageDurations: ["1m", "2m", "3m", "6m", "12m"],
-    covered: [
-      { title: "Health problems", icon: "ios-medkit" },
-      { title: "Vehicle accidents", icon: "ios-car" }
-    ],
-    notCovered: [
-      { title: "Flood", icon: "md-water" },
-      { title: "Vicious dogs", icon: "ios-paw" }
-    ]
+    covered: ["Health problems", "Vehicle accidents"],
+    notCovered: ["Flood", "Family"]
   },
   {
     title: "Personal accident /w Weekly Indemnities",
@@ -22,14 +16,8 @@ export default (plans = [
     pricePerMonth: 9,
     coverageAmounts: [5000, 10000, 20000, 40000, 100000],
     coverageDurations: ["1m", "2m", "3m", "6m", "12m"],
-    covered: [
-      { title: "Health problems", icon: "ios-medkit" },
-      { title: "Vehicle accidents", icon: "ios-car" }
-    ],
-    notCovered: [
-      { title: "Flood", icon: "md-water" },
-      { title: "Vicious dogs", icon: "ios-paw" }
-    ]
+    covered: ["Health problems", "Vehicle accidents"],
+    notCovered: ["Flood", "Family"]
   },
   {
     title: "Personal accident /w Medical Reimbursement",
@@ -38,14 +26,8 @@ export default (plans = [
     pricePerMonth: 9,
     coverageAmounts: [5000, 10000, 20000, 40000, 100000],
     coverageDurations: ["1m", "2m", "3m", "6m", "12m"],
-    covered: [
-      { title: "Health problems", icon: "ios-medkit" },
-      { title: "Vehicle accidents", icon: "ios-car" }
-    ],
-    notCovered: [
-      { title: "Flood", icon: "md-water" },
-      { title: "Vicious dogs", icon: "ios-paw" }
-    ]
+    covered: ["Health problems", "Vehicle accidents"],
+    notCovered: ["Flood", "Family"]
   },
   {
     title: "Snatch theft",
@@ -54,13 +36,7 @@ export default (plans = [
     pricePerMonth: 10,
     coverageAmounts: [2000],
     coverageDurations: ["1m", "2m", "3m", "6m", "12m"],
-    covered: [
-      { title: "Health problems", icon: "ios-medkit" },
-      { title: "Vehicle accidents", icon: "ios-car" }
-    ],
-    notCovered: [
-      { title: "Flood", icon: "md-water" },
-      { title: "Vicious dogs", icon: "ios-paw" }
-    ]
+    covered: ["Health problems", "Vehicle accidents"],
+    notCovered: ["Flood", "Family"]
   }
 ]);
