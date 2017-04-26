@@ -12,7 +12,11 @@ import {
   View,
   TouchableOpacity
 } from "react-native";
-import { DrawerNavigator, StackNavigator } from "react-navigation";
+import {
+  DrawerNavigator,
+  StackNavigator,
+  NavigationActions
+} from "react-navigation";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 import ChatScreen from "./src/Chat";
@@ -46,7 +50,22 @@ const BuyStackNavigator = StackNavigator({
   },
   Plan: {
     screen: PlanScreen,
-    navigationOptions: renderNavigation
+    navigationOptions: ({ navigation }) => ({
+      headerTitleStyle: styles.headerTitle,
+      headerLeft: (
+        <TouchableOpacity
+          onPress={() => {
+            navigation.dispatch(NavigationActions.back());
+          }}
+        >
+          <Icon
+            name="arrow-back"
+            size={MENU_ICON_SIZE}
+            style={styles.headerMenuIcon}
+          />
+        </TouchableOpacity>
+      )
+    })
   }
 });
 
