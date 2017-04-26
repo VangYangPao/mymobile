@@ -8,20 +8,38 @@ class ValidationResult {
 function validateEmail(email) {
   var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   const isValid = re.test(email);
-  return ValidationResult(isValid, isValid || "Please enter a valid email: hello@microassure.com")
+  return new ValidationResult(
+    isValid,
+    isValid || "Please enter a valid email, e.g. hello@microassure.com"
+  );
 }
 
 function notEmptyString(str) {
-  const isValid = !(/^\s*$/.test(str));
-  return ValidationResult(isValid, isValid || "You didn't type anything, please enter again.")
+  const isValid = !/^\s*$/.test(str);
+  return new ValidationResult(
+    isValid,
+    isValid || "You didn't type anything, please enter again."
+  );
 }
 
-export const TypeValidators = {
+const TypeValidators = {
   email: validateEmail,
-  string: notEmptyString,
+  string: notEmptyString
 };
 
-export (questions = {
+export function validateAnswer(question, answer) {
+  const { responseType } = question;
+  const responseTypes = [].concat(responseType);
+  var validateFunc;
+  for (var i = 0; i < responseTypes.length; i++) {
+    validateFunc = TypeValidators[responseTypes[i]];
+    response = validateFunc(answer);
+    if (!response.isValid) return response;
+  }
+  return response;
+}
+
+export const QUESTION_SETS = {
   buy: [
     {
       question: "Let's get started. What's your full name?",
@@ -29,14 +47,14 @@ export (questions = {
       id: "name"
     },
     {
-      question: "Hi {}, what's your ID number?",
+      question: "Hi <%= name %>, what's your NRIC?",
       responseType: "string",
       id: "idNumber"
     },
     {
-      question: "What's your email address?",
+      question: "Thanks, what email address can we contact you at?",
       responseType: ["string", "email"],
-      id: "email",
+      id: "email"
     },
     {
       question: "How about your emergency email address?",
@@ -86,4 +104,4 @@ export (questions = {
       id: "image"
     }
   ]
-});
+};

@@ -1,3 +1,4 @@
+import uuid from "uuid";
 import React, { Component } from "react";
 import { Image, StyleSheet, TouchableOpacity, View, Text } from "react-native";
 import {
@@ -12,17 +13,19 @@ import {
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Spinner from "react-native-spinkit";
 import Sound from "react-native-sound";
+import { template } from "lodash";
 
 import Plans from "./Plans";
 import colors from "./colors";
 import PLANS from "../data/plans";
+import { validateAnswer, QUESTION_SETS } from "../data/questions";
 
 // Enable playback in silence mode (iOS only)
 Sound.setCategory("Playback");
 
 const IMAGE_URL = "https://www.drive.ai/images/team/Carol.png";
 const FIRST_MSG_LOAD_TIME = 500;
-const PLANS_FADE_IN_TIME = 200;
+const PLANS_FADE_IN_TIME = 400;
 
 const AGENT_USER_ID = 0;
 const CUSTOMER_USER_ID = 1;
@@ -42,8 +45,9 @@ function transposePlansByTitle() {
 
 export default function ChatScreenWrapper(questionSet) {
   const wrapper = props => {
-    const isQuestions = !!props.navigation.state.params;
-    isStartScreen = !isQuestions;
+    const questionSetParam = props.navigation.state.params;
+    const isStartScreen = !questionSetParam;
+    questionSet = isStartScreen ? questionSet : questionSetParam;
     return (
       <ChatScreen
         isStartScreen={isStartScreen}
@@ -67,11 +71,15 @@ class ChatScreen extends Component {
     super(props);
     this.state = {
       messages: [],
-      answering: false,
-      currentQuestionIndex: 0
+      answering: true,
+      currentQuestionIndex: -1,
+      answers: {}
     };
 
-    this.handleSend = this.handleSend.bind(this);
+    if (props.questionSet) {
+      this.questions = QUESTION_SETS[props.questionSet];
+    }
+
     this.renderMessage = this.renderMessage.bind(this);
     this.renderBubble = this.renderBubble.bind(this);
     this.renderMessageText = this.renderMessageText.bind(this);
@@ -79,8 +87,21 @@ class ChatScreen extends Component {
     this.renderComposer = this.renderComposer.bind(this);
     this.renderSend = this.renderSend.bind(this);
 
+    this.handleUserSend = this.handleUserSend.bind(this);
+    this.handleAgentSend = this.handleAgentSend.bind(this);
     this.handleSelectPlan = this.handleSelectPlan.bind(this);
-    this.incomingPopSound = new Sound(
+    this.renderStartScreenMessages = this.renderStartScreenMessages.bind(this);
+    this.askNextQuestion = this.askNextQuestion.bind(this);
+    this.reaskQuestion = this.reaskQuestion.bind(this);
+    this.sendNewMessage = this.sendNewMessage.bind(this);
+
+    this.concatMessage = message => {
+      return prevState => {
+        return { messages: prevState.messages.concat(message) };
+      };
+    };
+
+    this.newMessageSound = new Sound(
       "incoming.mp3",
       Sound.MAIN_BUNDLE,
       error => {
@@ -88,77 +109,130 @@ class ChatScreen extends Component {
           console.log("failed to load the sound", error);
           return;
         }
-        this.incomingPopSound.setVolume(0.75);
+        this.newMessageSound.setVolume(0.75);
       }
     );
-  }
 
-  componentDidMount() {
-    if (this.props.isStartScreen) {
-      this.setState({
-        messages: [
-          {
-            type: "loading",
-            _id: 0,
-            text: "loading",
-            createdAt: new Date(),
-            user: AGENT_USER
-          }
-        ]
+    this.playNewMessageSound = () => {
+      this.newMessageSound.play(success => {
+        if (success) {
+        } else {
+        }
       });
-
-      const renderPlans = () => {
-        this.setState(
-          prevState => {
-            const messages = prevState.messages.concat([
-              { type: "plans", _id: 1, user: AGENT_USER }
-            ]);
-            return { messages };
-          },
-          () => {
-            this.incomingPopSound.play(success => {
-              if (success) {
-              } else {
-              }
-            });
-          }
-        );
-      };
-
-      setTimeout(() => {
-        this.setState(
-          prevState => {
-            return {
-              messages: [
-                {
-                  type: "text",
-                  _id: 0,
-                  text: "Hi I'm Carol, please choose the insurance plan you're interested in. 😄",
-                  createdAt: new Date(),
-                  user: AGENT_USER
-                }
-              ]
-            };
-          },
-          () => setTimeout(renderPlans, PLANS_FADE_IN_TIME)
-        );
-      }, FIRST_MSG_LOAD_TIME);
-    } else {
-      // this.setState({});
-    }
+    };
   }
 
-  handleSend(messages = []) {
-    this.setState(prevState => {
-      return {
-        messages: prevState.messages.concat(messages)
-      };
+  renderStartScreenMessages() {
+    this.setState({
+      messages: [
+        {
+          type: "loading",
+          _id: 0,
+          text: "loading",
+          createdAt: new Date(),
+          user: AGENT_USER
+        }
+      ]
     });
+
+    const renderPlans = () => {
+      this.handleAgentSend({ type: "plans", _id: 1, user: AGENT_USER });
+    };
+
+    setTimeout(() => {
+      this.setState(
+        prevState => {
+          return {
+            messages: [
+              {
+                type: "text",
+                _id: 0,
+                text: "Hi I'm Carol, please choose the insurance plan you're interested in. 😄",
+                createdAt: new Date(),
+                user: AGENT_USER
+              }
+            ]
+          };
+        },
+        () => setTimeout(renderPlans, PLANS_FADE_IN_TIME)
+      );
+    }, FIRST_MSG_LOAD_TIME);
+  }
+
+  handleUserSend(messages) {
+    this.setState(this.concatMessage(messages), () => {
+      this.setState({ answering: false });
+    });
+  }
+
+  handleAgentSend(message) {
+    this.setState(this.concatMessage(message), this.playNewMessageSound);
   }
 
   handleSelectPlan(planTitle) {
     const plan = transposePlansByTitle()[planTitle];
     this.props.navigation.navigate("Plan", plan);
+  }
+
+  componentDidMount() {
+    if (this.props.isStartScreen) {
+      this.renderStartScreenMessages();
+    } else {
+      // trigger the initial componentDidUpdate
+      this.setState({ answering: false });
+    }
+  }
+
+  sendNewMessage(msgText) {
+    this.handleAgentSend({
+      _id: uuid.v4(),
+      type: "text",
+      text: msgText,
+      createdAt: new Date(),
+      user: AGENT_USER
+    });
+  }
+
+  reaskQuestion(errMessage) {
+    this.sendNewMessage(errMessage);
+    this.setState({ answering: true });
+  }
+
+  askNextQuestion() {
+    const currentQuestionIndex = this.state.currentQuestionIndex + 1;
+    console.log(this.state.answers)
+    const nextQuestion = template(
+      this.questions[currentQuestionIndex].question
+    )(this.state.answers);
+    this.sendNewMessage(nextQuestion);
+    this.setState({
+      currentQuestionIndex,
+      answering: true
+    });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.answering !== prevState.answering && !this.state.answering) {
+      const { messages, currentQuestionIndex } = this.state;
+
+      // skip validation for bootstrap step-0
+      if (messages.length === 0) {
+        this.askNextQuestion();
+      } else {
+        const lastMessage = messages[messages.length - 1];
+        const lastQuestion = this.questions[currentQuestionIndex];
+        const result = validateAnswer(lastQuestion, lastMessage.text.trim());
+
+        if (result.isValid) {
+          var answers = JSON.parse(JSON.stringify(this.state.answers));
+          answers[lastQuestion.id] = lastMessage.text;
+          this.setState({ answers }, this.askNextQuestion);
+        } else {
+          this.reaskQuestion(result.errMessage);
+          return;
+        }
+      }
+    }
   }
 
   renderBubble(props) {
@@ -183,6 +257,10 @@ class ChatScreen extends Component {
       <MessageText
         {...props}
         textStyle={{
+          left: StyleSheet.flatten(styles.messageTextLeft),
+          right: StyleSheet.flatten(styles.messageTextRight)
+        }}
+        linkStyle={{
           left: StyleSheet.flatten(styles.messageTextLeft),
           right: StyleSheet.flatten(styles.messageTextRight)
         }}
@@ -232,9 +310,9 @@ class ChatScreen extends Component {
       <View style={styles.container}>
         <GiftedChat
           messages={this.state.messages}
-          onSend={this.handleSend}
+          onSend={this.handleUserSend}
           user={{
-            _id: 1
+            _id: CUSTOMER_USER_ID
           }}
           onLongPress={() => {}}
           renderTime={() => {}}
@@ -262,12 +340,14 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primaryOrange
   },
   messageTextLeft: {
+    textDecorationLine: 'none',
     color: "white"
   },
   bubbleRight: {
     backgroundColor: "white"
   },
   messageTextRight: {
+    textDecorationLine: 'none',
     color: colors.primaryText
   },
   spinner: {

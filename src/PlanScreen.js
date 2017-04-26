@@ -98,7 +98,7 @@ export default class PlanScreen extends Component {
   }
 
   handlePurchase() {
-    this.props.navigation.navigate("Buy", true);
+    this.props.navigation.navigate("Buy", "buy");
   }
 
   handlePricePerMonthChange(pricePerMonth) {
