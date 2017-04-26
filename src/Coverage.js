@@ -26,7 +26,6 @@ class Coverage extends Component {
   render() {
     const { plan, covered } = this.props.screenProps;
     const itemTitles = covered ? plan.covered : plan.notCovered;
-    console.log(itemTitles);
     const items = itemTitles.map(i => coverages[i]);
     return (
       <View style={styles.page}>

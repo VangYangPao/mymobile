@@ -5,7 +5,7 @@ import {
   Message,
   Bubble,
   MessageText,
-  Composer
+  InputToolbar
 } from "react-native-gifted-chat";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Spinner from "react-native-spinkit";
@@ -32,6 +32,8 @@ function transposePlansByTitle() {
 
 export default function chatWrapper(start) {
   const wrapper = props => {
+    const isQuestions = !!props.navigation.state.params;
+    start = !isQuestions;
     return <ChatScreen isStartScreen={start} {...props} />;
   };
   wrapper.navigationOptions = ({ screenProps }) => ({
@@ -52,7 +54,7 @@ class ChatScreen extends Component {
     this.renderMessage = this.renderMessage.bind(this);
     this.renderBubble = this.renderBubble.bind(this);
     this.renderMessageText = this.renderMessageText.bind(this);
-    this.renderComposer = this.renderComposer.bind(this);
+    this.renderInputToolbar = this.renderInputToolbar.bind(this);
 
     this.handleSelectPlan = this.handleSelectPlan.bind(this);
     this.incomingPopSound = new Sound(
@@ -69,60 +71,62 @@ class ChatScreen extends Component {
   }
 
   componentWillMount() {
-    this.setState({
-      messages: [
-        {
-          type: "loading",
-          _id: 1,
-          text: "loading",
-          createdAt: new Date(Date.UTC(2016, 7, 30, 17, 20, 0)),
-          user: {
-            _id: 2,
-            name: "Carol",
-            avatar: IMAGE_URL
+    if (this.props.isStartScreen) {
+      this.setState({
+        messages: [
+          {
+            type: "loading",
+            _id: 1,
+            text: "loading",
+            createdAt: new Date(Date.UTC(2016, 7, 30, 17, 20, 0)),
+            user: {
+              _id: 2,
+              name: "Carol",
+              avatar: IMAGE_URL
+            }
           }
-        }
-      ]
-    });
-
-    const renderPlans = () => {
-      this.setState(
-        prevState => {
-          const messages = prevState.messages.concat([
-            { type: "plans", _id: 2, user: { _id: 2 } }
-          ]);
-          return { messages };
-        },
-        () => {
-          this.incomingPopSound.play(success => {
-            if (success) {
-            } else {
-            }
-          });
-        }
-      );
-    };
-
-    setTimeout(() => {
-      this.setState(prevState => {
-        setTimeout(renderPlans, PLANS_FADE_IN_TIME);
-        return {
-          messages: [
-            {
-              type: "text",
-              _id: 1,
-              text: "Hi I'm Carol, please choose the insurance plan you're interested in. 😄",
-              createdAt: new Date(Date.UTC(2016, 7, 30, 17, 20, 0)),
-              user: {
-                _id: 2,
-                name: "Carol",
-                avatar: IMAGE_URL
-              }
-            }
-          ]
-        };
+        ]
       });
-    }, FIRST_MSG_LOAD_TIME);
+
+      const renderPlans = () => {
+        this.setState(
+          prevState => {
+            const messages = prevState.messages.concat([
+              { type: "plans", _id: 2, user: { _id: 2 } }
+            ]);
+            return { messages };
+          },
+          () => {
+            this.incomingPopSound.play(success => {
+              if (success) {
+              } else {
+              }
+            });
+          }
+        );
+      };
+
+      setTimeout(() => {
+        this.setState(prevState => {
+          setTimeout(renderPlans, PLANS_FADE_IN_TIME);
+          return {
+            messages: [
+              {
+                type: "text",
+                _id: 1,
+                text: "Hi I'm Carol, please choose the insurance plan you're interested in. 😄",
+                createdAt: new Date(Date.UTC(2016, 7, 30, 17, 20, 0)),
+                user: {
+                  _id: 2,
+                  name: "Carol",
+                  avatar: IMAGE_URL
+                }
+              }
+            ]
+          };
+        });
+      }, FIRST_MSG_LOAD_TIME);
+    }
   }
 
   onSend(messages = []) {
@@ -179,9 +183,9 @@ class ChatScreen extends Component {
     }
   }
 
-  renderComposer(props) {
+  renderInputToolbar(props) {
     if (this.props.isStartScreen) return null;
-    return <Composer {...props} />;
+    return <InputToolbar {...props} />;
   }
 
   render() {
@@ -199,7 +203,7 @@ class ChatScreen extends Component {
           renderBubble={this.renderBubble}
           renderMessage={this.renderMessage}
           renderMessageText={this.renderMessageText}
-          renderComposer={this.renderComposer}
+          renderInputToolbar={this.renderInputToolbar}
         />
       </View>
     );

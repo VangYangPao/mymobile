@@ -28,43 +28,74 @@ const MENU_ICON_SIZE = 30;
 const MENU_ICON_PADDING_LEFT = 15;
 const MENU_ICON_PADDING_RIGHT = 10;
 
-function renderNavigation({ navigation }) {
-  return {
-    headerTitleStyle: styles.headerTitle,
-    headerLeft: (
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate("DrawerOpen");
-        }}
-      >
-        <Icon name="menu" size={MENU_ICON_SIZE} style={styles.headerMenuIcon} />
-      </TouchableOpacity>
-    )
-  };
+const styles = StyleSheet.create({
+  headerTitle: {
+    // fontWeight: "400",
+    // fontSize: 20,
+    color: colors.primaryText,
+    alignSelf: "center",
+    paddingRight: MENU_ICON_PADDING_LEFT +
+      MENU_ICON_SIZE +
+      MENU_ICON_PADDING_RIGHT
+  },
+  headerMenuIcon: {
+    paddingLeft: MENU_ICON_PADDING_LEFT,
+    paddingRight: MENU_ICON_PADDING_RIGHT,
+    color: colors.primaryText
+  }
+});
+
+function renderBackButton(navigation) {
+  return (
+    <TouchableOpacity
+      onPress={() => {
+        navigation.dispatch(NavigationActions.back());
+      }}
+    >
+      <Icon
+        name="arrow-back"
+        size={MENU_ICON_SIZE}
+        style={styles.headerMenuIcon}
+      />
+    </TouchableOpacity>
+  );
 }
 
 const BuyStackNavigator = StackNavigator({
   Buy: {
     screen: ChatScreenWrapper(true),
-    navigationOptions: renderNavigation
+    navigationOptions: ({ navigation }) => {
+      const isQuestions = navigation.state.params;
+      var button;
+
+      if (!isQuestions) {
+        button = (
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("DrawerOpen");
+            }}
+          >
+            <Icon
+              name="menu"
+              size={MENU_ICON_SIZE}
+              style={styles.headerMenuIcon}
+            />
+          </TouchableOpacity>
+        );
+      } else {
+        button = renderBackButton(navigation);
+      }
+      return {
+        headerTitleStyle: styles.headerTitle,
+        headerLeft: button
+      };
+    }
   },
   Plan: {
     screen: PlanScreen,
     navigationOptions: ({ navigation }) => ({
       headerTitleStyle: styles.headerTitle,
-      headerLeft: (
-        <TouchableOpacity
-          onPress={() => {
-            navigation.dispatch(NavigationActions.back());
-          }}
-        >
-          <Icon
-            name="arrow-back"
-            size={MENU_ICON_SIZE}
-            style={styles.headerMenuIcon}
-          />
-        </TouchableOpacity>
-      )
+      headerLeft: renderBackButton(navigation)
     })
   }
 });
@@ -97,22 +128,5 @@ export default (Microsurance = StackNavigator(
   },
   { headerMode: "none" }
 ));
-
-const styles = StyleSheet.create({
-  headerTitle: {
-    // fontWeight: "400",
-    // fontSize: 20,
-    color: colors.primaryText,
-    alignSelf: "center",
-    paddingRight: MENU_ICON_PADDING_LEFT +
-      MENU_ICON_SIZE +
-      MENU_ICON_PADDING_RIGHT
-  },
-  headerMenuIcon: {
-    paddingLeft: MENU_ICON_PADDING_LEFT,
-    paddingRight: MENU_ICON_PADDING_RIGHT,
-    color: colors.primaryText
-  }
-});
 
 AppRegistry.registerComponent("Microsurance", () => Microsurance);

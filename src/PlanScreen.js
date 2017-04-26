@@ -66,7 +66,7 @@ class Footer extends Component {
           <TouchableOpacity
             style={[styles.footerBtn, styles.footerPurchase]}
             activeOpacity={0.6}
-            onPress={() => {}}
+            onPress={this.props.onPurchase}
           >
             <View style={styles.footerBtn}>
               <Text style={[styles.footerBtnText, styles.footerPurchaseText]}>
@@ -93,7 +93,12 @@ export default class PlanScreen extends Component {
     super(props);
     const { pricePerMonth } = props.navigation.state.params;
     this.handlePricePerMonthChange = this.handlePricePerMonthChange.bind(this);
+    this.handlePurchase = this.handlePurchase.bind(this);
     this.state = { pricePerMonth };
+  }
+
+  handlePurchase() {
+    this.props.navigation.navigate("Buy", true);
   }
 
   handlePricePerMonthChange(pricePerMonth) {
@@ -108,7 +113,10 @@ export default class PlanScreen extends Component {
     return (
       <View style={styles.container}>
         <PlanTabNavigator screenProps={screenProps} />
-        <Footer pricePerMonth={this.state.pricePerMonth} />
+        <Footer
+          onPurchase={this.handlePurchase}
+          pricePerMonth={this.state.pricePerMonth}
+        />
       </View>
     );
   }
