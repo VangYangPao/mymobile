@@ -5,7 +5,9 @@ import {
   Message,
   Bubble,
   MessageText,
-  InputToolbar
+  InputToolbar,
+  Composer,
+  Send
 } from "react-native-gifted-chat";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Spinner from "react-native-spinkit";
@@ -22,6 +24,14 @@ const IMAGE_URL = "https://www.drive.ai/images/team/Carol.png";
 const FIRST_MSG_LOAD_TIME = 500;
 const PLANS_FADE_IN_TIME = 200;
 
+const AGENT_USER_ID = 0;
+const CUSTOMER_USER_ID = 1;
+
+const AGENT_USER = {
+  _id: AGENT_USER_ID,
+  name: "Carol",
+  avatar: IMAGE_URL
+};
 function transposePlansByTitle() {
   var planDict = {};
   PLANS.forEach(plan => {
@@ -30,11 +40,17 @@ function transposePlansByTitle() {
   return planDict;
 }
 
-export default function chatWrapper(start) {
+export default function ChatScreenWrapper(questionSet) {
   const wrapper = props => {
     const isQuestions = !!props.navigation.state.params;
-    start = !isQuestions;
-    return <ChatScreen isStartScreen={start} {...props} />;
+    isStartScreen = !isQuestions;
+    return (
+      <ChatScreen
+        isStartScreen={isStartScreen}
+        questionSet={questionSet}
+        {...props}
+      />
+    );
   };
   wrapper.navigationOptions = ({ screenProps }) => ({
     title: "microAssure",
@@ -49,12 +65,19 @@ export default function chatWrapper(start) {
 class ChatScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = { messages: [] };
-    this.onSend = this.onSend.bind(this);
+    this.state = {
+      messages: [],
+      answering: false,
+      currentQuestionIndex: 0
+    };
+
+    this.handleSend = this.handleSend.bind(this);
     this.renderMessage = this.renderMessage.bind(this);
     this.renderBubble = this.renderBubble.bind(this);
     this.renderMessageText = this.renderMessageText.bind(this);
     this.renderInputToolbar = this.renderInputToolbar.bind(this);
+    this.renderComposer = this.renderComposer.bind(this);
+    this.renderSend = this.renderSend.bind(this);
 
     this.handleSelectPlan = this.handleSelectPlan.bind(this);
     this.incomingPopSound = new Sound(
@@ -70,20 +93,16 @@ class ChatScreen extends Component {
     );
   }
 
-  componentWillMount() {
+  componentDidMount() {
     if (this.props.isStartScreen) {
       this.setState({
         messages: [
           {
             type: "loading",
-            _id: 1,
+            _id: 0,
             text: "loading",
-            createdAt: new Date(Date.UTC(2016, 7, 30, 17, 20, 0)),
-            user: {
-              _id: 2,
-              name: "Carol",
-              avatar: IMAGE_URL
-            }
+            createdAt: new Date(),
+            user: AGENT_USER
           }
         ]
       });
@@ -92,7 +111,7 @@ class ChatScreen extends Component {
         this.setState(
           prevState => {
             const messages = prevState.messages.concat([
-              { type: "plans", _id: 2, user: { _id: 2 } }
+              { type: "plans", _id: 1, user: AGENT_USER }
             ]);
             return { messages };
           },
@@ -107,29 +126,29 @@ class ChatScreen extends Component {
       };
 
       setTimeout(() => {
-        this.setState(prevState => {
-          setTimeout(renderPlans, PLANS_FADE_IN_TIME);
-          return {
-            messages: [
-              {
-                type: "text",
-                _id: 1,
-                text: "Hi I'm Carol, please choose the insurance plan you're interested in. 😄",
-                createdAt: new Date(Date.UTC(2016, 7, 30, 17, 20, 0)),
-                user: {
-                  _id: 2,
-                  name: "Carol",
-                  avatar: IMAGE_URL
+        this.setState(
+          prevState => {
+            return {
+              messages: [
+                {
+                  type: "text",
+                  _id: 0,
+                  text: "Hi I'm Carol, please choose the insurance plan you're interested in. 😄",
+                  createdAt: new Date(),
+                  user: AGENT_USER
                 }
-              }
-            ]
-          };
-        });
+              ]
+            };
+          },
+          () => setTimeout(renderPlans, PLANS_FADE_IN_TIME)
+        );
       }, FIRST_MSG_LOAD_TIME);
+    } else {
+      // this.setState({});
     }
   }
 
-  onSend(messages = []) {
+  handleSend(messages = []) {
     this.setState(prevState => {
       return {
         messages: prevState.messages.concat(messages)
@@ -185,7 +204,27 @@ class ChatScreen extends Component {
 
   renderInputToolbar(props) {
     if (this.props.isStartScreen) return null;
-    return <InputToolbar {...props} />;
+    return (
+      <InputToolbar
+        {...props}
+        containerStyle={
+          !this.state.answering
+            ? { backgroundColor: colors.softBorderLine }
+            : null
+        }
+      />
+    );
+  }
+
+  renderComposer(props) {
+    if (!this.state.answering) {
+      return <Composer {...props} textInputProps={{ editable: false }} />;
+    }
+    return <Composer {...props} />;
+  }
+
+  renderSend(props) {
+    return <Send {...props} textStyle={styles.sendButton} />;
   }
 
   render() {
@@ -193,7 +232,7 @@ class ChatScreen extends Component {
       <View style={styles.container}>
         <GiftedChat
           messages={this.state.messages}
-          onSend={this.onSend}
+          onSend={this.handleSend}
           user={{
             _id: 1
           }}
@@ -204,6 +243,8 @@ class ChatScreen extends Component {
           renderMessage={this.renderMessage}
           renderMessageText={this.renderMessageText}
           renderInputToolbar={this.renderInputToolbar}
+          renderComposer={this.renderComposer}
+          renderSend={this.renderSend}
         />
       </View>
     );
@@ -211,6 +252,12 @@ class ChatScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+  textInput: {
+    backgroundColor: colors.softBorderLine
+  },
+  sendButton: {
+    color: colors.primaryOrange
+  },
   bubbleLeft: {
     backgroundColor: colors.primaryOrange
   },

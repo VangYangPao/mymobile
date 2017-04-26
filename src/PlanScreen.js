@@ -83,7 +83,7 @@ class Footer extends Component {
 
 export default class PlanScreen extends Component {
   static navigationOptions = ({ navigation }) => {
-    const options = ChatScreenWrapper(true).navigationOptions;
+    const options = ChatScreenWrapper(null).navigationOptions;
     options.title = "microAssure";
     options.headerStyle = styles.header;
     return options;
