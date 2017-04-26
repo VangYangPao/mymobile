@@ -65,7 +65,7 @@ export default class PlanOverview extends Component {
       topAnim: new Animated.Value(50),
       startDate: new Date(),
       coverageAmount: plan.coverageAmounts[0],
-      coverageDuration: plan.coverageDurations[0].inWeeks
+      coverageDuration: plan.coverageDurations[0]
     };
   }
 
@@ -113,7 +113,8 @@ export default class PlanOverview extends Component {
     const { plan } = this.props.screenProps;
     return (
       plan.pricePerMonth +
-      plan.coverageAmounts.indexOf(this.state.coverageAmount)
+      plan.coverageAmounts.indexOf(this.state.coverageAmount) -
+      plan.coverageDurations.indexOf(this.state.coverageDuration)
     );
   }
 
@@ -152,19 +153,10 @@ export default class PlanOverview extends Component {
       value: a
     }));
     const coverageDurations = plan.coverageDurations.map(d => ({
-      label: d.readable,
-      value: d.inWeeks
+      label: d,
+      value: d
     }));
     const pricePerMonth = this.countPricePerMonth();
-
-    const covered = [
-      { title: "Health problems", icon: "ios-medkit" },
-      { title: "Vehicle accidents", icon: "ios-car" }
-    ];
-    const notCovered = [
-      { title: "Flood", icon: "md-water" },
-      { title: "Vicious dogs", icon: "ios-paw" }
-    ];
 
     return (
       <View style={styles.page}>
@@ -214,10 +206,10 @@ export default class PlanOverview extends Component {
                 CLICK ICONS FOR MORE DETAILS
               </Text>
               <View style={styles.coverage}>
-                {covered.map(item => (
+                {plan.covered.map(item => (
                   <CoverageItem key={item.title} covered={true} {...item} />
                 ))}
-                {notCovered.map(item => (
+                {plan.notCovered.map(item => (
                   <CoverageItem key={item.title} covered={false} {...item} />
                 ))}
               </View>
@@ -244,8 +236,10 @@ export default class PlanOverview extends Component {
               <RangeSlider
                 values={coverageDurations}
                 onGesture={this.handleRangeSliderGesture}
-                onValueChange={val =>
-                  this.setState({ coverageDuration: val.value })}
+                onValueChange={coverageDuration =>
+                  this.setState({ coverageDuration: coverageDuration.value }, () => {
+                    onPricePerMonthChange(this.countPricePerMonth());
+                  })}
               />
             </View>
           </Animated.View>

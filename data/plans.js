@@ -5,12 +5,14 @@ export default (plans = [
     iconName: "directions-car",
     pricePerMonth: 8,
     coverageAmounts: [5000, 10000, 20000, 40000, 100000],
-    coverageDurations: [
-      { inWeeks: 2, readable: "2w" },
-      { inWeeks: 4, readable: "4w" },
-      { inWeeks: 12, readable: "3m" },
-      { inWeeks: 24, readable: "6m" },
-      { inWeeks: 48, readable: "12m" }
+    coverageDurations: ["1m", "2m", "3m", "6m", "12m"],
+    covered: [
+      { title: "Health problems", icon: "ios-medkit" },
+      { title: "Vehicle accidents", icon: "ios-car" }
+    ],
+    notCovered: [
+      { title: "Flood", icon: "md-water" },
+      { title: "Vicious dogs", icon: "ios-paw" }
     ]
   },
   {
@@ -19,12 +21,30 @@ export default (plans = [
     iconName: "healing",
     pricePerMonth: 9,
     coverageAmounts: [5000, 10000, 20000, 40000, 100000],
-    coverageDurations: [
-      { inWeeks: 2, readable: "2w" },
-      { inWeeks: 4, readable: "4w" },
-      { inWeeks: 12, readable: "3m" },
-      { inWeeks: 24, readable: "6m" },
-      { inWeeks: 48, readable: "12m" }
+    coverageDurations: ["1m", "2m", "3m", "6m", "12m"],
+    covered: [
+      { title: "Health problems", icon: "ios-medkit" },
+      { title: "Vehicle accidents", icon: "ios-car" }
+    ],
+    notCovered: [
+      { title: "Flood", icon: "md-water" },
+      { title: "Vicious dogs", icon: "ios-paw" }
+    ]
+  },
+  {
+    title: "Personal accident /w Medical Reimbursement",
+    subtitle: "Up to $10,000",
+    iconName: "local-hospital",
+    pricePerMonth: 9,
+    coverageAmounts: [5000, 10000, 20000, 40000, 100000],
+    coverageDurations: ["1m", "2m", "3m", "6m", "12m"],
+    covered: [
+      { title: "Health problems", icon: "ios-medkit" },
+      { title: "Vehicle accidents", icon: "ios-car" }
+    ],
+    notCovered: [
+      { title: "Flood", icon: "md-water" },
+      { title: "Vicious dogs", icon: "ios-paw" }
     ]
   },
   {
@@ -32,13 +52,15 @@ export default (plans = [
     subtitle: "Up to $10,000",
     iconName: "account-balance-wallet",
     pricePerMonth: 10,
-    coverageAmounts: [5000, 10000, 20000, 40000, 100000],
-    coverageDurations: [
-      { inWeeks: 2, readable: "2w" },
-      { inWeeks: 4, readable: "4w" },
-      { inWeeks: 12, readable: "3m" },
-      { inWeeks: 24, readable: "6m" },
-      { inWeeks: 48, readable: "12m" }
+    coverageAmounts: [2000],
+    coverageDurations: ["1m", "2m", "3m", "6m", "12m"],
+    covered: [
+      { title: "Health problems", icon: "ios-medkit" },
+      { title: "Vehicle accidents", icon: "ios-car" }
+    ],
+    notCovered: [
+      { title: "Flood", icon: "md-water" },
+      { title: "Vicious dogs", icon: "ios-paw" }
     ]
   }
 ]);

@@ -6,29 +6,8 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import ChatScreen from "./Chat";
 import PlanOverview from "./PlanOverview";
 import PLANS from "../data/plans";
+import CoverageWrapper from "./Coverage";
 import colors from "./colors";
-
-class OverviewScreen extends Component {
-  render() {
-    return <View><Text>test</Text></View>;
-  }
-}
-
-class CoveredScreen extends Component {
-  render() {
-    return <View><Text>test</Text></View>;
-  }
-}
-
-class NotCoveredScreen extends Component {
-  static navigationOptions = {
-    title: "Not Covered"
-  };
-
-  render() {
-    return <View><Text>test</Text></View>;
-  }
-}
 
 const tabStyles = {
   tabIndicator: {
@@ -50,10 +29,10 @@ const PlanTabNavigator = TabNavigator(
       screen: PlanOverview
     },
     Covered: {
-      screen: CoveredScreen
+      screen: CoverageWrapper(true)
     },
     NotCovered: {
-      screen: NotCoveredScreen
+      screen: CoverageWrapper(false)
     }
   },
   {
