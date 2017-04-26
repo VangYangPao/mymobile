@@ -12,13 +12,35 @@ import Sound from "react-native-sound";
 
 import Plans from "./Plans";
 import colors from "./colors";
+import PLANS from "../data/plans";
 
 // Enable playback in silence mode (iOS only)
 Sound.setCategory("Playback");
 
 const IMAGE_URL = "https://www.drive.ai/images/team/Carol.png";
+const FIRST_MSG_LOAD_TIME = 500;
+const PLANS_FADE_IN_TIME = 200;
+
+function transposePlansByTitle() {
+  var planDict = {};
+  PLANS.forEach(plan => {
+    planDict[plan.title] = plan;
+  });
+  return planDict;
+}
 
 export default class ChatScreen extends Component {
+  static navigationOptions = {
+    title: "microAssure",
+    headerTitleStyle: {
+      fontFamily: "Courgette"
+    },
+    drawerLabel: "Buy Policies",
+    drawerIcon: ({ tintColor }) => (
+      <Icon name="message" size={22} color={tintColor} />
+    )
+  };
+
   constructor(props) {
     super(props);
     this.state = { messages: [] };
@@ -38,24 +60,6 @@ export default class ChatScreen extends Component {
         this.incomingPopSound.setVolume(0.75);
       }
     );
-  }
-
-  componentWillUpdate(nextProps, nextState) {
-    const { messages } = nextState;
-    const lastMessage = messages[messages.length - 1];
-    console.log(lastMessage);
-    if (
-      lastMessage.user._id === 2 &&
-      (lastMessage.type === "text" || lastMessage.type === "plans")
-    ) {
-      this.incomingPopSound.play(success => {
-        if (success) {
-          console.log("successfully finished playing");
-        } else {
-          console.log("playback failed due to audio decoding errors");
-        }
-      });
-    }
   }
 
   componentWillMount() {
@@ -81,12 +85,18 @@ export default class ChatScreen extends Component {
           { type: "plans", _id: 2, user: { _id: 2 } }
         ]);
         return { messages };
+      }, () => {
+        this.incomingPopSound.play(success => {
+          if (success) {
+          } else {
+          }
+        });
       });
     };
 
     setTimeout(() => {
       this.setState(prevState => {
-        setTimeout(renderPlans, 300);
+        setTimeout(renderPlans, PLANS_FADE_IN_TIME);
         return {
           messages: [
             {
@@ -103,7 +113,7 @@ export default class ChatScreen extends Component {
           ]
         };
       });
-    }, 1500);
+    }, FIRST_MSG_LOAD_TIME);
   }
 
   onSend(messages = []) {
@@ -115,7 +125,8 @@ export default class ChatScreen extends Component {
   }
 
   handleSelectPlan(planTitle) {
-    console.log(planTitle);
+    const plan = transposePlansByTitle()[planTitle];
+    this.props.navigation.navigate("Plan", plan);
   }
 
   renderBubble(props) {
@@ -179,8 +190,6 @@ export default class ChatScreen extends Component {
     );
   }
 }
-
-const imageDim = 150;
 
 const styles = StyleSheet.create({
   bubbleLeft: {

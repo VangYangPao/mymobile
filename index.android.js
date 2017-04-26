@@ -12,36 +12,56 @@ import {
   View,
   TouchableOpacity
 } from "react-native";
-import { DrawerNavigator, StackNavigator } from "react-navigation";
+import {
+  DrawerNavigator,
+  StackNavigator,
+  NavigationActions
+} from "react-navigation";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 import ChatScreen from "./src/Chat";
+import PlanScreen from "./src/PlanScreen";
 import colors from "./src/colors";
 import DrawerContent from "./src/DrawerContent";
+
+const MENU_ICON_SIZE = 30;
+const MENU_ICON_PADDING_LEFT = 15;
+const MENU_ICON_PADDING_RIGHT = 10;
+
+function renderNavigation({ navigation }) {
+  return {
+    headerTitleStyle: styles.headerTitle,
+    headerLeft: (
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate("DrawerOpen");
+        }}
+      >
+        <Icon name="menu" size={MENU_ICON_SIZE} style={styles.headerMenuIcon} />
+      </TouchableOpacity>
+    )
+  };
+}
 
 const BuyStackNavigator = StackNavigator({
   Buy: {
     screen: ChatScreen,
-    navigationOptions: navigationProps => ({
-      title: "Buy Policies",
-      drawerLabel: "Buy Policies",
-      drawerIcon: ({ tintColor }) => (
-        <Icon name="message" size={22} color={tintColor} />
-      ),
-      headerTitleStyle: {
-        color: colors.primaryText
-      },
+    navigationOptions: renderNavigation
+  },
+  Plan: {
+    screen: PlanScreen,
+    navigationOptions: ({ navigation }) => ({
+      headerTitleStyle: styles.headerTitle,
       headerLeft: (
         <TouchableOpacity
           onPress={() => {
-            navigationProps.navigation.navigate("DrawerOpen");
+            navigation.dispatch(NavigationActions.back());
           }}
         >
           <Icon
-            name="menu"
-            size={25}
-            style={{ padding: 10, paddingLeft: 15 }}
-            color={colors.primaryOrange}
+            name="arrow-back"
+            size={MENU_ICON_SIZE}
+            style={styles.headerMenuIcon}
           />
         </TouchableOpacity>
       )
@@ -49,17 +69,21 @@ const BuyStackNavigator = StackNavigator({
   }
 });
 
+var drawerProps;
+
 const MyDrawerNavigator = DrawerNavigator(
   {
     BuyStack: {
       screen: BuyStackNavigator
-    },
-    ClaimStack: {
-      screen: BuyStackNavigator
     }
   },
   {
-    contentComponent: props => <DrawerContent {...props} />,
+    contentComponent: props => {
+      if (!drawerProps) {
+        drawerProps = props;
+      }
+      return <DrawerContent {...drawerProps} />;
+    },
     contentOptions: {
       activeTintColor: colors.primaryOrange,
       inactiveTintColor: colors.primaryText
@@ -73,5 +97,22 @@ export default (Microsurance = StackNavigator(
   },
   { headerMode: "none" }
 ));
+
+const styles = StyleSheet.create({
+  headerTitle: {
+    // fontWeight: "400",
+    // fontSize: 20,
+    color: colors.primaryText,
+    alignSelf: "center",
+    paddingRight: MENU_ICON_PADDING_LEFT +
+      MENU_ICON_SIZE +
+      MENU_ICON_PADDING_RIGHT
+  },
+  headerMenuIcon: {
+    paddingLeft: MENU_ICON_PADDING_LEFT,
+    paddingRight: MENU_ICON_PADDING_RIGHT,
+    color: colors.primaryText
+  }
+});
 
 AppRegistry.registerComponent("Microsurance", () => Microsurance);
