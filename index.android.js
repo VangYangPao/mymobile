@@ -19,7 +19,7 @@ import {
 } from "react-navigation";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
-import ChatScreen from "./src/Chat";
+import ChatScreenWrapper from "./src/Chat";
 import PlanScreen from "./src/PlanScreen";
 import colors from "./src/colors";
 import DrawerContent from "./src/DrawerContent";
@@ -45,7 +45,7 @@ function renderNavigation({ navigation }) {
 
 const BuyStackNavigator = StackNavigator({
   Buy: {
-    screen: ChatScreen,
+    screen: ChatScreenWrapper(true),
     navigationOptions: renderNavigation
   },
   Plan: {

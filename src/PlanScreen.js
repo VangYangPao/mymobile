@@ -3,7 +3,7 @@ import { Image, StyleSheet, TouchableOpacity, View, Text } from "react-native";
 import { TabNavigator } from "react-navigation";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
-import ChatScreen from "./Chat";
+import ChatScreenWrapper from "./Chat";
 import PlanOverview from "./PlanOverview";
 import PLANS from "../data/plans";
 import CoverageWrapper from "./Coverage";
@@ -83,7 +83,8 @@ class Footer extends Component {
 
 export default class PlanScreen extends Component {
   static navigationOptions = ({ navigation }) => {
-    const options = ChatScreen.navigationOptions;
+    const options = ChatScreenWrapper(true).navigationOptions;
+    options.title = "microAssure";
     options.headerStyle = styles.header;
     return options;
   };

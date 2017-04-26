@@ -4,7 +4,8 @@ import {
   GiftedChat,
   Message,
   Bubble,
-  MessageText
+  MessageText,
+  Composer
 } from "react-native-gifted-chat";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Spinner from "react-native-spinkit";
@@ -29,18 +30,21 @@ function transposePlansByTitle() {
   return planDict;
 }
 
-export default class ChatScreen extends Component {
-  static navigationOptions = {
+export default function chatWrapper(start) {
+  const wrapper = props => {
+    return <ChatScreen isStartScreen={start} {...props} />;
+  };
+  wrapper.navigationOptions = ({ screenProps }) => ({
     title: "microAssure",
-    headerTitleStyle: {
-      fontFamily: "Courgette"
-    },
     drawerLabel: "Buy Policies",
     drawerIcon: ({ tintColor }) => (
       <Icon name="message" size={22} color={tintColor} />
     )
-  };
+  });
+  return wrapper;
+}
 
+class ChatScreen extends Component {
   constructor(props) {
     super(props);
     this.state = { messages: [] };
@@ -48,6 +52,8 @@ export default class ChatScreen extends Component {
     this.renderMessage = this.renderMessage.bind(this);
     this.renderBubble = this.renderBubble.bind(this);
     this.renderMessageText = this.renderMessageText.bind(this);
+    this.renderComposer = this.renderComposer.bind(this);
+
     this.handleSelectPlan = this.handleSelectPlan.bind(this);
     this.incomingPopSound = new Sound(
       "incoming.mp3",
@@ -80,18 +86,21 @@ export default class ChatScreen extends Component {
     });
 
     const renderPlans = () => {
-      this.setState(prevState => {
-        const messages = prevState.messages.concat([
-          { type: "plans", _id: 2, user: { _id: 2 } }
-        ]);
-        return { messages };
-      }, () => {
-        this.incomingPopSound.play(success => {
-          if (success) {
-          } else {
-          }
-        });
-      });
+      this.setState(
+        prevState => {
+          const messages = prevState.messages.concat([
+            { type: "plans", _id: 2, user: { _id: 2 } }
+          ]);
+          return { messages };
+        },
+        () => {
+          this.incomingPopSound.play(success => {
+            if (success) {
+            } else {
+            }
+          });
+        }
+      );
     };
 
     setTimeout(() => {
@@ -170,6 +179,11 @@ export default class ChatScreen extends Component {
     }
   }
 
+  renderComposer(props) {
+    if (this.props.isStartScreen) return null;
+    return <Composer {...props} />;
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -185,6 +199,7 @@ export default class ChatScreen extends Component {
           renderBubble={this.renderBubble}
           renderMessage={this.renderMessage}
           renderMessageText={this.renderMessageText}
+          renderComposer={this.renderComposer}
         />
       </View>
     );
