@@ -61,6 +61,18 @@ function renderBackButton(navigation) {
   );
 }
 
+function renderMenuButton(navigation) {
+  return (
+    <TouchableOpacity
+      onPress={() => {
+        navigation.navigate("DrawerOpen");
+      }}
+    >
+      <Icon name="menu" size={MENU_ICON_SIZE} style={styles.headerMenuIcon} />
+    </TouchableOpacity>
+  );
+}
+
 const BuyStackNavigator = StackNavigator({
   Chat: {
     screen: ChatScreenWrapper(null),
@@ -69,19 +81,7 @@ const BuyStackNavigator = StackNavigator({
       var button;
 
       if (!isQuestions) {
-        button = (
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("DrawerOpen");
-            }}
-          >
-            <Icon
-              name="menu"
-              size={MENU_ICON_SIZE}
-              style={styles.headerMenuIcon}
-            />
-          </TouchableOpacity>
-        );
+        button = renderMenuButton(navigation);
       } else {
         button = renderBackButton(navigation);
       }
@@ -100,20 +100,29 @@ const BuyStackNavigator = StackNavigator({
   }
 });
 
-var drawerProps;
+const ClaimStackNavigator = StackNavigator({
+  Claim: {
+    screen: ChatScreenWrapper("claim"),
+    navigationOptions: {
+      screenOptions: {
+        title: "Claim Policies"
+      }
+    }
+  }
+});
 
 const MyDrawerNavigator = DrawerNavigator(
   {
     BuyStack: {
       screen: BuyStackNavigator
     }
+    // ClaimStack: {
+    //   screen: ClaimStackNavigator
+    // }
   },
   {
     contentComponent: props => {
-      if (!drawerProps) {
-        drawerProps = props;
-      }
-      return <DrawerContent {...drawerProps} />;
+      return <DrawerContent {...props} />;
     },
     contentOptions: {
       activeTintColor: colors.primaryOrange,

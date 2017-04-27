@@ -1,13 +1,28 @@
 import React, { Component } from "react";
-import { Image, StyleSheet, TouchableOpacity, View, Text } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Text,
+  Modal,
+  TextInput,
+  Dimensions
+} from "react-native";
 import { TabNavigator } from "react-navigation";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import {
+  CreditCardInput,
+  LiteCreditCardInput
+} from "react-native-credit-card-input";
 
 import ChatScreenWrapper from "./Chat";
 import PlanOverview from "./PlanOverview";
 import PLANS from "../data/plans";
 import CoverageWrapper from "./Coverage";
 import colors from "./colors";
+
+const windowWidth = Dimensions.get("window").width;
 
 const tabStyles = {
   tabIndicator: {
@@ -81,6 +96,35 @@ class Footer extends Component {
   }
 }
 
+class CheckoutModal extends Component {
+  render() {
+    return (
+      <Modal
+        animationType={"slide"}
+        transparent={true}
+        visible={true}
+        onRequestClose={this.props.onClose}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContentContainer}>
+            <View style={styles.checkoutHeader}>
+              <Text style={styles.checkoutTitle}>
+                Enter credit card details
+              </Text>
+            </View>
+            <View style={styles.checkoutContent}>
+              <CreditCardInput
+                onChange={this._onChange}
+                inputStyle={styles.creditCardInputStyle}
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
+    );
+  }
+}
+
 export default class PlanScreen extends Component {
   static navigationOptions = ({ navigation }) => {
     const options = ChatScreenWrapper(null).navigationOptions;
@@ -91,18 +135,24 @@ export default class PlanScreen extends Component {
 
   constructor(props) {
     super(props);
-    const { pricePerMonth } = props.navigation.state.params;
+    const { plan, page } = this.props.navigation.state.params;
+    this.plan = plan;
+    this.page = page;
+    const { pricePerMonth } = this.plan;
     this.handlePricePerMonthChange = this.handlePricePerMonthChange.bind(this);
     this.handlePurchase = this.handlePurchase.bind(this);
-    this.state = { pricePerMonth };
+    this.state = { pricePerMonth, renderCheckoutModal: false };
   }
 
   handlePurchase() {
-    const plan = this.props.navigation.state.params;
-    this.props.navigation.navigate("Chat", {
-      plan,
-      questionSet: "buy"
-    });
+    if (this.page === "info") {
+      this.props.navigation.navigate("Chat", {
+        plan: this.plan,
+        questionSet: "buy"
+      });
+    } else if (this.page === "checkout") {
+      this.setState({ renderCheckoutModal: true });
+    }
   }
 
   handlePricePerMonthChange(pricePerMonth) {
@@ -111,11 +161,17 @@ export default class PlanScreen extends Component {
 
   render() {
     const screenProps = {
-      plan: this.props.navigation.state.params,
+      plan: this.plan,
       onPricePerMonthChange: this.handlePricePerMonthChange
     };
+    const modal = (
+      <CheckoutModal
+        onClose={() => this.setState({ renderCheckoutModal: false })}
+      />
+    );
     return (
       <View style={styles.container}>
+        {this.state.renderCheckoutModal ? modal : null}
         <PlanTabNavigator screenProps={screenProps} />
         <Footer
           onPurchase={this.handlePurchase}
@@ -127,6 +183,35 @@ export default class PlanScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+  checkoutContent: {
+    paddingVertical: 20
+  },
+  checkoutHeader: {
+    alignItems: "center",
+    paddingVertical: 15,
+    backgroundColor: colors.softBorderLine
+  },
+  checkoutTitle: {
+    color: colors.primaryText,
+    fontSize: 20,
+    fontWeight: "500"
+  },
+  modalContentContainer: {
+    alignItems: "stretch",
+    justifyContent: "center",
+    width: windowWidth,
+    backgroundColor: "white"
+  },
+  modalContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(0,0,0,0.5)"
+  },
   tabIndicator: {
     backgroundColor: colors.primaryOrange,
     height: 3

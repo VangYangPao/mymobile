@@ -45,12 +45,12 @@ export const QUESTION_SETS = {
       question: "Let's get started. What's your full name?",
       responseType: "string",
       id: "name"
-    },
-    {
-      question: "Hi <%= name %>, what's your NRIC?",
-      responseType: "string",
-      id: "idNumber"
     }
+    // {
+    //   question: "Hi <%= name %>, what's your IC number?",
+    //   responseType: "string",
+    //   id: "idNumber"
+    // }
     // {
     //   question: "Thanks, what email address can we contact you at?",
     //   responseType: ["string", "email"],
@@ -97,6 +97,11 @@ export const QUESTION_SETS = {
       question: "Tell us about the accident.",
       responseType: "string",
       id: "description"
+    },
+    {
+      question: "I see. Tell us about your specific injuries.",
+      responseType: "string",
+      id: "injuryDetails"
     },
     {
       question: "Please snap a photo of the police report / medical report / death certificate.",

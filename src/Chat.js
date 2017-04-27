@@ -176,7 +176,8 @@ class ChatScreen extends Component {
 
   handleSelectPlan(planTitle) {
     const plan = transposePlansByTitle()[planTitle];
-    this.props.navigation.navigate("Plan", plan);
+    const params = { plan, page: "info" };
+    this.props.navigation.navigate("Plan", params);
   }
 
   componentDidMount() {
@@ -207,9 +208,12 @@ class ChatScreen extends Component {
     const currentQuestionIndex = this.state.currentQuestionIndex + 1;
     if (currentQuestionIndex >= this.questions.length) {
       const { questionSet, plan } = this.props;
-      if (questionSet === "buy") {
-        this.props.navigation.navigate("Plan", plan);
-      }
+      setTimeout(() => {
+        if (questionSet === "buy") {
+          const params = { plan, page: "checkout" };
+          this.props.navigation.navigate("Plan", params);
+        }
+      }, 500);
       return;
     }
     const nextQuestion = template(
