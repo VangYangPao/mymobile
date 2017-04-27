@@ -103,11 +103,10 @@ const BuyStackNavigator = StackNavigator({
 const ClaimStackNavigator = StackNavigator({
   Claim: {
     screen: ChatScreenWrapper("claim"),
-    navigationOptions: {
-      screenOptions: {
-        title: "Claim Policies"
-      }
-    }
+    navigationOptions: ({ navigation }) => ({
+      headerTitleStyle: styles.headerTitle,
+      headerLeft: renderMenuButton(navigation)
+    })
   }
 });
 
@@ -115,10 +114,10 @@ const MyDrawerNavigator = DrawerNavigator(
   {
     BuyStack: {
       screen: BuyStackNavigator
+    },
+    ClaimStack: {
+      screen: ClaimStackNavigator
     }
-    // ClaimStack: {
-    //   screen: ClaimStackNavigator
-    // }
   },
   {
     contentComponent: props => {

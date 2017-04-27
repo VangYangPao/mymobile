@@ -46,10 +46,10 @@ function transposePlansByTitle() {
 export default function ChatScreenWrapper(questionSet) {
   const wrapper = props => {
     const routeParams = props.navigation.state.params;
-    const isStartScreen = !routeParams;
-    questionSet = isStartScreen ? questionSet : routeParams.questionSet;
+    const isStartScreen = !routeParams && !questionSet;
     var plan;
     if (routeParams) {
+      questionSet = questionSet || routeParams.questionSet;
       plan = routeParams.plan;
     }
     return (
@@ -61,11 +61,21 @@ export default function ChatScreenWrapper(questionSet) {
       />
     );
   };
+
+  var drawerLabel;
+  var drawerIcon;
+  if (!questionSet) {
+    drawerLabel = "Buy Policies";
+    drawerIcon = "message";
+  } else if (questionSet === "claim") {
+    drawerLabel = "Claim Policies";
+    drawerIcon = "attach-money";
+  }
   wrapper.navigationOptions = ({ screenProps }) => ({
     title: "microAssure",
-    drawerLabel: "Buy Policies",
+    drawerLabel,
     drawerIcon: ({ tintColor }) => (
-      <Icon name="message" size={22} color={tintColor} />
+      <Icon name={drawerIcon} size={22} color={tintColor} />
     )
   });
   return wrapper;
