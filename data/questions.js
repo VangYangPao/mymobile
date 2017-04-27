@@ -50,32 +50,32 @@ export const QUESTION_SETS = {
       question: "Hi <%= name %>, what's your NRIC?",
       responseType: "string",
       id: "idNumber"
-    },
-    {
-      question: "Thanks, what email address can we contact you at?",
-      responseType: ["string", "email"],
-      id: "email"
-    },
-    {
-      question: "How about your emergency email address?",
-      responseType: "email",
-      id: "emergencyEmail"
-    },
-    {
-      question: "What's your phone number?",
-      responseType: "string",
-      id: "phoneNumber"
-    },
-    {
-      question: "Great! To collect your claims, we will need your bank name. 🏦",
-      responseType: "string",
-      id: "bankName"
-    },
-    {
-      question: "Next, we will need your bank account number for us to bank into. 💵",
-      responseType: "string",
-      id: "bankAccount"
     }
+    // {
+    //   question: "Thanks, what email address can we contact you at?",
+    //   responseType: ["string", "email"],
+    //   id: "email"
+    // },
+    // {
+    //   question: "How about your emergency email address?",
+    //   responseType: "email",
+    //   id: "emergencyEmail"
+    // },
+    // {
+    //   question: "What's your phone number?",
+    //   responseType: "string",
+    //   id: "phoneNumber"
+    // },
+    // {
+    //   question: "Great! To collect your claims, we will need your bank name. 🏦",
+    //   responseType: "string",
+    //   id: "bankName"
+    // },
+    // {
+    //   question: "Next, we will need your bank account number for us to bank into. 💵",
+    //   responseType: "string",
+    //   id: "bankAccount"
+    // }
   ],
   claim: [
     {

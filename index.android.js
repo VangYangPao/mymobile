@@ -62,7 +62,7 @@ function renderBackButton(navigation) {
 }
 
 const BuyStackNavigator = StackNavigator({
-  Buy: {
+  Chat: {
     screen: ChatScreenWrapper(null),
     navigationOptions: ({ navigation }) => {
       const isQuestions = navigation.state.params;

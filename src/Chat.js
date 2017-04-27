@@ -45,13 +45,18 @@ function transposePlansByTitle() {
 
 export default function ChatScreenWrapper(questionSet) {
   const wrapper = props => {
-    const questionSetParam = props.navigation.state.params;
-    const isStartScreen = !questionSetParam;
-    questionSet = isStartScreen ? questionSet : questionSetParam;
+    const routeParams = props.navigation.state.params;
+    const isStartScreen = !routeParams;
+    questionSet = isStartScreen ? questionSet : routeParams.questionSet;
+    var plan;
+    if (routeParams) {
+      plan = routeParams.plan;
+    }
     return (
       <ChatScreen
         isStartScreen={isStartScreen}
         questionSet={questionSet}
+        plan={plan}
         {...props}
       />
     );
@@ -200,7 +205,13 @@ class ChatScreen extends Component {
 
   askNextQuestion() {
     const currentQuestionIndex = this.state.currentQuestionIndex + 1;
-    console.log(this.state.answers)
+    if (currentQuestionIndex >= this.questions.length) {
+      const { questionSet, plan } = this.props;
+      if (questionSet === "buy") {
+        this.props.navigation.navigate("Plan", plan);
+      }
+      return;
+    }
     const nextQuestion = template(
       this.questions[currentQuestionIndex].question
     )(this.state.answers);
@@ -296,9 +307,15 @@ class ChatScreen extends Component {
 
   renderComposer(props) {
     if (!this.state.answering) {
-      return <Composer {...props} textInputProps={{ editable: false }} />;
+      return (
+        <Composer
+          placeholder="Type your message here..."
+          {...props}
+          textInputProps={{ editable: false }}
+        />
+      );
     }
-    return <Composer {...props} />;
+    return <Composer placeholder="Type your message here..." {...props} />;
   }
 
   renderSend(props) {
@@ -340,14 +357,14 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primaryOrange
   },
   messageTextLeft: {
-    textDecorationLine: 'none',
+    textDecorationLine: "none",
     color: "white"
   },
   bubbleRight: {
     backgroundColor: "white"
   },
   messageTextRight: {
-    textDecorationLine: 'none',
+    textDecorationLine: "none",
     color: colors.primaryText
   },
   spinner: {
