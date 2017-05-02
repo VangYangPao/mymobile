@@ -16,7 +16,7 @@
     "react-native-sound": "^0.9.1",
     "react-native-spinkit": "^1.0.2",
     "react-native-vector-icons": "^4.0.1",
-    "react-navigation": "git+https://github.com/react-community/react-navigation.git",
+    "react-navigation": "git+https://github.com/react-community/react-navigation.git#b8dbbe964eb534f1870cb000c592d730ac0eabfd",
     "react-redux": "^5.0.4",
     "redux": "^3.6.0",
     "redux-devtools": "^3.3.2"

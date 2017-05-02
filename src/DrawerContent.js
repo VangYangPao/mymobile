@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { View, Image, StyleSheet, Text } from "react-native";
-import { DrawerView } from "react-navigation";
+import { DrawerItems } from "react-navigation";
 
 export default class DrawerContent extends Component {
   render() {
@@ -13,7 +13,7 @@ export default class DrawerContent extends Component {
           />
           <Text style={styles.name}>Denzel Tan</Text>
         </View>
-        <DrawerView.Items {...this.props} />
+        <DrawerItems {...this.props} />
       </View>
     );
   }

@@ -24,6 +24,8 @@ import PlanScreen from "./src/PlanScreen";
 import colors from "./src/colors";
 import DrawerContent from "./src/DrawerContent";
 
+// global.___DEV___ = false
+
 const MENU_ICON_SIZE = 30;
 const MENU_ICON_PADDING_LEFT = 15;
 const MENU_ICON_PADDING_RIGHT = 10;

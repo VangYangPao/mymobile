@@ -320,16 +320,33 @@ class ChatScreen extends Component {
   }
 
   renderComposer(props) {
-    if (!this.state.answering) {
+    const { currentQuestionIndex } = this.state;
+    const { responseType } = this.questions[currentQuestionIndex];
+    // if (responseType !== "datetime") {
+      var additionalProps = {};
+      if (!this.state.answering) {
+        additionalProps = {
+          placeholder: "Type your message here...",
+          textInputProps: { editable: false }
+        };
+      }
       return (
         <Composer
           placeholder="Type your message here..."
           {...props}
-          textInputProps={{ editable: false }}
+          {...additionalProps}
         />
       );
-    }
-    return <Composer placeholder="Type your message here..." {...props} />;
+    // }
+    // return (
+    //   <View style={styles.datetimeContainer}>
+    //     <TouchableOpacity onPress={() => {}}>
+    //       <View style={styles.datetimeInput}>
+    //         <Text>Select Date</Text>
+    //       </View>
+    //     </TouchableOpacity>
+    //   </View>
+    // );
   }
 
   renderSend(props) {
@@ -361,6 +378,11 @@ class ChatScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+  datetimeInput: {
+  },
+  datetimeContainer: {
+    flex: 1,
+  },
   textInput: {
     backgroundColor: colors.softBorderLine
   },

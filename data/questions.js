@@ -45,52 +45,52 @@ export const QUESTION_SETS = {
       question: "Let's get started. What's your full name?",
       responseType: "string",
       id: "name"
+    },
+    {
+      question: "Hi <%= name %>, what's your IC number?",
+      responseType: "string",
+      id: "idNumber"
+    },
+    {
+      question: "Thanks, what email address can we contact you at?",
+      responseType: ["string", "email"],
+      id: "email"
+    },
+    {
+      question: "How about your emergency email address?",
+      responseType: "email",
+      id: "emergencyEmail"
+    },
+    {
+      question: "What's your phone number?",
+      responseType: "string",
+      id: "phoneNumber"
+    },
+    {
+      question: "Great! To collect your claims, we will need your bank name. 🏦",
+      responseType: "string",
+      id: "bankName"
+    },
+    {
+      question: "Next, we will need your bank account number for us to bank into. 💵",
+      responseType: "string",
+      id: "bankAccount"
     }
-    // {
-    //   question: "Hi <%= name %>, what's your IC number?",
-    //   responseType: "string",
-    //   id: "idNumber"
-    // }
-    // {
-    //   question: "Thanks, what email address can we contact you at?",
-    //   responseType: ["string", "email"],
-    //   id: "email"
-    // },
-    // {
-    //   question: "How about your emergency email address?",
-    //   responseType: "email",
-    //   id: "emergencyEmail"
-    // },
-    // {
-    //   question: "What's your phone number?",
-    //   responseType: "string",
-    //   id: "phoneNumber"
-    // },
-    // {
-    //   question: "Great! To collect your claims, we will need your bank name. 🏦",
-    //   responseType: "string",
-    //   id: "bankName"
-    // },
-    // {
-    //   question: "Next, we will need your bank account number for us to bank into. 💵",
-    //   responseType: "string",
-    //   id: "bankAccount"
-    // }
   ],
   claim: [
     {
-      question: "When did the accident happen?",
-      responseType: "datetime",
+      question: "Hi. When did the accident happen?",
+      responseType: "string",
       id: "accidentDateTime"
     },
     {
       question: "Where did it happen?",
-      responseType: "location",
+      responseType: "string",
       id: "accidentLocation"
     },
     {
       question: "Which police station did you report to?",
-      responseType: "location",
+      responseType: "string",
       id: "policeStation"
     },
     {
@@ -103,10 +103,10 @@ export const QUESTION_SETS = {
       responseType: "string",
       id: "injuryDetails"
     },
-    {
-      question: "Please snap a photo of the police report / medical report / death certificate.",
-      responseType: "string",
-      id: "image"
-    }
+    // {
+    //   question: "Please snap a photo of the police report / medical report / death certificate.",
+    //   responseType: "string",
+    //   id: "image"
+    // }
   ]
 };
