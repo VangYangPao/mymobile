@@ -19,84 +19,16 @@ import {
 } from "react-navigation";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
-import ChatScreen from "./src/Chat";
+import ChatScreenWrapper from "./src/Chat";
 import PlanScreen from "./src/PlanScreen";
 import colors from "./src/colors";
 import DrawerContent from "./src/DrawerContent";
 
+// global.___DEV___ = false
+
 const MENU_ICON_SIZE = 30;
 const MENU_ICON_PADDING_LEFT = 15;
 const MENU_ICON_PADDING_RIGHT = 10;
-
-function renderNavigation({ navigation }) {
-  return {
-    headerTitleStyle: styles.headerTitle,
-    headerLeft: (
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate("DrawerOpen");
-        }}
-      >
-        <Icon name="menu" size={MENU_ICON_SIZE} style={styles.headerMenuIcon} />
-      </TouchableOpacity>
-    )
-  };
-}
-
-const BuyStackNavigator = StackNavigator({
-  Buy: {
-    screen: ChatScreen,
-    navigationOptions: renderNavigation
-  },
-  Plan: {
-    screen: PlanScreen,
-    navigationOptions: ({ navigation }) => ({
-      headerTitleStyle: styles.headerTitle,
-      headerLeft: (
-        <TouchableOpacity
-          onPress={() => {
-            navigation.dispatch(NavigationActions.back());
-          }}
-        >
-          <Icon
-            name="arrow-back"
-            size={MENU_ICON_SIZE}
-            style={styles.headerMenuIcon}
-          />
-        </TouchableOpacity>
-      )
-    })
-  }
-});
-
-var drawerProps;
-
-const MyDrawerNavigator = DrawerNavigator(
-  {
-    BuyStack: {
-      screen: BuyStackNavigator
-    }
-  },
-  {
-    contentComponent: props => {
-      if (!drawerProps) {
-        drawerProps = props;
-      }
-      return <DrawerContent {...drawerProps} />;
-    },
-    contentOptions: {
-      activeTintColor: colors.primaryOrange,
-      inactiveTintColor: colors.primaryText
-    }
-  }
-);
-
-export default (Microsurance = StackNavigator(
-  {
-    Drawer: { screen: MyDrawerNavigator }
-  },
-  { headerMode: "none" }
-));
 
 const styles = StyleSheet.create({
   headerTitle: {
@@ -114,5 +46,97 @@ const styles = StyleSheet.create({
     color: colors.primaryText
   }
 });
+
+function renderBackButton(navigation) {
+  return (
+    <TouchableOpacity
+      onPress={() => {
+        navigation.dispatch(NavigationActions.back());
+      }}
+    >
+      <Icon
+        name="arrow-back"
+        size={MENU_ICON_SIZE}
+        style={styles.headerMenuIcon}
+      />
+    </TouchableOpacity>
+  );
+}
+
+function renderMenuButton(navigation) {
+  return (
+    <TouchableOpacity
+      onPress={() => {
+        navigation.navigate("DrawerOpen");
+      }}
+    >
+      <Icon name="menu" size={MENU_ICON_SIZE} style={styles.headerMenuIcon} />
+    </TouchableOpacity>
+  );
+}
+
+const BuyStackNavigator = StackNavigator({
+  Chat: {
+    screen: ChatScreenWrapper(null),
+    navigationOptions: ({ navigation }) => {
+      const isQuestions = navigation.state.params;
+      var button;
+
+      if (!isQuestions) {
+        button = renderMenuButton(navigation);
+      } else {
+        button = renderBackButton(navigation);
+      }
+      return {
+        headerTitleStyle: styles.headerTitle,
+        headerLeft: button
+      };
+    }
+  },
+  Plan: {
+    screen: PlanScreen,
+    navigationOptions: ({ navigation }) => ({
+      headerTitleStyle: styles.headerTitle,
+      headerLeft: renderBackButton(navigation)
+    })
+  }
+});
+
+const ClaimStackNavigator = StackNavigator({
+  Claim: {
+    screen: ChatScreenWrapper("claim"),
+    navigationOptions: ({ navigation }) => ({
+      headerTitleStyle: styles.headerTitle,
+      headerLeft: renderMenuButton(navigation)
+    })
+  }
+});
+
+const MyDrawerNavigator = DrawerNavigator(
+  {
+    BuyStack: {
+      screen: BuyStackNavigator
+    },
+    ClaimStack: {
+      screen: ClaimStackNavigator
+    }
+  },
+  {
+    contentComponent: props => {
+      return <DrawerContent {...props} />;
+    },
+    contentOptions: {
+      activeTintColor: colors.primaryOrange,
+      inactiveTintColor: colors.primaryText
+    }
+  }
+);
+
+export default (Microsurance = StackNavigator(
+  {
+    Drawer: { screen: MyDrawerNavigator }
+  },
+  { headerMode: "none" }
+));
 
 AppRegistry.registerComponent("Microsurance", () => Microsurance);
