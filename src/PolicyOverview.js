@@ -19,8 +19,37 @@ import RangeSlider from "./RangeSlider";
 import colors from "./colors";
 import coveragesData from "../data/coverage";
 
+class PolicyPrice extends Component {
+  render() {
+    const { pricePerMonth } = this.props;
+    const intPricePart = Math.floor(pricePerMonth);
+    const decimalPricePart = (pricePerMonth + "").split(".")[1];
+    var additionalStyle = null;
 
-class StartDateSelector extends Component {
+    if (intPricePart >= 10) {
+      const { fontSize } = StyleSheet.flatten(styles.priceAmount);
+      additionalStyle = {
+        fontSize: fontSize - 5
+      };
+    }
+    return (
+      <View style={styles.priceContainer}>
+        <View style={styles.price}>
+          <Text style={styles.priceCurrency}>$</Text>
+          <Text style={[styles.priceAmount, additionalStyle]}>
+            {intPricePart}
+          </Text>
+          <Text style={[styles.priceAmount, styles.priceAmountDecimal]}>
+            .{decimalPricePart}
+          </Text>
+        </View>
+        <Text style={styles.pricePerMonth}>PER MONTH</Text>
+      </View>
+    );
+  }
+}
+
+class PolicyStartDate extends Component {
   render() {
     const today = new Date();
     const { startDate } = this.props;
@@ -101,7 +130,7 @@ class CoverageItem extends Component {
   }
 }
 
-class Coverages extends Component {
+class PolicyCoverages extends Component {
   render() {
     return (
       <View style={styles.configContainer}>
@@ -227,22 +256,14 @@ export default class PolicyOverview extends Component {
               {policy.title}
             </Text>
 
-            <View style={styles.priceContainer}>
-              <View style={styles.price}>
-                <Text style={styles.priceCurrency}>$</Text>
-                <Text style={styles.priceAmount}>
-                  {pricePerMonth}
-                </Text>
-              </View>
-              <Text style={styles.pricePerMonth}>PER MONTH</Text>
-            </View>
+            <PolicyPrice pricePerMonth={pricePerMonth} />
 
-            <StartDateSelector
+            <PolicyStartDate
               startDate={this.state.startDate}
               onSelectStartDate={this.handleSelectStartDate}
             />
 
-            <Coverages {...policy} />
+            <PolicyCoverages {...policy} />
 
             <View style={styles.configContainer}>
               <Text style={styles.configTitle}>COVERAGE AMOUNTS</Text>
@@ -272,8 +293,9 @@ export default class PolicyOverview extends Component {
   }
 }
 
-const priceContainerSize = 150;
-const coverageContainerSize = 60;
+const PRICE_CONTAINER_SIZE = 150;
+const COVERAGE_CONTAINER_SIZE = 60;
+const PRICE_DECIMAL_CONTAINER_SIZE = 50;
 
 const styles = StyleSheet.create({
   lastView: {
@@ -295,9 +317,9 @@ const styles = StyleSheet.create({
   coverageContainer: {
     alignItems: "center",
     justifyContent: "center",
-    height: coverageContainerSize,
-    width: coverageContainerSize,
-    borderRadius: coverageContainerSize / 2,
+    height: COVERAGE_CONTAINER_SIZE,
+    width: COVERAGE_CONTAINER_SIZE,
+    borderRadius: COVERAGE_CONTAINER_SIZE / 2,
     backgroundColor: "#F5F5F5"
   },
   coverageItem: {
@@ -361,10 +383,10 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     alignItems: "center",
     justifyContent: "center",
-    height: priceContainerSize,
-    width: priceContainerSize,
+    height: PRICE_CONTAINER_SIZE,
+    width: PRICE_CONTAINER_SIZE,
     marginVertical: 20,
-    borderRadius: priceContainerSize / 2,
+    borderRadius: PRICE_CONTAINER_SIZE / 2,
     backgroundColor: colors.primaryOrange
   },
   price: {
@@ -376,6 +398,19 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     fontSize: 40,
     color: "white"
+  },
+  priceAmountDecimal: {
+    alignSelf: "flex-start",
+    fontSize: 18
+  },
+  priceAmountDecimalContainer: {
+    alignSelf: "flex-start",
+    alignItems: "center",
+    justifyContent: "center",
+    height: PRICE_DECIMAL_CONTAINER_SIZE,
+    width: PRICE_DECIMAL_CONTAINER_SIZE,
+    borderRadius: PRICE_DECIMAL_CONTAINER_SIZE / 2,
+    backgroundColor: colors.primaryOrange
   },
   priceAmount: {
     fontSize: 60,
