@@ -17,8 +17,8 @@ import {
 } from "react-native-credit-card-input";
 
 import ChatScreenWrapper from "./Chat";
-import PlanOverview from "./PlanOverview";
-import PLANS from "../data/plans";
+import PolicyOverview from "./PolicyOverview";
+import POLICIES from "../data/policies";
 import CoverageWrapper from "./Coverage";
 import colors from "./colors";
 
@@ -41,7 +41,7 @@ const tabStyles = {
 const PlanTabNavigator = TabNavigator(
   {
     Overview: {
-      screen: PlanOverview
+      screen: PolicyOverview
     },
     Covered: {
       screen: CoverageWrapper(true)
@@ -51,7 +51,7 @@ const PlanTabNavigator = TabNavigator(
     }
   },
   {
-    swipeEnabled: false,
+    // swipeEnabled: false,
     tabBarOptions: {
       upperCaseLabel: true,
       activeTintColor: colors.primaryOrange,
@@ -125,7 +125,7 @@ class CheckoutModal extends Component {
   }
 }
 
-export default class PlanScreen extends Component {
+export default class PolicyScreen extends Component {
   static navigationOptions = ({ navigation }) => {
     const options = ChatScreenWrapper(null).navigationOptions;
     options.title = "microAssure";
@@ -135,10 +135,10 @@ export default class PlanScreen extends Component {
 
   constructor(props) {
     super(props);
-    const { plan, page } = this.props.navigation.state.params;
-    this.plan = plan;
+    const { policy, page } = this.props.navigation.state.params;
+    this.policy = policy;
     this.page = page;
-    const { pricePerMonth } = this.plan;
+    const pricePerMonth = this.policy.plans[0].premium;
     this.handlePricePerMonthChange = this.handlePricePerMonthChange.bind(this);
     this.handlePurchase = this.handlePurchase.bind(this);
     this.state = { pricePerMonth, renderCheckoutModal: false };
@@ -147,7 +147,7 @@ export default class PlanScreen extends Component {
   handlePurchase() {
     if (this.page === "info") {
       this.props.navigation.navigate("Chat", {
-        plan: this.plan,
+        policy: this.policy,
         questionSet: "buy"
       });
     } else if (this.page === "checkout") {
@@ -161,7 +161,7 @@ export default class PlanScreen extends Component {
 
   render() {
     const screenProps = {
-      plan: this.plan,
+      policy: this.policy,
       onPricePerMonthChange: this.handlePricePerMonthChange
     };
     const modal = (

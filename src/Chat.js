@@ -11,13 +11,16 @@ import {
   Send
 } from "react-native-gifted-chat";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import Ionicon from "react-native-vector-icons/Ionicons";
 import Spinner from "react-native-spinkit";
 import Sound from "react-native-sound";
+import Slider from "react-native-slider";
 import { template } from "lodash";
 
-import Plans from "./Plans";
+import RangeSlider from "./RangeSlider";
+import PolicyChoice from "./PolicyChoice";
 import colors from "./colors";
-import PLANS from "../data/plans";
+import POLICIES from "../data/policies";
 import { validateAnswer, QUESTION_SETS } from "../data/questions";
 
 // Enable playback in silence mode (iOS only)
@@ -25,7 +28,7 @@ Sound.setCategory("Playback");
 
 const IMAGE_URL = "https://www.drive.ai/images/team/Carol.png";
 const FIRST_MSG_LOAD_TIME = 500;
-const PLANS_FADE_IN_TIME = 400;
+const POLICIES_FADE_IN_TIME = 400;
 
 const AGENT_USER_ID = 0;
 const CUSTOMER_USER_ID = 1;
@@ -35,28 +38,28 @@ const AGENT_USER = {
   name: "Carol",
   avatar: IMAGE_URL
 };
-function transposePlansByTitle() {
-  var planDict = {};
-  PLANS.forEach(plan => {
-    planDict[plan.title] = plan;
+function transposePolicyChoiceByTitle() {
+  var policyDict = {};
+  POLICIES.forEach(policy => {
+    policyDict[policy.title] = policy;
   });
-  return planDict;
+  return policyDict;
 }
 
 export default function ChatScreenWrapper(questionSet) {
   const wrapper = props => {
     const routeParams = props.navigation.state.params;
     const isStartScreen = !routeParams && !questionSet;
-    var plan;
+    var policy;
     if (routeParams) {
       questionSet = questionSet || routeParams.questionSet;
-      plan = routeParams.plan;
+      policy = routeParams.policy;
     }
     return (
       <ChatScreen
         isStartScreen={isStartScreen}
         questionSet={questionSet}
-        plan={plan}
+        policy={policy}
         {...props}
       />
     );
@@ -80,6 +83,11 @@ export default function ChatScreenWrapper(questionSet) {
   });
   return wrapper;
 }
+
+const BAR_WIDTH = 300;
+const BAR_HEIGHT_PERCENT = 0.045;
+const SLOT_RADIUS_PERCENT = 0.075;
+const SLIDER_RADIUS_PERCENT = 0.15;
 
 class ChatScreen extends Component {
   constructor(props) {
@@ -150,8 +158,8 @@ class ChatScreen extends Component {
       ]
     });
 
-    const renderPlans = () => {
-      this.handleAgentSend({ type: "plans", _id: 1, user: AGENT_USER });
+    const renderPolicyChoice = () => {
+      this.handleAgentSend({ type: "policies", _id: 1, user: AGENT_USER });
     };
 
     setTimeout(() => {
@@ -162,14 +170,14 @@ class ChatScreen extends Component {
               {
                 type: "text",
                 _id: 0,
-                text: "Hi I'm Carol, please choose the insurance plan you're interested in. 😄",
+                text: "Hi I'm Carol, please choose the insurance policy you're interested in. 😄",
                 createdAt: new Date(),
                 user: AGENT_USER
               }
             ]
           };
         },
-        () => setTimeout(renderPlans, PLANS_FADE_IN_TIME)
+        () => setTimeout(renderPolicyChoice, POLICIES_FADE_IN_TIME)
       );
     }, FIRST_MSG_LOAD_TIME);
   }
@@ -184,9 +192,9 @@ class ChatScreen extends Component {
     this.setState(this.concatMessage(message), this.playNewMessageSound);
   }
 
-  handleSelectPlan(planTitle) {
-    const plan = transposePlansByTitle()[planTitle];
-    const params = { plan, page: "info" };
+  handleSelectPlan(policyTitle) {
+    const policy = transposePolicyChoiceByTitle()[policyTitle];
+    const params = { policy, page: "info" };
     this.props.navigation.navigate("Plan", params);
   }
 
@@ -217,10 +225,10 @@ class ChatScreen extends Component {
   askNextQuestion() {
     const currentQuestionIndex = this.state.currentQuestionIndex + 1;
     if (currentQuestionIndex >= this.questions.length) {
-      const { questionSet, plan } = this.props;
+      const { questionSet, policy } = this.props;
       setTimeout(() => {
         if (questionSet === "buy") {
-          const params = { plan, page: "checkout" };
+          const params = { policy, page: "checkout" };
           this.props.navigation.navigate("Plan", params);
         }
       }, 500);
@@ -298,8 +306,8 @@ class ChatScreen extends Component {
     switch (currentMessage.type) {
       case "text":
         return <Message {...props} />;
-      case "plans":
-        return <Plans onSelectPlan={this.handleSelectPlan} />;
+      case "policies":
+        return <PolicyChoice onSelectPlan={this.handleSelectPlan} />;
       default:
         return <Message {...props} />;
     }
@@ -323,20 +331,20 @@ class ChatScreen extends Component {
     const { currentQuestionIndex } = this.state;
     const { responseType } = this.questions[currentQuestionIndex];
     // if (responseType !== "datetime") {
-      var additionalProps = {};
-      if (!this.state.answering) {
-        additionalProps = {
-          placeholder: "Type your message here...",
-          textInputProps: { editable: false }
-        };
-      }
-      return (
-        <Composer
-          placeholder="Type your message here..."
-          {...props}
-          {...additionalProps}
-        />
-      );
+    var additionalProps = {};
+    if (!this.state.answering) {
+      additionalProps = {
+        placeholder: "Type your message here...",
+        textInputProps: { editable: false }
+      };
+    }
+    return (
+      <Composer
+        placeholder="Type your message here..."
+        {...props}
+        {...additionalProps}
+      />
+    );
     // }
     // return (
     //   <View style={styles.datetimeContainer}>
@@ -354,6 +362,12 @@ class ChatScreen extends Component {
   }
 
   render() {
+    const elements = [
+      { label: "10k", value: 10000 },
+      { label: "20k", value: 20000 },
+      { label: "50k", value: 50000 },
+      { label: "100k", value: 100000 }
+    ];
     return (
       <View style={styles.container}>
         <GiftedChat
@@ -378,10 +392,9 @@ class ChatScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-  datetimeInput: {
-  },
+  datetimeInput: {},
   datetimeContainer: {
-    flex: 1,
+    flex: 1
   },
   textInput: {
     backgroundColor: colors.softBorderLine

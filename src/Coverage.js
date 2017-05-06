@@ -24,8 +24,8 @@ export default function coverageWrapper(covered) {
 
 class Coverage extends Component {
   render() {
-    const { plan, covered } = this.props.screenProps;
-    const itemTitles = covered ? plan.covered : plan.notCovered;
+    const { policy, covered } = this.props.screenProps;
+    const itemTitles = covered ? policy.covered : policy.notCovered;
     const items = itemTitles.map(i => coverages[i]);
     return (
       <View style={styles.page}>

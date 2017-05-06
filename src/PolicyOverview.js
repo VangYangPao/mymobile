@@ -9,7 +9,8 @@ import {
   InteractionManager,
   Animated,
   Easing,
-  ToastAndroid
+  ToastAndroid,
+  Slider
 } from "react-native";
 import Ionicon from "react-native-vector-icons/Ionicons";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -51,22 +52,25 @@ class CoverageItem extends Component {
   }
 }
 
-export default class PlanOverview extends Component {
+export default class PolicyOverview extends Component {
   constructor(props) {
     super(props);
     this.handleSelectStartDate = this.handleSelectStartDate.bind(this);
-    this.countPricePerMonth = this.countPricePerMonth.bind(this);
-    this.handleRangeSliderGesture = this.handleRangeSliderGesture.bind(this);
+    this.getPricePerMonth = this.getPricePerMonth.bind(this);
+    this.updateCoverageAmount = this.updateCoverageAmount.bind(this);
 
-    const plan = props.screenProps.plan;
+    const { plans } = props.screenProps.policy;
+    this.coverageAmounts = plans.map(p => p.coverageAmount);
+    this.coverageDurations = ["1m", "2m", "3m", "6m", "12m"];
+
     this.state = {
       renderContent: false,
       scrollEnabled: true,
       fadeAnim: new Animated.Value(0),
       topAnim: new Animated.Value(50),
       startDate: new Date(),
-      coverageAmount: plan.coverageAmounts[0],
-      coverageDuration: plan.coverageDurations[0]
+      coverageAmount: this.coverageAmounts[0],
+      coverageDuration: this.coverageDurations[0]
     };
   }
 
@@ -86,9 +90,9 @@ export default class PlanOverview extends Component {
     }
   }
 
-  handleRangeSliderGesture(hasOngoingGesture) {
-    this.setState({ scrollEnabled: !hasOngoingGesture });
-  }
+  // handleRangeSliderGesture(hasOngoingGesture) {
+  //   this.setState({ scrollEnabled: !hasOngoingGesture });
+  // }
 
   componentDidMount() {
     InteractionManager.runAfterInteractions(() =>
@@ -110,13 +114,19 @@ export default class PlanOverview extends Component {
     );
   }
 
-  countPricePerMonth() {
-    const { plan } = this.props.screenProps;
-    return (
-      plan.pricePerMonth +
-      plan.coverageAmounts.indexOf(this.state.coverageAmount) -
-      plan.coverageDurations.indexOf(this.state.coverageDuration)
+  updateCoverageAmount(coverageAmount) {
+    this.setState({ coverageAmount }, () =>
+      this.props.screenProps.onPricePerMonthChange(this.getPricePerMonth())
     );
+  }
+
+  getPricePerMonth() {
+    const { plans } = this.props.screenProps.policy;
+    const { coverageAmount } = this.state;
+    const planIndex = this.coverageAmounts.indexOf(coverageAmount);
+    console.log(planIndex)
+    const { premium } = plans[planIndex];
+    return premium;
   }
 
   render() {
@@ -147,17 +157,17 @@ export default class PlanOverview extends Component {
       today.getDate() === startDay &&
       today.getMonth() === startMonth &&
       today.getFullYear() === startYear;
-    const { plan, onPricePerMonthChange } = this.props.screenProps;
+    const { policy, onPricePerMonthChange } = this.props.screenProps;
 
-    const coverageAmounts = plan.coverageAmounts.map(a => ({
-      label: Math.floor(a / 1000) + "k",
-      value: a
+    const coverageAmounts = this.coverageAmounts.map(c => ({
+      label: Math.floor(c / 1000) + "k",
+      value: c
     }));
-    const coverageDurations = plan.coverageDurations.map(d => ({
+    const coverageDurations = this.coverageDurations.map(d => ({
       label: d,
       value: d
     }));
-    const pricePerMonth = this.countPricePerMonth();
+    const pricePerMonth = this.getPricePerMonth();
 
     return (
       <View style={styles.page}>
@@ -172,8 +182,8 @@ export default class PlanOverview extends Component {
               { opacity: this.state.fadeAnim, top: this.state.topAnim }
             ]}
           >
-            <Text style={styles.planTitle}>
-              {plan.title}
+            <Text style={styles.policyTitle}>
+              {policy.title}
             </Text>
             <View style={styles.priceContainer}>
               <View style={styles.price}>
@@ -207,11 +217,19 @@ export default class PlanOverview extends Component {
                 CLICK ICONS FOR MORE DETAILS
               </Text>
               <View style={styles.coverage}>
-                {plan.covered.map(item => (
-                  <CoverageItem key={item} covered={true} {...coverages[item]} />
+                {policy.covered.map(item => (
+                  <CoverageItem
+                    key={item}
+                    covered={true}
+                    {...coverages[item]}
+                  />
                 ))}
-                {plan.notCovered.map(item => (
-                  <CoverageItem key={item} covered={false} {...coverages[item]} />
+                {policy.notCovered.map(item => (
+                  <CoverageItem
+                    key={item}
+                    covered={false}
+                    {...coverages[item]}
+                  />
                 ))}
               </View>
             </View>
@@ -221,12 +239,8 @@ export default class PlanOverview extends Component {
                 SLIDE TO ADJUST THE AMOUNT
               </Text>
               <RangeSlider
-                values={coverageAmounts}
-                onGesture={this.handleRangeSliderGesture}
-                onValueChange={val =>
-                  this.setState({ coverageAmount: val.value }, () => {
-                    onPricePerMonthChange(this.countPricePerMonth());
-                  })}
+                elements={coverageAmounts}
+                onValueChange={this.updateCoverageAmount}
               />
             </View>
             <View style={[styles.configContainer, { borderBottomWidth: 0 }]}>
@@ -235,15 +249,9 @@ export default class PlanOverview extends Component {
                 SLIDE TO ADJUST THE DURATION
               </Text>
               <RangeSlider
-                values={coverageDurations}
-                onGesture={this.handleRangeSliderGesture}
+                elements={coverageAmounts}
                 onValueChange={coverageDuration =>
-                  this.setState(
-                    { coverageDuration: coverageDuration.value },
-                    () => {
-                      onPricePerMonthChange(this.countPricePerMonth());
-                    }
-                  )}
+                  this.setState({ coverageDuration })}
               />
             </View>
           </Animated.View>
@@ -364,7 +372,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "white"
   },
-  planTitle: {
+  policyTitle: {
     alignSelf: "center",
     color: colors.primaryText,
     fontFamily: "Bitter",

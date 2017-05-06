@@ -1,136 +1,101 @@
-import React, { PropTypes, Component } from "react";
-import {
-  requireNativeComponent,
-  View,
-  StyleSheet,
-  Text,
-  PanResponder
-} from "react-native";
+import React, { Component } from "react";
+import { View, Text, StyleSheet } from "react-native";
+import Slider from "react-native-slider";
 
 import colors from "./colors";
-
-const BAR_WIDTH = 300;
-const BAR_HEIGHT_PERCENT = 0.045;
-const SLOT_RADIUS_PERCENT = 0.075;
-const SLIDER_RADIUS_PERCENT = 0.15;
 
 export default class RangeSlider extends Component {
   constructor(props) {
     super(props);
-    this._onChange = this._onChange.bind(this);
+    this.handleValueChange = this.handleValueChange.bind(this);
     this.state = {
       currentIndex: 0
     };
   }
 
-  _onChange(event: Event) {
-    const index = event.nativeEvent.index;
-    this.setState(
-      {
-        currentIndex: index
-      },
-      () => {
-        if (!this.props.onValueChange) return;
-        this.props.onValueChange(this.props.values[index]);
-      }
-    );
-  }
-
-  componentWillMount() {
-    this._panResponder = PanResponder.create({
-      // Ask to be the responder:
-      onStartShouldSetPanResponder: (evt, gestureState) => true,
-      onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
-      onMoveShouldSetPanResponder: (evt, gestureState) => true,
-      onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
-
-      onPanResponderGrant: (evt, gestureState) => {
-        if (!this.props.onGesture) return;
-        this.props.onGesture(true);
-        // The guesture has started. Show visual feedback so the user knows
-        // what is happening!
-
-        // gestureState.d{x,y} will be set to zero now
-      },
-      onPanResponderMove: (evt, gestureState) => {
-        if (!this.props.onGesture) return;
-        this.props.onGesture(true);
-        // The most recent move distance is gestureState.move{X,Y}
-        // The accumulated gesture distance since becoming responder is
-        // gestureState.d{x,y}
-      },
-      onPanResponderTerminationRequest: (evt, gestureState) => true,
-      onPanResponderRelease: (evt, gestureState) => {
-        if (!this.props.onGesture) return;
-        this.props.onGesture(false);
-        // The user has released all touches while this view is the
-        // responder. This typically means a gesture has succeeded
-      },
-      onPanResponderTerminate: (evt, gestureState) => {
-        if (!this.props.onGesture) return;
-        this.props.onGesture(false);
-        // Another component has become the responder, so this gesture
-        // should be cancelled
-      },
-      onShouldBlockNativeResponder: (evt, gestureState) => {
-        // Returns whether this component should block native components from becoming the JS
-        // responder. Returns true by default. Is currently only supported on android.
-        return true;
-      }
+  handleValueChange(currentIndex) {
+    const value = this.props.elements[currentIndex].value;
+    this.setState({ currentIndex }, () => {
+      if (this.props.onValueChange) this.props.onValueChange(value);
     });
   }
 
   render() {
-    const rangeSliderProps = {
-      rangeCount: this.props.values.length,
-      barHeightPercent: this.props.barHeightPercent || BAR_HEIGHT_PERCENT,
-      slotRadiusPercent: this.props.slotRadiusPercent || SLOT_RADIUS_PERCENT,
-      sliderRadiusPercent: this.sliderRadiusPercent || SLIDER_RADIUS_PERCENT
+    const { elements } = this.props;
+    const labels = elements.map(e => e.label);
+    const values = elements.map(e => e.value);
+    const sliderProps = {
+      minimumValue: 0,
+      maximumValue: this.props.elements.length - 1,
+      value: 0,
+      step: 1,
+      maximumTrackTintColor: colors.borderLine,
+      minimumTrackTintColor: colors.primaryOrange,
+      thumbTintColor: colors.primaryOrange,
+      thumbStyle: styles.thumb,
+      trackStyle: styles.track
     };
-
     return (
-      <View {...this._panResponder.panHandlers} style={styles.container}>
+      <View style={styles.container}>
         <View style={styles.labels}>
-          {this.props.values.map((v, idx) => {
+          {labels.map((lbl, idx) => {
             const activeStyle = idx === this.state.currentIndex
               ? styles.activeLabel
               : null;
             return (
-              <Text key={v.value} style={[styles.label, activeStyle]}>
-                {v.label}
+              <Text
+                key={lbl}
+                style={[styles.label, styles.labelsOffset, activeStyle]}
+              >
+                {lbl}
               </Text>
             );
           })}
         </View>
-        <RCTRangeSlider
-          onChange={this._onChange}
-          style={styles.slider}
-          {...rangeSliderProps}
-        />
+        <View style={[styles.labels, styles.trackStepsContainer]}>
+          {values.map((v, idx) => {
+            const activeTrackStep = idx <= this.state.currentIndex
+              ? styles.activeTrackStep
+              : null;
+            return <View key={v} style={[styles.trackStep, activeTrackStep]} />;
+          })}
+        </View>
+        <Slider {...sliderProps} onValueChange={this.handleValueChange} />
       </View>
     );
   }
 }
 
-RangeSlider.propTypes = {
-  rangeCount: PropTypes.number,
-  barHeightPercent: PropTypes.number,
-  slotRadiusPercent: PropTypes.number,
-  sliderRadiusPercent: PropTypes.number,
-  filledColor: PropTypes.string,
-  emptyColor: PropTypes.string,
-  onValueChange: PropTypes.func,
-  ...View.propTypes // include the default view properties
-};
-
-const RCTRangeSlider = requireNativeComponent("RCTRangeSlider", RangeSlider, {
-  nativeOnly: { onChange: true }
-});
+const THUMB_SIZE = 25;
+const LABELS_PADDING_LEFT = 4;
+const LABELS_PADDING_RIGHT = -5;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center"
+  track: {
+    height: 6
+  },
+  thumb: {
+    height: THUMB_SIZE,
+    width: THUMB_SIZE,
+    borderRadius: THUMB_SIZE / 2
+  },
+  trackStepsContainer: {
+    position: "absolute",
+    top: THUMB_SIZE - 3,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    paddingLeft: 0,
+    paddingRight: 0
+  },
+  activeTrackStep: {
+    backgroundColor: colors.primaryOrange
+  },
+  trackStep: {
+    height: THUMB_SIZE,
+    width: THUMB_SIZE,
+    borderRadius: THUMB_SIZE / 2,
+    backgroundColor: colors.borderLine
   },
   activeLabel: {
     fontSize: 17,
@@ -140,17 +105,16 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#757575"
   },
+  labelsOffset: {
+    paddingLeft: LABELS_PADDING_LEFT,
+    paddingRight: LABELS_PADDING_RIGHT,
+  },
   labels: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
-    paddingLeft: BAR_WIDTH * SLOT_RADIUS_PERCENT,
-    paddingRight: BAR_WIDTH * (SLOT_RADIUS_PERCENT - 0.035),
-    width: 300
+    justifyContent: "space-between"
   },
-  slider: {
-    marginTop: -15,
-    width: BAR_WIDTH,
-    height: 75
+  container: {
+    alignSelf: "stretch"
   }
 });

@@ -9,21 +9,21 @@ import {
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 import colors from "./colors";
-import plans from "../data/plans";
+import policies from "../data/policies";
 
 function addCommas(nStr) {
-    nStr += '';
-    x = nStr.split('.');
-    x1 = x[0];
-    x2 = x.length > 1 ? '.' + x[1] : '';
-    var rgx = /(\d+)(\d{3})/;
-    while (rgx.test(x1)) {
-            x1 = x1.replace(rgx, '$1' + ',' + '$2');
-    }
-    return x1 + x2;
+  nStr += "";
+  x = nStr.split(".");
+  x1 = x[0];
+  x2 = x.length > 1 ? "." + x[1] : "";
+  var rgx = /(\d+)(\d{3})/;
+  while (rgx.test(x1)) {
+    x1 = x1.replace(rgx, "$1" + "," + "$2");
+  }
+  return x1 + x2;
 }
 
-class Plan extends Component {
+class Policy extends Component {
   constructor(props) {
     super(props);
     this.handleSelectPlan = this.handleSelectPlan.bind(this);
@@ -34,12 +34,11 @@ class Plan extends Component {
   }
 
   render() {
-    const highestCoverageAmount = this.props.coverageAmounts[
-      this.props.coverageAmounts.length - 1
-    ];
+    const { plans } = this.props;
+    const highestCoverageAmount = plans[plans.length - 1].coverageAmount;
     return (
       <TouchableOpacity activeOpacity={0.6} onPress={this.handleSelectPlan}>
-        <View style={styles.planContainer}>
+        <View style={styles.policyContainer}>
           <View style={styles.iconContainer}>
             <Icon name={this.props.iconName} style={styles.icon} />
           </View>
@@ -48,7 +47,12 @@ class Plan extends Component {
               {this.props.title}
             </Text>
             <Text style={styles.subtitle}>
-              Up to ${addCommas(highestCoverageAmount)}
+              {this.props.subtitle}
+              {" "}
+              {"\u2022"}
+              {" "}
+              Up to $
+              {addCommas(highestCoverageAmount)}
             </Text>
           </View>
         </View>
@@ -57,7 +61,7 @@ class Plan extends Component {
   }
 }
 
-export default class Plans extends Component {
+export default class PolicyChoice extends Component {
   constructor(props) {
     super(props);
     this.handleSelectPlan = this.handleSelectPlan.bind(this);
@@ -66,8 +70,8 @@ export default class Plans extends Component {
     };
   }
 
-  handleSelectPlan(planTitle) {
-    this.props.onSelectPlan(planTitle);
+  handleSelectPlan(policyTitle) {
+    this.props.onSelectPlan(policyTitle);
   }
 
   componentDidMount() {
@@ -85,12 +89,12 @@ export default class Plans extends Component {
       <Animated.View
         style={[styles.container, { opacity: this.state.fadeAnim }]}
       >
-        {plans.map(plan => {
+        {policies.map(policy => {
           return (
-            <Plan
-              key={plan.title}
+            <Policy
+              key={policy.title}
               onSelectPlan={this.handleSelectPlan}
-              {...plan}
+              {...policy}
             />
           );
         })}
@@ -100,7 +104,7 @@ export default class Plans extends Component {
 }
 
 const styles = StyleSheet.create({
-  planContainer: {
+  policyContainer: {
     flexDirection: "row",
     backgroundColor: "white",
     marginLeft: 10,
