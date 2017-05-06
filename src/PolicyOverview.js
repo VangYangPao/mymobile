@@ -17,7 +17,56 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 
 import RangeSlider from "./RangeSlider";
 import colors from "./colors";
-import coverages from "../data/coverage";
+import coveragesData from "../data/coverage";
+
+
+class StartDateSelector extends Component {
+  render() {
+    const today = new Date();
+    const { startDate } = this.props;
+    const startDay = startDate.getDate();
+    const startMonth = startDate.getMonth();
+    const startYear = startDate.getFullYear();
+    const startDateIsToday =
+      today.getDate() === startDay &&
+      today.getMonth() === startMonth &&
+      today.getFullYear() === startYear;
+    const monthNames = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ];
+
+    return (
+      <View style={styles.startDateContainer}>
+        <Text style={styles.startDate}>Start date</Text>
+        <TouchableOpacity onPress={this.props.onSelectStartDate}>
+          <View style={styles.dropdown}>
+            <Text style={styles.dropdownDefault}>
+              {startDateIsToday
+                ? "TODAY"
+                : `${startDay} ${monthNames[startMonth]}, ${startYear}`}
+            </Text>
+            <Icon
+              size={25}
+              name="arrow-drop-down"
+              style={styles.dropdownIcon}
+            />
+          </View>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+}
 
 class CoverageItem extends Component {
   constructor(props) {
@@ -48,6 +97,27 @@ class CoverageItem extends Component {
           <Text style={styles.coverageTitle}>{this.props.title}</Text>
         </View>
       </TouchableOpacity>
+    );
+  }
+}
+
+class Coverages extends Component {
+  render() {
+    return (
+      <View style={styles.configContainer}>
+        <Text style={styles.configTitle}>COVERAGE HIGHLIGHTS</Text>
+        <Text style={styles.configSubtitle}>
+          CLICK ICONS FOR MORE DETAILS
+        </Text>
+        <View style={styles.coverage}>
+          {this.props.covered.map(item => (
+            <CoverageItem key={item} covered={true} {...coveragesData[item]} />
+          ))}
+          {this.props.notCovered.map(item => (
+            <CoverageItem key={item} covered={false} {...coveragesData[item]} />
+          ))}
+        </View>
+      </View>
     );
   }
 }
@@ -90,10 +160,6 @@ export default class PolicyOverview extends Component {
     }
   }
 
-  // handleRangeSliderGesture(hasOngoingGesture) {
-  //   this.setState({ scrollEnabled: !hasOngoingGesture });
-  // }
-
   componentDidMount() {
     InteractionManager.runAfterInteractions(() =>
       this.setState({ renderContent: true }, () => {
@@ -124,7 +190,6 @@ export default class PolicyOverview extends Component {
     const { plans } = this.props.screenProps.policy;
     const { coverageAmount } = this.state;
     const planIndex = this.coverageAmounts.indexOf(coverageAmount);
-    console.log(planIndex)
     const { premium } = plans[planIndex];
     return premium;
   }
@@ -133,30 +198,6 @@ export default class PolicyOverview extends Component {
     if (!this.state.renderContent) {
       return <View style={styles.page} />;
     }
-
-    const monthNames = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec"
-    ];
-    const today = new Date();
-    const startDate = this.state.startDate;
-    const startDay = startDate.getDate();
-    const startMonth = startDate.getMonth();
-    const startYear = startDate.getFullYear();
-    const startDateIsToday =
-      today.getDate() === startDay &&
-      today.getMonth() === startMonth &&
-      today.getFullYear() === startYear;
     const { policy, onPricePerMonthChange } = this.props.screenProps;
 
     const coverageAmounts = this.coverageAmounts.map(c => ({
@@ -185,6 +226,7 @@ export default class PolicyOverview extends Component {
             <Text style={styles.policyTitle}>
               {policy.title}
             </Text>
+
             <View style={styles.priceContainer}>
               <View style={styles.price}>
                 <Text style={styles.priceCurrency}>$</Text>
@@ -194,45 +236,14 @@ export default class PolicyOverview extends Component {
               </View>
               <Text style={styles.pricePerMonth}>PER MONTH</Text>
             </View>
-            <View style={styles.startDateContainer}>
-              <Text style={styles.startDate}>Start date</Text>
-              <TouchableOpacity onPress={this.handleSelectStartDate}>
-                <View style={styles.dropdown}>
-                  <Text style={styles.dropdownDefault}>
-                    {startDateIsToday
-                      ? "TODAY"
-                      : `${startDay} ${monthNames[startMonth]}, ${startYear}`}
-                  </Text>
-                  <Icon
-                    size={25}
-                    name="arrow-drop-down"
-                    style={styles.dropdownIcon}
-                  />
-                </View>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.configContainer}>
-              <Text style={styles.configTitle}>COVERAGE HIGHLIGHTS</Text>
-              <Text style={styles.configSubtitle}>
-                CLICK ICONS FOR MORE DETAILS
-              </Text>
-              <View style={styles.coverage}>
-                {policy.covered.map(item => (
-                  <CoverageItem
-                    key={item}
-                    covered={true}
-                    {...coverages[item]}
-                  />
-                ))}
-                {policy.notCovered.map(item => (
-                  <CoverageItem
-                    key={item}
-                    covered={false}
-                    {...coverages[item]}
-                  />
-                ))}
-              </View>
-            </View>
+
+            <StartDateSelector
+              startDate={this.state.startDate}
+              onSelectStartDate={this.handleSelectStartDate}
+            />
+
+            <Coverages {...policy} />
+
             <View style={styles.configContainer}>
               <Text style={styles.configTitle}>COVERAGE AMOUNTS</Text>
               <Text style={styles.configSubtitle}>
@@ -243,13 +254,13 @@ export default class PolicyOverview extends Component {
                 onValueChange={this.updateCoverageAmount}
               />
             </View>
-            <View style={[styles.configContainer, { borderBottomWidth: 0 }]}>
+            <View style={[styles.configContainer, styles.lastView]}>
               <Text style={styles.configTitle}>COVERAGE DURATION</Text>
               <Text style={styles.configSubtitle}>
                 SLIDE TO ADJUST THE DURATION
               </Text>
               <RangeSlider
-                elements={coverageAmounts}
+                elements={coverageDurations}
                 onValueChange={coverageDuration =>
                   this.setState({ coverageDuration })}
               />
@@ -265,6 +276,9 @@ const priceContainerSize = 150;
 const coverageContainerSize = 60;
 
 const styles = StyleSheet.create({
+  lastView: {
+    borderBottomWidth: 0
+  },
   coverageBtn: {
     flex: 0.25
   },
