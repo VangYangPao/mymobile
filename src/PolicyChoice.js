@@ -7,6 +7,7 @@ import {
   Animated
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import VectorDrawableView from "react-native-vectordrawable-android";
 
 import colors from "./colors";
 import policies from "../data/policies";
@@ -40,7 +41,10 @@ class Policy extends Component {
       <TouchableOpacity activeOpacity={0.6} onPress={this.handleSelectPlan}>
         <View style={styles.policyContainer}>
           <View style={styles.iconContainer}>
-            <Icon name={this.props.iconName} style={styles.icon} />
+            <VectorDrawableView
+              resourceName={this.props.imageSource}
+              style={{ height: 100, width: 100 }}
+            />
           </View>
           <View style={styles.detailContainer}>
             <Text style={styles.title} numberOfLines={1}>

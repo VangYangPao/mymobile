@@ -3164,6 +3164,10 @@ react-native-vector-icons@^4.0.1:
     lodash "^4.0.0"
     yargs "^6.3.0"
 
+react-native-vectordrawable-android@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/react-native-vectordrawable-android/-/react-native-vectordrawable-android-1.0.6.tgz#d71a44ce181a47956a0efc203c31060b7a85690d"
+
 react-native@0.43.3:
   version "0.43.3"
   resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.43.3.tgz#4f8e0d8d88827553789c02ef21cbc1afb68474d0"

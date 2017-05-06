@@ -2,7 +2,7 @@ export default (policies = [
     {
         title: "Accidental Death",
         subtitle: "Up to $10,000",
-        iconName: "directions-car",
+        imageSource: "ic_accidental_death",
         plans: [
             {
                 coverageAmount: 10000,
@@ -19,7 +19,7 @@ export default (policies = [
             {
                 coverageAmount: 100000,
                 premium: 49.91
-            },
+            }
         ],
         covered: ["Health problems", "Vehicle accidents"],
         notCovered: ["Flood", "Family"]
@@ -27,7 +27,7 @@ export default (policies = [
     {
         title: "Permanent Disablement",
         subtitle: "Up to $10,000",
-        iconName: "healing",
+        imageSource: "ic_permanent_disablement",
         plans: [
             {
                 coverageAmount: 10000,
@@ -44,7 +44,7 @@ export default (policies = [
             {
                 coverageAmount: 100000,
                 premium: 49.91
-            },
+            }
         ],
         covered: ["Health problems", "Vehicle accidents"],
         notCovered: ["Flood", "Family"]
@@ -52,7 +52,7 @@ export default (policies = [
     {
         title: "Medical Benefit",
         subtitle: "Requires medical record (TCM / Physiotherapy)",
-        iconName: "local-hospital",
+        imageSource: "ic_medical_benefit",
         plans: [
             {
                 coverageAmount: 1000,
@@ -69,7 +69,7 @@ export default (policies = [
             {
                 coverageAmount: 10000,
                 premium: 49.91
-            },
+            }
         ],
         covered: ["Health problems", "Vehicle accidents"],
         notCovered: ["Flood", "Family"]
@@ -77,7 +77,7 @@ export default (policies = [
     {
         title: "Hospitalization Benefit",
         subtitle: "Due to accident only",
-        iconName: "account-balance-wallet",
+        imageSource: "ic_hospitalization_benefit",
         plans: [
             {
                 coverageAmount: 5000,
@@ -94,7 +94,7 @@ export default (policies = [
             {
                 coverageAmount: 50000,
                 premium: 49.91
-            },
+            }
         ],
         covered: ["Health problems", "Vehicle accidents"],
         notCovered: ["Flood", "Family"]
