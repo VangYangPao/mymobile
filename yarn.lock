@@ -3164,9 +3164,16 @@ react-native-vector-icons@^4.0.1:
     lodash "^4.0.0"
     yargs "^6.3.0"
 
-react-native-vectordrawable-android@^1.0.6:
+"react-native-vectordrawable-android@https://github.com/mavenave/react-native-vectordrawable-android/tarball/master":
   version "1.0.6"
-  resolved "https://registry.yarnpkg.com/react-native-vectordrawable-android/-/react-native-vectordrawable-android-1.0.6.tgz#d71a44ce181a47956a0efc203c31060b7a85690d"
+  resolved "https://github.com/mavenave/react-native-vectordrawable-android/tarball/master#92d9e74c2696b45e9e5d5642161f17edc9baffdd"
+
+react-native-viewpager@^0.2.13:
+  version "0.2.13"
+  resolved "https://registry.yarnpkg.com/react-native-viewpager/-/react-native-viewpager-0.2.13.tgz#75e421ae90e89efcd77d2c077c0525382b7c39c5"
+  dependencies:
+    react-timer-mixin "^0.13.3"
+    warning "^2.1.0"
 
 react-native@0.43.3:
   version "0.43.3"
@@ -3965,6 +3972,12 @@ walker@~1.0.5:
   resolved "https://registry.yarnpkg.com/walker/-/walker-1.0.7.tgz#2f7f9b8fd10d677262b18a884e28d19618e028fb"
   dependencies:
     makeerror "1.0.x"
+
+warning@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/warning/-/warning-2.1.0.tgz#21220d9c63afc77a8c92111e011af705ce0c6901"
+  dependencies:
+    loose-envify "^1.0.0"
 
 watch@~0.10.0:
   version "0.10.0"

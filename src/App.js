@@ -14,6 +14,7 @@ import {
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 import ChatScreenWrapper from "./Chat";
+import IntroScreen from "./IntroScreen";
 import PolicyScreen from "./PolicyScreen";
 import colors from "./colors";
 import DrawerContent from "./DrawerContent";
@@ -128,6 +129,7 @@ const MyDrawerNavigator = DrawerNavigator(
 
 export default (Microsurance = StackNavigator(
   {
+    Intro: { screen: IntroScreen },
     Drawer: { screen: MyDrawerNavigator }
   },
   { headerMode: "none" }

@@ -2,12 +2,11 @@ package com.microsurance;
 
 import android.app.Application;
 
-import com.VectordrawableAndroid.ReactVectorDrawableAndroidPackage;
 import com.facebook.react.ReactApplication;
-import com.horcrux.svg.SvgPackage;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
 import com.facebook.react.views.image.ReactImageManager;
+import com.upinion.VectordrawableAndroid.ReactVectorDrawableAndroidPackage;
 import com.zmxv.RNSound.RNSoundPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.react.rnspinkit.RNSpinkitPackage;
@@ -31,7 +30,6 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new SvgPackage(),
             new RNSoundPackage(),
             new VectorIconsPackage(),
             new RNSpinkitPackage(),
