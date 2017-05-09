@@ -21,19 +21,23 @@ import DrawerContent from "./DrawerContent";
 
 // global.___DEV___ = false
 
-const MENU_ICON_SIZE = 30;
+const MENU_ICON_SIZE = 27;
 const MENU_ICON_PADDING_LEFT = 15;
 const MENU_ICON_PADDING_RIGHT = 10;
 
 const styles = StyleSheet.create({
+  header: {
+    height: 52.5,
+  },
   headerTitle: {
-    // fontWeight: "400",
     // fontSize: 20,
-    color: colors.primaryText,
     alignSelf: "center",
     paddingRight: MENU_ICON_PADDING_LEFT +
       MENU_ICON_SIZE +
-      MENU_ICON_PADDING_RIGHT
+      MENU_ICON_PADDING_RIGHT,
+    color: colors.primaryText,
+    fontWeight: "400",
+    fontFamily: 'Comfortaa-Bold'
   },
   headerMenuIcon: {
     paddingLeft: MENU_ICON_PADDING_LEFT,
@@ -83,6 +87,7 @@ const BuyStackNavigator = StackNavigator({
         button = renderBackButton(navigation);
       }
       return {
+        headerStyle: styles.header,
         headerTitleStyle: styles.headerTitle,
         headerLeft: button
       };
@@ -129,7 +134,7 @@ const MyDrawerNavigator = DrawerNavigator(
 
 export default (Microsurance = StackNavigator(
   {
-    Intro: { screen: IntroScreen },
+    // Intro: { screen: IntroScreen },
     Drawer: { screen: MyDrawerNavigator }
   },
   { headerMode: "none" }
