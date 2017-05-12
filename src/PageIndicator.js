@@ -15,15 +15,26 @@ import colors from "./colors";
 
 var deviceWidth = Dimensions.get("window").width;
 var DOT_SIZE = 6;
-var DOT_SAPCE = 4;
+var DOT_SPACE = 4;
 
 var styles = StyleSheet.create({
+  buttonText: {
+    color: colors.primaryOrange,
+    fontSize: 18
+  },
+  button: {
+    position: "absolute",
+    right: 10,
+    bottom: 10
+  },
   indicators: {
     flex: 1,
+    flexDirection: "row",
     alignItems: "center",
+    justifyContent: "center",
     position: "absolute",
-    bottom: 10,
     left: 0,
+    bottom: 15,
     right: 0,
     backgroundColor: "transparent"
   },
@@ -42,8 +53,8 @@ var styles = StyleSheet.create({
     height: DOT_SIZE,
     borderRadius: DOT_SIZE / 2,
     backgroundColor: "#E0E1E2",
-    marginLeft: DOT_SAPCE,
-    marginRight: DOT_SAPCE
+    marginLeft: DOT_SPACE,
+    marginRight: DOT_SPACE
   },
 
   curDot: {
@@ -52,7 +63,7 @@ var styles = StyleSheet.create({
     height: DOT_SIZE,
     borderRadius: DOT_SIZE / 2,
     backgroundColor: colors.primaryOrange,
-    margin: DOT_SAPCE,
+    margin: DOT_SPACE,
     bottom: 0
   }
 });
@@ -85,7 +96,7 @@ var DefaultViewPageIndicator = React.createClass({
 
   render() {
     var pageCount = this.props.pageCount;
-    var itemWidth = DOT_SIZE + DOT_SAPCE * 2;
+    var itemWidth = DOT_SIZE + DOT_SPACE * 2;
     var offset =
       (this.state.viewWidth - itemWidth * pageCount) / 2 +
       itemWidth * this.props.activePage;
@@ -103,22 +114,27 @@ var DefaultViewPageIndicator = React.createClass({
     }
 
     return (
-      <View style={styles.indicators}>
-        <View
-          style={styles.tabs}
-          onLayout={event => {
-            var viewWidth = event.nativeEvent.layout.width;
-            if (!viewWidth || this.state.viewWidth === viewWidth) {
-              return;
-            }
-            this.setState({
-              viewWidth: viewWidth
-            });
-          }}
-        >
-          {indicators}
-          <Animated.View style={[styles.curDot, { left }]} />
+      <View>
+        <View style={styles.indicators}>
+          <View
+            style={styles.tabs}
+            onLayout={event => {
+              var viewWidth = event.nativeEvent.layout.width;
+              if (!viewWidth || this.state.viewWidth === viewWidth) {
+                return;
+              }
+              this.setState({
+                viewWidth: viewWidth
+              });
+            }}
+          >
+            {indicators}
+            <Animated.View style={[styles.curDot, { left }]} />
+          </View>
         </View>
+        <TouchableOpacity style={styles.button}>
+          <Text style={styles.buttonText}>Sign In</Text>
+        </TouchableOpacity>
       </View>
     );
   }

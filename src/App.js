@@ -1,3 +1,4 @@
+/* @flow */
 import React, { Component } from "react";
 import {
   AppRegistry,
@@ -27,7 +28,7 @@ const MENU_ICON_PADDING_RIGHT = 10;
 
 const styles = StyleSheet.create({
   header: {
-    height: 52.5,
+    height: 52.5
   },
   headerTitle: {
     // fontSize: 20,
@@ -37,7 +38,7 @@ const styles = StyleSheet.create({
       MENU_ICON_PADDING_RIGHT,
     color: colors.primaryText,
     fontWeight: "400",
-    fontFamily: 'Comfortaa-Bold'
+    fontFamily: "Comfortaa-Bold"
   },
   headerMenuIcon: {
     paddingLeft: MENU_ICON_PADDING_LEFT,
@@ -134,7 +135,7 @@ const MyDrawerNavigator = DrawerNavigator(
 
 export default (Microsurance = StackNavigator(
   {
-    // Intro: { screen: IntroScreen },
+    Intro: { screen: IntroScreen },
     Drawer: { screen: MyDrawerNavigator }
   },
   { headerMode: "none" }
