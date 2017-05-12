@@ -132,7 +132,10 @@ var DefaultViewPageIndicator = React.createClass({
             <Animated.View style={[styles.curDot, { left }]} />
           </View>
         </View>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity
+          onPress={() => this.props.navigation.navigate("Drawer")}
+          style={styles.button}
+        >
           <Text style={styles.buttonText}>Sign In</Text>
         </TouchableOpacity>
       </View>

@@ -128,7 +128,9 @@ export default class IntroScreen extends Component {
   }
 
   render() {
-    const renderPageIndicator = props => <PageIndicator {...props} />;
+    const renderPageIndicator = props => (
+      <PageIndicator navigation={this.props.navigation} {...props} />
+    );
     return (
       <ViewPager
         dataSource={this.state.dataSource}
