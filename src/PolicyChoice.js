@@ -43,11 +43,11 @@ class Policy extends Component {
           <View style={styles.iconContainer}>
             <VectorDrawableView
               resourceName={this.props.imageSource}
-              style={{ height: 100, width: 100 }}
+              style={{ height: 75, width: 75 }}
             />
           </View>
           <View style={styles.detailContainer}>
-            <Text style={styles.title} numberOfLines={1}>
+            <Text style={styles.title}>
               {this.props.title}
             </Text>
             <Text style={styles.subtitle}>
@@ -111,11 +111,9 @@ const styles = StyleSheet.create({
   policyContainer: {
     flexDirection: "row",
     backgroundColor: "white",
-    marginLeft: 10,
-    marginRight: 10,
-    marginTop: 7,
-    marginBottom: 7,
-    padding: 12,
+    marginHorizontal: 10,
+    marginVertical: 6,
+    padding: 6,
     borderRadius: 3
   },
   iconContainer: {
@@ -132,8 +130,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.primaryText
   },
+  subtitle: {
+    marginTop: 4
+  },
   container: {
-    flex: 1,
-    marginTop: 10
+    flex: 1
   }
 });

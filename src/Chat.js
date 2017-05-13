@@ -385,6 +385,7 @@ class ChatScreen extends Component {
           renderInputToolbar={this.renderInputToolbar}
           renderComposer={this.renderComposer}
           renderSend={this.renderSend}
+          minInputToolbarHeight={0}
         />
       </View>
     );
