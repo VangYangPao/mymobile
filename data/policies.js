@@ -4,20 +4,24 @@ export default (policies = [
     imageSource: "ic_ad_pd",
     plans: [
       {
+        coverageAmount: 5000,
+        premium: 2.68
+      },
+      {
         coverageAmount: 10000,
-        premium: 4.99
+        premium: 5.35
       },
       {
         coverageAmount: 20000,
-        premium: 9.98
+        premium: 9.84
       },
       {
-        coverageAmount: 50000,
-        premium: 24.95
+        coverageAmount: 40000,
+        premium: 17.87
       },
       {
         coverageAmount: 100000,
-        premium: 49.91
+        premium: 40.98
       }
     ],
     covered: ["Accidental Death", "Accidental Permanent Disability"],
@@ -36,20 +40,24 @@ export default (policies = [
     imageSource: "ic_ad_pd_medical_reimbursement",
     plans: [
       {
+        coverageAmount: 5000,
+        premium: 2.68
+      },
+      {
         coverageAmount: 10000,
-        premium: 4.99
+        premium: 5.35
       },
       {
         coverageAmount: 20000,
-        premium: 9.98
+        premium: 9.84
       },
       {
-        coverageAmount: 50000,
-        premium: 24.95
+        coverageAmount: 40000,
+        premium: 17.87
       },
       {
         coverageAmount: 100000,
-        premium: 49.91
+        premium: 40.98
       }
     ],
     covered: [
@@ -72,20 +80,24 @@ export default (policies = [
     imageSource: "ic_ad_pd_weekly_indemnity",
     plans: [
       {
-        coverageAmount: 1000,
-        premium: 4.99
-      },
-      {
-        coverageAmount: 2000,
-        premium: 9.98
-      },
-      {
         coverageAmount: 5000,
-        premium: 24.95
+        premium: 2.20
       },
       {
         coverageAmount: 10000,
-        premium: 49.91
+        premium: 4.09
+      },
+      {
+        coverageAmount: 20000,
+        premium: 7.75
+      },
+      {
+        coverageAmount: 40000,
+        premium: 14.97
+      },
+      {
+        coverageAmount: 100000,
+        premium: 36.42
       }
     ],
     covered: [
@@ -108,19 +120,7 @@ export default (policies = [
     plans: [
       {
         coverageAmount: 1000,
-        premium: 4.99
-      },
-      {
-        coverageAmount: 2000,
-        premium: 9.98
-      },
-      {
-        coverageAmount: 5000,
-        premium: 24.95
-      },
-      {
-        coverageAmount: 10000,
-        premium: 49.91
+        premium: 12.84
       }
     ],
     covered: ["Phone Cracked / Dropped", "Phone On Wet Surface / Blank Screen"],

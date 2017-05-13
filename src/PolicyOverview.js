@@ -23,8 +23,9 @@ import coveragesData from "../data/coverage";
 class PolicyPrice extends Component {
   render() {
     const { pricePerMonth } = this.props;
-    const intPricePart = Math.floor(pricePerMonth);
-    const decimalPricePart = (pricePerMonth + "").split(".")[1];
+    const [intPricePart, decimalPricePart] = pricePerMonth
+      .toFixed(2)
+      .split(".");
     var additionalStyle = null;
 
     if (intPricePart >= 10) {
@@ -35,6 +36,7 @@ class PolicyPrice extends Component {
     }
     return (
       <View style={styles.priceContainer}>
+        <Text style={styles.pricePerMonth}>FROM</Text>
         <View style={styles.price}>
           <Text style={styles.priceCurrency}>$</Text>
           <Text style={[styles.priceAmount, additionalStyle]}>
@@ -104,7 +106,10 @@ class CoverageItem extends Component {
     this.handlePress = this.handlePress.bind(this);
   }
 
-  handlePress() {}
+  handlePress() {
+    const screenName = this.props.covered ? "Covered" : "NotCovered";
+    this.props.navigation.navigate(screenName);
+  }
 
   render() {
     return (
@@ -144,13 +149,19 @@ class PolicyCoverages extends Component {
         </Text>
         <View style={styles.coverage}>
           {this.props.covered.map(item => (
-            <CoverageItem key={item} covered={true} {...coveragesData[item]} />
+            <CoverageItem
+              key={item}
+              navigation={this.props.navigation}
+              covered={true}
+              {...coveragesData[item]}
+            />
           ))}
           {this.props.notCovered
             .slice(0, 2)
             .map(item => (
               <CoverageItem
                 key={item}
+                navigation={this.props.navigation}
                 covered={false}
                 {...coveragesData[item]}
               />
@@ -266,7 +277,7 @@ export default class PolicyOverview extends Component {
               {policy.title}
             </Text>
             <PolicyPrice pricePerMonth={pricePerMonth} />
-            <PolicyCoverages {...policy} />
+            <PolicyCoverages navigation={this.props.navigation} {...policy} />
           </Animated.View>
         </ScrollView>
       </View>
@@ -368,8 +379,7 @@ const styles = StyleSheet.create({
   },
   price: {
     flexDirection: "row",
-    alignItems: "center",
-    marginTop: -20
+    alignItems: "center"
   },
   priceCurrency: {
     paddingBottom: 10,
