@@ -118,7 +118,7 @@ class CheckoutModal extends Component {
 export default class PolicyScreen extends Component {
   static navigationOptions = ({ navigation }) => {
     const options = ChatScreenWrapper(null).navigationOptions;
-    options.title = "microAssure";
+    options.title = "Product Summary";
     options.headerStyle = styles.header;
     return options;
   };

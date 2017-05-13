@@ -36,7 +36,7 @@ const CUSTOMER_USER_ID = 1;
 const AGENT_USER = {
   _id: AGENT_USER_ID,
   name: "Carol",
-  avatar: IMAGE_URL
+  avatar: require("../images/mom.png")
 };
 function transposePolicyChoiceByTitle() {
   var policyDict = {};
