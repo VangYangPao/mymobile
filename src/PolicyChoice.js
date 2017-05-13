@@ -43,7 +43,7 @@ class Policy extends Component {
           <View style={styles.iconContainer}>
             <VectorDrawableView
               resourceName={this.props.imageSource}
-              style={{ height: 75, width: 75 }}
+              style={styles.icon}
             />
           </View>
           <View style={styles.detailContainer}>
@@ -51,12 +51,7 @@ class Policy extends Component {
               {this.props.title}
             </Text>
             <Text style={styles.subtitle}>
-              {this.props.subtitle}
-              {" "}
-              {"\u2022"}
-              {" "}
-              Up to $
-              {addCommas(highestCoverageAmount)}
+              Up to ${addCommas(highestCoverageAmount)}
             </Text>
           </View>
         </View>
@@ -124,7 +119,8 @@ const styles = StyleSheet.create({
     flex: 1
   },
   icon: {
-    fontSize: 30
+    height: 75,
+    width: 75
   },
   title: {
     fontSize: 16,

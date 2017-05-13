@@ -1,7 +1,6 @@
 export default (policies = [
   {
     title: "Accidental Death / Permanent Disability",
-    subtitle: "Up to $10,000",
     imageSource: "ic_ad_pd",
     plans: [
       {
@@ -21,8 +20,8 @@ export default (policies = [
         premium: 49.91
       }
     ],
-    covered: ["Health problems", "Vehicle accidents"],
-    notCovered: ["Flood", "Family"]
+    covered: ["Accidental Death", "Accidental Permanent Disability"],
+    notCovered: ["Disability Income", "Cashless Medical Coverage"]
   },
   {
     title: "Accidental Death / Permanent Disability with Medical Reimbursement",
@@ -46,8 +45,12 @@ export default (policies = [
         premium: 49.91
       }
     ],
-    covered: ["Health problems", "Vehicle accidents"],
-    notCovered: ["Flood", "Family"]
+    covered: [
+      "Accidental Death",
+      "Accidental Permanent Disability",
+      "Medical Reimbursement (Medical Benefit)"
+    ],
+    notCovered: ["Disability Income", "Cashless Medical Coverage"]
   },
   {
     title: "Accidental Death / Permanent Disability with Weekly Indemnity",
@@ -71,12 +74,15 @@ export default (policies = [
         premium: 49.91
       }
     ],
-    covered: ["Health problems", "Vehicle accidents"],
-    notCovered: ["Flood", "Family"]
+    covered: [
+      "Accidental Death",
+      "Accidental Permanent Disability",
+      "Weekly Indemnity (Accident Benefit)"
+    ],
+    notCovered: ["Disability Income", "Cashless Medical Coverage"]
   },
   {
     title: "Phone Protection",
-    subtitle: "Requires medical record (TCM / Physiotherapy)",
     imageSource: "ic_phone_protection",
     plans: [
       {
@@ -96,7 +102,7 @@ export default (policies = [
         premium: 49.91
       }
     ],
-    covered: ["Health problems", "Vehicle accidents"],
-    notCovered: ["Flood", "Family"]
+    covered: ["Phone Cracked / Dropped", "Phone On Wet Surface / Blank Screen"],
+    notCovered: []
   }
 ]);

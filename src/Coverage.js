@@ -7,6 +7,7 @@ import {
   ScrollView
 } from "react-native";
 import Ionicon from "react-native-vector-icons/Ionicons";
+import VectorDrawableView from "react-native-vectordrawable-android";
 
 import colors from "./colors";
 import coverages from "../data/coverage";
@@ -46,7 +47,10 @@ class Coverage extends Component {
                     ]}
                   >
                     <View style={styles.iconContainer}>
-                      <Ionicon name={item.icon} size={35} style={styles.icon} />
+                      <VectorDrawableView
+                        resourceName={item.icon}
+                        style={styles.icon}
+                      />
                     </View>
                     <Text style={styles.title}>{item.title.toUpperCase()}</Text>
                     <Text style={styles.description}>{item.description}</Text>
@@ -65,17 +69,18 @@ const containerSize = 75;
 
 const styles = StyleSheet.create({
   description: {
-    fontSize: 16,
-    textAlign: "center"
+    fontSize: 16
   },
   title: {
     marginTop: 10,
     marginBottom: 10,
     fontSize: 18,
-    color: colors.primaryText
+    color: colors.primaryText,
+    textAlign: "center"
   },
   icon: {
-    color: colors.primaryText
+    height: containerSize,
+    width: containerSize
   },
   iconContainer: {
     alignItems: "center",

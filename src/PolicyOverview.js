@@ -14,6 +14,7 @@ import {
 } from "react-native";
 import Ionicon from "react-native-vector-icons/Ionicons";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import VectorDrawableView from "react-native-vectordrawable-android";
 
 import RangeSlider from "./RangeSlider";
 import colors from "./colors";
@@ -113,17 +114,20 @@ class CoverageItem extends Component {
         onPress={this.handlePress}
       >
         <View style={styles.coverageItem}>
-          <View style={styles.coverageContainer}>
-            <Ionicon
-              name={this.props.icon}
-              size={30}
-              style={[
-                styles.coverageIcon,
-                !this.props.covered ? styles.notCovered : null
-              ]}
+          <View
+            style={[
+              styles.coverageIconContainer,
+              !this.props.covered ? styles.notCovered : null
+            ]}
+          >
+            <VectorDrawableView
+              resourceName={this.props.icon}
+              style={styles.coverageIcon}
             />
           </View>
-          <Text style={styles.coverageTitle}>{this.props.title}</Text>
+          <Text style={styles.coverageTitle}>
+            {this.props.shortTitle || this.props.title}
+          </Text>
         </View>
       </TouchableOpacity>
     );
@@ -294,7 +298,7 @@ export default class PolicyOverview extends Component {
 }
 
 const PRICE_CONTAINER_SIZE = 150;
-const COVERAGE_CONTAINER_SIZE = 60;
+const COVERAGE_CONTAINER_SIZE = 50;
 const PRICE_DECIMAL_CONTAINER_SIZE = 50;
 
 const styles = StyleSheet.create({
@@ -305,16 +309,18 @@ const styles = StyleSheet.create({
     flex: 0.25
   },
   notCovered: {
-    color: "#BDBDBD"
+    opacity: 0.3
   },
   coverageTitle: {
     marginTop: 5,
-    textAlign: "center"
+    textAlign: "center",
+    fontSize: 12
   },
   coverageIcon: {
-    color: "#616161"
+    height: COVERAGE_CONTAINER_SIZE,
+    width: COVERAGE_CONTAINER_SIZE
   },
-  coverageContainer: {
+  coverageIconContainer: {
     alignItems: "center",
     justifyContent: "center",
     height: COVERAGE_CONTAINER_SIZE,
