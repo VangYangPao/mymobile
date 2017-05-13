@@ -108,7 +108,9 @@ class CoverageItem extends Component {
 
   handlePress() {
     const screenName = this.props.covered ? "Covered" : "NotCovered";
-    this.props.navigation.navigate(screenName);
+    this.props.navigation.navigate(screenName, {
+      coverageTitle: this.props.title
+    });
   }
 
   render() {
