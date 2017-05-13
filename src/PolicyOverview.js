@@ -259,37 +259,8 @@ export default class PolicyOverview extends Component {
             <Text style={styles.policyTitle}>
               {policy.title}
             </Text>
-
             <PolicyPrice pricePerMonth={pricePerMonth} />
-
-            <PolicyStartDate
-              startDate={this.state.startDate}
-              onSelectStartDate={this.handleSelectStartDate}
-            />
-
             <PolicyCoverages {...policy} />
-
-            <View style={styles.configContainer}>
-              <Text style={styles.configTitle}>COVERAGE AMOUNTS</Text>
-              <Text style={styles.configSubtitle}>
-                SLIDE TO ADJUST THE AMOUNT
-              </Text>
-              <RangeSlider
-                elements={coverageAmounts}
-                onValueChange={this.updateCoverageAmount}
-              />
-            </View>
-            <View style={[styles.configContainer, styles.lastView]}>
-              <Text style={styles.configTitle}>COVERAGE DURATION</Text>
-              <Text style={styles.configSubtitle}>
-                SLIDE TO ADJUST THE DURATION
-              </Text>
-              <RangeSlider
-                elements={coverageDurations}
-                onValueChange={coverageDuration =>
-                  this.setState({ coverageDuration })}
-              />
-            </View>
           </Animated.View>
         </ScrollView>
       </View>
@@ -297,9 +268,9 @@ export default class PolicyOverview extends Component {
   }
 }
 
-const PRICE_CONTAINER_SIZE = 150;
+const PRICE_CONTAINER_SIZE = 125;
 const COVERAGE_CONTAINER_SIZE = 50;
-const PRICE_DECIMAL_CONTAINER_SIZE = 50;
+const PRICE_DECIMAL_CONTAINER_SIZE = 20;
 
 const styles = StyleSheet.create({
   lastView: {
@@ -336,22 +307,16 @@ const styles = StyleSheet.create({
   },
   configTitle: {
     color: colors.primaryText,
-    fontSize: 19,
+    fontSize: 17,
     fontWeight: "500"
   },
   configSubtitle: {
     fontSize: 13,
-    marginTop: 5,
-    marginBottom: 20
+    marginBottom: 10
   },
   configContainer: {
     flex: 1,
-    alignItems: "center",
-    marginTop: 20,
-    marginBottom: 5,
-    paddingBottom: 15,
-    borderBottomColor: colors.softBorderLine,
-    borderBottomWidth: 1.5
+    alignItems: "center"
   },
   startDate: {
     fontSize: 16,
@@ -391,7 +356,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     height: PRICE_CONTAINER_SIZE,
     width: PRICE_CONTAINER_SIZE,
-    marginVertical: 20,
+    marginVertical: 13,
     borderRadius: PRICE_CONTAINER_SIZE / 2,
     backgroundColor: colors.primaryOrange
   },
@@ -402,12 +367,12 @@ const styles = StyleSheet.create({
   },
   priceCurrency: {
     paddingBottom: 10,
-    fontSize: 40,
+    fontSize: 20,
     color: "white"
   },
   priceAmountDecimal: {
     alignSelf: "flex-start",
-    fontSize: 18
+    fontSize: 15
   },
   priceAmountDecimalContainer: {
     alignSelf: "flex-start",
@@ -419,19 +384,19 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primaryOrange
   },
   priceAmount: {
-    fontSize: 60,
+    fontSize: 40,
     color: "white"
   },
   pricePerMonth: {
     fontWeight: "500",
-    fontSize: 16,
+    fontSize: 14,
     color: "white"
   },
   policyTitle: {
     alignSelf: "center",
     color: colors.primaryText,
     fontFamily: "Bitter",
-    fontSize: 30
+    fontSize: 20
   },
   page: {
     position: "absolute",

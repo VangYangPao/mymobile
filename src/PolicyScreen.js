@@ -68,16 +68,6 @@ class Footer extends Component {
     return (
       <View style={styles.footer}>
         <View style={styles.footerBtnContainer}>
-          {/*<TouchableOpacity
-            style={[styles.footerBtn, styles.footerGoBack]}
-            onPress={() => {}}
-          >
-            <View style={styles.footerBtn}>
-              <Text style={[styles.footerBtnText, styles.footerGoBackText]}>
-                GO BACK
-              </Text>
-            </View>
-          </TouchableOpacity>*/}
           <TouchableOpacity
             style={[styles.footerBtn, styles.footerPurchase]}
             activeOpacity={0.6}
@@ -237,7 +227,7 @@ const styles = StyleSheet.create({
   },
   footerBtnContainer: {
     justifyContent: "center",
-    height: 50,
+    height: 45,
     flexDirection: "row"
   },
   footerBtn: {
