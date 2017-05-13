@@ -146,9 +146,15 @@ class PolicyCoverages extends Component {
           {this.props.covered.map(item => (
             <CoverageItem key={item} covered={true} {...coveragesData[item]} />
           ))}
-          {this.props.notCovered.map(item => (
-            <CoverageItem key={item} covered={false} {...coveragesData[item]} />
-          ))}
+          {this.props.notCovered
+            .slice(0, 2)
+            .map(item => (
+              <CoverageItem
+                key={item}
+                covered={false}
+                {...coveragesData[item]}
+              />
+            ))}
         </View>
       </View>
     );

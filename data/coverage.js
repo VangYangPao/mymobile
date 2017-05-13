@@ -43,5 +43,25 @@ export default (coverageItems = {
     title: "Phone On Wet Surface / Blank Screen",
     icon: "ic_phone_wet",
     description: "This covers accidental damage to your phone. For example, your phone dropped and cracked, or your phone fell onto wet surface and black-screen, you shall enjoy door-to-door repair service or phone replacement instantly."
+  },
+  "War or Terrorism": {
+    title: "War or Terrorism",
+    icon: "ic_war_terrorism"
+  },
+  "Pregnancy or Miscarriage": {
+    title: "Pregnancy or Miscarriage",
+    icon: "ic_pregnancy"
+  },
+  "Suicide or Self-inflicted Injury": {
+    title: "Suicide or Self-inflicted Injury",
+    icon: "ic_suicide"
+  },
+  "Dangerous Sports": {
+    title: "Dangerous Sports",
+    icon: "ic_dangerous_sport"
+  },
+  "Pre-existing Conditions": {
+    title: "Pre-Existing Conditions",
+    icon: "ic_preexisting_conditions"
   }
 });

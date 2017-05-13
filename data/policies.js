@@ -21,7 +21,14 @@ export default (policies = [
       }
     ],
     covered: ["Accidental Death", "Accidental Permanent Disability"],
-    notCovered: ["Disability Income", "Cashless Medical Coverage"]
+    notCovered: [
+      "Disability Income",
+      "Cashless Medical Coverage",
+      "War or Terrorism",
+      "Pregnancy or Miscarriage",
+      "Suicide or Self-inflicted Injury",
+      "Dangerous Sports"
+    ]
   },
   {
     title: "Accidental Death / Permanent Disability with Medical Reimbursement",
@@ -50,7 +57,14 @@ export default (policies = [
       "Accidental Permanent Disability",
       "Medical Reimbursement (Medical Benefit)"
     ],
-    notCovered: ["Disability Income", "Cashless Medical Coverage"]
+    notCovered: [
+      "Disability Income",
+      "Cashless Medical Coverage",
+      "War or Terrorism",
+      "Pregnancy or Miscarriage",
+      "Suicide or Self-inflicted Injury",
+      "Dangerous Sports"
+    ]
   },
   {
     title: "Accidental Death / Permanent Disability with Weekly Indemnity",
@@ -79,7 +93,14 @@ export default (policies = [
       "Accidental Permanent Disability",
       "Weekly Indemnity (Accident Benefit)"
     ],
-    notCovered: ["Disability Income", "Cashless Medical Coverage"]
+    notCovered: [
+      "Disability Income",
+      "Cashless Medical Coverage",
+      "War or Terrorism",
+      "Pregnancy or Miscarriage",
+      "Suicide or Self-inflicted Injury",
+      "Dangerous Sports"
+    ]
   },
   {
     title: "Phone Protection",
