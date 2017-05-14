@@ -113,6 +113,27 @@ const ClaimStackNavigator = StackNavigator({
   }
 });
 
+class SettingsScreen extends Component {
+  static navigationOptions = {
+    drawerLabel: "Settings",
+    drawerIcon: ({ tintColor }) => (
+      <Icon name="settings" size={22} color={tintColor} />
+    )
+  };
+
+  render() {}
+}
+
+class HelpScreen extends Component {
+  static navigationOptions = {
+    drawerLabel: "Settings",
+    drawerIcon: ({ tintColor }) => (
+      <Icon name="feedback" size={22} color={tintColor} />
+    )
+  };
+  render() {}
+}
+
 const MyDrawerNavigator = DrawerNavigator(
   {
     BuyStack: {
@@ -120,6 +141,12 @@ const MyDrawerNavigator = DrawerNavigator(
     },
     ClaimStack: {
       screen: ClaimStackNavigator
+    },
+    Settings: {
+      screen: SettingsScreen
+    },
+    Help: {
+      screen: HelpScreen
     }
   },
   {

@@ -26,7 +26,6 @@ import { validateAnswer, QUESTION_SETS } from "../data/questions";
 // Enable playback in silence mode (iOS only)
 Sound.setCategory("Playback");
 
-const IMAGE_URL = "https://www.drive.ai/images/team/Carol.png";
 const FIRST_MSG_LOAD_TIME = 500;
 const POLICIES_FADE_IN_TIME = 400;
 
