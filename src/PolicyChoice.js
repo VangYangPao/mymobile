@@ -60,6 +60,7 @@ export default class PolicyChoice extends Component {
     super(props);
     this.handleSelectPlan = this.handleSelectPlan.bind(this);
     this.state = {
+      topAnim: new Animated.Value(20),
       fadeAnim: new Animated.Value(0) // Initial value for opacity: 0
     };
   }
@@ -69,11 +70,17 @@ export default class PolicyChoice extends Component {
   }
 
   componentDidMount() {
-    Animated.timing(
-      // Animate over time
-      this.state.fadeAnim, // The animated value to drive
+    Animated.parallel(
+      [
+        Animated.timing(this.state.fadeAnim, {
+          toValue: 1 // Animate to opacity: 1, or fully opaque
+        }),
+        Animated.timing(this.state.topAnim, {
+          toValue: 0
+        })
+      ],
       {
-        toValue: 1 // Animate to opacity: 1, or fully opaque
+        duration: 500
       }
     ).start();
   }
@@ -81,7 +88,10 @@ export default class PolicyChoice extends Component {
   render() {
     return (
       <Animated.View
-        style={[styles.container, { opacity: this.state.fadeAnim }]}
+        style={[
+          styles.container,
+          { opacity: this.state.fadeAnim, top: this.state.topAnim }
+        ]}
       >
         {policies.map(policy => {
           return (
