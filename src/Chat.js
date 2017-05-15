@@ -367,6 +367,10 @@ class ChatScreen extends Component {
       { label: "50k", value: 50000 },
       { label: "100k", value: 100000 }
     ];
+    const additionalProps = {};
+    if (!this.state.answering || this.props.isStartScreen) {
+      additionalProps.minInputToolbarHeight = 0;
+    }
     return (
       <View style={styles.container}>
         <GiftedChat
@@ -384,7 +388,7 @@ class ChatScreen extends Component {
           renderInputToolbar={this.renderInputToolbar}
           renderComposer={this.renderComposer}
           renderSend={this.renderSend}
-          minInputToolbarHeight={0}
+          {...additionalProps}
         />
       </View>
     );
