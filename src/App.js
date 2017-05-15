@@ -1,12 +1,6 @@
 /* @flow */
 import React, { Component } from "react";
-import {
-  AppRegistry,
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity
-} from "react-native";
+import { AppRegistry, StyleSheet, View, TouchableOpacity } from "react-native";
 import {
   DrawerNavigator,
   StackNavigator,
@@ -44,6 +38,10 @@ const styles = StyleSheet.create({
     paddingLeft: MENU_ICON_PADDING_LEFT,
     paddingRight: MENU_ICON_PADDING_RIGHT,
     color: colors.primaryText
+  },
+  planHeaderTitle: {
+    fontWeight: "500",
+    fontFamily: "Lato"
   }
 });
 
@@ -97,7 +95,7 @@ const BuyStackNavigator = StackNavigator({
   Plan: {
     screen: PolicyScreen,
     navigationOptions: ({ navigation }) => ({
-      headerTitleStyle: styles.headerTitle,
+      headerTitleStyle: [styles.headerTitle, styles.planHeaderTitle],
       headerLeft: renderBackButton(navigation)
     })
   }

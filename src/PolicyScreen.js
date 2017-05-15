@@ -4,7 +4,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
-  Text,
   Modal,
   TextInput,
   Dimensions
@@ -16,6 +15,7 @@ import {
   LiteCreditCardInput
 } from "react-native-credit-card-input";
 
+import { Text } from "./defaultComponents";
 import ChatScreenWrapper from "./Chat";
 import PolicyOverview from "./PolicyOverview";
 import POLICIES from "../data/policies";

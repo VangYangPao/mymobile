@@ -3,7 +3,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
-  Text,
   ScrollView,
   DatePickerAndroid,
   InteractionManager,
@@ -17,6 +16,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import VectorDrawableView from "react-native-vectordrawable-android";
 
 import RangeSlider from "./RangeSlider";
+import { Text } from "./defaultComponents";
 import colors from "./colors";
 import coveragesData from "../data/coverage";
 
@@ -414,7 +414,8 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     color: colors.primaryText,
     fontFamily: "Bitter",
-    fontSize: 20
+    fontSize: 20,
+    textAlign: "center"
   },
   page: {
     position: "absolute",

@@ -1,6 +1,6 @@
 import uuid from "uuid";
 import React, { Component } from "react";
-import { Image, StyleSheet, TouchableOpacity, View, Text } from "react-native";
+import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import {
   GiftedChat,
   Message,
@@ -17,6 +17,7 @@ import Sound from "react-native-sound";
 import Slider from "react-native-slider";
 import { template } from "lodash";
 
+import { Text } from "./defaultComponents";
 import RangeSlider from "./RangeSlider";
 import PolicyChoice from "./PolicyChoice";
 import colors from "./colors";
@@ -75,6 +76,9 @@ export default function ChatScreenWrapper(questionSet) {
   }
   wrapper.navigationOptions = ({ screenProps }) => ({
     title: "microAssure",
+    headerTitleStyle: {
+      fontWeight: "300"
+    },
     drawerLabel,
     drawerIcon: ({ tintColor }) => (
       <Icon name={drawerIcon} size={22} color={tintColor} />

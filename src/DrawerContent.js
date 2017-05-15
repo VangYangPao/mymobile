@@ -1,6 +1,8 @@
 import React, { Component } from "react";
-import { View, Image, StyleSheet, Text } from "react-native";
+import { View, Image, StyleSheet } from "react-native";
 import { DrawerItems } from "react-navigation";
+
+import { Text } from "./defaultComponents";
 
 export default class DrawerContent extends Component {
   render() {
@@ -25,7 +27,7 @@ const styles = StyleSheet.create({
   header: {
     alignItems: "center",
     paddingTop: 10,
-    paddingBottom: 10,
+    paddingBottom: 10
   },
   image: {
     height: imageDim,
@@ -33,7 +35,7 @@ const styles = StyleSheet.create({
     borderRadius: imageDim / 2
   },
   name: {
-    marginTop: 5,
+    marginTop: 5
   },
   container: {
     flex: 1

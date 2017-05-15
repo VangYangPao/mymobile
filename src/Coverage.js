@@ -1,14 +1,9 @@
 import React, { Component } from "react";
-import {
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  Text,
-  ScrollView
-} from "react-native";
+import { StyleSheet, TouchableOpacity, View, ScrollView } from "react-native";
 import Ionicon from "react-native-vector-icons/Ionicons";
 import VectorDrawableView from "react-native-vectordrawable-android";
 
+import { Text } from "./defaultComponents";
 import colors from "./colors";
 import coverages from "../data/coverage";
 

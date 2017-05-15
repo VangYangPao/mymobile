@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import {
   StyleSheet,
-  Text,
   View,
   TouchableOpacity,
   Image,
@@ -11,6 +10,7 @@ import {
 import ViewPager from "react-native-viewpager";
 import VectorDrawableView from "react-native-vectordrawable-android";
 
+import { Text } from "./defaultComponents";
 import colors from "./colors";
 import PageIndicator from "./PageIndicator";
 
@@ -153,7 +153,8 @@ const styles = StyleSheet.create({
     borderRadius: 3
   },
   benefitTitle: {
-    textAlign: "center"
+    textAlign: "center",
+    marginTop: 7
   },
   benefitIcon: {
     height: 100,

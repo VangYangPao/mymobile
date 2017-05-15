@@ -2,15 +2,9 @@
 
 var React = require("react");
 var ReactNative = require("react-native");
-var {
-  Dimensions,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  Animated
-} = ReactNative;
+var { Dimensions, StyleSheet, TouchableOpacity, View, Animated } = ReactNative;
 
+import { Text } from "./defaultComponents";
 import colors from "./colors";
 
 var deviceWidth = Dimensions.get("window").width;

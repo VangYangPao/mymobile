@@ -1,14 +1,9 @@
 import React, { Component } from "react";
-import {
-  View,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  Animated
-} from "react-native";
+import { View, StyleSheet, TouchableOpacity, Animated } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import VectorDrawableView from "react-native-vectordrawable-android";
 
+import { Text } from "./defaultComponents";
 import colors from "./colors";
 import policies from "../data/policies";
 
