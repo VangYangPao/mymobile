@@ -1,4 +1,24 @@
 export default (coverageItems = {
+  accidentalDeath: {
+    title: "Accidental Death"
+  },
+  permanentDisablement: {
+    title: "Permanent Disablement"
+  },
+  medicalReimbursement: {
+    shortTitle: "Medical Benefit",
+    title: "Medical Benefit – AMR (TCM/Physio)"
+  },
+  weeklyIndemnity: {
+    shortTitle: "Weekly Indemnity",
+    title: "Accident Hospitalization Benefit (per week)"
+  },
+  accidentalDamage: {
+    title: "Accidental Damage"
+  },
+  waterDamage: {
+    title: "Water Damage"
+  },
   "Accidental Death": {
     title: "Accidental Death",
     icon: "ic_accidental_death",

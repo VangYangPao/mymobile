@@ -4,23 +4,28 @@ export default (policies = [
     imageSource: "ic_ad_pd",
     plans: [
       {
-        coverageAmount: 5000,
+        accidentalDeath: 5000,
+        permanentDisablement: 5000,
         premium: 2.68
       },
       {
-        coverageAmount: 10000,
+        accidentalDeath: 10000,
+        permanentDisablement: 10000,
         premium: 5.35
       },
       {
-        coverageAmount: 20000,
+        accidentalDeath: 20000,
+        permanentDisablement: 20000,
         premium: 9.84
       },
       {
-        coverageAmount: 40000,
+        accidentalDeath: 40000,
+        permanentDisablement: 40000,
         premium: 17.87
       },
       {
-        coverageAmount: 100000,
+        accidentalDeath: 100000,
+        permanentDisablement: 100000,
         premium: 40.98
       }
     ],
@@ -40,23 +45,33 @@ export default (policies = [
     imageSource: "ic_ad_pd_medical_reimbursement",
     plans: [
       {
-        coverageAmount: 5000,
+        accidentalDeath: 5000,
+        permanentDisablement: 5000,
+        medicalReimbursement: 500,
         premium: 2.68
       },
       {
-        coverageAmount: 10000,
+        accidentalDeath: 10000,
+        permanentDisablement: 10000,
+        medicalReimbursement: 1000,
         premium: 5.35
       },
       {
-        coverageAmount: 20000,
+        accidentalDeath: 20000,
+        permanentDisablement: 20000,
+        medicalReimbursement: 1500,
         premium: 9.84
       },
       {
-        coverageAmount: 40000,
+        accidentalDeath: 40000,
+        permanentDisablement: 40000,
+        medicalReimbursement: 2000,
         premium: 17.87
       },
       {
-        coverageAmount: 100000,
+        accidentalDeath: 100000,
+        permanentDisablement: 100000,
+        medicalReimbursement: 3000,
         premium: 40.98
       }
     ],
@@ -80,23 +95,33 @@ export default (policies = [
     imageSource: "ic_ad_pd_weekly_indemnity",
     plans: [
       {
-        coverageAmount: 5000,
+        accidentalDeath: 5000,
+        permanentDisablement: 5000,
+        weeklyIndemnity: 200,
         premium: 2.20
       },
       {
-        coverageAmount: 10000,
+        accidentalDeath: 10000,
+        permanentDisablement: 10000,
+        weeklyIndemnity: 250,
         premium: 4.09
       },
       {
-        coverageAmount: 20000,
+        accidentalDeath: 20000,
+        permanentDisablement: 20000,
+        weeklyIndemnity: 300,
         premium: 7.75
       },
       {
-        coverageAmount: 40000,
+        accidentalDeath: 40000,
+        permanentDisablement: 40000,
+        weeklyIndemnity: 350,
         premium: 14.97
       },
       {
-        coverageAmount: 100000,
+        accidentalDeath: 100000,
+        permanentDisablement: 100000,
+        weeklyIndemnity: 400,
         premium: 36.42
       }
     ],
@@ -119,7 +144,8 @@ export default (policies = [
     imageSource: "ic_phone_protection",
     plans: [
       {
-        coverageAmount: 1000,
+        accidentalDamage: 1000,
+        waterDamage: 1000,
         premium: 12.84
       }
     ],
