@@ -99,7 +99,7 @@ class ChatScreen extends Component {
       messages: [],
       answering: true,
       currentQuestionIndex: -1,
-      answers: {}
+      answers: { policy: props.policy }
     };
 
     if (props.questionSet) {
@@ -241,10 +241,20 @@ class ChatScreen extends Component {
       this.questions[currentQuestionIndex].question
     )(this.state.answers);
     this.sendNewMessage(nextQuestion);
-    this.setState({
-      currentQuestionIndex,
-      answering: true
-    });
+
+    this.setState(
+      {
+        currentQuestionIndex,
+        answering: true
+      },
+      () => {
+        if (
+          this.questions[this.state.currentQuestionIndex].responseType === null
+        ) {
+          this.askNextQuestion();
+        }
+      }
+    );
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -257,6 +267,10 @@ class ChatScreen extends Component {
       } else {
         const lastMessage = messages[messages.length - 1];
         const lastQuestion = this.questions[currentQuestionIndex];
+        // just respond with next question if it's not a question
+        if (lastQuestion.responseType === null) {
+          this.askNextQuestion();
+        }
         const result = validateAnswer(lastQuestion, lastMessage.text.trim());
 
         if (result.isValid) {
@@ -318,6 +332,8 @@ class ChatScreen extends Component {
 
   renderInputToolbar(props) {
     if (this.props.isStartScreen) return null;
+    const { currentQuestionIndex } = this.state;
+    const question = this.questions[currentQuestionIndex];
     return (
       <InputToolbar
         {...props}

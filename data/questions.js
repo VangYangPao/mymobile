@@ -42,6 +42,25 @@ export function validateAnswer(question, answer) {
 export const QUESTION_SETS = {
   buy: [
     {
+      question: "Thanks for choosing <%= policy.title %>. ☺️",
+      responseType: null
+    },
+    {
+      question: "Let's get started. Which plan do you want to buy?",
+      responseType: "number",
+      choice: [],
+      id: "planIndex"
+    },
+    {
+      question: "Great! How long do you want to be covered with this plan?",
+      responseType: "string",
+      id: "coverageDuration"
+    },
+    {
+      question: "Awesome. That would be <%= totalPremium %> ($<%= monthlyPremium %> per month.).",
+      responseType: null
+    },
+    {
       question: "Let's get started. What's your full name?",
       responseType: "string",
       id: "name"
@@ -102,7 +121,7 @@ export const QUESTION_SETS = {
       question: "I see. Tell us about your specific injuries.",
       responseType: "string",
       id: "injuryDetails"
-    },
+    }
     // {
     //   question: "Please snap a photo of the police report / medical report / death certificate.",
     //   responseType: "string",
