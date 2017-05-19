@@ -308,7 +308,9 @@ class ChatScreen extends Component {
         if (lastQuestion.responseType === null) {
           this.askNextQuestion();
         }
-        const answer = lastMessage.value || lastMessage.text.trim();
+        const answer = lastMessage.value !== undefined
+          ? lastMessage.value
+          : lastMessage.text.trim();
         const result = validateAnswer(lastQuestion, answer);
 
         if (result.isValid) {
