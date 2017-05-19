@@ -45,6 +45,9 @@ const AGENT_USER = {
   name: "Carol",
   avatar: require("../images/mom.png")
 };
+const CUSTOMER_USER = {
+  _id: CUSTOMER_USER_ID
+};
 function transposePolicyChoiceByTitle() {
   var policyDict = {};
   POLICIES.forEach(policy => {
@@ -122,6 +125,7 @@ class ChatScreen extends Component {
 
     this.handleUserSend = this.handleUserSend.bind(this);
     this.handleAgentSend = this.handleAgentSend.bind(this);
+    this.handleSelectPolicy = this.handleSelectPolicy.bind(this);
     this.handleSelectPlan = this.handleSelectPlan.bind(this);
     this.renderStartScreenMessages = this.renderStartScreenMessages.bind(this);
     this.askNextQuestion = this.askNextQuestion.bind(this);
@@ -202,10 +206,27 @@ class ChatScreen extends Component {
     this.setState(this.concatMessage(message), this.playNewMessageSound);
   }
 
-  handleSelectPlan(policyTitle) {
+  handleSelectPolicy(policyTitle) {
     const policy = transposePolicyChoiceByTitle()[policyTitle];
     const params = { policy, page: "info" };
     this.props.navigation.navigate("Plan", params);
+  }
+
+  handleSelectPlan(planIndex) {
+    const currentQuestion = this.questions[this.state.currentQuestionIndex];
+    if (currentQuestion.id !== "planIndex") return;
+    const planAlphabet = ["A", "B", "C", "D", "E"];
+    const premium = this.props.policy.plans[planIndex].premium;
+    this.setState(
+      this.concatMessage({
+        type: "text",
+        _id: uuid.v4(),
+        text: `Plan ${planAlphabet[planIndex]} $${premium + ""}/month`,
+        value: planIndex,
+        user: CUSTOMER_USER
+      }),
+      () => this.setState({ answering: false })
+    );
   }
 
   componentDidMount() {
@@ -287,7 +308,8 @@ class ChatScreen extends Component {
         if (lastQuestion.responseType === null) {
           this.askNextQuestion();
         }
-        const result = validateAnswer(lastQuestion, lastMessage.text.trim());
+        const answer = lastMessage.value || lastMessage.text.trim();
+        const result = validateAnswer(lastQuestion, answer);
 
         if (result.isValid) {
           var answers = JSON.parse(JSON.stringify(this.state.answers));
@@ -340,9 +362,14 @@ class ChatScreen extends Component {
       case "text":
         return <Message {...props} />;
       case "policies":
-        return <PolicyChoice onSelectPlan={this.handleSelectPlan} />;
+        return <PolicyChoice onSelectPolicy={this.handleSelectPolicy} />;
       case "plans":
-        return <PlanCarousel plans={this.props.policy.plans} />;
+        return (
+          <PlanCarousel
+            onSelectPlan={this.handleSelectPlan}
+            plans={this.props.policy.plans}
+          />
+        );
       default:
         return <Message {...props} />;
     }
@@ -408,9 +435,7 @@ class ChatScreen extends Component {
         <GiftedChat
           messages={this.state.messages}
           onSend={this.handleUserSend}
-          user={{
-            _id: CUSTOMER_USER_ID
-          }}
+          user={CUSTOMER_USER}
           onLongPress={() => {}}
           renderTime={() => {}}
           renderDay={() => {}}

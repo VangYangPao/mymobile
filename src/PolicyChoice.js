@@ -67,7 +67,7 @@ export default class PolicyChoice extends Component {
   }
 
   handleSelectPlan(policyTitle) {
-    this.props.onSelectPlan(policyTitle);
+    this.props.onSelectPolicy(policyTitle);
   }
 
   componentDidMount() {

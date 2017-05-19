@@ -35,13 +35,15 @@ export default class PlanCarousel extends Component {
     this.handleSelectPlan = this.handleSelectPlan.bind(this);
   }
 
-  handleSelectPlan() {
-    if (this.props.onSelectPlan) {
-      this.props.onSelectPlan();
-    }
+  handleSelectPlan(planIndex) {
+    return () => {
+      if (this.props.onSelectPlan) {
+        this.props.onSelectPlan(planIndex);
+      }
+    };
   }
 
-  renderPlan(plan) {
+  renderPlan(plan, index) {
     var coverages = [];
     var coverage, coverageView;
     for (var coverageKey in plan) {
@@ -59,9 +61,9 @@ export default class PlanCarousel extends Component {
     }
     return (
       <TouchableOpacity
-        onPress={this.handleSelectPlan}
+        onPress={this.handleSelectPlan(index)}
         activeOpacity={0.6}
-        key={plan}
+        key={index}
       >
         <View style={styles.plan}>
           <PolicyPrice pricePerMonth={plan.premium} />
@@ -102,7 +104,7 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   carousel: {
-    marginTop: 15
+    marginVertical: 15
   },
   plan: {
     flex: 1,
@@ -110,6 +112,6 @@ const styles = StyleSheet.create({
     paddingTop: 5,
     paddingBottom: 15,
     backgroundColor: "white",
-    elevation: 2
+    elevation: 4
   }
 });

@@ -5,6 +5,14 @@ class ValidationResult {
   }
 }
 
+function validateNumber(num) {
+  const isValid = Number.isInteger(num);
+  return new ValidationResult(
+    isValid,
+    isValid || "Please enter a valid number"
+  );
+}
+
 function validateEmail(email) {
   var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   const isValid = re.test(email);
@@ -24,7 +32,8 @@ function notEmptyString(str) {
 
 const TypeValidators = {
   email: validateEmail,
-  string: notEmptyString
+  string: notEmptyString,
+  number: validateNumber
 };
 
 export function validateAnswer(question, answer) {
