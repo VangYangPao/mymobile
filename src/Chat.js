@@ -1,6 +1,12 @@
 import uuid from "uuid";
 import React, { Component } from "react";
-import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  Dimensions,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  View
+} from "react-native";
 import {
   GiftedChat,
   Message,
@@ -17,6 +23,7 @@ import Sound from "react-native-sound";
 import Slider from "react-native-slider";
 import { template } from "lodash";
 
+import PlanCarousel from "./PlanCarousel";
 import { Text } from "./defaultComponents";
 import RangeSlider from "./RangeSlider";
 import PolicyChoice from "./PolicyChoice";
@@ -248,10 +255,19 @@ class ChatScreen extends Component {
         answering: true
       },
       () => {
-        if (
-          this.questions[this.state.currentQuestionIndex].responseType === null
-        ) {
+        const currentQuestion = this.questions[this.state.currentQuestionIndex];
+        if (currentQuestion.responseType === null) {
           this.askNextQuestion();
+          return;
+        }
+        if (currentQuestion.id === "planIndex") {
+          this.setState(
+            this.concatMessage({
+              type: "plans",
+              _id: uuid.v4(),
+              user: AGENT_USER
+            })
+          );
         }
       }
     );
@@ -325,6 +341,8 @@ class ChatScreen extends Component {
         return <Message {...props} />;
       case "policies":
         return <PolicyChoice onSelectPlan={this.handleSelectPlan} />;
+      case "plans":
+        return <PlanCarousel plans={this.props.policy.plans} />;
       default:
         return <Message {...props} />;
     }
@@ -381,12 +399,6 @@ class ChatScreen extends Component {
   }
 
   render() {
-    const elements = [
-      { label: "10k", value: 10000 },
-      { label: "20k", value: 20000 },
-      { label: "50k", value: 50000 },
-      { label: "100k", value: 100000 }
-    ];
     const additionalProps = {};
     if (!this.state.answering || this.props.isStartScreen) {
       additionalProps.minInputToolbarHeight = 0;

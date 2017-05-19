@@ -15,42 +15,11 @@ import Ionicon from "react-native-vector-icons/Ionicons";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import VectorDrawableView from "react-native-vectordrawable-android";
 
+import PolicyPrice from "./PolicyPrice";
 import RangeSlider from "./RangeSlider";
 import { Text } from "./defaultComponents";
 import colors from "./colors";
 import coveragesData from "../data/coverage";
-
-class PolicyPrice extends Component {
-  render() {
-    const { pricePerMonth } = this.props;
-    const [intPricePart, decimalPricePart] = pricePerMonth
-      .toFixed(2)
-      .split(".");
-    var additionalStyle = null;
-
-    if (intPricePart >= 10) {
-      const { fontSize } = StyleSheet.flatten(styles.priceAmount);
-      additionalStyle = {
-        fontSize: fontSize - 5
-      };
-    }
-    return (
-      <View style={styles.priceContainer}>
-        <Text style={styles.pricePerMonth}>FROM</Text>
-        <View style={styles.price}>
-          <Text style={styles.priceCurrency}>$</Text>
-          <Text style={[styles.priceAmount, additionalStyle]}>
-            {intPricePart}
-          </Text>
-          <Text style={[styles.priceAmount, styles.priceAmountDecimal]}>
-            .{decimalPricePart}
-          </Text>
-        </View>
-        <Text style={styles.pricePerMonth}>PER MONTH</Text>
-      </View>
-    );
-  }
-}
 
 class PolicyStartDate extends Component {
   render() {
@@ -278,7 +247,7 @@ export default class PolicyOverview extends Component {
             <Text style={styles.policyTitle}>
               {policy.title}
             </Text>
-            <PolicyPrice pricePerMonth={pricePerMonth} />
+            <PolicyPrice pricePerMonth={pricePerMonth} showFrom={true} />
             <PolicyCoverages navigation={this.props.navigation} {...policy} />
           </Animated.View>
         </ScrollView>
@@ -368,47 +337,6 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
     borderBottomColor: colors.softBorderLine,
     borderBottomWidth: 1.5
-  },
-  priceContainer: {
-    alignSelf: "center",
-    alignItems: "center",
-    justifyContent: "center",
-    height: PRICE_CONTAINER_SIZE,
-    width: PRICE_CONTAINER_SIZE,
-    marginVertical: 13,
-    borderRadius: PRICE_CONTAINER_SIZE / 2,
-    backgroundColor: colors.primaryOrange
-  },
-  price: {
-    flexDirection: "row",
-    alignItems: "center"
-  },
-  priceCurrency: {
-    paddingBottom: 10,
-    fontSize: 20,
-    color: "white"
-  },
-  priceAmountDecimal: {
-    alignSelf: "flex-start",
-    fontSize: 15
-  },
-  priceAmountDecimalContainer: {
-    alignSelf: "flex-start",
-    alignItems: "center",
-    justifyContent: "center",
-    height: PRICE_DECIMAL_CONTAINER_SIZE,
-    width: PRICE_DECIMAL_CONTAINER_SIZE,
-    borderRadius: PRICE_DECIMAL_CONTAINER_SIZE / 2,
-    backgroundColor: colors.primaryOrange
-  },
-  priceAmount: {
-    fontSize: 40,
-    color: "white"
-  },
-  pricePerMonth: {
-    fontWeight: "500",
-    fontSize: 14,
-    color: "white"
   },
   policyTitle: {
     alignSelf: "center",

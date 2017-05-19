@@ -48,7 +48,6 @@ export const QUESTION_SETS = {
     {
       question: "Let's get started. Which plan do you want to buy?",
       responseType: "number",
-      choice: [],
       id: "planIndex"
     },
     {

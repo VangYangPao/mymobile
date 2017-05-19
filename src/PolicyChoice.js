@@ -31,7 +31,8 @@ class Policy extends Component {
 
   render() {
     const { plans } = this.props;
-    const highestCoverageAmount = plans[plans.length - 1].coverageAmount;
+    const lastPlan = plans[plans.length - 1];
+    const highestCoverageAmount = lastPlan[Object.keys(lastPlan)[0]];
     return (
       <TouchableOpacity activeOpacity={0.6} onPress={this.handleSelectPlan}>
         <View style={styles.policyContainer}>
