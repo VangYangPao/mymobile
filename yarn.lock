@@ -3048,7 +3048,7 @@ raw-body@~2.1.2:
     iconv-lite "0.4.13"
     unpipe "1.0.0"
 
-react-addons-shallow-compare@^15.0.2:
+react-addons-shallow-compare@15.5.2, react-addons-shallow-compare@^15.0.2:
   version "15.5.2"
   resolved "https://registry.yarnpkg.com/react-addons-shallow-compare/-/react-addons-shallow-compare-15.5.2.tgz#7cb0ee7acc8d7c93fcc202df0bf47ba916a7bdad"
   dependencies:
@@ -3146,6 +3146,12 @@ react-native-slider@0.8.0:
   dependencies:
     react-addons-shallow-compare "^15.0.2"
     style-equal "^1.0.0"
+
+react-native-snap-carousel@^2.1.4:
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/react-native-snap-carousel/-/react-native-snap-carousel-2.1.4.tgz#7d9b7bfade489a34fd34869531d8d10a2a21018d"
+  dependencies:
+    react-addons-shallow-compare "15.5.2"
 
 react-native-sound@^0.9.1:
   version "0.9.1"
