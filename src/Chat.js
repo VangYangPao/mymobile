@@ -108,6 +108,7 @@ class ChatScreen extends Component {
     this.state = {
       messages: [],
       answering: true,
+      renderInput: true,
       currentQuestionIndex: -1,
       answers: { policy: props.policy }
     };
@@ -225,7 +226,7 @@ class ChatScreen extends Component {
         value: planIndex,
         user: CUSTOMER_USER
       }),
-      () => this.setState({ answering: false })
+      () => this.setState({ answering: false, renderInput: true })
     );
   }
 
@@ -287,7 +288,8 @@ class ChatScreen extends Component {
               type: "plans",
               _id: uuid.v4(),
               user: AGENT_USER
-            })
+            }),
+            () => this.setState({ renderInput: false })
           );
         }
       }
@@ -295,6 +297,11 @@ class ChatScreen extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    if (prevState.answering != this.state.answering) {
+      // console.log(this.refs.chat._messageContainerRef);
+      this.refs.chat.resetInputToolbar();
+    }
+
     if (this.state.answering !== prevState.answering && !this.state.answering) {
       const { messages, currentQuestionIndex } = this.state;
 
@@ -429,12 +436,18 @@ class ChatScreen extends Component {
 
   render() {
     const additionalProps = {};
-    if (!this.state.answering || this.props.isStartScreen) {
-      additionalProps.minInputToolbarHeight = 0;
+    var minInputToolbarHeight = 44;
+    if (
+      !this.state.answering ||
+      !this.state.renderInput ||
+      this.props.isStartScreen
+    ) {
+      minInputToolbarHeight = 0;
     }
     return (
       <View style={styles.container}>
         <GiftedChat
+          ref="chat"
           messages={this.state.messages}
           onSend={this.handleUserSend}
           user={CUSTOMER_USER}
@@ -444,10 +457,19 @@ class ChatScreen extends Component {
           renderBubble={this.renderBubble}
           renderMessage={this.renderMessage}
           renderMessageText={this.renderMessageText}
-          renderInputToolbar={this.renderInputToolbar}
-          renderComposer={this.renderComposer}
           renderSend={this.renderSend}
-          {...additionalProps}
+          minInputToolbarHeight={minInputToolbarHeight}
+          listViewProps={{
+            onContentSizeChange: (contentWidth, contentHeight) => {
+              if (this._messageContainerRef === null) {
+                return;
+              }
+              this.refs.chat._messageContainerRef.scrollTo({
+                y: contentHeight,
+                animated: true
+              });
+            }
+          }}
         />
       </View>
     );
