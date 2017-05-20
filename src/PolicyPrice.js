@@ -32,10 +32,10 @@ export default class PolicyPrice extends Component {
         <View style={styles.price}>
           <Text style={styles.priceCurrency}>$</Text>
           <Text style={[styles.priceAmount, additionalStyle]}>
-            {intPricePart}
+            {intPricePart + ""}
           </Text>
           <Text style={[styles.priceAmount, styles.priceAmountDecimal]}>
-            .{decimalPricePart}
+            .{decimalPricePart + ""}
           </Text>
         </View>
         <Text style={styles.pricePerMonth}>PER MONTH</Text>

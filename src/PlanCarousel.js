@@ -51,7 +51,7 @@ export default class PlanCarousel extends Component {
       coverage = COVERAGES[coverageKey];
       coverageView = (
         <View style={styles.coverage} key={coverageKey}>
-          <Text style={styles.coverageAmount}>${plan[coverageKey]}</Text>
+          <Text style={styles.coverageAmount}>${plan[coverageKey] + ""}</Text>
           <Text style={styles.coverageTitle}>
             {coverage.shortTitle || coverage.title}
           </Text>

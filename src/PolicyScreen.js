@@ -75,7 +75,7 @@ class Footer extends Component {
           >
             <View style={styles.footerBtn}>
               <Text style={[styles.footerBtnText, styles.footerPurchaseText]}>
-                PURCHASE (${this.props.pricePerMonth}/month)
+                PURCHASE (${this.props.pricePerMonth + ""}/month)
               </Text>
             </View>
           </TouchableOpacity>
