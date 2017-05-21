@@ -22,6 +22,7 @@ import Ionicon from "react-native-vector-icons/Ionicons";
 import Spinner from "react-native-spinkit";
 import Sound from "react-native-sound";
 import Slider from "react-native-slider";
+import ImagePicker from "react-native-image-picker";
 import { template } from "lodash";
 
 import PlanCarousel from "./PlanCarousel";
@@ -50,7 +51,7 @@ const CUSTOMER_USER = {
   _id: CUSTOMER_USER_ID
 };
 function transposePolicyChoiceByTitle() {
-  var policyDict = {};
+  let policyDict = {};
   POLICIES.forEach(policy => {
     policyDict[policy.title] = policy;
   });
@@ -61,7 +62,7 @@ export default function ChatScreenWrapper(questionSet) {
   const wrapper = props => {
     const routeParams = props.navigation.state.params;
     const isStartScreen = !routeParams && !questionSet;
-    var policy;
+    let policy;
     if (routeParams) {
       questionSet = questionSet || routeParams.questionSet;
       policy = routeParams.policy;
@@ -76,8 +77,8 @@ export default function ChatScreenWrapper(questionSet) {
     );
   };
 
-  var drawerLabel;
-  var drawerIcon;
+  let drawerLabel;
+  let drawerIcon;
   if (!questionSet) {
     drawerLabel = "Buy Policies";
     drawerIcon = "message";
@@ -102,6 +103,57 @@ const BAR_WIDTH = 300;
 const BAR_HEIGHT_PERCENT = 0.045;
 const SLOT_RADIUS_PERCENT = 0.075;
 const SLIDER_RADIUS_PERCENT = 0.15;
+
+class ActionButton extends Component {
+  render() {
+    return (
+      <View style={widgetStyles.actionButtonContainer}>
+        <TouchableOpacity
+          onPress={() => {
+            if (this.props.onPress) this.props.onPress();
+          }}
+          activeOpacity={0.5}
+        >
+          <View style={widgetStyles.actionButton}>
+            <Text style={widgetStyles.actionButtonText}>{this.props.text}</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+}
+
+class ImagePickerActionButton extends Component {
+  constructor(props) {
+    super(props);
+    this.handlePress = this.handlePress.bind(this);
+    this.options = {
+      title: "Select picture of NRIC",
+      storageOptions: {
+        skipBackup: true,
+        path: "images"
+      }
+    };
+  }
+
+  handlePress() {
+    ImagePicker.showImagePicker(this.options, response => {
+      if (response.didCancel) {
+        console.log("User cancelled image picker");
+      } else if (response.error) {
+        console.log("ImagePicker Error: ", response.error);
+      } else {
+        if (typeof this.props.onPickImage === "function") {
+          this.props.onPickImage(response.uri);
+        }
+      }
+    });
+  }
+
+  render() {
+    return <ActionButton onPress={this.handlePress} text="SELECT IMAGE" />;
+  }
+}
 
 class CoverageDurationWidget extends Component {
   constructor(props) {
@@ -146,6 +198,21 @@ class CoverageDurationWidget extends Component {
 }
 
 const widgetStyles = StyleSheet.create({
+  actionButtonText: {
+    fontSize: 17,
+    fontWeight: "600",
+    color: "white"
+  },
+  actionButton: {
+    height: 44,
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  actionButtonContainer: {
+    flex: 1,
+    backgroundColor: colors.primaryOrange,
+    height: 44
+  },
   confirmButton: {
     marginTop: 20,
     marginBottom: 30
@@ -191,6 +258,7 @@ class ChatScreen extends Component {
     this.handleSelectPolicy = this.handleSelectPolicy.bind(this);
     this.handleSelectPlan = this.handleSelectPlan.bind(this);
     this.handleSelectDuration = this.handleSelectDuration.bind(this);
+    this.handlePickImage = this.handlePickImage.bind(this);
     this.renderStartScreenMessages = this.renderStartScreenMessages.bind(this);
     this.askNextQuestion = this.askNextQuestion.bind(this);
     this.reaskQuestion = this.reaskQuestion.bind(this);
@@ -307,6 +375,19 @@ class ChatScreen extends Component {
     );
   }
 
+  handlePickImage(imageUri) {
+    this.setState(
+      this.concatMessage({
+        type: "text",
+        _id: uuid.v4(),
+        user: CUSTOMER_USER,
+        value: imageUri,
+        image: imageUri
+      }),
+      () => this.setState({ answering: false })
+    );
+  }
+
   componentDidMount() {
     if (this.props.isStartScreen) {
       this.renderStartScreenMessages();
@@ -337,10 +418,11 @@ class ChatScreen extends Component {
       const { questionSet, policy } = this.props;
       setTimeout(() => {
         if (questionSet === "buy") {
+          console.log(this.state.answers);
           const params = { policy, page: "checkout" };
           this.props.navigation.navigate("Plan", params);
         }
-      }, 500);
+      }, 3000);
       return;
     }
     const nextQuestion = template(
@@ -398,7 +480,7 @@ class ChatScreen extends Component {
         if (lastQuestion.responseType === null) {
           this.askNextQuestion();
         }
-        var answer = lastMessage.value !== undefined
+        let answer = lastMessage.value !== undefined
           ? lastMessage.value
           : lastMessage.text.trim();
         if (
@@ -410,7 +492,7 @@ class ChatScreen extends Component {
         const result = validateAnswer(lastQuestion, answer);
 
         if (result.isValid) {
-          var newAnswer = {};
+          let newAnswer = {};
           newAnswer[lastQuestion.id] = lastMessage.value !== undefined
             ? lastMessage.value
             : lastMessage.text;
@@ -507,13 +589,18 @@ class ChatScreen extends Component {
   renderComposer(props) {
     const { currentQuestionIndex } = this.state;
     if (currentQuestionIndex < 0) return;
-    var { responseType } = this.questions[currentQuestionIndex];
+    let { responseType } = this.questions[currentQuestionIndex];
     responseType = [].concat(responseType);
-    var keyboardType = "default";
+
+    if (responseType.indexOf("image") !== -1) {
+      return <ImagePickerActionButton onPickImage={this.handlePickImage} />;
+    }
+
+    let keyboardType = "default";
     if (responseType.indexOf("email") !== -1) keyboardType = "email-address";
     if (responseType.indexOf("number") !== -1) keyboardType = "numeric";
     if (responseType.indexOf("phoneNumber") !== -1) keyboardType = "phone-pad";
-    var textInputProps = { keyboardType };
+    let textInputProps = { keyboardType };
     return (
       <Composer
         placeholder="Type your message here..."
@@ -529,7 +616,7 @@ class ChatScreen extends Component {
 
   render() {
     const additionalProps = {};
-    var minInputToolbarHeight = 44;
+    let minInputToolbarHeight = 44;
     if (
       !this.state.answering ||
       !this.state.renderInput ||

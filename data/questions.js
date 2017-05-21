@@ -42,7 +42,8 @@ const TypeValidators = {
   email: validateEmail,
   string: notEmptyString,
   number: validateNumber,
-  phoneNumber: validatePhoneNumber
+  phoneNumber: validatePhoneNumber,
+  image: notEmptyString
 };
 
 export function validateAnswer(question, answer) {
@@ -85,7 +86,7 @@ export const QUESTION_SETS = {
     {
       question: "Hi <%= name %>, what's your IC number?",
       responseType: "string",
-      id: "idNumber"
+      id: "icNumber"
     },
     {
       question: "Thanks, what email address can we contact you at?",
@@ -126,6 +127,15 @@ export const QUESTION_SETS = {
       question: "And what's your beneficiary's bank account number?",
       responseType: "number",
       id: "beneficiaryBankAccount"
+    },
+    {
+      question: "Please send us a picture of your NRIC for verification.",
+      responseType: "image",
+      id: "icImage"
+    },
+    {
+      question: "Thank you. Please wait while I process your information...",
+      responseType: null
     }
   ],
   claim: [

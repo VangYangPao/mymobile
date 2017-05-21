@@ -108,6 +108,14 @@ class CheckoutModal extends Component {
                 inputStyle={styles.creditCardInputStyle}
               />
             </View>
+            <Button
+              onPress={() => {
+                if (!this.props.onSelectDuration) return;
+                this.props.onSelectDuration(this.state.months);
+              }}
+              title="CONFIRM PURCHASE"
+              color={colors.primaryOrange}
+            />
           </View>
         </View>
       </Modal>
