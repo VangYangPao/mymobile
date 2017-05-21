@@ -119,7 +119,7 @@ class CoverageDurationWidget extends Component {
     }));
     const { months } = this.state;
     const s = months > 1 ? "s" : "";
-    const totalPremium = this.props.monthlyPremium * months;
+    const totalPremium = (this.props.monthlyPremium * months).toFixed(2);
     const buttonText = `CHOOSE ${months + ""} month${s} - $${totalPremium}`;
     return (
       <View style={widgetStyles.durationContainer}>
@@ -153,7 +153,8 @@ const widgetStyles = StyleSheet.create({
   durationContainer: {
     flex: 1,
     marginHorizontal: 10,
-    marginVertical: 17,
+    marginTop: 17,
+    marginBottom: 22,
     paddingHorizontal: 15,
     paddingTop: 10,
     paddingBottom: 15,
@@ -404,7 +405,9 @@ class ChatScreen extends Component {
 
         if (result.isValid) {
           var newAnswer = {};
-          newAnswer[lastQuestion.id] = lastMessage.value || lastMessage.text;
+          newAnswer[lastQuestion.id] = lastMessage.value !== undefined
+            ? lastMessage.value
+            : lastMessage.text;
           const answers = Object.assign(this.state.answers, newAnswer);
           this.setState({ answers }, this.askNextQuestion);
         } else {

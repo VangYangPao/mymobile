@@ -65,7 +65,7 @@ export const QUESTION_SETS = {
       id: "coverageDuration"
     },
     {
-      question: "Awesome. That would be $<%= policy.plans[planIndex].premium * coverageDuration %> ($<%= policy.plans[planIndex].premium %> per month).",
+      question: "Awesome. That would be $<%= (policy.plans[planIndex].premium * coverageDuration).toFixed(2) %> ($<%= policy.plans[planIndex].premium %> per month).",
       responseType: null
     },
     {
