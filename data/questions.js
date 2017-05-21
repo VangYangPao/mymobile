@@ -22,6 +22,11 @@ function validateEmail(email) {
   );
 }
 
+function validateDate(date) {
+  const isValid = date instanceof Date;
+  return new ValidationResult(isValid, isValid || "Please enter a valid date");
+}
+
 function notEmptyString(str) {
   const isValid = !/^\s*$/.test(str);
   return new ValidationResult(
@@ -43,7 +48,8 @@ const TypeValidators = {
   string: notEmptyString,
   number: validateNumber,
   phoneNumber: validatePhoneNumber,
-  image: notEmptyString
+  image: notEmptyString,
+  date: validateDate
 };
 
 export function validateAnswer(question, answer) {
@@ -141,11 +147,11 @@ export const QUESTION_SETS = {
   claim: [
     {
       question: "Hi. When did the accident happen?",
-      responseType: "string",
+      responseType: "date",
       id: "accidentDateTime"
     },
     {
-      question: "Where did it happen?",
+      question: "Thank you. Where did it happen?",
       responseType: "string",
       id: "accidentLocation"
     },
@@ -160,14 +166,14 @@ export const QUESTION_SETS = {
       id: "description"
     },
     {
-      question: "I see. Tell us about your specific injuries.",
+      question: "Thank you. Tell us about your specific injuries.",
       responseType: "string",
       id: "injuryDetails"
+    },
+    {
+      question: "Please snap a photo of the police report / medical report / death certificate.",
+      responseType: "image",
+      id: "image"
     }
-    // {
-    //   question: "Please snap a photo of the police report / medical report / death certificate.",
-    //   responseType: "string",
-    //   id: "image"
-    // }
   ]
 };

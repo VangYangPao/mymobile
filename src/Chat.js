@@ -1,6 +1,7 @@
 import uuid from "uuid";
 import React, { Component } from "react";
 import {
+  DatePickerAndroid,
   Dimensions,
   Image,
   StyleSheet,
@@ -155,6 +156,35 @@ class ImagePickerActionButton extends Component {
   }
 }
 
+class DatePickerActionButton extends Component {
+  constructor(props) {
+    super(props);
+    this.handlePress = this.handlePress.bind(this);
+  }
+
+  async handlePress() {
+    try {
+      const today = new Date();
+      const { action, year, month, day } = await DatePickerAndroid.open({
+        date: today,
+        minDate: today,
+        mode: "spinner"
+      });
+      if (action !== DatePickerAndroid.dismissedAction) {
+        const date = new Date(year, month, day);
+        if (typeof this.props.onPickDate === "function")
+          this.props.onPickDate(date);
+      }
+    } catch ({ code, message }) {
+      console.warn("Cannot open date picker", message);
+    }
+  }
+
+  render() {
+    return <ActionButton onPress={this.handlePress} text="SELECT DATE" />;
+  }
+}
+
 class CoverageDurationWidget extends Component {
   constructor(props) {
     super(props);
@@ -259,6 +289,7 @@ class ChatScreen extends Component {
     this.handleSelectPlan = this.handleSelectPlan.bind(this);
     this.handleSelectDuration = this.handleSelectDuration.bind(this);
     this.handlePickImage = this.handlePickImage.bind(this);
+    this.handlePickDate = this.handlePickDate.bind(this);
     this.renderStartScreenMessages = this.renderStartScreenMessages.bind(this);
     this.askNextQuestion = this.askNextQuestion.bind(this);
     this.reaskQuestion = this.reaskQuestion.bind(this);
@@ -375,6 +406,22 @@ class ChatScreen extends Component {
     );
   }
 
+  handlePickDate(date) {
+    const day = date.getDate();
+    const month = date.getMonth();
+    const year = date.getFullYear();
+    this.setState(
+      this.concatMessage({
+        type: "text",
+        _id: uuid.v4(),
+        user: CUSTOMER_USER,
+        value: date,
+        text: `It happened on ${day}/${month}/${year}.`
+      }),
+      () => this.setState({ answering: false })
+    );
+  }
+
   handlePickImage(imageUri) {
     this.setState(
       this.concatMessage({
@@ -485,6 +532,7 @@ class ChatScreen extends Component {
           : lastMessage.text.trim();
         if (
           lastQuestion.responseType.indexOf("number") !== -1 &&
+          !isNaN(answer) &&
           typeof answer === "string"
         ) {
           answer = parseFloat(answer);
@@ -594,6 +642,8 @@ class ChatScreen extends Component {
 
     if (responseType.indexOf("image") !== -1) {
       return <ImagePickerActionButton onPickImage={this.handlePickImage} />;
+    } else if (responseType.indexOf("date") !== -1) {
+      return <DatePickerActionButton onPickDate={this.handlePickDate} />;
     }
 
     let keyboardType = "default";
