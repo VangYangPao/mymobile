@@ -61,15 +61,15 @@ export const QUESTION_SETS = {
     },
     {
       question: "Great! How long do you want to be covered with this plan?",
-      responseType: "string",
+      responseType: "number",
       id: "coverageDuration"
     },
     {
-      question: "Awesome. That would be <%= totalPremium %> ($<%= monthlyPremium %> per month.).",
+      question: "Awesome. That would be $<%= policy.plans[planIndex].premium * coverageDuration %> ($<%= policy.plans[planIndex].premium %> per month).",
       responseType: null
     },
     {
-      question: "Let's get started. What's your full name?",
+      question: "Tell us about yourself. What's your full name?",
       responseType: "string",
       id: "name"
     },

@@ -10,6 +10,7 @@ import {
 import Carousel from "react-native-snap-carousel";
 
 import PolicyPrice from "./PolicyPrice";
+import { addCommas } from "./utils";
 import POLICIES from "../data/policies";
 import COVERAGES from "../data/coverage";
 
@@ -49,9 +50,10 @@ export default class PlanCarousel extends Component {
     for (var coverageKey in plan) {
       if (coverageKey === "premium") continue;
       coverage = COVERAGES[coverageKey];
+      const coverageAmount = addCommas(plan[coverageKey]);
       coverageView = (
         <View style={styles.coverage} key={coverageKey}>
-          <Text style={styles.coverageAmount}>${plan[coverageKey] + ""}</Text>
+          <Text style={styles.coverageAmount}>${coverageAmount}</Text>
           <Text style={styles.coverageTitle}>
             {coverage.shortTitle || coverage.title}
           </Text>
@@ -81,9 +83,10 @@ export default class PlanCarousel extends Component {
         }}
         sliderWidth={sliderWidth}
         itemWidth={itemWidth}
-        firstItem={2}
+        firstItem={0}
         enableMomentum={false}
         containerCustomStyle={styles.carousel}
+        inactiveSlideOpacity={0.7}
       >
         {this.props.plans.map(this.renderPlan)}
       </Carousel>

@@ -36,7 +36,7 @@ export default class RangeSlider extends Component {
       trackStyle: styles.track
     };
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, this.props.containerStyle]}>
         <View style={styles.labels}>
           {labels.map((lbl, idx) => {
             const activeStyle = idx === this.state.currentIndex
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
   },
   labelsOffset: {
     paddingLeft: LABELS_PADDING_LEFT,
-    paddingRight: LABELS_PADDING_RIGHT,
+    paddingRight: LABELS_PADDING_RIGHT
   },
   labels: {
     flexDirection: "row",

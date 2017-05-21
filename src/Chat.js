@@ -5,7 +5,8 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
-  View
+  View,
+  Button
 } from "react-native";
 import {
   GiftedChat,
@@ -102,6 +103,66 @@ const BAR_HEIGHT_PERCENT = 0.045;
 const SLOT_RADIUS_PERCENT = 0.075;
 const SLIDER_RADIUS_PERCENT = 0.15;
 
+class CoverageDurationWidget extends Component {
+  constructor(props) {
+    super(props);
+    this.coverageDurations = [1, 2, 3, 6, 12];
+    this.state = {
+      months: this.coverageDurations[0]
+    };
+  }
+
+  render() {
+    const elements = this.coverageDurations.map(d => ({
+      label: d + "m",
+      value: d
+    }));
+    const { months } = this.state;
+    const s = months > 1 ? "s" : "";
+    const totalPremium = this.props.monthlyPremium * months;
+    const buttonText = `CHOOSE ${months + ""} month${s} - $${totalPremium}`;
+    return (
+      <View style={widgetStyles.durationContainer}>
+        <RangeSlider
+          elements={elements}
+          onValueChange={months => this.setState({ months })}
+          containerStyle={{
+            marginBottom: 20
+          }}
+        />
+        <Button
+          onPress={() => {
+            if (!this.props.onSelectDuration) return;
+            this.props.onSelectDuration(this.state.months);
+          }}
+          disabled={this.props.disabled}
+          title={buttonText}
+          color={colors.primaryOrange}
+          style={widgetStyles.confirmButton}
+        />
+      </View>
+    );
+  }
+}
+
+const widgetStyles = StyleSheet.create({
+  confirmButton: {
+    marginTop: 20,
+    marginBottom: 30
+  },
+  durationContainer: {
+    flex: 1,
+    marginHorizontal: 10,
+    marginVertical: 17,
+    paddingHorizontal: 15,
+    paddingTop: 10,
+    paddingBottom: 15,
+    borderRadius: 3,
+    backgroundColor: "white",
+    elevation: 4
+  }
+});
+
 class ChatScreen extends Component {
   constructor(props) {
     super(props);
@@ -128,6 +189,7 @@ class ChatScreen extends Component {
     this.handleAgentSend = this.handleAgentSend.bind(this);
     this.handleSelectPolicy = this.handleSelectPolicy.bind(this);
     this.handleSelectPlan = this.handleSelectPlan.bind(this);
+    this.handleSelectDuration = this.handleSelectDuration.bind(this);
     this.renderStartScreenMessages = this.renderStartScreenMessages.bind(this);
     this.askNextQuestion = this.askNextQuestion.bind(this);
     this.reaskQuestion = this.reaskQuestion.bind(this);
@@ -214,8 +276,6 @@ class ChatScreen extends Component {
   }
 
   handleSelectPlan(planIndex) {
-    const currentQuestion = this.questions[this.state.currentQuestionIndex];
-    if (currentQuestion.id !== "planIndex") return;
     const planAlphabet = ["A", "B", "C", "D", "E"];
     const premium = this.props.policy.plans[planIndex].premium;
     this.setState(
@@ -224,6 +284,22 @@ class ChatScreen extends Component {
         _id: uuid.v4(),
         text: `Plan ${planAlphabet[planIndex]} $${premium + ""}/month`,
         value: planIndex,
+        user: CUSTOMER_USER
+      }),
+      () => this.setState({ answering: false, renderInput: true })
+    );
+  }
+
+  handleSelectDuration(months) {
+    const currentQuestion = this.questions[this.state.currentQuestionIndex];
+    if (currentQuestion.id !== "coverageDuration") return;
+    const s = months > 1 ? "s" : "";
+    this.setState(
+      this.concatMessage({
+        type: "text",
+        _id: uuid.v4(),
+        text: `I want to be covered for ${months} month${s}`,
+        value: months,
         user: CUSTOMER_USER
       }),
       () => this.setState({ answering: false, renderInput: true })
@@ -282,10 +358,11 @@ class ChatScreen extends Component {
           this.askNextQuestion();
           return;
         }
-        if (currentQuestion.id === "planIndex") {
+        const widgets = ["planIndex", "coverageDuration"];
+        if (widgets.indexOf(currentQuestion.id) !== -1) {
           this.setState(
             this.concatMessage({
-              type: "plans",
+              type: currentQuestion.id,
               _id: uuid.v4(),
               user: AGENT_USER
             }),
@@ -297,7 +374,12 @@ class ChatScreen extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.answering != this.state.answering) {
+    // console.log("answering", this.state.answering);
+    // console.log("renderInput", this.state.renderInput);
+    if (
+      prevState.answering !== this.state.answering ||
+      prevState.renderInput !== this.state.renderInput
+    ) {
       // console.log(this.refs.chat._messageContainerRef);
       this.refs.chat.resetInputToolbar();
     }
@@ -321,8 +403,9 @@ class ChatScreen extends Component {
         const result = validateAnswer(lastQuestion, answer);
 
         if (result.isValid) {
-          var answers = JSON.parse(JSON.stringify(this.state.answers));
-          answers[lastQuestion.id] = lastMessage.text;
+          var newAnswer = {};
+          newAnswer[lastQuestion.id] = lastMessage.value || lastMessage.text;
+          const answers = Object.assign(this.state.answers, newAnswer);
           this.setState({ answers }, this.askNextQuestion);
         } else {
           this.reaskQuestion(result.errMessage);
@@ -372,11 +455,23 @@ class ChatScreen extends Component {
         return <Message {...props} />;
       case "policies":
         return <PolicyChoice onSelectPolicy={this.handleSelectPolicy} />;
-      case "plans":
+      case "planIndex":
         return (
           <PlanCarousel
             onSelectPlan={this.handleSelectPlan}
             plans={this.props.policy.plans}
+          />
+        );
+      case "coverageDuration":
+        const notCurrentQuestion =
+          this.questions[this.state.currentQuestionIndex].id !==
+          "coverageDuration";
+        const { planIndex } = this.state.answers;
+        return (
+          <CoverageDurationWidget
+            onSelectDuration={this.handleSelectDuration}
+            monthlyPremium={this.props.policy.plans[planIndex].premium}
+            disabled={notCurrentQuestion}
           />
         );
       default:
