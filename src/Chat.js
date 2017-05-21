@@ -465,9 +465,16 @@ class ChatScreen extends Component {
       const { questionSet, policy } = this.props;
       setTimeout(() => {
         if (questionSet === "buy") {
-          console.log(this.state.answers);
           const params = { policy, page: "checkout" };
-          this.props.navigation.navigate("Policy", params);
+          // this.props.navigation.navigate("Policy", params);
+          let form = Object.assign({}, this.state.answers);
+          const { planIndex } = form;
+          delete form.policy;
+          delete form.planIndex;
+          delete form.icImage;
+          form.totalPremium =
+            this.props.policy.plans[planIndex].premium * form.coverageDuration;
+          this.props.navigation.navigate("Confirmation", { form });
         }
       }, 2000);
       return;

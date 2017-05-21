@@ -38,7 +38,9 @@ export default class PolicyPrice extends Component {
             .{decimalPricePart + ""}
           </Text>
         </View>
-        <Text style={styles.pricePerMonth}>PER MONTH</Text>
+        {this.props.showFrom
+          ? <Text style={styles.pricePerMonth}>PER MONTH</Text>
+          : null}
       </View>
     );
   }

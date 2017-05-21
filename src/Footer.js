@@ -24,7 +24,6 @@ export default class Footer extends Component {
               </Text>
             </View>
           </TouchableOpacity>
-
         </View>
       </View>
     );
@@ -53,7 +52,5 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     fontSize: 15
   },
-  footer: {
-    justifyContent: "flex-end"
-  }
+  footer: {}
 });

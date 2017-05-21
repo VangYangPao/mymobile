@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import { TabNavigator } from "react-navigation";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import { CreditCardInput } from "react-native-credit-card-input";
 
 import { Text } from "./defaultComponents";
 import Footer from "./Footer";
@@ -61,43 +60,6 @@ const PlanTabNavigator = TabNavigator(
   }
 );
 
-class CheckoutModal extends Component {
-  render() {
-    return (
-      <Modal
-        animationType={"slide"}
-        transparent={true}
-        visible={true}
-        onRequestClose={this.props.onClose}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContentContainer}>
-            <View style={styles.checkoutHeader}>
-              <Text style={styles.checkoutTitle}>
-                Enter credit card details
-              </Text>
-            </View>
-            <View style={styles.checkoutContent}>
-              <CreditCardInput
-                onChange={this._onChange}
-                inputStyle={styles.creditCardInputStyle}
-              />
-            </View>
-            <Button
-              onPress={() => {
-                if (!this.props.onSelectDuration) return;
-                this.props.onSelectDuration(this.state.months);
-              }}
-              title="CONFIRM PURCHASE"
-              color={colors.primaryOrange}
-            />
-          </View>
-        </View>
-      </Modal>
-    );
-  }
-}
-
 export default class PolicyScreen extends Component {
   static navigationOptions = ({ navigation }) => {
     const options = ChatScreenWrapper(null).navigationOptions;
@@ -114,7 +76,7 @@ export default class PolicyScreen extends Component {
     const pricePerMonth = this.policy.plans[0].premium;
     this.handlePricePerMonthChange = this.handlePricePerMonthChange.bind(this);
     this.handlePurchase = this.handlePurchase.bind(this);
-    this.state = { pricePerMonth, renderCheckoutModal: false };
+    this.state = { pricePerMonth };
   }
 
   handlePurchase() {
@@ -137,15 +99,9 @@ export default class PolicyScreen extends Component {
       policy: this.policy,
       onPricePerMonthChange: this.handlePricePerMonthChange
     };
-    const modal = (
-      <CheckoutModal
-        onClose={() => this.setState({ renderCheckoutModal: false })}
-      />
-    );
     const footerText = `PURCHASE (${this.state.pricePerMonth}/month)`;
     return (
       <View style={styles.container}>
-        {this.state.renderCheckoutModal ? modal : null}
         <PlanTabNavigator screenProps={screenProps} />
         <Footer onPress={this.handlePurchase} text={footerText} />
       </View>
