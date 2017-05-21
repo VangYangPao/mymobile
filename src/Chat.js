@@ -398,9 +398,15 @@ class ChatScreen extends Component {
         if (lastQuestion.responseType === null) {
           this.askNextQuestion();
         }
-        const answer = lastMessage.value !== undefined
+        var answer = lastMessage.value !== undefined
           ? lastMessage.value
           : lastMessage.text.trim();
+        if (
+          lastQuestion.responseType.indexOf("number") !== -1 &&
+          typeof answer === "string"
+        ) {
+          answer = parseFloat(answer);
+        }
         const result = validateAnswer(lastQuestion, answer);
 
         if (result.isValid) {
@@ -500,32 +506,21 @@ class ChatScreen extends Component {
 
   renderComposer(props) {
     const { currentQuestionIndex } = this.state;
-    const { responseType } = this.questions[currentQuestionIndex];
-    // if (responseType !== "datetime") {
-    var additionalProps = {};
-    if (!this.state.answering) {
-      additionalProps = {
-        placeholder: "Type your message here...",
-        textInputProps: { editable: false }
-      };
-    }
+    if (currentQuestionIndex < 0) return;
+    var { responseType } = this.questions[currentQuestionIndex];
+    responseType = [].concat(responseType);
+    var keyboardType = "default";
+    if (responseType.indexOf("email") !== -1) keyboardType = "email-address";
+    if (responseType.indexOf("number") !== -1) keyboardType = "numeric";
+    if (responseType.indexOf("phoneNumber") !== -1) keyboardType = "phone-pad";
+    var textInputProps = { keyboardType };
     return (
       <Composer
         placeholder="Type your message here..."
         {...props}
-        {...additionalProps}
+        textInputProps={textInputProps}
       />
     );
-    // }
-    // return (
-    //   <View style={styles.datetimeContainer}>
-    //     <TouchableOpacity onPress={() => {}}>
-    //       <View style={styles.datetimeInput}>
-    //         <Text>Select Date</Text>
-    //       </View>
-    //     </TouchableOpacity>
-    //   </View>
-    // );
   }
 
   renderSend(props) {
@@ -556,6 +551,7 @@ class ChatScreen extends Component {
           renderMessage={this.renderMessage}
           renderMessageText={this.renderMessageText}
           renderSend={this.renderSend}
+          renderComposer={this.renderComposer}
           minInputToolbarHeight={minInputToolbarHeight}
           listViewProps={{
             onContentSizeChange: (contentWidth, contentHeight) => {

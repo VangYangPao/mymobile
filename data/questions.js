@@ -30,10 +30,19 @@ function notEmptyString(str) {
   );
 }
 
+function validatePhoneNumber(s) {
+  const isValid = true;
+  return new ValidationResult(
+    isValid,
+    isValid || "Please enter a valid phone number"
+  );
+}
+
 const TypeValidators = {
   email: validateEmail,
   string: notEmptyString,
-  number: validateNumber
+  number: validateNumber,
+  phoneNumber: validatePhoneNumber
 };
 
 export function validateAnswer(question, answer) {
@@ -65,7 +74,7 @@ export const QUESTION_SETS = {
       id: "coverageDuration"
     },
     {
-      question: "Awesome. That would be $<%= (policy.plans[planIndex].premium * coverageDuration).toFixed(2) %> ($<%= policy.plans[planIndex].premium %> per month).",
+      question: "Awesome. That would be $<%= (policy.plans[planIndex].premium * coverageDuration).toFixed(2) %>.",
       responseType: null
     },
     {
@@ -90,18 +99,33 @@ export const QUESTION_SETS = {
     },
     {
       question: "What's your phone number?",
-      responseType: "string",
+      responseType: ["string", "phoneNumber"],
       id: "phoneNumber"
     },
     {
-      question: "Great! To collect your claims, we will need your bank name. 🏦",
+      question: "Great! To collect your claims, we will need your bank name. 🏦 (Western Union accepted)",
       responseType: "string",
       id: "bankName"
     },
     {
       question: "Next, we will need your bank account number for us to bank into. 💵",
-      responseType: "string",
+      responseType: "number",
       id: "bankAccount"
+    },
+    {
+      question: "What's your beneficiary's full name?",
+      responseType: "string",
+      id: "beneficiaryName"
+    },
+    {
+      question: "To bank into your beneficiary's bank account, we need his/her bank name. (Western Union accepted)",
+      responseType: "string",
+      id: "beneficiaryBankName"
+    },
+    {
+      question: "And what's your beneficiary's bank account number?",
+      responseType: "number",
+      id: "beneficiaryBankAccount"
     }
   ],
   claim: [
