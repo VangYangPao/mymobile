@@ -372,7 +372,7 @@ class ChatScreen extends Component {
   handleSelectPolicy(policyTitle) {
     const policy = transposePolicyChoiceByTitle()[policyTitle];
     const params = { policy, page: "info" };
-    this.props.navigation.navigate("Plan", params);
+    this.props.navigation.navigate("Policy", params);
   }
 
   handleSelectPlan(planIndex) {
@@ -467,7 +467,7 @@ class ChatScreen extends Component {
         if (questionSet === "buy") {
           console.log(this.state.answers);
           const params = { policy, page: "checkout" };
-          this.props.navigation.navigate("Plan", params);
+          this.props.navigation.navigate("Policy", params);
         }
       }, 2000);
       return;

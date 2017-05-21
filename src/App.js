@@ -92,7 +92,7 @@ const BuyStackNavigator = StackNavigator({
       };
     }
   },
-  Plan: {
+  Policy: {
     screen: PolicyScreen,
     navigationOptions: ({ navigation }) => ({
       headerTitleStyle: [styles.headerTitle, styles.planHeaderTitle],
@@ -124,7 +124,7 @@ class SettingsScreen extends Component {
 
 class HelpScreen extends Component {
   static navigationOptions = {
-    drawerLabel: "Settings",
+    drawerLabel: "Help",
     drawerIcon: ({ tintColor }) => (
       <Icon name="feedback" size={22} color={tintColor} />
     )
