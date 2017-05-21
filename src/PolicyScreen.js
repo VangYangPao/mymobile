@@ -10,12 +10,10 @@ import {
 } from "react-native";
 import { TabNavigator } from "react-navigation";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import {
-  CreditCardInput,
-  LiteCreditCardInput
-} from "react-native-credit-card-input";
+import { CreditCardInput } from "react-native-credit-card-input";
 
 import { Text } from "./defaultComponents";
+import Footer from "./Footer";
 import ChatScreenWrapper from "./Chat";
 import PolicyOverview from "./PolicyOverview";
 import POLICIES from "../data/policies";
@@ -62,29 +60,6 @@ const PlanTabNavigator = TabNavigator(
     }
   }
 );
-
-class Footer extends Component {
-  render() {
-    return (
-      <View style={styles.footer}>
-        <View style={styles.footerBtnContainer}>
-          <TouchableOpacity
-            style={[styles.footerBtn, styles.footerPurchase]}
-            activeOpacity={0.6}
-            onPress={this.props.onPurchase}
-          >
-            <View style={styles.footerBtn}>
-              <Text style={[styles.footerBtnText, styles.footerPurchaseText]}>
-                PURCHASE (${this.props.pricePerMonth + ""}/month)
-              </Text>
-            </View>
-          </TouchableOpacity>
-
-        </View>
-      </View>
-    );
-  }
-}
 
 class CheckoutModal extends Component {
   render() {
@@ -167,14 +142,12 @@ export default class PolicyScreen extends Component {
         onClose={() => this.setState({ renderCheckoutModal: false })}
       />
     );
+    const footerText = `PURCHASE (${this.state.pricePerMonth}/month)`;
     return (
       <View style={styles.container}>
         {this.state.renderCheckoutModal ? modal : null}
         <PlanTabNavigator screenProps={screenProps} />
-        <Footer
-          onPurchase={this.handlePurchase}
-          pricePerMonth={this.state.pricePerMonth}
-        />
+        <Footer onPress={this.handlePurchase} text={footerText} />
       </View>
     );
   }
@@ -224,34 +197,7 @@ const styles = StyleSheet.create({
   header: {
     elevation: 0
   },
-  footerGoBack: {
-    backgroundColor: "white"
-  },
-  footerPurchase: {
-    backgroundColor: colors.primaryOrange
-  },
-  footerGoBackText: {
-    color: colors.primaryText
-  },
-  footerBtnContainer: {
-    justifyContent: "center",
-    height: 45,
-    flexDirection: "row"
-  },
-  footerBtn: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center"
-  },
-  footerBtnText: {
-    color: "white",
-    fontWeight: "600",
-    fontSize: 15
-  },
   container: {
     flex: 1
-  },
-  footer: {
-    justifyContent: "flex-end"
   }
 });

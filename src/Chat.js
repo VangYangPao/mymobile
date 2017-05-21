@@ -469,7 +469,7 @@ class ChatScreen extends Component {
           const params = { policy, page: "checkout" };
           this.props.navigation.navigate("Plan", params);
         }
-      }, 3000);
+      }, 2000);
       return;
     }
     const nextQuestion = template(

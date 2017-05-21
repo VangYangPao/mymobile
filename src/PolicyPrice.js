@@ -4,10 +4,10 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
-  View,
-  Text
+  View
 } from "react-native";
 
+import { Text } from "./defaultComponents";
 import colors from "./colors";
 
 export default class PolicyPrice extends Component {
