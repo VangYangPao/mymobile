@@ -5,7 +5,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
-  Button
+  Button,
+  ToastAndroid
 } from "react-native";
 
 import { Text } from "./defaultComponents";
@@ -13,6 +14,7 @@ import { prettifyCamelCase } from "./utils";
 import Page from "./Page";
 import Footer from "./Footer";
 import PolicyPrice from "./PolicyPrice";
+import CheckoutModal from "./CheckoutModal";
 
 export default class ConfirmationScreen extends Component {
   static navigationOptions = {
@@ -35,14 +37,24 @@ export default class ConfirmationScreen extends Component {
 
   render() {
     const { form } = this.props.navigation.state.params;
-    const { totalPremium } = form;
+    const totalPremium = new Number(form.totalPremium);
     delete form.totalPremium;
     let formArr = [];
     for (var key in form) {
       formArr.push({ key, value: form[key] });
     }
+    const modal = (
+      <CheckoutModal
+        onCheckout={() => {
+          ToastAndroid.show("Thank you for buying!", ToastAndroid.LONG);
+          this.props.navigation.navigate("ClaimStack");
+        }}
+        onClose={() => this.setState({ renderCheckoutModal: false })}
+      />
+    );
     return (
       <View style={styles.container}>
+        {this.state.renderCheckoutModal ? modal : null}
         <View style={styles.pageContainer}>
           <Page>
             <Text style={styles.pageTitle}>Confirm your details</Text>
@@ -50,7 +62,10 @@ export default class ConfirmationScreen extends Component {
             {formArr.map(f => this.renderField(f.key, f.value))}
           </Page>
         </View>
-        <Footer text="ENTER BILLING DETAILS" />
+        <Footer
+          onPress={() => this.setState({ renderCheckoutModal: true })}
+          text="ENTER BILLING DETAILS"
+        />
       </View>
     );
   }

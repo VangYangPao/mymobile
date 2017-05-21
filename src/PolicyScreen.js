@@ -4,9 +4,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
-  Modal,
-  TextInput,
-  Dimensions
+  TextInput
 } from "react-native";
 import { TabNavigator } from "react-navigation";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -18,8 +16,6 @@ import PolicyOverview from "./PolicyOverview";
 import POLICIES from "../data/policies";
 import CoverageWrapper from "./Coverage";
 import colors from "./colors";
-
-const windowWidth = Dimensions.get("window").width;
 
 const tabStyles = {
   tabIndicator: {
@@ -85,8 +81,6 @@ export default class PolicyScreen extends Component {
         policy: this.policy,
         questionSet: "buy"
       });
-    } else if (this.page === "checkout") {
-      this.setState({ renderCheckoutModal: true });
     }
   }
 
@@ -110,35 +104,6 @@ export default class PolicyScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-  checkoutContent: {
-    paddingVertical: 20
-  },
-  checkoutHeader: {
-    alignItems: "center",
-    paddingVertical: 15,
-    backgroundColor: colors.softBorderLine
-  },
-  checkoutTitle: {
-    color: colors.primaryText,
-    fontSize: 20,
-    fontWeight: "500"
-  },
-  modalContentContainer: {
-    alignItems: "stretch",
-    justifyContent: "center",
-    width: windowWidth,
-    backgroundColor: "white"
-  },
-  modalContainer: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    bottom: 0,
-    right: 0,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "rgba(0,0,0,0.5)"
-  },
   tabIndicator: {
     backgroundColor: colors.primaryOrange,
     height: 3

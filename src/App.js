@@ -11,6 +11,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import ChatScreenWrapper from "./Chat";
 import IntroScreen from "./IntroScreen";
 import PolicyScreen from "./PolicyScreen";
+import ConfirmationScreen from "./ConfirmationScreen";
 import colors from "./colors";
 import DrawerContent from "./DrawerContent";
 
@@ -73,6 +74,11 @@ function renderMenuButton(navigation) {
   );
 }
 
+const policyNavOptions = ({ navigation }) => ({
+  headerTitleStyle: [styles.headerTitle, styles.planHeaderTitle],
+  headerLeft: renderBackButton(navigation)
+});
+
 const BuyStackNavigator = StackNavigator({
   Chat: {
     screen: ChatScreenWrapper(null),
@@ -94,10 +100,11 @@ const BuyStackNavigator = StackNavigator({
   },
   Policy: {
     screen: PolicyScreen,
-    navigationOptions: ({ navigation }) => ({
-      headerTitleStyle: [styles.headerTitle, styles.planHeaderTitle],
-      headerLeft: renderBackButton(navigation)
-    })
+    navigationOptions: policyNavOptions
+  },
+  Confirmation: {
+    screen: ConfirmationScreen,
+    navigationOptions: policyNavOptions
   }
 });
 
@@ -160,7 +167,7 @@ const MyDrawerNavigator = DrawerNavigator(
 
 export default (Microsurance = StackNavigator(
   {
-    Intro: { screen: IntroScreen },
+    // Intro: { screen: IntroScreen },
     Drawer: { screen: MyDrawerNavigator }
   },
   { headerMode: "none" }
