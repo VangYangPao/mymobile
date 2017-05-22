@@ -108,14 +108,14 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     justifyContent: "center",
-    paddingRight: 12
+    paddingRight: 18
   },
   detailContainer: {
     flex: 1
   },
   icon: {
-    height: 75,
-    width: 75
+    height: 50,
+    width: 50
   },
   title: {
     fontSize: 16,

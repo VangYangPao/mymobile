@@ -1,3 +1,12 @@
+const notCovered = [
+  "Disability Income",
+  "Cashless Medical Coverage",
+  "War or Terrorism",
+  "Pregnancy or Miscarriage",
+  "Suicide or Self-inflicted Injury",
+  "Dangerous Sports"
+];
+
 export default (policies = [
   {
     title: "Accidental Death / Permanent Disability",
@@ -30,14 +39,7 @@ export default (policies = [
       }
     ],
     covered: ["Accidental Death", "Accidental Permanent Disability"],
-    notCovered: [
-      "Disability Income",
-      "Cashless Medical Coverage",
-      "War or Terrorism",
-      "Pregnancy or Miscarriage",
-      "Suicide or Self-inflicted Injury",
-      "Dangerous Sports"
-    ]
+    notCovered
   },
   {
     title: "Accidental Death / Permanent Disability with Medical Reimbursement",
@@ -80,14 +82,7 @@ export default (policies = [
       "Accidental Permanent Disability",
       "Medical Reimbursement (Medical Benefit)"
     ],
-    notCovered: [
-      "Disability Income",
-      "Cashless Medical Coverage",
-      "War or Terrorism",
-      "Pregnancy or Miscarriage",
-      "Suicide or Self-inflicted Injury",
-      "Dangerous Sports"
-    ]
+    notCovered
   },
   {
     title: "Accidental Death / Permanent Disability with Weekly Indemnity",
@@ -130,14 +125,7 @@ export default (policies = [
       "Accidental Permanent Disability",
       "Weekly Indemnity (Accident Benefit)"
     ],
-    notCovered: [
-      "Disability Income",
-      "Cashless Medical Coverage",
-      "War or Terrorism",
-      "Pregnancy or Miscarriage",
-      "Suicide or Self-inflicted Injury",
-      "Dangerous Sports"
-    ]
+    notCovered
   },
   {
     title: "Phone Protection",
@@ -151,5 +139,29 @@ export default (policies = [
     ],
     covered: ["Phone Cracked / Dropped", "Phone On Wet Surface / Blank Screen"],
     notCovered: []
+  },
+  {
+    title: "Travel Protection",
+    imageSource: "ic_dangerous_sport",
+    plans: [
+      {
+        accidentalDamage: 1000,
+        waterDamage: 1000,
+        premium: 12.84
+      }
+    ],
+    covered: [
+      "Overseas medical expenses",
+      "Medical expenses",
+      "Emergency medical evacuation",
+      "Accidental Death",
+      "Accidental Permanent Disability",
+      "Loss of benefit, personal effect, cash",
+      "Delayed baggage and flight",
+      "Loss or cancellation of trip",
+      "Personal liability",
+      "Loss of home contents due to burglary"
+    ],
+    notCovered
   }
 ]);

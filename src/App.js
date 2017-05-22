@@ -146,13 +146,13 @@ const MyDrawerNavigator = DrawerNavigator(
     },
     ClaimStack: {
       screen: ClaimStackNavigator
-    },
-    Settings: {
-      screen: SettingsScreen
-    },
-    Help: {
-      screen: HelpScreen
     }
+    // Settings: {
+    //   screen: SettingsScreen
+    // },
+    // Help: {
+    //   screen: HelpScreen
+    // }
   },
   {
     contentComponent: props => {
@@ -167,7 +167,7 @@ const MyDrawerNavigator = DrawerNavigator(
 
 export default (Microsurance = StackNavigator(
   {
-    // Intro: { screen: IntroScreen },
+    Intro: { screen: IntroScreen },
     Drawer: { screen: MyDrawerNavigator }
   },
   { headerMode: "none" }
