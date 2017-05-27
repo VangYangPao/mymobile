@@ -12,6 +12,7 @@ import ChatScreenWrapper from "./Chat";
 import IntroScreen from "./IntroScreen";
 import PolicyScreen from "./PolicyScreen";
 import ConfirmationScreen from "./ConfirmationScreen";
+import StatusScreen from "./StatusScreen";
 import colors from "./colors";
 import DrawerContent from "./DrawerContent";
 
@@ -74,7 +75,7 @@ function renderMenuButton(navigation) {
   );
 }
 
-const policyNavOptions = ({ navigation }) => ({
+const backButtonNavOptions = ({ navigation }) => ({
   headerTitleStyle: [styles.headerTitle, styles.planHeaderTitle],
   headerLeft: renderBackButton(navigation)
 });
@@ -100,11 +101,11 @@ const BuyStackNavigator = StackNavigator({
   },
   Policy: {
     screen: PolicyScreen,
-    navigationOptions: policyNavOptions
+    navigationOptions: backButtonNavOptions
   },
   Confirmation: {
     screen: ConfirmationScreen,
-    navigationOptions: policyNavOptions
+    navigationOptions: backButtonNavOptions
   }
 });
 
@@ -115,6 +116,13 @@ const ClaimStackNavigator = StackNavigator({
       headerTitleStyle: styles.headerTitle,
       headerLeft: renderMenuButton(navigation)
     })
+  }
+});
+
+const StatusStackNavigator = StackNavigator({
+  Status: {
+    screen: StatusScreen,
+    navigationOptions: backButtonNavOptions
   }
 });
 
@@ -141,6 +149,9 @@ class HelpScreen extends Component {
 
 const MyDrawerNavigator = DrawerNavigator(
   {
+    StatusStack: {
+      screen: StatusStackNavigator
+    },
     BuyStack: {
       screen: BuyStackNavigator
     },
