@@ -347,7 +347,7 @@ class ChatScreen extends Component {
               {
                 type: "text",
                 _id: 0,
-                text: "Hi I'm Carol, please choose the insurance policy you're interested in. 😄",
+                text: "Hi I'm Eve, please choose the insurance policy you're interested in. 😄",
                 createdAt: new Date(),
                 user: AGENT_USER
               }
