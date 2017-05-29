@@ -71,8 +71,20 @@ export const QUESTION_SETS = {
       question: "Thanks for choosing <%= policy.title %>. ☺️",
       responseType: null
     },
+
     {
-      question: "Let's get started. Who is the recipient for the travel insurance?",
+      question: "Let's get started. Where will you be travelling to?",
+      responseType: ["string", "choice"],
+      choices: [
+        { label: "ASEAN", value: "ASEAN" },
+        { label: "Asia", value: "Asia" },
+        { label: "Worldwide", value: "Worldwide" }
+      ],
+      travelInsurance: true,
+      id: "travelDestination"
+    },
+    {
+      question: "Great! Who is the recipient for the travel insurance?",
       responseType: ["string", "choice"],
       choices: [
         { label: "Applicant", value: "applicant" },
@@ -84,15 +96,10 @@ export const QUESTION_SETS = {
       id: "recipient"
     },
     {
-      question: "Great! Where will you be travelling to?",
-      responseType: ["string", "choice"],
-      choices: [
-        { label: "ASEAN", value: "ASEAN" },
-        { label: "Asia", value: "Asia" },
-        { label: "Worldwide", value: "Worldwide" }
-      ],
+      question: "How many days will you be at <%= travelDestination %>?",
+      responseType: ["number"],
       travelInsurance: true,
-      id: "travelDestination"
+      id: "travelDuration"
     },
     {
       question: "Let's get started. Which plan do you want to buy?",

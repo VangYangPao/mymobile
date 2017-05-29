@@ -34,6 +34,7 @@ import PolicyChoice from "./PolicyChoice";
 import colors from "./colors";
 import POLICIES from "../data/policies";
 import { validateAnswer, QUESTION_SETS } from "../data/questions";
+import travelInsurancePrices from "../data/travelInsurancePrices";
 
 // Enable playback in silence mode (iOS only)
 Sound.setCategory("Playback");
@@ -524,7 +525,7 @@ class ChatScreen extends Component {
     const nextQuestion = this.questions[currentQuestionIndex];
     if (
       nextQuestion.travelInsurance &&
-      this.props.policy.title !== "Travel Insurance"
+      this.props.policy.title !== "Travel Protection"
     ) {
       this.setState({
         currentQuestionIndex: currentQuestionIndex + 1,
