@@ -126,44 +126,44 @@ const StatusStackNavigator = StackNavigator({
   }
 });
 
-class SettingsScreen extends Component {
-  static navigationOptions = {
-    drawerLabel: "Settings",
+function createDrawerNavOptions(drawerLabel, iconName) {
+  return {
+    drawerLabel,
     drawerIcon: ({ tintColor }) => (
-      <Icon name="settings" size={22} color={tintColor} />
+      <Icon name={iconName} size={22} color={tintColor} />
     )
   };
+}
+
+class SettingsScreen extends Component {
+  static navigationOptions = createDrawerNavOptions("Settings", "settings");
 
   render() {}
 }
 
 class HelpScreen extends Component {
-  static navigationOptions = {
-    drawerLabel: "Help",
-    drawerIcon: ({ tintColor }) => (
-      <Icon name="feedback" size={22} color={tintColor} />
-    )
-  };
+  static navigationOptions = createDrawerNavOptions("Help", "feedback");
   render() {}
 }
 
 const MyDrawerNavigator = DrawerNavigator(
   {
-    StatusStack: {
-      screen: StatusStackNavigator
-    },
     BuyStack: {
       screen: BuyStackNavigator
     },
     ClaimStack: {
       screen: ClaimStackNavigator
+    },
+    StatusStack: {
+      screen: StatusStackNavigator,
+      navigationOptions: createDrawerNavOptions("Status", "email")
+    },
+    Settings: {
+      screen: SettingsScreen
+    },
+    Help: {
+      screen: HelpScreen
     }
-    // Settings: {
-    //   screen: SettingsScreen
-    // },
-    // Help: {
-    //   screen: HelpScreen
-    // }
   },
   {
     contentComponent: props => {
