@@ -7,7 +7,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
-  Button
+  Button,
+  Picker
 } from "react-native";
 import {
   GiftedChat,
@@ -185,6 +186,32 @@ class DatePickerActionButton extends Component {
   }
 }
 
+class PickerActionButton extends Component {
+  render() {
+    return (
+      <View style={{ flex: 1 }}>
+        <Picker
+          prompt={this.props.label}
+          onValueChange={(value, index) => {
+            if (typeof this.props.onValueChange === "function") {
+              const item = this.props.items[index];
+              this.props.onValueChange(item.label, item.value);
+            }
+          }}
+        >
+          {this.props.items.map(item => (
+            <Picker.Item
+              key={item.value}
+              label={item.label}
+              value={item.value}
+            />
+          ))}
+        </Picker>
+      </View>
+    );
+  }
+}
+
 class CoverageDurationWidget extends Component {
   constructor(props) {
     super(props);
@@ -290,6 +317,7 @@ class ChatScreen extends Component {
     this.handleSelectDuration = this.handleSelectDuration.bind(this);
     this.handlePickImage = this.handlePickImage.bind(this);
     this.handlePickDate = this.handlePickDate.bind(this);
+    this.handlePickChoice = this.handlePickChoice.bind(this);
     this.renderStartScreenMessages = this.renderStartScreenMessages.bind(this);
     this.askNextQuestion = this.askNextQuestion.bind(this);
     this.reaskQuestion = this.reaskQuestion.bind(this);
@@ -435,6 +463,19 @@ class ChatScreen extends Component {
     );
   }
 
+  handlePickChoice(label, value) {
+    this.setState(
+      this.concatMessage({
+        type: "text",
+        _id: uuid.v4(),
+        user: CUSTOMER_USER,
+        value,
+        text: label
+      }),
+      () => this.setState({ answering: false })
+    );
+  }
+
   componentDidMount() {
     if (this.props.isStartScreen) {
       this.renderStartScreenMessages();
@@ -479,10 +520,23 @@ class ChatScreen extends Component {
       }, 2000);
       return;
     }
-    const nextQuestion = template(
-      this.questions[currentQuestionIndex].question
-    )(this.state.answers);
-    this.sendNewMessage(nextQuestion);
+
+    const nextQuestion = this.questions[currentQuestionIndex];
+    if (
+      nextQuestion.travelInsurance &&
+      this.props.policy.title !== "Travel Insurance"
+    ) {
+      this.setState({
+        currentQuestionIndex: currentQuestionIndex + 1,
+        answering: false
+      });
+      return;
+    }
+
+    const nextQuestionText = template(nextQuestion.question)(
+      this.state.answers
+    );
+    this.sendNewMessage(nextQuestionText);
 
     this.setState(
       {
@@ -644,13 +698,25 @@ class ChatScreen extends Component {
   renderComposer(props) {
     const { currentQuestionIndex } = this.state;
     if (currentQuestionIndex < 0) return;
-    let { responseType } = this.questions[currentQuestionIndex];
+    const currentQuestion = this.questions[currentQuestionIndex];
+    let { responseType } = currentQuestion;
     responseType = [].concat(responseType);
 
     if (responseType.indexOf("image") !== -1) {
       return <ImagePickerActionButton onPickImage={this.handlePickImage} />;
     } else if (responseType.indexOf("date") !== -1) {
       return <DatePickerActionButton onPickDate={this.handlePickDate} />;
+    } else if (responseType.indexOf("choice") !== -1) {
+      const label = currentQuestion.id === "recipient"
+        ? "SELECT RECIPIENT"
+        : "SELECT DESTINATION";
+      return (
+        <PickerActionButton
+          label={label}
+          items={currentQuestion.choices}
+          onValueChange={this.handlePickChoice}
+        />
+      );
     }
 
     let keyboardType = "default";

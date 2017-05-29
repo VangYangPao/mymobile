@@ -49,7 +49,8 @@ const TypeValidators = {
   number: validateNumber,
   phoneNumber: validatePhoneNumber,
   image: notEmptyString,
-  date: validateDate
+  date: validateDate,
+  choice: () => new ValidationResult(true, true)
 };
 
 export function validateAnswer(question, answer) {
@@ -69,6 +70,29 @@ export const QUESTION_SETS = {
     {
       question: "Thanks for choosing <%= policy.title %>. ☺️",
       responseType: null
+    },
+    {
+      question: "Let's get started. Who is the recipient for the travel insurance?",
+      responseType: ["string", "choice"],
+      choices: [
+        { label: "Applicant", value: "applicant" },
+        { label: "Insured & Spouse", value: "insuredAndSpouse" },
+        { label: "Insured & Children", value: "insuredAndChildren" },
+        { label: "Family", value: "family" }
+      ],
+      travelInsurance: true,
+      id: "recipient"
+    },
+    {
+      question: "Great! Where will you be travelling to?",
+      responseType: ["string", "choice"],
+      choices: [
+        { label: "ASEAN", value: "ASEAN" },
+        { label: "Asia", value: "Asia" },
+        { label: "Worldwide", value: "Worldwide" }
+      ],
+      travelInsurance: true,
+      id: "travelDestination"
     },
     {
       question: "Let's get started. Which plan do you want to buy?",
