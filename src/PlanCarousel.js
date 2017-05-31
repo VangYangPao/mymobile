@@ -61,6 +61,8 @@ export default class PlanCarousel extends Component {
       );
       coverages.push(coverageView);
     }
+    const planAlphabets = ["A", "B", "C", "D", "E"];
+    const planTitle = planAlphabets[index];
     return (
       <TouchableOpacity
         onPress={this.handleSelectPlan(index)}
@@ -68,6 +70,7 @@ export default class PlanCarousel extends Component {
         key={index}
       >
         <View style={styles.plan}>
+          <Text style={styles.planTitle}>Plan {planTitle}</Text>
           <PolicyPrice pricePerMonth={plan.premium} />
           {coverages}
         </View>
@@ -108,6 +111,10 @@ const styles = StyleSheet.create({
   },
   carousel: {
     marginVertical: 15
+  },
+  planTitle: {
+    textAlign: "center",
+    fontSize: 20
   },
   plan: {
     flex: 1,
