@@ -8,6 +8,12 @@
   dependencies:
     hoist-non-react-statics "^1.2.0"
 
+"@expo/react-native-action-sheet@0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@expo/react-native-action-sheet/-/react-native-action-sheet-0.3.1.tgz#cf1fd38e570febb4930c5518e42dfa1a32b1ace5"
+  dependencies:
+    hoist-non-react-statics "^1.2.0"
+
 abab@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/abab/-/abab-1.0.3.tgz#b81de5f7274ec4e756d797cd834f303642724e5d"
@@ -3107,9 +3113,9 @@ react-native-flip-card@^3.3.0:
 
 "react-native-gifted-chat@https://github.com/mavenave/react-native-gifted-chat/tarball/master":
   version "0.1.4"
-  resolved "https://github.com/mavenave/react-native-gifted-chat/tarball/master#57728f6946c5e3e9061f501f7d16d28738e099d1"
+  resolved "https://github.com/mavenave/react-native-gifted-chat/tarball/master#f111e078acb871c8ec50aaebb3819e205a1236d8"
   dependencies:
-    "@expo/react-native-action-sheet" "0.3.0"
+    "@expo/react-native-action-sheet" "0.3.1"
     md5 "2.2.1"
     moment "2.17.1"
     react-native-communications "2.2.1"

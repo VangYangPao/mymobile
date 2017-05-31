@@ -59,14 +59,16 @@ class PolicyCoverages extends Component {
           CLICK ICONS FOR MORE DETAILS
         </Text>
         <View style={styles.coverage}>
-          {this.props.covered.map(item => (
-            <CoverageItem
-              key={item}
-              navigation={this.props.navigation}
-              covered={true}
-              {...coveragesData[item]}
-            />
-          ))}
+          {this.props.covered
+            .slice(0, 3)
+            .map(item => (
+              <CoverageItem
+                key={item}
+                navigation={this.props.navigation}
+                covered={true}
+                {...coveragesData[item]}
+              />
+            ))}
           {this.props.notCovered
             .slice(0, 2)
             .map(item => (
@@ -86,13 +88,18 @@ class PolicyCoverages extends Component {
 export default class PolicyOverview extends Component {
   render() {
     const { policy } = this.props.screenProps;
+    const showPerMonth = policy.title !== "Travel Protection";
     const pricePerMonth = policy.plans[0].premium;
     return (
       <Page>
         <Text style={styles.policyTitle}>
           {policy.title}
         </Text>
-        <PolicyPrice pricePerMonth={pricePerMonth} showFrom={true} />
+        <PolicyPrice
+          pricePerMonth={pricePerMonth}
+          showFrom={true}
+          showPerMonth={showPerMonth}
+        />
         <PolicyCoverages navigation={this.props.navigation} {...policy} />
       </Page>
     );
