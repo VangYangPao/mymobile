@@ -28,13 +28,13 @@ import ImagePicker from "react-native-image-picker";
 import { template } from "lodash";
 
 import PlanCarousel from "./PlanCarousel";
+import TravelInsurancePlanCarousel from "./TravelInsurancePlanCarousel";
 import { Text } from "./defaultComponents";
 import RangeSlider from "./RangeSlider";
 import PolicyChoice from "./PolicyChoice";
 import colors from "./colors";
 import POLICIES from "../data/policies";
 import { validateAnswer, QUESTION_SETS } from "../data/questions";
-import travelInsurancePrices from "../data/travelInsurancePrices";
 
 // Enable playback in silence mode (iOS only)
 Sound.setCategory("Playback");
@@ -315,6 +315,9 @@ class ChatScreen extends Component {
     this.handleAgentSend = this.handleAgentSend.bind(this);
     this.handleSelectPolicy = this.handleSelectPolicy.bind(this);
     this.handleSelectPlan = this.handleSelectPlan.bind(this);
+    this.handleSelectTravelInsurancePlan = this.handleSelectTravelInsurancePlan.bind(
+      this
+    );
     this.handleSelectDuration = this.handleSelectDuration.bind(this);
     this.handlePickImage = this.handlePickImage.bind(this);
     this.handlePickDate = this.handlePickDate.bind(this);
@@ -402,6 +405,21 @@ class ChatScreen extends Component {
     const policy = transposePolicyChoiceByTitle()[policyTitle];
     const params = { policy, page: "info" };
     this.props.navigation.navigate("Policy", params);
+  }
+
+  handleSelectTravelInsurancePlan(planIndex, price) {
+    const plans = ["Basic", "Enhanced", "Superior", "Premier"];
+    const answers = Object.assign(this.state.answers, { price });
+    this.setState(
+      this.concatMessage({
+        type: "text",
+        _id: uuid.v4(),
+        text: `${plans[planIndex]} plan`,
+        value: planIndex,
+        user: CUSTOMER_USER
+      }),
+      () => this.setState({ answering: false, renderInput: true, answers })
+    );
   }
 
   handleSelectPlan(planIndex) {
@@ -516,8 +534,14 @@ class ChatScreen extends Component {
           delete form.policy;
           delete form.planIndex;
           delete form.icImage;
-          form.totalPremium =
-            this.props.policy.plans[planIndex].premium * form.coverageDuration;
+          if (policy.title === "Travel Protection") {
+            form.totalPremium = new Number(form.price);
+            delete form.price;
+          } else {
+            form.totalPremium =
+              this.props.policy.plans[planIndex].premium *
+              form.coverageDuration;
+          }
           this.props.navigation.navigate("Confirmation", { form });
         }
       }, 2000);
@@ -526,7 +550,15 @@ class ChatScreen extends Component {
 
     const nextQuestion = this.questions[currentQuestionIndex];
     if (
-      nextQuestion.isTravelInsurance && !this.props.policy.isTravelInsurance
+      nextQuestion.include !== undefined &&
+      nextQuestion.include !== this.props.policy.title
+    ) {
+      this.setState({ currentQuestionIndex }, this.askNextQuestion);
+      return;
+    }
+    if (
+      nextQuestion.exclude !== undefined &&
+      nextQuestion.exclude === this.props.policy.title
     ) {
       this.setState({ currentQuestionIndex }, this.askNextQuestion);
       return;
@@ -653,14 +685,30 @@ class ChatScreen extends Component {
       case "policies":
         return <PolicyChoice onSelectPolicy={this.handleSelectPolicy} />;
       case "planIndex":
-        // send in custom PLANS
-        // send in travelInsurancePrices
-        return (
-          <PlanCarousel
-            onSelectPlan={this.handleSelectPlan}
-            plans={this.props.policy.plans}
-          />
-        );
+        const carouselProps = {
+          onSelectPlan: this.handleSelectPlan,
+          plans: this.props.policy.plans
+        };
+        if (this.props.policy.isTravelInsurance) {
+          const {
+            travelDestination,
+            recipient,
+            travelDuration
+          } = this.state.answers;
+          const additionalProps = {
+            travelDestination,
+            recipient,
+            travelDuration
+          };
+          return (
+            <TravelInsurancePlanCarousel
+              {...carouselProps}
+              {...additionalProps}
+              onSelectPlan={this.handleSelectTravelInsurancePlan}
+            />
+          );
+        }
+        return <PlanCarousel {...carouselProps} />;
       case "coverageDuration":
         const notCurrentQuestion =
           this.questions[this.state.currentQuestionIndex].id !==

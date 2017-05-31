@@ -33,18 +33,19 @@ export default class PlanCarousel extends Component {
   constructor(props) {
     super(props);
     this.renderPlan = this.renderPlan.bind(this);
+    this.renderCoverages = this.renderCoverages.bind(this);
     this.handleSelectPlan = this.handleSelectPlan.bind(this);
   }
 
   handleSelectPlan(planIndex) {
     return () => {
-      if (this.props.onSelectPlan) {
+      if (typeof this.props.onSelectPlan === "function") {
         this.props.onSelectPlan(planIndex);
       }
     };
   }
 
-  renderPlan(plan, index) {
+  renderCoverages(plan) {
     var coverages = [];
     var coverage, coverageView;
     for (var coverageKey in plan) {
@@ -61,8 +62,21 @@ export default class PlanCarousel extends Component {
       );
       coverages.push(coverageView);
     }
+    return coverages;
+  }
+
+  getPlanTitle(index) {
     const planAlphabets = ["A", "B", "C", "D", "E"];
-    const planTitle = planAlphabets[index];
+    return "Plan " + planAlphabets[index];
+  }
+
+  renderPlan(plan, index) {
+    const renderCoverages = typeof this.props.renderCoverages === "function"
+      ? this.props.renderCoverages
+      : this.renderCoverages;
+    const getPlanTitle = typeof this.props.getPlanTitle === "function"
+      ? this.props.getPlanTitle
+      : this.getPlanTitle;
     return (
       <TouchableOpacity
         onPress={this.handleSelectPlan(index)}
@@ -70,9 +84,9 @@ export default class PlanCarousel extends Component {
         key={index}
       >
         <View style={styles.plan}>
-          <Text style={styles.planTitle}>Plan {planTitle}</Text>
+          <Text style={styles.planTitle}>{getPlanTitle(index)}</Text>
           <PolicyPrice pricePerMonth={plan.premium} />
-          {coverages}
+          {renderCoverages(plan)}
         </View>
       </TouchableOpacity>
     );
