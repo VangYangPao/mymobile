@@ -139,23 +139,24 @@ export default (policies = [
     ],
     covered: ["Phone Cracked / Dropped", "Phone On Wet Surface / Blank Screen"],
     notCovered: []
+  },
+  {
+    title: "Travel Protection",
+    imageSource: "ic_dangerous_sport",
+    plans: [{ 0: 50000, premium: 35 }], // hardcoded for display purposes only
+    isTravelInsurance: true,
+    covered: [
+      "Overseas medical expenses",
+      "Medical expenses",
+      "Emergency medical evacuation",
+      "Accidental Death",
+      "Accidental Permanent Disability",
+      "Loss of benefit, personal effect, cash",
+      "Delayed baggage and flight",
+      "Loss or cancellation of trip",
+      "Personal liability",
+      "Loss of home contents due to burglary"
+    ],
+    notCovered
   }
-  // {
-  //   title: "Travel Protection",
-  //   imageSource: "ic_dangerous_sport",
-  //   plans: [],
-  //   covered: [
-  //     "Overseas medical expenses",
-  //     "Medical expenses",
-  //     "Emergency medical evacuation",
-  //     "Accidental Death",
-  //     "Accidental Permanent Disability",
-  //     "Loss of benefit, personal effect, cash",
-  //     "Delayed baggage and flight",
-  //     "Loss or cancellation of trip",
-  //     "Personal liability",
-  //     "Loss of home contents due to burglary"
-  //   ],
-  //   notCovered
-  // }
 ]);

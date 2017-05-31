@@ -71,7 +71,6 @@ export const QUESTION_SETS = {
       question: "Thanks for choosing <%= policy.title %>. ☺️",
       responseType: null
     },
-
     {
       question: "Let's get started. Where will you be travelling to?",
       responseType: ["string", "choice"],
@@ -80,7 +79,7 @@ export const QUESTION_SETS = {
         { label: "Asia", value: "Asia" },
         { label: "Worldwide", value: "Worldwide" }
       ],
-      travelInsurance: true,
+      isTravelInsurance: true,
       id: "travelDestination"
     },
     {
@@ -92,13 +91,13 @@ export const QUESTION_SETS = {
         { label: "Insured & Children", value: "insuredAndChildren" },
         { label: "Family", value: "family" }
       ],
-      travelInsurance: true,
+      isTravelInsurance: true,
       id: "recipient"
     },
     {
       question: "How many days will you be at <%= travelDestination %>?",
       responseType: ["number"],
-      travelInsurance: true,
+      isTravelInsurance: true,
       id: "travelDuration"
     },
     {

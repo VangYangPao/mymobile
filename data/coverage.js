@@ -19,6 +19,38 @@ export default (coverageItems = {
   waterDamage: {
     title: "Water Damage"
   },
+  "Overseas medical expenses": {
+    title: "Overseas medical expenses",
+    icon: "ic_medical_reimbursement"
+  },
+  "Medical expenses": {
+    title: "Medical expenses",
+    icon: "ic_medical_reimbursement"
+  },
+  "Emergency medical evacuation": {
+    title: "Emergency medical evacuation",
+    icon: "ic_medical_reimbursement"
+  },
+  "Loss of benefit, personal effect, cash": {
+    title: "Loss of benefit, personal effect, cash",
+    icon: "ic_accidental_death"
+  },
+  "Delayed baggage and flight": {
+    title: "Delayed baggage and flight",
+    icon: "ic_accidental_death"
+  },
+  "Loss or cancellation of trip": {
+    title: "Loss or cancellation of trip",
+    icon: "ic_accidental_death"
+  },
+  "Personal liability": {
+    title: "Personal liability",
+    icon: "ic_accidental_death"
+  },
+  "Loss of home contents due to burglary": {
+    title: "Loss of home contents due to burglary",
+    icon: "ic_accidental_death"
+  },
   "Accidental Death": {
     title: "Accidental Death",
     icon: "ic_accidental_death",

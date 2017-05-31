@@ -503,6 +503,8 @@ class ChatScreen extends Component {
 
   askNextQuestion() {
     const currentQuestionIndex = this.state.currentQuestionIndex + 1;
+
+    // end the questionnaire and redirect user to checkout page
     if (currentQuestionIndex >= this.questions.length) {
       const { questionSet, policy } = this.props;
       setTimeout(() => {
@@ -524,16 +526,11 @@ class ChatScreen extends Component {
 
     const nextQuestion = this.questions[currentQuestionIndex];
     if (
-      nextQuestion.travelInsurance &&
-      this.props.policy.title !== "Travel Protection"
+      nextQuestion.isTravelInsurance && !this.props.policy.isTravelInsurance
     ) {
-      this.setState({
-        currentQuestionIndex: currentQuestionIndex + 1,
-        answering: false
-      });
+      this.setState({ currentQuestionIndex }, this.askNextQuestion);
       return;
     }
-
     const nextQuestionText = template(nextQuestion.question)(
       this.state.answers
     );
@@ -566,13 +563,10 @@ class ChatScreen extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    // console.log("answering", this.state.answering);
-    // console.log("renderInput", this.state.renderInput);
     if (
       prevState.answering !== this.state.answering ||
       prevState.renderInput !== this.state.renderInput
     ) {
-      // console.log(this.refs.chat._messageContainerRef);
       this.refs.chat.resetInputToolbar();
     }
 
@@ -585,13 +579,15 @@ class ChatScreen extends Component {
       } else {
         const lastMessage = messages[messages.length - 1];
         const lastQuestion = this.questions[currentQuestionIndex];
-        // just respond with next question if it's not a question
+
+        // just ignore checking the response if null
         if (lastQuestion.responseType === null) {
-          this.askNextQuestion();
+          return;
         }
         let answer = lastMessage.value !== undefined
           ? lastMessage.value
           : lastMessage.text.trim();
+
         if (
           lastQuestion.responseType.indexOf("number") !== -1 &&
           !isNaN(answer) &&
@@ -657,6 +653,8 @@ class ChatScreen extends Component {
       case "policies":
         return <PolicyChoice onSelectPolicy={this.handleSelectPolicy} />;
       case "planIndex":
+        // send in custom PLANS
+        // send in travelInsurancePrices
         return (
           <PlanCarousel
             onSelectPlan={this.handleSelectPlan}
