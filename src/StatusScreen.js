@@ -13,7 +13,7 @@ import colors from "./colors";
 
 export default class StatusScreen extends Component {
   static navigationOptions = {
-    title: "Status"
+    title: "Notification"
   };
 
   renderItem({ item, index }) {
@@ -25,15 +25,16 @@ export default class StatusScreen extends Component {
     const day = item.date.getDate();
     const month = item.date.getMonth();
     const year = item.date.getFullYear();
+    const dateStr = `${day}-${month}-${year}`;
     return (
       <View style={styles.policy}>
         <Text style={styles.policyName}>{item.name}</Text>
         <Text style={styles.date}>
-          {verbMap[item.status]} on: {day}-{month}-{year}
+          {verbMap[item.status]} on: {dateStr}
         </Text>
         {item.status !== "active"
           ? <Text style={styles.date}>
-              Amount: ${item.claimAmount}
+              Amount: ${item.claimAmount + ""}
             </Text>
           : null}
       </View>

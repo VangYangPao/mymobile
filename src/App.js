@@ -1,6 +1,12 @@
 /* @flow */
 import React, { Component } from "react";
-import { AppRegistry, StyleSheet, View, TouchableOpacity } from "react-native";
+import {
+  AppRegistry,
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  Image
+} from "react-native";
 import {
   DrawerNavigator,
   StackNavigator,
@@ -14,6 +20,7 @@ import PolicyScreen from "./PolicyScreen";
 import ConfirmationScreen from "./ConfirmationScreen";
 import StatusScreen from "./StatusScreen";
 import AuthScreen from "./AuthScreen";
+import HomeScreen from "./HomeScreen";
 import colors from "./colors";
 import DrawerContent from "./DrawerContent";
 
@@ -24,6 +31,19 @@ const MENU_ICON_PADDING_LEFT = 15;
 const MENU_ICON_PADDING_RIGHT = 10;
 
 const styles = StyleSheet.create({
+  navigatorContainer: {
+    flex: 1,
+    backgroundColor: colors.primaryOrange
+  },
+  backgroundImage: {
+    flex: 1,
+    width: null,
+    height: null,
+    resizeMode: "cover"
+  },
+  homeHeader: {
+    backgroundColor: "transparent"
+  },
   header: {
     height: 52.5
   },
@@ -36,6 +56,11 @@ const styles = StyleSheet.create({
     color: colors.primaryText,
     fontWeight: "400",
     fontFamily: "Comfortaa-Bold"
+  },
+  homeHeaderMenuIcon: {
+    paddingLeft: MENU_ICON_PADDING_LEFT,
+    paddingRight: MENU_ICON_PADDING_RIGHT,
+    color: "white"
   },
   headerMenuIcon: {
     paddingLeft: MENU_ICON_PADDING_LEFT,
@@ -64,14 +89,14 @@ function renderBackButton(navigation) {
   );
 }
 
-function renderMenuButton(navigation) {
+function renderMenuButton(navigation, iconStyle = styles.headerMenuIcon) {
   return (
     <TouchableOpacity
       onPress={() => {
         navigation.navigate("DrawerOpen");
       }}
     >
-      <Icon name="menu" size={MENU_ICON_SIZE} style={styles.headerMenuIcon} />
+      <Icon name="menu" size={MENU_ICON_SIZE} style={iconStyle} />
     </TouchableOpacity>
   );
 }
@@ -127,6 +152,45 @@ const StatusStackNavigator = StackNavigator({
   }
 });
 
+const HomeStackNavigator = StackNavigator(
+  {
+    Home: {
+      screen: HomeScreen,
+      navigationOptions: ({ screenProps }) => {
+        return {
+          headerStyle: styles.homeHeader,
+          headerLeft: renderMenuButton(
+            screenProps.rootNavigation,
+            styles.homeHeaderMenuIcon
+          )
+        };
+      }
+    }
+  },
+  {
+    cardStyle: { backgroundColor: "transparent" }
+  }
+);
+
+const HomeStackNavigatorWrapper = props => {
+  return (
+    <View style={styles.navigatorContainer}>
+      <Image
+        source={require("../images/background.png")}
+        style={styles.backgroundImage}
+      >
+        <HomeStackNavigator
+          screenProps={{ rootNavigation: props.navigation }}
+        />
+      </Image>
+    </View>
+  );
+};
+HomeStackNavigatorWrapper.navigationOptions = createDrawerNavOptions(
+  "Home",
+  "home"
+);
+
 function createDrawerNavOptions(drawerLabel, iconName) {
   return {
     drawerLabel,
@@ -149,6 +213,9 @@ class HelpScreen extends Component {
 
 const MyDrawerNavigator = DrawerNavigator(
   {
+    HomeStack: {
+      screen: HomeStackNavigatorWrapper
+    },
     BuyStack: {
       screen: BuyStackNavigator
     },
@@ -180,7 +247,7 @@ const MyDrawerNavigator = DrawerNavigator(
 export default (Microsurance = StackNavigator(
   {
     // Intro: { screen: IntroScreen },
-    Auth: { screen: AuthScreen },
+    // Auth: { screen: AuthScreen },
     Drawer: { screen: MyDrawerNavigator }
   },
   { headerMode: "none" }
