@@ -8,7 +8,8 @@ import {
   View,
   Button,
   Picker,
-  ScrollView
+  ScrollView,
+  InteractionManager
 } from "react-native";
 import { NavigationActions } from "react-navigation";
 import VectorDrawableView from "react-native-vectordrawable-android";
@@ -18,12 +19,12 @@ const Form = t.form.Form;
 import colors from "./colors";
 import { Text } from "./defaultComponents";
 
-let formStyles = Object.assign({}, t.form.Form.stylesheet);
-formStyles.controlLabel.normal.color = "white";
-formStyles.textbox.normal.borderColor = "white";
-formStyles.textbox.normal.color = "white";
-formStyles.fieldset.marginTop = 20;
-formStyles.fieldset.marginBottom = 10;
+// let formStyles = Object.assign({}, t.form.Form.stylesheet);
+// formStyles.controlLabel.normal.color = "white";
+// formStyles.textbox.normal.borderColor = "white";
+// formStyles.textbox.normal.color = "white";
+// formStyles.fieldset.marginTop = 20;
+// formStyles.fieldset.marginBottom = 10;
 
 const resetToDrawerAction = NavigationActions.reset({
   index: 0,
@@ -87,7 +88,7 @@ class SignUpScreen extends Component {
             <Text style={styles.signUpHeader}>Sign up for microAssure</Text>
             <Form ref="form" type={UserSignUp} options={userSignUpOptions} />
             <Button
-              onPress={() => this.handleSignUp}
+              onPress={this.handleSignUp}
               title="Sign Up"
               color="#EF6C00"
               style={styles.signinButton}
@@ -170,7 +171,8 @@ export default class AuthScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      screen: "Login"
+      screen: "Login",
+      renderBackgroundImage: false
     };
     this.handleNavigateToLogin = this.handleNavigateToLogin.bind(this);
     this.handleNavigateToSignUp = this.handleNavigateToSignUp.bind(this);
@@ -189,6 +191,12 @@ export default class AuthScreen extends Component {
 
   handleNavigateToForgotPassword() {
     this.setState({ screen: "ForgotPassword" });
+  }
+
+  componentDidMount() {
+    InteractionManager.runAfterInteractions(() =>
+      this.setState({ renderBackgroundImage: true })
+    );
   }
 
   render() {
@@ -217,13 +225,24 @@ export default class AuthScreen extends Component {
       default:
         break;
     }
+
+    let backgroundImage;
+    if (this.state.renderBackgroundImage) {
+      backgroundImage = (
+        <Image
+          source={require("../images/background.png")}
+          style={styles.backgroundImage}
+        />
+      );
+    } else {
+      backgroundImage = null;
+    }
+
     return (
-      <Image
-        source={require("../images/background.png")}
-        style={styles.backgroundImage}
-      >
+      <View style={styles.page}>
+        {backgroundImage}
         {page}
-      </Image>
+      </View>
     );
   }
 }
@@ -253,11 +272,19 @@ const styles = StyleSheet.create({
     color: "white"
   },
   backgroundImage: {
-    flex: 1,
+    // flex: 1,
+    position: "absolute",
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
     width: null,
     height: null,
+    resizeMode: "cover"
+  },
+  page: {
+    flex: 1,
     justifyContent: "center",
-    resizeMode: "cover",
     backgroundColor: colors.primaryOrange
   }
 });

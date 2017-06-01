@@ -5,7 +5,8 @@ import {
   StyleSheet,
   View,
   TouchableOpacity,
-  Image
+  Image,
+  InteractionManager
 } from "react-native";
 import {
   DrawerNavigator,
@@ -36,7 +37,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primaryOrange
   },
   backgroundImage: {
-    flex: 1,
+    position: "absolute",
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
     width: null,
     height: null,
     resizeMode: "cover"
@@ -172,24 +177,43 @@ const HomeStackNavigator = StackNavigator(
   }
 );
 
-const HomeStackNavigatorWrapper = props => {
-  return (
-    <View style={styles.navigatorContainer}>
-      <Image
-        source={require("../images/background.png")}
-        style={styles.backgroundImage}
-      >
-        <HomeStackNavigator
-          screenProps={{ rootNavigation: props.navigation }}
+class HomeStackNavigatorWrapper extends Component {
+  static navigationOptions = createDrawerNavOptions("Home", "home");
+
+  constructor(props) {
+    super(props);
+    this.state = { renderBackgroundImage: false };
+  }
+
+  componentDidMount() {
+    InteractionManager.runAfterInteractions(() =>
+      this.setState({ renderBackgroundImage: true })
+    );
+  }
+
+  render() {
+    let backgroundImage;
+    if (this.state.renderBackgroundImage) {
+      backgroundImage = (
+        <Image
+          source={require("../images/background.png")}
+          style={styles.backgroundImage}
         />
-      </Image>
-    </View>
-  );
-};
-HomeStackNavigatorWrapper.navigationOptions = createDrawerNavOptions(
-  "Home",
-  "home"
-);
+      );
+    } else {
+      backgroundImage = null;
+    }
+
+    return (
+      <View style={styles.navigatorContainer}>
+        {backgroundImage}
+        <HomeStackNavigator
+          screenProps={{ rootNavigation: this.props.navigation }}
+        />
+      </View>
+    );
+  }
+}
 
 function createDrawerNavOptions(drawerLabel, iconName) {
   return {
@@ -246,8 +270,8 @@ const MyDrawerNavigator = DrawerNavigator(
 
 export default (Microsurance = StackNavigator(
   {
-    // Intro: { screen: IntroScreen },
-    // Auth: { screen: AuthScreen },
+    Intro: { screen: IntroScreen },
+    Auth: { screen: AuthScreen },
     Drawer: { screen: MyDrawerNavigator }
   },
   { headerMode: "none" }

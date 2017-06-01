@@ -7,7 +7,8 @@ import {
   View,
   Button,
   Picker,
-  ScrollView
+  ScrollView,
+  InteractionManager
 } from "react-native";
 import { NavigationActions } from "react-navigation";
 import VectorDrawableView from "react-native-vectordrawable-android";
@@ -15,6 +16,17 @@ import VectorDrawableView from "react-native-vectordrawable-android";
 import { Text } from "./defaultComponents";
 
 export default class HomeScreen extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { renderMenu: false };
+  }
+
+  componentDidMount() {
+    InteractionManager.runAfterInteractions(() =>
+      this.setState({ renderMenu: true })
+    );
+  }
+
   renderMenuItem(item) {
     return (
       <TouchableOpacity
@@ -67,14 +79,16 @@ export default class HomeScreen extends Component {
           resourceName="ic_microassure_white"
           style={styles.appName}
         />
-        <View style={styles.menu}>
-          <View style={styles.menuRow}>
-            {menuItems.slice(0, 2).map(this.renderMenuItem)}
-          </View>
-          <View style={styles.menuRow}>
-            {menuItems.slice(2, 4).map(this.renderMenuItem)}
-          </View>
-        </View>
+        {this.state.renderMenu
+          ? <View style={styles.menu}>
+              <View style={styles.menuRow}>
+                {menuItems.slice(0, 2).map(this.renderMenuItem)}
+              </View>
+              <View style={styles.menuRow}>
+                {menuItems.slice(2, 4).map(this.renderMenuItem)}
+              </View>
+            </View>
+          : null}
       </View>
     );
   }

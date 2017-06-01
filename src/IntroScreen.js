@@ -67,7 +67,7 @@ export default class IntroScreen extends Component {
     const signInButton = (
       <View style={styles.buttonContainer}>
         <Button
-          onPress={() => this.props.navigation.navigate("Drawer")}
+          onPress={() => this.props.navigation.navigate("Auth")}
           title={buttonText}
           color={colors.primaryOrange}
           style={styles.signinButton}

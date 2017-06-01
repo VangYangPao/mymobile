@@ -127,7 +127,7 @@ var DefaultViewPageIndicator = React.createClass({
           </View>
         </View>
         <TouchableOpacity
-          onPress={() => this.props.navigation.navigate("Drawer")}
+          onPress={() => this.props.navigation.navigate("Auth")}
           style={styles.button}
         >
           <Text style={styles.buttonText}>Sign In</Text>
