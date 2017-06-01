@@ -19,12 +19,12 @@ const Form = t.form.Form;
 import colors from "./colors";
 import { Text } from "./defaultComponents";
 
-// let formStyles = Object.assign({}, t.form.Form.stylesheet);
-// formStyles.controlLabel.normal.color = "white";
-// formStyles.textbox.normal.borderColor = "white";
-// formStyles.textbox.normal.color = "white";
-// formStyles.fieldset.marginTop = 20;
-// formStyles.fieldset.marginBottom = 10;
+let formStyles = Object.assign({}, t.form.Form.stylesheet);
+formStyles.controlLabel.normal.color = "white";
+formStyles.textbox.normal.borderColor = "white";
+formStyles.textbox.normal.color = "white";
+formStyles.fieldset.marginTop = 20;
+formStyles.fieldset.marginBottom = 10;
 
 const resetToDrawerAction = NavigationActions.reset({
   index: 0,
