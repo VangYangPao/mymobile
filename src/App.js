@@ -13,6 +13,7 @@ import IntroScreen from "./IntroScreen";
 import PolicyScreen from "./PolicyScreen";
 import ConfirmationScreen from "./ConfirmationScreen";
 import StatusScreen from "./StatusScreen";
+import AuthScreen from "./AuthScreen";
 import colors from "./colors";
 import DrawerContent from "./DrawerContent";
 
@@ -178,7 +179,8 @@ const MyDrawerNavigator = DrawerNavigator(
 
 export default (Microsurance = StackNavigator(
   {
-    Intro: { screen: IntroScreen },
+    // Intro: { screen: IntroScreen },
+    Auth: { screen: AuthScreen },
     Drawer: { screen: MyDrawerNavigator }
   },
   { headerMode: "none" }

@@ -2,12 +2,6 @@
 # yarn lockfile v1
 
 
-"@expo/react-native-action-sheet@0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@expo/react-native-action-sheet/-/react-native-action-sheet-0.3.0.tgz#b4da88fa0e506bdf57a31ac87999fea30825d6a7"
-  dependencies:
-    hoist-non-react-statics "^1.2.0"
-
 "@expo/react-native-action-sheet@0.3.1":
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/@expo/react-native-action-sheet/-/react-native-action-sheet-0.3.1.tgz#cf1fd38e570febb4930c5518e42dfa1a32b1ace5"
@@ -3805,6 +3799,22 @@ supports-color@^3.1.2:
 symbol-tree@^3.2.1:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/symbol-tree/-/symbol-tree-3.2.2.tgz#ae27db38f660a7ae2e1c3b7d1bc290819b8519e6"
+
+tcomb-form-native@^0.6.8:
+  version "0.6.8"
+  resolved "https://registry.yarnpkg.com/tcomb-form-native/-/tcomb-form-native-0.6.8.tgz#fccdd117d2712c338f6c3aae943690ec7357f061"
+  dependencies:
+    tcomb-validation "^3.0.0"
+
+tcomb-validation@^3.0.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/tcomb-validation/-/tcomb-validation-3.3.0.tgz#29ada8534203500e90b245eedd0e1a80f1909ba2"
+  dependencies:
+    tcomb "^3.0.0"
+
+tcomb@^3.0.0:
+  version "3.2.20"
+  resolved "https://registry.yarnpkg.com/tcomb/-/tcomb-3.2.20.tgz#823e689dcf3518d82c4b6c890a822aa6916692cd"
 
 temp@0.8.3:
   version "0.8.3"
