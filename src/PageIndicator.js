@@ -12,36 +12,27 @@ var DOT_SIZE = 6;
 var DOT_SPACE = 4;
 
 var styles = StyleSheet.create({
-  buttonText: {
-    color: colors.primaryOrange,
-    fontSize: 18
+  signInText: {
+    color: colors.primaryOrange
   },
-  button: {
-    position: "absolute",
-    right: 10,
-    bottom: 10
+  buttonText: {
+    fontSize: 18
   },
   indicators: {
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    position: "absolute",
-    left: 0,
-    bottom: 15,
-    right: 0,
     backgroundColor: "transparent"
   },
   tab: {
     alignItems: "center"
   },
-
   tabs: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center"
   },
-
   dot: {
     width: DOT_SIZE,
     height: DOT_SIZE,
@@ -50,7 +41,6 @@ var styles = StyleSheet.create({
     marginLeft: DOT_SPACE,
     marginRight: DOT_SPACE
   },
-
   curDot: {
     position: "absolute",
     width: DOT_SIZE,
@@ -59,6 +49,13 @@ var styles = StyleSheet.create({
     backgroundColor: colors.primaryOrange,
     margin: DOT_SPACE,
     bottom: 0
+  },
+  container: {
+    flex: 0.1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingTop: 15,
+    backgroundColor: "white"
   }
 });
 
@@ -108,7 +105,16 @@ var DefaultViewPageIndicator = React.createClass({
     }
 
     return (
-      <View>
+      <View style={styles.container}>
+        <TouchableOpacity
+          onPress={() => this.props.navigation.navigate("Auth")}
+          style={styles.button}
+        >
+          <Text style={styles.buttonText}>
+            Already a user?{" "}
+            <Text style={styles.signInText}>Sign In</Text>
+          </Text>
+        </TouchableOpacity>
         <View style={styles.indicators}>
           <View
             style={styles.tabs}
@@ -126,12 +132,6 @@ var DefaultViewPageIndicator = React.createClass({
             <Animated.View style={[styles.curDot, { left }]} />
           </View>
         </View>
-        <TouchableOpacity
-          onPress={() => this.props.navigation.navigate("Auth")}
-          style={styles.button}
-        >
-          <Text style={styles.buttonText}>Sign In</Text>
-        </TouchableOpacity>
       </View>
     );
   }

@@ -5,12 +5,13 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
-  Button
+  TouchableHighlight
 } from "react-native";
 import ViewPager from "react-native-viewpager";
 import VectorDrawableView from "react-native-vectordrawable-android";
 
 import { Text } from "./defaultComponents";
+import Button from "./Button";
 import colors from "./colors";
 import PageIndicator from "./PageIndicator";
 
@@ -23,36 +24,28 @@ export default class IntroScreen extends Component {
       pageHasChanged: (p1, p2) => p1 !== p2
     });
 
-    type Page = {
-      title: string,
-      subtitle: string,
-      imageSource: String,
-      type: string
-    };
-
-    const pages: Array<Page> = [
+    const pages = [
       {
         title: "Easy On-Demand\nMicro Insurance",
-        subtitle: "Instant coverage at a super-low price for everyone.",
+        subtitle: "Super-Big Coverage\nat Super-Low Prices",
         imageSource: require("../images/parents.png"),
         type: "basics"
       },
       {
-        title: "No-hassle Instant Claim",
-        subtitle: "We care, so we pay claims fast.",
+        title: "Buy Instantly and\nClaim Super Fast!",
+        subtitle: "We care, that's why we\nwant to pay claims fast",
         imageSource: require("../images/grandparents.png"),
         type: "basic"
       },
       {
-        title: "Simple, Easy and Friendly",
-        subtitle: "Why we're super different:",
-        imageSource: require("../images/parents.png"),
+        title: "Simple, Easy and\nSuper User-Friendly",
+        subtitle:
+          "Here are the reasons why we\nare different from other insurers",
         type: "benefits"
       },
       {
-        title: "Join XYZ Members\nWho Are Insured By Us",
-        subtitle: "CHECK OUT OUR SUPER-LOW PRICES",
-        imageSource: require("../images/parents.png"),
+        title: "Join 1,000 Members\nWho Are Protected By Us",
+        imageSource: require("../images/grandparents.png"),
         type: "cta"
       }
     ];
@@ -63,17 +56,16 @@ export default class IntroScreen extends Component {
   }
 
   renderPage(page) {
-    const buttonText = "CHECK OUT OUR SUPER-LOW PRICES";
+    const buttonText = "CHECK OUT OUR SUPER-BIG COVERAGE\nAT SUPER-LOW PRICES";
     const signInButton = (
-      <View style={styles.buttonContainer}>
-        <Button
-          onPress={() => this.props.navigation.navigate("Auth")}
-          title={buttonText}
-          color={colors.primaryOrange}
-          style={styles.signinButton}
-        />
-      </View>
+      <Button
+        onPress={() => this.props.navigation.navigate("Auth")}
+        style={styles.button}
+      >
+        {buttonText}
+      </Button>
     );
+
     const benefits = [
       { title: "No Broker/Agent", resourceName: "ic_no_broker" },
       {
@@ -85,15 +77,14 @@ export default class IntroScreen extends Component {
       { title: "Algorithm Powered", resourceName: "ic_algorithm_powered" },
       { title: "Click to Claim", resourceName: "ic_click_to_claim" }
     ];
-    const renderBenefit = b => (
+    const renderBenefit = b =>
       <View style={styles.benefit} key={b.resourceName}>
         <VectorDrawableView
           resourceName={b.resourceName}
           style={styles.benefitIcon}
         />
         <Text style={styles.benefitTitle}>{b.title}</Text>
-      </View>
-    );
+      </View>;
     const benefitsView = (
       <View style={styles.benefitsView}>
         <View style={styles.benefitsContainer}>
@@ -106,6 +97,18 @@ export default class IntroScreen extends Component {
     );
     return (
       <View style={styles.page}>
+        <VectorDrawableView
+          resourceName="ic_microassure"
+          style={styles.appName}
+        />
+        <View style={{ flex: 0.2 }}>
+          <Text style={styles.title}>{page.title}</Text>
+          {page.type === "cta"
+            ? null
+            : <Text style={styles.subtitle}>{page.subtitle}</Text>}
+          {page.type === "cta" ? signInButton : null}
+        </View>
+        {page.type === "benefits" ? benefitsView : null}
         {page.type !== "benefits"
           ? <Image
               source={page.imageSource}
@@ -113,24 +116,13 @@ export default class IntroScreen extends Component {
               style={styles.image}
             />
           : null}
-        <VectorDrawableView
-          resourceName="ic_microassure"
-          style={styles.appName}
-        />
-        <Text style={styles.title}>{page.title}</Text>
-        {page.type === "cta"
-          ? null
-          : <Text style={styles.subtitle}>{page.subtitle}</Text>}
-        {page.type === "benefits" ? benefitsView : null}
-        {page.type === "cta" ? signInButton : null}
       </View>
     );
   }
 
   render() {
-    const renderPageIndicator = props => (
-      <PageIndicator navigation={this.props.navigation} {...props} />
-    );
+    const renderPageIndicator = props =>
+      <PageIndicator navigation={this.props.navigation} {...props} />;
     return (
       <ViewPager
         dataSource={this.state.dataSource}
@@ -142,6 +134,10 @@ export default class IntroScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+  button: {
+    marginTop: 10,
+    marginHorizontal: 15
+  },
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "center",
@@ -191,7 +187,7 @@ const styles = StyleSheet.create({
   title: {
     alignSelf: "center",
     marginBottom: 10,
-    fontSize: 28,
+    fontSize: 23,
     textAlign: "center",
     color: colors.primaryText
   },
@@ -201,10 +197,6 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   image: {
-    position: "absolute",
-    bottom: 50,
-    left: 0,
-    right: 0,
     height: 300,
     width: Dimensions.get("window").width
   },
