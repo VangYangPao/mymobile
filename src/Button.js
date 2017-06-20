@@ -1,21 +1,29 @@
 import React, { Component } from "react";
-import { View, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  TouchableHighlight,
+  StyleSheet
+} from "react-native";
 
 import { Text } from "./defaultComponents";
 import colors from "./colors";
 
+const buttonBorderRadius = 5;
+
 export default class Button extends Component {
   render() {
     return (
-      <TouchableOpacity
+      <TouchableHighlight
         onPress={this.props.onPress}
-        style={styles.container}
-        activeOpacity={0.6}
+        activeOpacity={0.7}
+        style={[styles.container, this.props.containerStyle]}
+        underlayColor={colors.borderLine}
       >
         <View style={[styles.button, this.props.style]}>
           <Text style={styles.buttonText}>{this.props.children}</Text>
         </View>
-      </TouchableOpacity>
+      </TouchableHighlight>
     );
   }
 }
@@ -26,7 +34,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingVertical: 15,
     paddingHorizontal: 10,
-    borderRadius: 5,
+    borderRadius: buttonBorderRadius,
     backgroundColor: colors.primaryOrange
   },
   buttonText: {
@@ -36,6 +44,6 @@ const styles = StyleSheet.create({
     fontWeight: "500"
   },
   container: {
-    elevation: 3
+    borderRadius: buttonBorderRadius
   }
 });

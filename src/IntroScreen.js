@@ -60,7 +60,7 @@ export default class IntroScreen extends Component {
     const signInButton = (
       <Button
         onPress={() => this.props.navigation.navigate("Auth")}
-        style={styles.button}
+        containerStyle={styles.buttonContainer}
       >
         {buttonText}
       </Button>
@@ -97,18 +97,6 @@ export default class IntroScreen extends Component {
     );
     return (
       <View style={styles.page}>
-        <VectorDrawableView
-          resourceName="ic_microassure"
-          style={styles.appName}
-        />
-        <View style={{ flex: 0.2 }}>
-          <Text style={styles.title}>{page.title}</Text>
-          {page.type === "cta"
-            ? null
-            : <Text style={styles.subtitle}>{page.subtitle}</Text>}
-          {page.type === "cta" ? signInButton : null}
-        </View>
-        {page.type === "benefits" ? benefitsView : null}
         {page.type !== "benefits"
           ? <Image
               source={page.imageSource}
@@ -116,6 +104,18 @@ export default class IntroScreen extends Component {
               style={styles.image}
             />
           : null}
+        <VectorDrawableView
+          resourceName="ic_microassure"
+          style={styles.appName}
+        />
+        <View style={{ flex: 0.2, zIndex: 2 }}>
+          <Text style={styles.title}>{page.title}</Text>
+          {page.type === "cta"
+            ? null
+            : <Text style={styles.subtitle}>{page.subtitle}</Text>}
+          {page.type === "cta" ? signInButton : null}
+        </View>
+        {page.type === "benefits" ? benefitsView : null}
       </View>
     );
   }
@@ -134,14 +134,9 @@ export default class IntroScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-  button: {
+  buttonContainer: {
     marginTop: 10,
     marginHorizontal: 15
-  },
-  buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    marginTop: 2
   },
   signInButton: {
     paddingVertical: 30,
@@ -197,6 +192,10 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   image: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
     height: 300,
     width: Dimensions.get("window").width
   },

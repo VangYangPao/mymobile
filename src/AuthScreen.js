@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   TextInput,
   View,
-  Button,
   Picker,
   ScrollView,
   InteractionManager
@@ -17,6 +16,7 @@ import t from "tcomb-form-native";
 const Form = t.form.Form;
 
 import colors from "./colors";
+import Button from "./Button";
 import { Text } from "./defaultComponents";
 
 let formStyles = Object.assign({}, t.form.Form.stylesheet);
@@ -62,7 +62,8 @@ const userSignUpOptions = {
       placeholderTextColor: "white"
     },
     readAgreement: {
-      label: "I have read, understood and agreed to the Terms of Use and Privacy Policy"
+      label:
+        "I have read, understood and agreed to the Terms of Use and Privacy Policy"
     }
   }
 };
@@ -87,12 +88,9 @@ class SignUpScreen extends Component {
           <View style={styles.container}>
             <Text style={styles.signUpHeader}>Sign up for microAssure</Text>
             <Form ref="form" type={UserSignUp} options={userSignUpOptions} />
-            <Button
-              onPress={this.handleSignUp}
-              title="Sign Up"
-              color="#EF6C00"
-              style={styles.signinButton}
-            />
+            <Button onPress={this.handleSignUp} style={styles.signinButton}>
+              Sign Up
+            </Button>
             <TouchableOpacity
               onPress={this.props.onNavigateToLogin}
               style={{ marginTop: 20 }}
@@ -143,12 +141,9 @@ class LoginScreen extends Component {
           style={styles.logo}
         />
         <Form ref="form" type={UserLogin} options={userLoginOptions} />
-        <Button
-          onPress={this.handleLogin}
-          title="Login"
-          color="#EF6C00"
-          style={styles.signinButton}
-        />
+        <Button onPress={this.handleLogin} style={styles.signinButton}>
+          LOGIN
+        </Button>
         <TouchableOpacity
           onPress={this.props.onNavigateToSignUp}
           style={{ marginVertical: 20 }}
@@ -248,6 +243,9 @@ export default class AuthScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+  signinButton: {
+    backgroundColor: "#8BC34A"
+  },
   signUpHeader: {
     marginBottom: 20,
     fontSize: 26,
