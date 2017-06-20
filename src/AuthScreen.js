@@ -88,7 +88,11 @@ class SignUpScreen extends Component {
           <View style={styles.container}>
             <Text style={styles.signUpHeader}>Sign up for microAssure</Text>
             <Form ref="form" type={UserSignUp} options={userSignUpOptions} />
-            <Button onPress={this.handleSignUp} style={styles.signinButton}>
+            <Button
+              onPress={this.handleSignUp}
+              containerStyle={{ marginTop: 30 }}
+              style={styles.signinButton}
+            >
               Sign Up
             </Button>
             <TouchableOpacity
@@ -255,7 +259,8 @@ const styles = StyleSheet.create({
   bottomBtn: {
     textAlign: "center",
     color: "white",
-    fontSize: 17
+    fontSize: 17,
+    marginTop: 15
   },
   textinput: {
     height: 50

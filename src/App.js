@@ -6,7 +6,8 @@ import {
   View,
   TouchableOpacity,
   Image,
-  InteractionManager
+  InteractionManager,
+  Dimensions
 } from "react-native";
 import {
   DrawerNavigator,
@@ -27,9 +28,10 @@ import DrawerContent from "./DrawerContent";
 
 // global.___DEV___ = false
 
-const MENU_ICON_SIZE = 27;
+const MENU_ICON_SIZE = 35;
 const MENU_ICON_PADDING_LEFT = 15;
 const MENU_ICON_PADDING_RIGHT = 10;
+const WINDOW_WIDTH = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
   navigatorContainer: {
@@ -55,9 +57,8 @@ const styles = StyleSheet.create({
   headerTitle: {
     // fontSize: 20,
     alignSelf: "center",
-    paddingRight: MENU_ICON_PADDING_LEFT +
-      MENU_ICON_SIZE +
-      MENU_ICON_PADDING_RIGHT,
+    paddingRight:
+      MENU_ICON_PADDING_LEFT + MENU_ICON_SIZE + MENU_ICON_PADDING_RIGHT,
     color: colors.primaryText,
     fontWeight: "400",
     fontFamily: "Comfortaa-Bold"
@@ -218,9 +219,8 @@ class HomeStackNavigatorWrapper extends Component {
 function createDrawerNavOptions(drawerLabel, iconName) {
   return {
     drawerLabel,
-    drawerIcon: ({ tintColor }) => (
+    drawerIcon: ({ tintColor }) =>
       <Icon name={iconName} size={22} color={tintColor} />
-    )
   };
 }
 
@@ -231,33 +231,51 @@ class SettingsScreen extends Component {
 }
 
 class HelpScreen extends Component {
-  static navigationOptions = createDrawerNavOptions("Help", "feedback");
-  render() {}
+  static navigationOptions = {
+    drawerLabel: () => null
+  };
+  render() {
+    return null;
+  }
+}
+
+class LegalScreen extends Component {
+  static navigationOptions = {
+    drawerLabel: () => null
+  };
+  render() {
+    return null;
+  }
 }
 
 const MyDrawerNavigator = DrawerNavigator(
   {
-    HomeStack: {
-      screen: HomeStackNavigatorWrapper
-    },
+    // HomeStack: {
+    //   screen: HomeStackNavigatorWrapper
+    // },
     BuyStack: {
       screen: BuyStackNavigator
     },
     ClaimStack: {
       screen: ClaimStackNavigator
     },
-    StatusStack: {
+    MyPolicies: {
       screen: StatusStackNavigator,
-      navigationOptions: createDrawerNavOptions("Status", "email")
+      navigationOptions: createDrawerNavOptions("My Policy & Status", "book")
     },
-    Settings: {
-      screen: SettingsScreen
+    Profile: {
+      screen: StatusStackNavigator,
+      navigationOptions: createDrawerNavOptions("My Profile", "account-circle")
     },
     Help: {
       screen: HelpScreen
+    },
+    Legal: {
+      screen: LegalScreen
     }
   },
   {
+    drawerWidth: WINDOW_WIDTH * 0.7,
     contentComponent: props => {
       return <DrawerContent {...props} />;
     },
@@ -270,8 +288,8 @@ const MyDrawerNavigator = DrawerNavigator(
 
 export default (Microsurance = StackNavigator(
   {
-    Intro: { screen: IntroScreen },
-    Auth: { screen: AuthScreen },
+    // Intro: { screen: IntroScreen },
+    // Auth: { screen: AuthScreen },
     Drawer: { screen: MyDrawerNavigator }
   },
   { headerMode: "none" }
