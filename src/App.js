@@ -275,7 +275,7 @@ const MyDrawerNavigator = DrawerNavigator(
     }
   },
   {
-    drawerWidth: WINDOW_WIDTH * 0.7,
+    drawerWidth: WINDOW_WIDTH * 0.65,
     contentComponent: props => {
       return <DrawerContent {...props} />;
     },

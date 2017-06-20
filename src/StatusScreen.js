@@ -13,7 +13,7 @@ import colors from "./colors";
 
 export default class StatusScreen extends Component {
   static navigationOptions = {
-    title: "Notification"
+    title: "My Policy & Status"
   };
 
   renderItem({ item, index }) {
@@ -75,7 +75,8 @@ export default class StatusScreen extends Component {
       {
         key: 3,
         status: "active",
-        name: "Accidental Death / Permanent Disability with Medical Reimbursement",
+        name:
+          "Accidental Death / Permanent Disability with Medical Reimbursement",
         date: new Date(2017, 5, 26, 16, 43)
       }
     ];
