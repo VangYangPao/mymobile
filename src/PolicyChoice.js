@@ -35,9 +35,6 @@ class Policy extends Component {
             <Text style={styles.title}>
               {this.props.title}
             </Text>
-            <Text style={styles.subtitle}>
-              Up to ${addCommas(highestCoverageAmount)}
-            </Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -111,20 +108,22 @@ const styles = StyleSheet.create({
     paddingRight: 18
   },
   detailContainer: {
-    flex: 1
+    flex: 1,
+    justifyContent: "center"
   },
   icon: {
-    height: 50,
-    width: 50
+    height: 65,
+    width: 65
   },
   title: {
-    fontSize: 16,
+    fontSize: 18,
     color: colors.primaryText
   },
   subtitle: {
     marginTop: 4
   },
   container: {
-    flex: 1
+    flex: 1,
+    marginTop: 10
   }
 });

@@ -48,7 +48,7 @@ const CUSTOMER_USER_ID = 1;
 const AGENT_USER = {
   _id: AGENT_USER_ID,
   name: "Carol",
-  avatar: require("../images/mom.png")
+  avatar: require("../images/eve.png")
 };
 const CUSTOMER_USER = {
   _id: CUSTOMER_USER_ID
