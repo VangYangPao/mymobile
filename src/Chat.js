@@ -95,9 +95,8 @@ export default function ChatScreenWrapper(questionSet) {
       fontWeight: "300"
     },
     drawerLabel,
-    drawerIcon: ({ tintColor }) => (
+    drawerIcon: ({ tintColor }) =>
       <Icon name={drawerIcon} size={22} color={tintColor} />
-    )
   });
   return wrapper;
 }
@@ -200,13 +199,13 @@ class PickerActionButton extends Component {
             }
           }}
         >
-          {this.props.items.map(item => (
+          {this.props.items.map(item =>
             <Picker.Item
               key={item.value}
               label={item.label}
               value={item.value}
             />
-          ))}
+          )}
         </Picker>
       </View>
     );
@@ -379,7 +378,8 @@ class ChatScreen extends Component {
               {
                 type: "text",
                 _id: 0,
-                text: "Hi I'm Eve, please choose the insurance policy you're interested in. 😄",
+                text:
+                  "Hi I'm Eve, please choose the insurance policy you're interested in. 😄",
                 createdAt: new Date(),
                 user: AGENT_USER
               }
@@ -680,8 +680,6 @@ class ChatScreen extends Component {
   renderMessage(props) {
     const { currentMessage } = props;
     switch (currentMessage.type) {
-      case "text":
-        return <Message {...props} />;
       case "policies":
         return <PolicyChoice onSelectPolicy={this.handleSelectPolicy} />;
       case "planIndex":
@@ -721,8 +719,9 @@ class ChatScreen extends Component {
             disabled={notCurrentQuestion}
           />
         );
+      case "text":
       default:
-        return <Message {...props} />;
+        return <Message {...props} containerStyle={messageContainerStyle} />;
     }
   }
 
@@ -826,6 +825,15 @@ class ChatScreen extends Component {
     );
   }
 }
+
+const messageContainerStyle = {
+  left: {
+    alignItems: "flex-start"
+  },
+  right: {
+    alignItems: "flex-start"
+  }
+};
 
 const styles = StyleSheet.create({
   datetimeInput: {},

@@ -22,6 +22,7 @@ class Policy extends Component {
     const { plans } = this.props;
     const lastPlan = plans[plans.length - 1];
     const highestCoverageAmount = lastPlan[Object.keys(lastPlan)[0]];
+    const titleSplit = this.props.title.split(" with ");
     return (
       <TouchableOpacity activeOpacity={0.6} onPress={this.handleSelectPlan}>
         <View style={styles.policyContainer}>
@@ -33,7 +34,11 @@ class Policy extends Component {
           </View>
           <View style={styles.detailContainer}>
             <Text style={styles.title}>
-              {this.props.title}
+              {titleSplit[0]}
+              {titleSplit[1]
+                ? <Text style={styles.boldedText}> with {titleSplit[1]}</Text>
+                : null}
+
             </Text>
           </View>
         </View>
@@ -95,6 +100,9 @@ export default class PolicyChoice extends Component {
 }
 
 const styles = StyleSheet.create({
+  boldedText: {
+    fontWeight: "500"
+  },
   policyContainer: {
     flexDirection: "row",
     backgroundColor: "white",
