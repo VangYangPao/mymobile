@@ -104,11 +104,13 @@ export default class IntroScreen extends Component {
               style={styles.image}
             />
           : null}
-        <VectorDrawableView
-          resourceName="ic_microassure"
-          style={styles.appName}
-        />
-        <View style={{ flex: 0.2, zIndex: 2 }}>
+        <View style={styles.appNameContainer}>
+          <VectorDrawableView
+            resourceName="ic_microassure"
+            style={styles.appName}
+          />
+        </View>
+        <View style={styles.contentContaier}>
           <Text style={styles.title}>{page.title}</Text>
           {page.type === "cta"
             ? null
@@ -133,9 +135,14 @@ export default class IntroScreen extends Component {
   }
 }
 
+const windowWidth = Dimensions.get("window").width;
+const backgroundImagePercent = 0.95;
+const backgroundImageWidth = windowWidth * backgroundImagePercent;
+const backgroundImageHoriPadding =
+  windowWidth * ((1 - backgroundImagePercent) / 2);
+
 const styles = StyleSheet.create({
   buttonContainer: {
-    marginTop: 10,
     marginHorizontal: 15
   },
   signInButton: {
@@ -148,8 +155,8 @@ const styles = StyleSheet.create({
     marginTop: 7
   },
   benefitIcon: {
-    height: 100,
-    width: 100
+    height: 80,
+    width: 80
   },
   benefit: {
     flex: 1,
@@ -161,11 +168,21 @@ const styles = StyleSheet.create({
     alignItems: "baseline",
     justifyContent: "center",
     paddingHorizontal: 10,
-    paddingVertical: 20
+    paddingVertical: 5
   },
   benefitsView: {
+    position: "absolute",
+    bottom: 0,
+    left: backgroundImageHoriPadding,
+    right: backgroundImageHoriPadding,
+    height: 300,
+    width: backgroundImageWidth,
+    justifyContent: "center",
+    paddingTop: 20
+  },
+  contentContaier: {
     flex: 1,
-    marginTop: 30
+    zIndex: 2
   },
   signin: {
     alignSelf: "center",
@@ -174,9 +191,13 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: colors.primaryOrange
   },
+  appNameContainer: {
+    flex: 0.3,
+    justifyContent: "flex-end"
+  },
   appName: {
+    // width: windowWidth * 0.6,
     height: 40,
-    marginTop: 10,
     marginBottom: 25
   },
   title: {
@@ -194,10 +215,10 @@ const styles = StyleSheet.create({
   image: {
     position: "absolute",
     bottom: 0,
-    left: 0,
-    right: 0,
+    left: backgroundImageHoriPadding,
+    right: backgroundImageHoriPadding,
     height: 300,
-    width: Dimensions.get("window").width
+    width: backgroundImageWidth
   },
   page: {
     flex: 1,
