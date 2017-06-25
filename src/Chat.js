@@ -7,7 +7,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
-  Button,
   Picker
 } from "react-native";
 import {
@@ -35,6 +34,7 @@ import PolicyChoice from "./PolicyChoice";
 import colors from "./colors";
 import POLICIES from "../data/policies";
 import { validateAnswer, QUESTION_SETS } from "../data/questions";
+import Button from "./Button";
 
 // Enable playback in silence mode (iOS only)
 Sound.setCategory("Playback");
@@ -232,22 +232,21 @@ class CoverageDurationWidget extends Component {
     const buttonText = `CHOOSE ${months + ""} month${s} - $${totalPremium}`;
     return (
       <View style={widgetStyles.durationContainer}>
+        <Button
+          onPress={() => {
+            if (!this.props.onSelectDuration) return;
+            this.props.onSelectDuration(this.state.months);
+          }}
+          style={widgetStyles.confirmButton}
+        >
+          {buttonText}
+        </Button>
         <RangeSlider
           elements={elements}
           onValueChange={months => this.setState({ months })}
           containerStyle={{
             marginBottom: 20
           }}
-        />
-        <Button
-          onPress={() => {
-            if (!this.props.onSelectDuration) return;
-            this.props.onSelectDuration(this.state.months);
-          }}
-          disabled={this.props.disabled}
-          title={buttonText}
-          color={colors.primaryOrange}
-          style={widgetStyles.confirmButton}
         />
       </View>
     );
@@ -271,7 +270,7 @@ const widgetStyles = StyleSheet.create({
     height: 44
   },
   confirmButton: {
-    marginTop: 20,
+    marginTop: 5,
     marginBottom: 30
   },
   durationContainer: {
@@ -281,7 +280,7 @@ const widgetStyles = StyleSheet.create({
     marginBottom: 22,
     paddingHorizontal: 15,
     paddingTop: 10,
-    paddingBottom: 15,
+    paddingBottom: 2,
     borderRadius: 3,
     backgroundColor: "white",
     elevation: 4
@@ -423,6 +422,8 @@ class ChatScreen extends Component {
   }
 
   handleSelectPlan(planIndex) {
+    if (this.state.answers && this.state.answers.planIndex !== undefined)
+      return;
     const planAlphabet = ["A", "B", "C", "D", "E"];
     const premium = this.props.policy.plans[planIndex].premium;
     this.setState(

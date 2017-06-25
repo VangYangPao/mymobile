@@ -81,6 +81,7 @@ export default class PolicyOverview extends Component {
         <PolicyPrice
           pricePerMonth={pricePerMonth}
           showFrom={true}
+          showDuration={true}
           minimumCoverage={policy.from}
         />
         <PolicyCoverages {...policy} />

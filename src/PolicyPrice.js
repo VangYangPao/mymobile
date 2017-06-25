@@ -40,16 +40,18 @@ export default class PolicyPrice extends Component {
             </Text>
           </View>
         </View>
-        <View style={styles.priceContainer}>
-          {this.props.showFrom
-            ? <Text style={styles.pricePerMonth}>FROM</Text>
-            : null}
-          <View style={styles.price}>
-            <Text style={[styles.priceAmount, styles.priceDuration]}>
-              {minimumCoverage}
-            </Text>
-          </View>
-        </View>
+        {this.props.showDuration
+          ? <View style={styles.priceContainer}>
+              {this.props.showFrom
+                ? <Text style={styles.pricePerMonth}>FROM</Text>
+                : null}
+              <View style={styles.price}>
+                <Text style={[styles.priceAmount, styles.priceDuration]}>
+                  {minimumCoverage}
+                </Text>
+              </View>
+            </View>
+          : null}
       </View>
     );
   }
