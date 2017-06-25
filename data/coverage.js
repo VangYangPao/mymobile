@@ -103,6 +103,14 @@ export default (coverageItems = {
     description:
       "This covers accidental damage to your phone. For example, your phone dropped and cracked, or your phone fell onto wet surface and black-screen, you shall enjoy door-to-door repair service or phone replacement instantly."
   },
+  "Wear & Tear / Upgrade": {
+    title: "Wear & Tear / Upgrade",
+    icon: "ic_phone_wear_tear"
+  },
+  "Phone stolen / lost": {
+    title: "Phone stolen / lost",
+    icon: "ic_phone_lost"
+  },
   "Phone On Wet Surface / Blank Screen": {
     shortTitle: "Wet Phone",
     title: "Phone On Wet Surface / Blank Screen",

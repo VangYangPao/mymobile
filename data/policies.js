@@ -165,6 +165,6 @@ export default (policies = [
       }
     ],
     covered: ["Phone Cracked / Dropped", "Phone On Wet Surface / Blank Screen"],
-    notCovered: []
+    notCovered: ["Wear & Tear / Upgrade", "Phone stolen / lost"]
   }
 ]);
