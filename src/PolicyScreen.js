@@ -90,7 +90,7 @@ export default class PolicyScreen extends Component {
       policy: this.policy,
       onPricePerMonthChange: this.handlePricePerMonthChange
     };
-    const footerText = `BUY PLAN`;
+    const footerText = `BUY`;
     return (
       <View style={styles.container}>
         <PlanTabNavigator screenProps={screenProps} />

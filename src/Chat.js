@@ -901,6 +901,20 @@ class ChatScreen extends Component {
     ) {
       minInputToolbarHeight = 0;
     }
+
+    let listViewProps = {};
+    if (!this.props.isStartScreen) {
+      listViewProps.onContentSizeChange = (contentWidth, contentHeight) => {
+        if (this._messageContainerRef === null) {
+          return;
+        }
+        this.refs.chat._messageContainerRef.scrollTo({
+          y: contentHeight,
+          animated: true
+        });
+      };
+    }
+
     return (
       <View style={styles.container}>
         <GiftedChat
@@ -917,17 +931,7 @@ class ChatScreen extends Component {
           renderSend={this.renderSend}
           renderComposer={this.renderComposer}
           minInputToolbarHeight={minInputToolbarHeight}
-          listViewProps={{
-            onContentSizeChange: (contentWidth, contentHeight) => {
-              if (this._messageContainerRef === null) {
-                return;
-              }
-              this.refs.chat._messageContainerRef.scrollTo({
-                y: contentHeight,
-                animated: true
-              });
-            }
-          }}
+          listViewProps={listViewProps}
         />
       </View>
     );
