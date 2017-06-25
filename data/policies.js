@@ -11,6 +11,7 @@ export default (policies = [
   {
     title: "Accidental Death / Permanent Disability",
     imageSource: "ic_ad_pd",
+    from: "1 month",
     plans: [
       {
         accidentalDeath: 5000,
@@ -49,6 +50,7 @@ export default (policies = [
     title: "Accidental Death / Permanent Disability with Medical Reimbursement",
     subtitle: "Up to $10,000",
     imageSource: "ic_ad_pd_medical_reimbursement",
+    from: "1 month",
     plans: [
       {
         accidentalDeath: 5000,
@@ -93,6 +95,7 @@ export default (policies = [
     title: "Accidental Death / Permanent Disability with Weekly Indemnity",
     subtitle: "Requires medical record (TCM / Physiotherapy)",
     imageSource: "ic_ad_pd_weekly_indemnity",
+    from: "1 month",
     plans: [
       {
         accidentalDeath: 5000,
@@ -140,6 +143,7 @@ export default (policies = [
       "At a super-low price, this is a super-big comprehensive plan that covers most of your financial loss and unforeseen expenses when you travel overseas. It covers you and your family's medical expenses, loss of baggage, loss of cash, and loss of home contents. You and your family enjoy unlimited emergency medical evacuation, cash compensation for flight delay, diversion or cancellation. In the event accidental death or permanent disability, your loved ones will receive a lump sum cash within days. These are just some highlights, and we are constantly adding more benefits and coverage to make you travel happily and peacefully!",
     plans: [{ 0: 50000, premium: 35 }], // hardcoded for display purposes only
     isTravelInsurance: true,
+    from: "1 day",
     covered: [
       "Overseas medical expenses",
       "Medical expenses",
@@ -157,6 +161,7 @@ export default (policies = [
   {
     title: "Phone Protection",
     imageSource: "ic_phone_protection",
+    from: "1 year",
     plans: [
       {
         accidentalDamage: 1000,

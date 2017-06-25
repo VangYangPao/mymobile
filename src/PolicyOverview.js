@@ -53,7 +53,7 @@ class PolicyCoverages extends Component {
         <Text style={styles.configTitle}>COVERAGE HIGHLIGHTS</Text>
         <View style={styles.coverage}>
           {this.props.covered
-            .slice(0, 3)
+            .slice(0, 4)
             .map(item =>
               <CoverageItem
                 key={item}
@@ -81,7 +81,7 @@ export default class PolicyOverview extends Component {
         <PolicyPrice
           pricePerMonth={pricePerMonth}
           showFrom={true}
-          showPerMonth={showPerMonth}
+          minimumCoverage={policy.from}
         />
         <PolicyCoverages {...policy} />
       </Page>

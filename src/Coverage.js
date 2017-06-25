@@ -10,6 +10,11 @@ import coverages from "../data/coverage";
 export default class Coverage extends Component {
   static navigationOptions = { title: "Coverage" };
 
+  constructor(props) {
+    super(props);
+    this.state = { expanded: false };
+  }
+
   renderItem(item, idx, items) {
     const lastIndex = idx === items.length - 1;
     return (
@@ -26,13 +31,14 @@ export default class Coverage extends Component {
     );
   }
 
-  renderRow(item) {
+  renderNotCovered() {
+    if (!this.state.expanded) return null;
+    const { policy } = this.props.screenProps;
+    const notCoveredItems = policy.notCovered.map(i => coverages[i]);
     return (
-      <View key={item.title} style={{ flex: 1, alignItems: "center" }}>
-        <View style={styles.iconContainer}>
-          <VectorDrawableView resourceName={item.icon} style={styles.icon} />
-        </View>
-        <Text style={styles.rowTitle}>{item.title.toUpperCase()}</Text>
+      <View style={styles.coverages}>
+        <Text style={[styles.title, styles.notCoveredTitle]}>Not Covered</Text>
+        {notCoveredItems.map(this.renderItem)}
       </View>
     );
   }
@@ -40,7 +46,6 @@ export default class Coverage extends Component {
   render() {
     const { policy } = this.props.screenProps;
     const coveredItems = policy.covered.map(i => coverages[i]);
-    const notCoveredItems = policy.notCovered.map(i => coverages[i]);
     return (
       <View style={styles.page}>
         <ScrollView
@@ -52,6 +57,12 @@ export default class Coverage extends Component {
               <Text style={[styles.title, styles.pageTitle]}>COVERED</Text>
               {coveredItems.map(this.renderItem)}
             </View>
+            <TouchableOpacity onPress={() => this.setState({ expanded: true })}>
+              <Text style={styles.notCoveredOpenerText}>
+                Here is a summary of what is not covered.
+              </Text>
+            </TouchableOpacity>
+            {this.renderNotCovered()}
           </View>
         </ScrollView>
       </View>
@@ -62,6 +73,11 @@ export default class Coverage extends Component {
 const containerSize = 75;
 
 const styles = StyleSheet.create({
+  notCoveredOpenerText: {
+    alignSelf: "center",
+    color: colors.borderLine,
+    fontSize: 16
+  },
   rowTitle: {
     textAlign: "center",
     marginTop: 7
@@ -72,6 +88,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingHorizontal: 10,
     paddingVertical: 7
+  },
+  notCoveredTitle: {
+    fontSize: 22
   },
   pageTitle: {
     fontWeight: "500",

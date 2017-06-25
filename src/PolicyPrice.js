@@ -12,7 +12,7 @@ import colors from "./colors";
 
 export default class PolicyPrice extends Component {
   render() {
-    const { pricePerMonth } = this.props;
+    const { pricePerMonth, minimumCoverage } = this.props;
     const [intPricePart, decimalPricePart] = pricePerMonth
       .toFixed(2)
       .split(".");
@@ -25,22 +25,31 @@ export default class PolicyPrice extends Component {
       };
     }
     return (
-      <View style={styles.priceContainer}>
-        {this.props.showFrom
-          ? <Text style={styles.pricePerMonth}>FROM</Text>
-          : null}
-        <View style={styles.price}>
-          <Text style={styles.priceCurrency}>$</Text>
-          <Text style={[styles.priceAmount, additionalStyle]}>
-            {intPricePart + ""}
-          </Text>
-          <Text style={[styles.priceAmount, styles.priceAmountDecimal]}>
-            .{decimalPricePart + ""}
-          </Text>
+      <View style={styles.circlesContainer}>
+        <View style={styles.priceContainer}>
+          {this.props.showFrom
+            ? <Text style={styles.pricePerMonth}>FROM</Text>
+            : null}
+          <View style={styles.price}>
+            <Text style={styles.priceCurrency}>$</Text>
+            <Text style={[styles.priceAmount, additionalStyle]}>
+              {intPricePart + ""}
+            </Text>
+            <Text style={[styles.priceAmount, styles.priceAmountDecimal]}>
+              .{decimalPricePart + ""}
+            </Text>
+          </View>
         </View>
-        {this.props.showPerMonth
-          ? <Text style={styles.pricePerMonth}>PER MONTH</Text>
-          : null}
+        <View style={styles.priceContainer}>
+          {this.props.showFrom
+            ? <Text style={styles.pricePerMonth}>FROM</Text>
+            : null}
+          <View style={styles.price}>
+            <Text style={[styles.priceAmount, styles.priceDuration]}>
+              {minimumCoverage}
+            </Text>
+          </View>
+        </View>
       </View>
     );
   }
@@ -50,6 +59,12 @@ const PRICE_CONTAINER_SIZE = 125;
 const PRICE_DECIMAL_CONTAINER_SIZE = 20;
 
 const styles = StyleSheet.create({
+  circlesContainer: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center"
+  },
   priceContainer: {
     alignSelf: "center",
     alignItems: "center",
@@ -81,6 +96,9 @@ const styles = StyleSheet.create({
     width: PRICE_DECIMAL_CONTAINER_SIZE,
     borderRadius: PRICE_DECIMAL_CONTAINER_SIZE / 2,
     backgroundColor: colors.primaryOrange
+  },
+  priceDuration: {
+    fontSize: 25
   },
   priceAmount: {
     fontSize: 40,

@@ -109,7 +109,7 @@ export default (coverageItems = {
   },
   "Phone stolen / lost": {
     title: "Phone stolen / lost",
-    icon: "ic_phone_lost"
+    icon: "ic_phone_stolen"
   },
   "Phone On Wet Surface / Blank Screen": {
     shortTitle: "Wet Phone",
