@@ -43,12 +43,20 @@ function validatePhoneNumber(s) {
   );
 }
 
+function validateImages(arr) {
+  const isValid = true;
+  return new ValidationResult(
+    isValid,
+    isValid || "Please enter a valid phone number"
+  );
+}
+
 const TypeValidators = {
   email: validateEmail,
   string: notEmptyString,
   number: validateNumber,
   phoneNumber: validatePhoneNumber,
-  image: notEmptyString,
+  images: validateImages,
   date: validateDate,
   choice: () => new ValidationResult(true, true)
 };
@@ -112,7 +120,8 @@ export const QUESTION_SETS = {
       exclude: "Travel Protection"
     },
     {
-      question: "Awesome. That would be $<%= (policy.plans[planIndex].premium * coverageDuration).toFixed(2) %>.",
+      question:
+        "Awesome. That would be $<%= (policy.plans[planIndex].premium * coverageDuration).toFixed(2) %>.",
       responseType: null,
       exclude: "Travel Protection"
     },
@@ -147,12 +156,14 @@ export const QUESTION_SETS = {
       id: "phoneNumber"
     },
     {
-      question: "Great! To collect your claims, we will need your bank name. 🏦 (Western Union accepted)",
+      question:
+        "Great! To collect your claims, we will need your bank name. 🏦 (Western Union accepted)",
       responseType: "string",
       id: "bankName"
     },
     {
-      question: "Next, we will need your bank account number for us to bank into. 💵",
+      question:
+        "Next, we will need your bank account number for us to bank into. 💵",
       responseType: "number",
       id: "bankAccount"
     },
@@ -162,7 +173,8 @@ export const QUESTION_SETS = {
       id: "beneficiaryName"
     },
     {
-      question: "To bank into your beneficiary's bank account, we need his/her bank name. (Western Union accepted)",
+      question:
+        "To bank into your beneficiary's bank account, we need his/her bank name. (Western Union accepted)",
       responseType: "string",
       id: "beneficiaryBankName"
     },
@@ -172,8 +184,9 @@ export const QUESTION_SETS = {
       id: "beneficiaryBankAccount"
     },
     {
-      question: "Please send us a picture of your NRIC for verification.",
-      responseType: "image",
+      question:
+        "Please send us the front and back of your NRIC for verification.",
+      responseType: "images",
       id: "icImage"
     },
     {
@@ -208,9 +221,10 @@ export const QUESTION_SETS = {
       id: "injuryDetails"
     },
     {
-      question: "Please snap a photo of the police report / medical report / death certificate.",
-      responseType: "image",
-      id: "image"
+      question:
+        "Please snap photos of the police report / medical report / death certificate.",
+      responseType: "images",
+      id: "report"
     }
   ]
 };

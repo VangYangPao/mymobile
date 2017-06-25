@@ -7,7 +7,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
-  Picker
+  Picker,
+  ScrollView
 } from "react-native";
 import {
   GiftedChat,
@@ -227,9 +228,9 @@ class CoverageDurationWidget extends Component {
       value: d
     }));
     const { months } = this.state;
-    const s = months > 1 ? "s" : "";
+    const s = months > 1 ? "S" : "";
     const totalPremium = (this.props.monthlyPremium * months).toFixed(2);
-    const buttonText = `CHOOSE ${months + ""} month${s} - $${totalPremium}`;
+    const buttonText = `CHOOSE ${months + ""} MONTH${s} - $${totalPremium}`;
     return (
       <View style={widgetStyles.durationContainer}>
         <Button
@@ -237,7 +238,7 @@ class CoverageDurationWidget extends Component {
             if (!this.props.onSelectDuration) return;
             this.props.onSelectDuration(this.state.months);
           }}
-          style={widgetStyles.confirmButton}
+          containerStyle={widgetStyles.confirmButtonContainer}
         >
           {buttonText}
         </Button>
@@ -253,7 +254,100 @@ class CoverageDurationWidget extends Component {
   }
 }
 
+class MultipleImagePicker extends Component {
+  constructor(props) {
+    super(props);
+    this.handlePress = this.handlePress.bind(this);
+    this.state = { images: [] };
+  }
+
+  handlePress() {
+    ImagePicker.showImagePicker(this.options, response => {
+      if (response.didCancel) {
+        console.log("User cancelled image picker");
+      } else if (response.error) {
+        console.log("ImagePicker Error: ", response.error);
+      } else {
+        this.setState({ images: this.state.images.concat(response.uri) });
+      }
+    });
+  }
+
+  renderImage(imageUri, idx) {
+    return (
+      <Image
+        key={idx}
+        source={{ uri: imageUri }}
+        style={widgetStyles.pickedImage}
+        resizeMode="cover"
+      />
+    );
+  }
+
+  render() {
+    console.log(this.state.images);
+    return (
+      <View style={widgetStyles.imageGalleryContainer}>
+        <Text style={widgetStyles.imageGalleryTitle}>
+          Press on the '+'{"\n"}to start adding images
+        </Text>
+        <ScrollView horizontal={true} style={widgetStyles.imageGallery}>
+          {this.state.images.map(this.renderImage)}
+          <TouchableOpacity activeOpacity={0.7} onPress={this.handlePress}>
+            <View style={[widgetStyles.pickedImage, widgetStyles.emptyImage]}>
+              <Icon name="add" size={55} style={widgetStyles.plusIcon} />
+            </View>
+          </TouchableOpacity>
+        </ScrollView>
+        <Button
+          onPress={() => this.props.onFinishSelectImages(this.state.images)}
+          style={widgetStyles.confirmUpload}
+        >
+          UPLOAD IMAGES
+        </Button>
+      </View>
+    );
+  }
+}
+
+const imageHeight = 150;
+const imageWidth = 100;
+
 const widgetStyles = StyleSheet.create({
+  imageGallery: {
+    flex: 1,
+    flexDirection: "row"
+  },
+  imageGalleryTitle: {
+    alignSelf: "center",
+    marginBottom: 20,
+    fontSize: 18,
+    textAlign: "center"
+  },
+  emptyImage: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 0,
+    backgroundColor: colors.borderLine
+  },
+  plusIcon: {
+    color: "white"
+  },
+  pickedImage: {
+    width: imageWidth,
+    height: imageHeight,
+    marginRight: 20,
+    borderRadius: 4
+  },
+  imageGalleryContainer: {
+    flex: 1,
+    marginVertical: 20,
+    marginHorizontal: 20,
+    paddingVertical: 25,
+    paddingHorizontal: 20,
+    borderRadius: 4,
+    backgroundColor: "white"
+  },
   actionButtonText: {
     fontSize: 17,
     fontWeight: "600",
@@ -269,9 +363,9 @@ const widgetStyles = StyleSheet.create({
     backgroundColor: colors.primaryOrange,
     height: 44
   },
-  confirmButton: {
+  confirmButtonContainer: {
     marginTop: 5,
-    marginBottom: 30
+    marginBottom: 20
   },
   durationContainer: {
     flex: 1,
@@ -317,6 +411,7 @@ class ChatScreen extends Component {
       this
     );
     this.handleSelectDuration = this.handleSelectDuration.bind(this);
+    this.handleFinishSelectImages = this.handleFinishSelectImages.bind(this);
     this.handlePickImage = this.handlePickImage.bind(this);
     this.handlePickDate = this.handlePickDate.bind(this);
     this.handlePickChoice = this.handlePickChoice.bind(this);
@@ -378,7 +473,7 @@ class ChatScreen extends Component {
                 type: "text",
                 _id: 0,
                 text:
-                  "Hi I'm Eve, please choose the insurance policy you're interested in. 😄",
+                  "Hi I'm Eve, please choose the insurance plan you prefer. 😄",
                 createdAt: new Date(),
                 user: AGENT_USER
               }
@@ -430,7 +525,8 @@ class ChatScreen extends Component {
       this.concatMessage({
         type: "text",
         _id: uuid.v4(),
-        text: `Plan ${planAlphabet[planIndex]} $${premium + ""}/month`,
+        text: `I choose Plan ${planAlphabet[planIndex]}. $${premium +
+          ""} for one month of protection.`,
         value: planIndex,
         user: CUSTOMER_USER
       }),
@@ -494,6 +590,10 @@ class ChatScreen extends Component {
       }),
       () => this.setState({ answering: false })
     );
+  }
+
+  handleFinishSelectImages(imagesUri) {
+    this.setState({ answering: false });
   }
 
   componentDidMount() {
@@ -580,7 +680,7 @@ class ChatScreen extends Component {
           this.askNextQuestion();
           return;
         }
-        const widgets = ["planIndex", "coverageDuration"];
+        const widgets = ["planIndex", "coverageDuration", "icImage", "report"];
         if (widgets.indexOf(currentQuestion.id) !== -1) {
           this.setState(
             this.concatMessage({
@@ -681,6 +781,13 @@ class ChatScreen extends Component {
   renderMessage(props) {
     const { currentMessage } = props;
     switch (currentMessage.type) {
+      case "report":
+      case "icImage":
+        return (
+          <MultipleImagePicker
+            onFinishSelectImages={this.handleFinishSelectImages}
+          />
+        );
       case "policies":
         return <PolicyChoice onSelectPolicy={this.handleSelectPolicy} />;
       case "planIndex":
@@ -749,22 +856,22 @@ class ChatScreen extends Component {
     let { responseType } = currentQuestion;
     responseType = [].concat(responseType);
 
-    if (responseType.indexOf("image") !== -1) {
-      return <ImagePickerActionButton onPickImage={this.handlePickImage} />;
-    } else if (responseType.indexOf("date") !== -1) {
-      return <DatePickerActionButton onPickDate={this.handlePickDate} />;
-    } else if (responseType.indexOf("choice") !== -1) {
-      const label = currentQuestion.id === "recipient"
-        ? "SELECT RECIPIENT"
-        : "SELECT DESTINATION";
-      return (
-        <PickerActionButton
-          label={label}
-          items={currentQuestion.choices}
-          onValueChange={this.handlePickChoice}
-        />
-      );
-    }
+    // if (responseType.indexOf("image") !== -1) {
+    //   return <ImagePickerActionButton onPickImage={this.handlePickImage} />;
+    // } else if (responseType.indexOf("date") !== -1) {
+    //   return <DatePickerActionButton onPickDate={this.handlePickDate} />;
+    // } else if (responseType.indexOf("choice") !== -1) {
+    //   const label = currentQuestion.id === "recipient"
+    //     ? "SELECT RECIPIENT"
+    //     : "SELECT DESTINATION";
+    //   return (
+    //     <PickerActionButton
+    //       label={label}
+    //       items={currentQuestion.choices}
+    //       onValueChange={this.handlePickChoice}
+    //     />
+    //   );
+    // }
 
     let keyboardType = "default";
     if (responseType.indexOf("email") !== -1) keyboardType = "email-address";
