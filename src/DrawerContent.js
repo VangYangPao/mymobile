@@ -28,13 +28,13 @@ export default class DrawerContent extends Component {
               <Text style={styles.footerBtnText}>HELP</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity
+          {/*<TouchableOpacity
             onPress={() => this.props.navigation.navigate("Legal")}
           >
             <View style={styles.footerBtn}>
               <Text style={styles.footerBtnText}>LEGAL</Text>
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity>*/}
         </View>
       </View>
     );

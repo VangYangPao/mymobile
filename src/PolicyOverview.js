@@ -126,7 +126,8 @@ const styles = StyleSheet.create({
   configTitle: {
     color: colors.primaryText,
     fontSize: 17,
-    fontWeight: "500"
+    fontWeight: "500",
+    marginBottom: 20
   },
   configSubtitle: {
     fontSize: 13,

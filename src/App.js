@@ -261,7 +261,7 @@ const MyDrawerNavigator = DrawerNavigator(
     },
     MyPolicies: {
       screen: StatusStackNavigator,
-      navigationOptions: createDrawerNavOptions("My Policy & Status", "book")
+      navigationOptions: createDrawerNavOptions("My Polices & Status", "book")
     },
     Profile: {
       screen: StatusStackNavigator,
