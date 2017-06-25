@@ -80,9 +80,7 @@ export default (coverageItems = {
   },
   "Disability Income": {
     title: "Disability Income",
-    icon: "ic_weekly_indemnity",
-    description:
-      "The amount of benefit that will be paid to you every month to replace your partial income if you are unable to work as a result of an accident or illness (This benefit is excluded)."
+    icon: "ic_weekly_indemnity"
   },
   "Food Poisoning": {
     title: "Food Poisoning",
@@ -92,9 +90,7 @@ export default (coverageItems = {
   },
   "Cashless Medical Coverage": {
     title: "Cashless Medical Coverage",
-    icon: "ic_cashless_coverage",
-    description:
-      "The advance payment (or deposit) made on your behalf to a registered hospital when you seek medical treatment, regardless if the treatment is minor or major or critical (This benefit is excluded)."
+    icon: "ic_cashless_coverage"
   },
   "Phone Cracked / Dropped": {
     shortTitle: "Phone Cracked",
@@ -117,6 +113,10 @@ export default (coverageItems = {
     icon: "ic_phone_wet",
     description:
       "This covers accidental damage to your phone. For example, your phone dropped and cracked, or your phone fell onto wet surface and black-screen, you shall enjoy door-to-door repair service or phone replacement instantly."
+  },
+  "Natural Disaster": {
+    title: "Natural Disaster",
+    icon: "ic_natural_disaster"
   },
   "War or Terrorism": {
     title: "War or Terrorism",

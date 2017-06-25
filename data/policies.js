@@ -1,10 +1,12 @@
 const notCovered = [
   "Disability Income",
   "Cashless Medical Coverage",
+  "Natural Disaster",
   "War or Terrorism",
   "Pregnancy or Miscarriage",
   "Suicide or Self-inflicted Injury",
-  "Dangerous Sports"
+  "Dangerous Sports",
+  "Pre-existing Conditions"
 ];
 
 export default (policies = [
@@ -39,11 +41,7 @@ export default (policies = [
         premium: 40.98
       }
     ],
-    covered: [
-      "Accidental Death",
-      "Accidental Permanent Disability",
-      "Food Poisoning"
-    ],
+    covered: ["Accidental Death", "Accidental Permanent Disability"],
     notCovered
   },
   {
@@ -131,8 +129,7 @@ export default (policies = [
     covered: [
       "Accidental Death",
       "Accidental Permanent Disability",
-      "Weekly Indemnity (Accident Benefit)",
-      "Food Poisoning"
+      "Weekly Indemnity (Accident Benefit)"
     ],
     notCovered
   },
