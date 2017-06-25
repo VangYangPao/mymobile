@@ -56,7 +56,7 @@ export default class IntroScreen extends Component {
   }
 
   renderPage(page) {
-    const buttonText = "CHECK OUT OUR\nSUPER-BIG COVERAGE\nAT SUPER-LOW PRICES";
+    const buttonText = "CHECK OUT OUR SUPER-BIG COVERAGE\nAT SUPER-LOW PRICES";
     const signInButton = (
       <Button
         onPress={() => this.props.navigation.navigate("Auth")}
@@ -144,11 +144,11 @@ const backgroundImageHoriPadding =
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    flex: 1,
-    alignItems: "center"
+    alignSelf: "center"
   },
   signInButton: {
-    paddingHorizontal: 20
+    paddingHorizontal: 15,
+    paddingVertical: 7
   },
   benefitTitle: {
     textAlign: "center",
@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
     color: colors.primaryOrange
   },
   appNameContainer: {
-    flex: 0.3,
+    flex: 0.23,
     justifyContent: "flex-end"
   },
   appName: {
