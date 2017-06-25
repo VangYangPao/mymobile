@@ -56,11 +56,12 @@ export default class IntroScreen extends Component {
   }
 
   renderPage(page) {
-    const buttonText = "CHECK OUT OUR SUPER-BIG COVERAGE\nAT SUPER-LOW PRICES";
+    const buttonText = "CHECK OUT OUR\nSUPER-BIG COVERAGE\nAT SUPER-LOW PRICES";
     const signInButton = (
       <Button
         onPress={() => this.props.navigation.navigate("Auth")}
         containerStyle={styles.buttonContainer}
+        style={styles.signInButton}
       >
         {buttonText}
       </Button>
@@ -143,12 +144,11 @@ const backgroundImageHoriPadding =
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    marginHorizontal: 15
+    flex: 1,
+    alignItems: "center"
   },
   signInButton: {
-    paddingVertical: 30,
-    paddingHorizontal: 15,
-    borderRadius: 3
+    paddingHorizontal: 20
   },
   benefitTitle: {
     textAlign: "center",
