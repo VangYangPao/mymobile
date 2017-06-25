@@ -38,7 +38,11 @@ export default (policies = [
         premium: 40.98
       }
     ],
-    covered: ["Accidental Death", "Accidental Permanent Disability"],
+    covered: [
+      "Accidental Death",
+      "Accidental Permanent Disability",
+      "Food Poisoning"
+    ],
     notCovered
   },
   {
@@ -80,7 +84,8 @@ export default (policies = [
     covered: [
       "Accidental Death",
       "Accidental Permanent Disability",
-      "Medical Reimbursement (Medical Benefit)"
+      "Medical Reimbursement (Medical Benefit)",
+      "Food Poisoning"
     ],
     notCovered
   },
@@ -93,7 +98,7 @@ export default (policies = [
         accidentalDeath: 5000,
         permanentDisablement: 5000,
         weeklyIndemnity: 200,
-        premium: 2.20
+        premium: 2.2
       },
       {
         accidentalDeath: 10000,
@@ -123,26 +128,16 @@ export default (policies = [
     covered: [
       "Accidental Death",
       "Accidental Permanent Disability",
-      "Weekly Indemnity (Accident Benefit)"
+      "Weekly Indemnity (Accident Benefit)",
+      "Food Poisoning"
     ],
     notCovered
   },
   {
-    title: "Phone Protection",
-    imageSource: "ic_phone_protection",
-    plans: [
-      {
-        accidentalDamage: 1000,
-        waterDamage: 1000,
-        premium: 12.84
-      }
-    ],
-    covered: ["Phone Cracked / Dropped", "Phone On Wet Surface / Blank Screen"],
-    notCovered: []
-  },
-  {
     title: "Travel Protection",
     imageSource: "ic_dangerous_sport",
+    description:
+      "At a super-low price, this is a super-big comprehensive plan that covers most of your financial loss and unforeseen expenses when you travel overseas. It covers you and your family's medical expenses, loss of baggage, loss of cash, and loss of home contents. You and your family enjoy unlimited emergency medical evacuation, cash compensation for flight delay, diversion or cancellation. In the event accidental death or permanent disability, your loved ones will receive a lump sum cash within days. These are just some highlights, and we are constantly adding more benefits and coverage to make you travel happily and peacefully!",
     plans: [{ 0: 50000, premium: 35 }], // hardcoded for display purposes only
     isTravelInsurance: true,
     covered: [
@@ -158,5 +153,18 @@ export default (policies = [
       "Loss of home contents due to burglary"
     ],
     notCovered
+  },
+  {
+    title: "Phone Protection",
+    imageSource: "ic_phone_protection",
+    plans: [
+      {
+        accidentalDamage: 1000,
+        waterDamage: 1000,
+        premium: 12.84
+      }
+    ],
+    covered: ["Phone Cracked / Dropped", "Phone On Wet Surface / Blank Screen"],
+    notCovered: []
   }
 ]);
