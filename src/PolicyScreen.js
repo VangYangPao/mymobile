@@ -14,7 +14,7 @@ import Footer from "./Footer";
 import ChatScreenWrapper from "./Chat";
 import PolicyOverview from "./PolicyOverview";
 import POLICIES from "../data/policies";
-import CoverageWrapper from "./Coverage";
+import CoveragePage from "./Coverage";
 import colors from "./colors";
 
 const tabStyles = {
@@ -36,11 +36,8 @@ const PlanTabNavigator = TabNavigator(
     Overview: {
       screen: PolicyOverview
     },
-    Covered: {
-      screen: CoverageWrapper(true)
-    },
-    NotCovered: {
-      screen: CoverageWrapper(false)
+    Coverage: {
+      screen: CoveragePage
     }
   },
   {
@@ -59,7 +56,7 @@ const PlanTabNavigator = TabNavigator(
 export default class PolicyScreen extends Component {
   static navigationOptions = ({ navigation }) => {
     const options = ChatScreenWrapper(null).navigationOptions;
-    options.title = "Product Summary";
+    options.title = "Plan Summary";
     options.headerStyle = styles.header;
     return options;
   };

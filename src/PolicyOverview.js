@@ -24,11 +24,7 @@ class CoverageItem extends Component {
 
   render() {
     return (
-      <TouchableOpacity
-        style={styles.coverageBtn}
-        activeOpacity={0.5}
-        onPress={this.handlePress}
-      >
+      <TouchableOpacity style={styles.coverageBtn} activeOpacity={0.5}>
         <View style={styles.coverageItem}>
           <View
             style={[
@@ -55,30 +51,17 @@ class PolicyCoverages extends Component {
     return (
       <View style={styles.configContainer}>
         <Text style={styles.configTitle}>COVERAGE HIGHLIGHTS</Text>
-        <Text style={styles.configSubtitle}>
-          CLICK ICONS FOR MORE DETAILS
-        </Text>
         <View style={styles.coverage}>
           {this.props.covered
             .slice(0, 3)
-            .map(item => (
+            .map(item =>
               <CoverageItem
                 key={item}
                 navigation={this.props.navigation}
                 covered={true}
                 {...coveragesData[item]}
               />
-            ))}
-          {this.props.notCovered
-            .slice(0, 2)
-            .map(item => (
-              <CoverageItem
-                key={item}
-                navigation={this.props.navigation}
-                covered={false}
-                {...coveragesData[item]}
-              />
-            ))}
+            )}
         </View>
       </View>
     );
@@ -100,7 +83,7 @@ export default class PolicyOverview extends Component {
           showFrom={true}
           showPerMonth={showPerMonth}
         />
-        <PolicyCoverages navigation={this.props.navigation} {...policy} />
+        <PolicyCoverages {...policy} />
       </Page>
     );
   }

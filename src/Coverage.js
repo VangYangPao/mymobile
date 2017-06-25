@@ -7,22 +7,40 @@ import { Text } from "./defaultComponents";
 import colors from "./colors";
 import coverages from "../data/coverage";
 
-export default function coverageWrapper(covered) {
-  const wrapper = props => {
-    props.screenProps.covered = covered;
-    return <Coverage {...props} />;
-  };
-  wrapper.navigationOptions = ({ screenProps }) => {
-    return { title: covered ? "Covered" : "Not Covered" };
-  };
-  return wrapper;
-}
+export default class Coverage extends Component {
+  static navigationOptions = { title: "Coverage" };
 
-class Coverage extends Component {
+  renderItem(item, idx, items) {
+    const lastIndex = idx === items.length - 1;
+    return (
+      <View
+        key={item.title}
+        style={[styles.item, lastIndex ? { borderBottomWidth: 0 } : null]}
+      >
+        <View style={styles.iconContainer}>
+          <VectorDrawableView resourceName={item.icon} style={styles.icon} />
+        </View>
+        <Text style={styles.title}>{item.title.toUpperCase()}</Text>
+        <Text style={styles.description}>{item.description}</Text>
+      </View>
+    );
+  }
+
+  renderRow(item) {
+    return (
+      <View key={item.title} style={{ flex: 1, alignItems: "center" }}>
+        <View style={styles.iconContainer}>
+          <VectorDrawableView resourceName={item.icon} style={styles.icon} />
+        </View>
+        <Text style={styles.rowTitle}>{item.title.toUpperCase()}</Text>
+      </View>
+    );
+  }
+
   render() {
-    const { policy, covered } = this.props.screenProps;
-    const itemTitles = covered ? policy.covered : policy.notCovered;
-    const items = itemTitles.map(i => coverages[i]);
+    const { policy } = this.props.screenProps;
+    const coveredItems = policy.covered.map(i => coverages[i]);
+    const notCoveredItems = policy.notCovered.map(i => coverages[i]);
     return (
       <View style={styles.page}>
         <ScrollView
@@ -30,28 +48,9 @@ class Coverage extends Component {
           contentContainerStyle={styles.scrollViewContentContainer}
         >
           <View style={styles.container}>
-            <View style={styles.coverageItem}>
-              {items.map((item, idx) => {
-                const lastIndex = idx === items.length - 1;
-                return (
-                  <View
-                    key={item.title}
-                    style={[
-                      styles.item,
-                      lastIndex ? { borderBottomWidth: 0 } : null
-                    ]}
-                  >
-                    <View style={styles.iconContainer}>
-                      <VectorDrawableView
-                        resourceName={item.icon}
-                        style={styles.icon}
-                      />
-                    </View>
-                    <Text style={styles.title}>{item.title.toUpperCase()}</Text>
-                    <Text style={styles.description}>{item.description}</Text>
-                  </View>
-                );
-              })}
+            <View style={styles.coverages}>
+              <Text style={[styles.title, styles.pageTitle]}>COVERED</Text>
+              {coveredItems.map(this.renderItem)}
             </View>
           </View>
         </ScrollView>
@@ -63,6 +62,26 @@ class Coverage extends Component {
 const containerSize = 75;
 
 const styles = StyleSheet.create({
+  rowTitle: {
+    textAlign: "center",
+    marginTop: 7
+  },
+  row: {
+    flexDirection: "row",
+    alignItems: "baseline",
+    justifyContent: "center",
+    paddingHorizontal: 10,
+    paddingVertical: 7
+  },
+  pageTitle: {
+    fontWeight: "500",
+    fontSize: 22
+  },
+  coverages: {
+    marginBottom: 30,
+    borderBottomColor: colors.softBorderLine,
+    borderBottomWidth: 1
+  },
   description: {
     fontSize: 16
   },
