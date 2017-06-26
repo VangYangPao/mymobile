@@ -907,17 +907,15 @@ class ChatScreen extends Component {
 
     let listViewProps = {};
     if (!this.props.isStartScreen) {
-      // listViewProps.style = {
-      //   height: Dimensions.get("window").height - 58 - minInputToolbarHeight
-      // };
       listViewProps.onContentSizeChange = (contentWidth, contentHeight) => {
         if (this._messageContainerRef === null) {
           return;
         }
-        const scrollHeight = Platform.select({
-          ios: contentHeight - WINDOW_HEIGHT * 0.8,
-          android: contentHeight
-        });
+        let scrollHeight = contentHeight;
+        if (Platform.OS === "ios") {
+          const supposedScrollHeight = contentHeight - WINDOW_HEIGHT * 0.8;
+          scrollHeight = supposedScrollHeight < 0 ? 0 : supposedScrollHeight;
+        }
         this.refs.chat._messageContainerRef.scrollTo({
           y: scrollHeight,
           animated: true
