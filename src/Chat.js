@@ -21,12 +21,14 @@ import {
   Composer,
   Send
 } from "react-native-gifted-chat";
+import moment from "moment";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Ionicon from "react-native-vector-icons/Ionicons";
 import Spinner from "react-native-spinkit";
 import Sound from "react-native-sound";
 import Slider from "react-native-slider";
 import ImagePicker from "react-native-image-picker";
+import DatePicker from "react-native-datepicker";
 import { template } from "lodash";
 
 import database from "./HackStorage";
@@ -162,6 +164,46 @@ class ImagePickerActionButton extends Component {
   }
 }
 
+class MyDatePicker extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { date: new Date() };
+  }
+
+  render() {
+    const now = new Date();
+    return (
+      <DatePicker
+        style={{ flex: 1, paddingHorizontal: 10 }}
+        date={now}
+        mode="datetime"
+        placeholder="SELECT DATE"
+        format="YYYY-MM-DD HH:mm"
+        maxDate={now}
+        confirmBtnText="Confirm"
+        cancelBtnText="Cancel"
+        customStyles={{
+          dateIcon: {
+            position: "absolute",
+            left: 0,
+            top: 4,
+            marginLeft: 0
+          },
+          dateInput: {
+            marginLeft: 36
+          },
+          btnTextConfirm: {
+            color: colors.primaryOrange
+          }
+        }}
+        onDateChange={dateStr => {
+          this.props.onPickDate(moment(dateStr).toDate());
+        }}
+      />
+    );
+  }
+}
+
 class DatePickerActionButton extends Component {
   constructor(props) {
     super(props);
@@ -187,7 +229,7 @@ class DatePickerActionButton extends Component {
   }
 
   render() {
-    return <ActionButton onPress={this.handlePress} text="SELECT DATE" />;
+    return <MyDatePicker />;
   }
 }
 
@@ -651,16 +693,13 @@ class ChatScreen extends Component {
   }
 
   handlePickDate(date) {
-    const day = date.getDate();
-    const month = date.getMonth();
-    const year = date.getFullYear();
     this.setState(
       this.concatMessage({
         type: "text",
         _id: uuid.v4(),
         user: CUSTOMER_USER,
         value: date,
-        text: `It happened on ${day}/${month}/${year}.`
+        text: `It happened on ${moment(date).format("YYYY-MM-DD HH:mm A")}`
       }),
       () => this.setState({ answering: false })
     );
@@ -767,6 +806,21 @@ class ChatScreen extends Component {
               form.coverageDuration;
           }
           this.props.navigation.navigate("Confirmation", { form });
+        } else if (questionSet === "claim") {
+          const policyIndex = database.policies.findIndex(
+            p => p.id === this.state.answers.claimPolicyNo
+          );
+          const policy = database.policies[policyIndex];
+          const { id, paid, purchaseDate } = policy;
+          database.claims.push({
+            id,
+            paid,
+            purchaseDate,
+            status: "pending",
+            amount: 1000
+          });
+          database.policies.splice(policyIndex, 1);
+          this.props.navigation.navigate("MyPolicies");
         }
       }, 2000);
       return;
@@ -1004,7 +1058,7 @@ class ChatScreen extends Component {
     responseType = [].concat(responseType);
 
     if (responseType.indexOf("date") !== -1) {
-      return <DatePickerActionButton onPickDate={this.handlePickDate} />;
+      return <MyDatePicker onPickDate={this.handlePickDate} />;
     } else if (
       responseType.indexOf("choice") !== -1 &&
       Platform.OS === "android"

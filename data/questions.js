@@ -231,6 +231,10 @@ export const QUESTION_SETS = {
         "Please snap photos of the police report / medical report / death certificate.",
       responseType: "images",
       id: "report"
+    },
+    {
+      question: "Thank you. Please wait while I process your submission...",
+      responseType: null
     }
   ]
 };
