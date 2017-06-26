@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
   View,
   Picker,
-  ScrollView
+  ScrollView,
+  Platform
 } from "react-native";
 import {
   GiftedChat,
@@ -200,13 +201,15 @@ class PickerActionButton extends Component {
             }
           }}
         >
-          {this.props.items.map(item =>
-            <Picker.Item
-              key={item.value}
-              label={item.label}
-              value={item.value}
-            />
-          )}
+          {[{ label: "", value: "" }]
+            .concat(this.props.items)
+            .map(item =>
+              <Picker.Item
+                key={item.value}
+                label={item.label}
+                value={item.value}
+              />
+            )}
         </Picker>
       </View>
     );
@@ -380,6 +383,8 @@ const widgetStyles = StyleSheet.create({
     elevation: 4
   }
 });
+
+const WINDOW_HEIGHT = Dimensions.get("window").height;
 
 class ChatScreen extends Component {
   constructor(props) {
@@ -856,22 +861,20 @@ class ChatScreen extends Component {
     let { responseType } = currentQuestion;
     responseType = [].concat(responseType);
 
-    // if (responseType.indexOf("image") !== -1) {
-    //   return <ImagePickerActionButton onPickImage={this.handlePickImage} />;
-    // } else if (responseType.indexOf("date") !== -1) {
-    //   return <DatePickerActionButton onPickDate={this.handlePickDate} />;
-    // } else if (responseType.indexOf("choice") !== -1) {
-    //   const label = currentQuestion.id === "recipient"
-    //     ? "SELECT RECIPIENT"
-    //     : "SELECT DESTINATION";
-    //   return (
-    //     <PickerActionButton
-    //       label={label}
-    //       items={currentQuestion.choices}
-    //       onValueChange={this.handlePickChoice}
-    //     />
-    //   );
-    // }
+    if (responseType.indexOf("date") !== -1) {
+      return <DatePickerActionButton onPickDate={this.handlePickDate} />;
+    } else if (responseType.indexOf("choice") !== -1) {
+      const label = currentQuestion.id === "recipient"
+        ? "SELECT RECIPIENT"
+        : "SELECT DESTINATION";
+      return (
+        <PickerActionButton
+          label={label}
+          items={currentQuestion.choices}
+          onValueChange={this.handlePickChoice}
+        />
+      );
+    }
 
     let keyboardType = "default";
     if (responseType.indexOf("email") !== -1) keyboardType = "email-address";
@@ -904,12 +907,19 @@ class ChatScreen extends Component {
 
     let listViewProps = {};
     if (!this.props.isStartScreen) {
+      // listViewProps.style = {
+      //   height: Dimensions.get("window").height - 58 - minInputToolbarHeight
+      // };
       listViewProps.onContentSizeChange = (contentWidth, contentHeight) => {
         if (this._messageContainerRef === null) {
           return;
         }
+        const scrollHeight = Platform.select({
+          ios: contentHeight - WINDOW_HEIGHT * 0.8,
+          android: contentHeight
+        });
         this.refs.chat._messageContainerRef.scrollTo({
-          y: contentHeight,
+          y: scrollHeight,
           animated: true
         });
       };
