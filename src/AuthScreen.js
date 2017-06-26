@@ -11,7 +11,7 @@ import {
   InteractionManager
 } from "react-native";
 import { NavigationActions } from "react-navigation";
-import VectorDrawableView from "react-native-vectordrawable-android";
+import VectorDrawableView from "./VectorDrawableView";
 import t from "tcomb-form-native";
 const Form = t.form.Form;
 
@@ -21,6 +21,7 @@ import { Text } from "./defaultComponents";
 
 let formStyles = Object.assign({}, t.form.Form.stylesheet);
 formStyles.controlLabel.normal.color = "white";
+formStyles.controlLabel.normal.backgroundColor = "transparent";
 formStyles.textbox.normal.borderColor = "white";
 formStyles.textbox.normal.color = "white";
 formStyles.fieldset.marginTop = 20;
@@ -44,18 +45,22 @@ const userSignUpOptions = {
   fields: {
     email: {
       placeholderTextColor: "white",
-      keyboardType: "email-address"
+      keyboardType: "email-address",
+      error: "Insert a valid email"
     },
     fullName: {
-      placeholderTextColor: "white"
+      placeholderTextColor: "white",
+      error: "Name must not be empty"
     },
     telephone: {
       placeholderTextColor: "white",
-      keyboardType: "phone-pad"
+      keyboardType: "phone-pad",
+      error: "Phone number must not be empty"
     },
     password: {
       secureTextEntry: true,
-      placeholderTextColor: "white"
+      placeholderTextColor: "white",
+      error: "Password must not be empty"
     },
     confirmPassword: {
       secureTextEntry: true,
@@ -116,10 +121,12 @@ const UserLogin = t.struct({
 const userLoginOptions = {
   fields: {
     email: {
-      keyboardType: "email-address"
+      keyboardType: "email-address",
+      error: "Enter a valid email"
     },
     password: {
-      secureTextEntry: true
+      secureTextEntry: true,
+      error: "Password must not be empty"
     }
   }
 };
@@ -141,7 +148,7 @@ class LoginScreen extends Component {
     return (
       <View style={styles.container}>
         <VectorDrawableView
-          resourceName="ic_microassure_white"
+          resourceName="microassure_white"
           style={styles.logo}
         />
         <Form ref="form" type={UserLogin} options={userLoginOptions} />
@@ -259,6 +266,7 @@ const styles = StyleSheet.create({
   bottomBtn: {
     textAlign: "center",
     color: "white",
+    backgroundColor: "transparent",
     fontSize: 17,
     marginTop: 15
   },
@@ -271,8 +279,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30
   },
   logo: {
-    height: 40,
-    color: "white"
+    height: 40
   },
   backgroundImage: {
     // flex: 1,

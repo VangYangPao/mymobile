@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import VectorDrawableView from "react-native-vectordrawable-android";
+import VectorDrawableView from "./VectorDrawableView";
 
 import Page from "./Page";
 import PolicyPrice from "./PolicyPrice";

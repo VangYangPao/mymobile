@@ -44,6 +44,7 @@
 		3F06AD391EFF5F3B0028DA38 /* Bitter.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3F06AD381EFF5F3B0028DA38 /* Bitter.ttf */; };
 		3F06AD3B1EFF5F500028DA38 /* Comfortaa-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3F06AD3A1EFF5F500028DA38 /* Comfortaa-Bold.ttf */; };
 		3F41020E1EFF26FC001B4303 /* Lato.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3F41020D1EFF26FC001B4303 /* Lato.ttf */; };
+		3F78E3571F00E12400BED509 /* Assets in Resources */ = {isa = PBXBuildFile; fileRef = 3F78E3561F00E12400BED509 /* Assets */; };
 		4D2B225A568248F5AA8E5FC1 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5A05141396E742339933A7DE /* Zocial.ttf */; };
 		5C455B84CB9F4D31900CAF43 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5D78ED3977AD4FCABA1EB9D3 /* Ionicons.ttf */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
@@ -306,6 +307,7 @@
 		3F06AD381EFF5F3B0028DA38 /* Bitter.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Bitter.ttf; path = ../android/app/src/main/assets/fonts/Bitter.ttf; sourceTree = "<group>"; };
 		3F06AD3A1EFF5F500028DA38 /* Comfortaa-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Comfortaa-Bold.ttf"; path = "../android/app/src/main/assets/fonts/Comfortaa-Bold.ttf"; sourceTree = "<group>"; };
 		3F41020D1EFF26FC001B4303 /* Lato.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Lato.ttf; path = ../android/app/src/main/assets/fonts/Lato.ttf; sourceTree = "<group>"; };
+		3F78E3561F00E12400BED509 /* Assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Assets; sourceTree = "<group>"; };
 		45DEFEFB1BC14CA7B6E42C2A /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		4B31F264E29847AC9260120A /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		540133F9A6C04693A58504EB /* RNSpinkit.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNSpinkit.xcodeproj; path = "../node_modules/react-native-spinkit/ios/RNSpinkit.xcodeproj"; sourceTree = "<group>"; };
@@ -465,9 +467,6 @@
 		13B07FAE1A68108700A75B9A /* Microsurance */ = {
 			isa = PBXGroup;
 			children = (
-				3F41020D1EFF26FC001B4303 /* Lato.ttf */,
-				3F06AD3A1EFF5F500028DA38 /* Comfortaa-Bold.ttf */,
-				3F06AD381EFF5F3B0028DA38 /* Bitter.ttf */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -604,6 +603,10 @@
 		A0F852F93A8C4A0185A33EEE /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3F78E3561F00E12400BED509 /* Assets */,
+				3F06AD3A1EFF5F500028DA38 /* Comfortaa-Bold.ttf */,
+				3F06AD381EFF5F3B0028DA38 /* Bitter.ttf */,
+				3F41020D1EFF26FC001B4303 /* Lato.ttf */,
 				26EEA7131B3C4C4C9B28E87C /* Entypo.ttf */,
 				C53BF5BB57F144DFAB286280 /* EvilIcons.ttf */,
 				AC883382BA9C47A69E3330A3 /* FontAwesome.ttf */,
@@ -1032,6 +1035,7 @@
 				CE4F8FACBB844A56948B34A7 /* EvilIcons.ttf in Resources */,
 				3C47F5E1514B48E0ABB89DAB /* FontAwesome.ttf in Resources */,
 				18E439D1B3E444F9926C8E0D /* Foundation.ttf in Resources */,
+				3F78E3571F00E12400BED509 /* Assets in Resources */,
 				5C455B84CB9F4D31900CAF43 /* Ionicons.ttf in Resources */,
 				EAF77E8861684225831708B9 /* MaterialCommunityIcons.ttf in Resources */,
 				2D2B7BEB81D847E4ACB9EBB7 /* MaterialIcons.ttf in Resources */,

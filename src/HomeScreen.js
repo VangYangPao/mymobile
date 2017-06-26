@@ -11,7 +11,7 @@ import {
   InteractionManager
 } from "react-native";
 import { NavigationActions } from "react-navigation";
-import VectorDrawableView from "react-native-vectordrawable-android";
+import VectorDrawableView from "./VectorDrawableView";
 
 import { Text } from "./defaultComponents";
 

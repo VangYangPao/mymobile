@@ -53,6 +53,8 @@
 	<string></string>
 	<key>UIAppFonts</key>
 	<array>
+		<string>Bitter.ttf</string>
+		<string>Comfortaa-Bold.ttf</string>
 		<string>Lato.ttf</string>
 		<string>Entypo.ttf</string>
 		<string>EvilIcons.ttf</string>

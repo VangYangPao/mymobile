@@ -8,7 +8,7 @@ import {
   TouchableHighlight
 } from "react-native";
 import ViewPager from "react-native-viewpager";
-import VectorDrawableView from "react-native-vectordrawable-android";
+import VectorDrawableView from "./VectorDrawableView";
 
 import { Text } from "./defaultComponents";
 import Button from "./Button";

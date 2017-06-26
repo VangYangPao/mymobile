@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { View, StyleSheet, TouchableOpacity, Animated } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import VectorDrawableView from "react-native-vectordrawable-android";
+import VectorDrawableView from "./VectorDrawableView";
 
 import { Text } from "./defaultComponents";
 import colors from "./colors";

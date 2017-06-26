@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, TouchableOpacity, View, ScrollView } from "react-native";
 import Ionicon from "react-native-vector-icons/Ionicons";
-import VectorDrawableView from "react-native-vectordrawable-android";
+import VectorDrawableView from "./VectorDrawableView";
 
 import { Text } from "./defaultComponents";
 import colors from "./colors";
