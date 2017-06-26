@@ -17,7 +17,7 @@ export default class DrawerContent extends Component {
             />
             <Text style={styles.name}>Denzel Tan</Text>
           </View>
-          <DrawerItems {...this.props} />
+          <DrawerItems labelStyle={styles.drawerItemLabel} {...this.props} />
         </View>
         <View style={styles.footer}>
           <TouchableOpacity
@@ -44,6 +44,9 @@ export default class DrawerContent extends Component {
 const imageDim = 100;
 
 const styles = StyleSheet.create({
+  drawerItemLabel: {
+    marginLeft: -5
+  },
   footerBtnIcon: {
     marginRight: 10
   },
@@ -63,7 +66,7 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: "center",
-    paddingTop: 10,
+    paddingTop: 25,
     paddingBottom: 10
   },
   image: {

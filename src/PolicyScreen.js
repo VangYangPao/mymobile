@@ -6,7 +6,7 @@ import {
   View,
   TextInput
 } from "react-native";
-import { TabNavigator } from "react-navigation";
+import { TabNavigator, TabBarTop } from "react-navigation";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 import { Text } from "./defaultComponents";
@@ -41,7 +41,8 @@ const PlanTabNavigator = TabNavigator(
     }
   },
   {
-    // swipeEnabled: false,
+    tabBarComponent: TabBarTop,
+    tabBarPosition: "top",
     tabBarOptions: {
       upperCaseLabel: true,
       activeTintColor: colors.primaryOrange,

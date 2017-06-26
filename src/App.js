@@ -16,6 +16,7 @@ import {
   NavigationActions
 } from "react-navigation";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import Ionicon from "react-native-vector-icons/Ionicons";
 
 import ChatScreenWrapper from "./Chat";
 import IntroScreen from "./IntroScreen";
@@ -53,10 +54,10 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent"
   },
   header: {
-    height: 52.5
+    height: 58,
+    backgroundColor: "white"
   },
   headerTitle: {
-    // fontSize: 20,
     alignSelf: "center",
     paddingRight: 0,
     ...Platform.select({
@@ -89,14 +90,15 @@ const styles = StyleSheet.create({
 });
 
 function renderBackButton(navigation) {
+  const iconName = (Platform.OS === "ios" ? "ios" : "md") + "-arrow-back";
   return (
     <TouchableOpacity
       onPress={() => {
         navigation.dispatch(NavigationActions.back());
       }}
     >
-      <Icon
-        name="arrow-back"
+      <Ionicon
+        name={iconName}
         size={MENU_ICON_SIZE}
         style={styles.headerMenuIcon}
       />
@@ -116,10 +118,16 @@ function renderMenuButton(navigation, iconStyle = styles.headerMenuIcon) {
   );
 }
 
-const backButtonNavOptions = ({ navigation }) => ({
-  headerTitleStyle: [styles.headerTitle, styles.planHeaderTitle],
-  headerLeft: renderBackButton(navigation)
-});
+const backButtonNavOptions = ({ navigation }) => {
+  let options = {
+    headerTitleStyle: [styles.headerTitle, styles.planHeaderTitle],
+    headerLeft: renderBackButton(navigation)
+  };
+  if (Platform.OS === "ios") {
+    options.headerStyle = styles.header;
+  }
+  return options;
+};
 
 const BuyStackNavigator = StackNavigator({
   Chat: {
