@@ -68,7 +68,7 @@ export default class IntroScreen extends Component {
     );
 
     const benefits = [
-      { title: "No Broker/Agent", resourceName: "ic_no_broker" },
+      { title: "No Middlemen", resourceName: "ic_no_broker" },
       {
         title: "Comprehensive Coverage",
         resourceName: "ic_comprehensive_coverage"
