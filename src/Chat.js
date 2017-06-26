@@ -10,7 +10,8 @@ import {
   ScrollView,
   Platform,
   Picker,
-  Alert
+  Alert,
+  ToastAndroid
 } from "react-native";
 import {
   GiftedChat,
@@ -820,7 +821,20 @@ class ChatScreen extends Component {
             amount: 1000
           });
           database.policies.splice(policyIndex, 1);
-          this.props.navigation.navigate("MyPolicies");
+          if (Platform.OS === "ios") {
+            Alert.alert("Thank you!", "Your claim has been submitted.", [
+              {
+                text: "OK",
+                onPress: () => this.props.navigation.navigate("Status")
+              }
+            ]);
+          } else {
+            ToastAndroid.show(
+              "Thank you! Your claim has been submitted.",
+              ToastAndroid.LONG
+            );
+            this.props.navigation.navigate("Status");
+          }
         }
       }, 2000);
       return;

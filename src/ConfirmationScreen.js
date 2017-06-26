@@ -11,6 +11,7 @@ import {
   Platform
 } from "react-native";
 
+import database from "./HackStorage";
 import { Text } from "./defaultComponents";
 import { prettifyCamelCase } from "./utils";
 import Page from "./Page";
@@ -33,11 +34,18 @@ export default class ConfirmationScreen extends Component {
   }
 
   handleCheckout() {
+    const newId = database.policies[database.policies.length - 1].id + 1;
+    database.policies.push({
+      id: newId,
+      paid: this.totalPremium,
+      purchaseDate: new Date(),
+      status: "active"
+    });
     if (Platform.OS === "ios") {
       Alert.alert("Thank you!", "Your order is complete.", [
         {
           text: "OK",
-          onPress: () => this.props.navigation.navigate("MyPolicies")
+          onPress: () => this.props.navigation.navigate("Status")
         }
       ]);
     } else {
@@ -45,7 +53,7 @@ export default class ConfirmationScreen extends Component {
         "Thank you! Your order is complete.",
         ToastAndroid.LONG
       );
-      this.props.navigation.navigate("MyPolicies");
+      this.props.navigation.navigate("Status");
     }
   }
 

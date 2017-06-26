@@ -38,8 +38,9 @@ export default class StatusScreen extends Component {
             Purchased on: {dateStr}
           </Text>
           <Text style={styles.date}>
-            Amount: ${(section === "policies" ? item.paid : item.claimAmount) +
-              ""}
+            Amount: ${(section === "policies"
+              ? item.paid.toFixed(2)
+              : item.claimAmount) + ""}
           </Text>
         </View>
         <View style={styles.policyStatus}>
