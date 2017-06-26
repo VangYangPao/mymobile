@@ -1,3 +1,19 @@
+export function getDateStr(datetime) {
+  const day = datetime.getDate();
+  const month = datetime.getMonth();
+  const year = datetime.getFullYear();
+  let hour = datetime.getHours();
+  const minute = datetime.getMinutes();
+  if (hour > 12) {
+    meridien = "PM";
+    hour -= 12;
+  } else {
+    meridien = "AM";
+  }
+  const dateStr = `${hour}:${minute}${meridien} ${day}-${month}-${year}`;
+  return dateStr;
+}
+
 export function addCommas(nStr) {
   nStr += "";
   x = nStr.split(".");

@@ -8,6 +8,8 @@ import {
   TouchableOpacity
 } from "react-native";
 
+import database from "./HackStorage";
+import { getDateStr } from "./utils";
 import { Text } from "./defaultComponents";
 import colors from "./colors";
 
@@ -17,21 +19,6 @@ export default class StatusScreen extends Component {
   };
 
   renderItem(section, { item, index }) {
-    function getDateStr(datetime) {
-      const day = datetime.getDate();
-      const month = datetime.getMonth();
-      const year = datetime.getFullYear();
-      let hour = datetime.getHours();
-      const minute = datetime.getMinutes();
-      if (hour > 12) {
-        meridien = "PM";
-        hour -= 12;
-      } else {
-        meridien = "AM";
-      }
-      const dateStr = `${hour}:${minute}${meridien} ${day}-${month}-${year}`;
-      return dateStr;
-    }
     const dateStr = getDateStr(item.purchaseDate);
 
     const styleMap = {
@@ -73,40 +60,11 @@ export default class StatusScreen extends Component {
   }
 
   render() {
-    const policies = [
-      {
-        key: "PL12",
-        status: "active",
-        name: "Accidental Death / Permanent Disability",
-        purchaseDate: new Date(2017, 5, 26, 16, 43),
-        paid: 5.66
-      },
-      {
-        key: "PL13",
-        status: "active",
-        name: "Accidental Death / Permanent Disability",
-        purchaseDate: new Date(2017, 5, 26, 16, 43),
-        paid: 2.68
-      },
-      {
-        key: "PL14",
-        status: "expired",
-        name: "Accidental Death / Permanent Disability",
-        purchaseDate: new Date(2017, 5, 26, 16, 43),
-        paid: 10.99
-      }
-    ];
-    const claims = [
-      {
-        key: "CL11",
-        status: "pending",
-        name:
-          "Accidental Death / Permanent Disability with Medical Reimbursement",
-        purchaseDate: new Date(2017, 3, 26, 16, 43),
-        claimDate: new Date(2017, 5, 26, 16, 43),
-        claimAmount: 1000
-      }
-    ];
+    function padItemsWith(arr, prefix) {
+      return arr.map(a => {
+        return { key: prefix + a.id, ...a };
+      });
+    }
     return (
       <View style={styles.container}>
         <SectionList
@@ -116,13 +74,13 @@ export default class StatusScreen extends Component {
           sections={[
             // homogenous rendering between sections
             {
-              data: policies,
+              data: padItemsWith(database.policies, "PL"),
               title: "POLICIES",
               key: "policies",
               renderItem: (...params) => this.renderItem("policies", ...params)
             },
             {
-              data: claims,
+              data: padItemsWith(database.claims, "CL"),
               title: "CLAIMS",
               key: "claims",
               renderItem: (...params) => this.renderItem("claims", ...params)
