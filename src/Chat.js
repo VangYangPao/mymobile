@@ -276,31 +276,33 @@ class MultipleImagePicker extends Component {
     });
   }
 
-  renderImage(imageUri, idx) {
+  renderImage(imageUri, idx, images) {
     return (
       <Image
         key={idx}
         source={{ uri: imageUri }}
-        style={widgetStyles.pickedImage}
+        style={[
+          widgetStyles.pickedImage,
+          idx === images.length - 1 ? widgetStyles.lastImage : null
+        ]}
         resizeMode="cover"
       />
     );
   }
 
   render() {
-    console.log(this.state.images);
     return (
       <View style={widgetStyles.imageGalleryContainer}>
         <Text style={widgetStyles.imageGalleryTitle}>
           Press on the '+'{"\n"}to start adding images
         </Text>
         <ScrollView horizontal={true} style={widgetStyles.imageGallery}>
-          {this.state.images.map(this.renderImage)}
           <TouchableOpacity activeOpacity={0.7} onPress={this.handlePress}>
             <View style={[widgetStyles.pickedImage, widgetStyles.emptyImage]}>
               <Icon name="add" size={55} style={widgetStyles.plusIcon} />
             </View>
           </TouchableOpacity>
+          {this.state.images.reverse().map(this.renderImage)}
         </ScrollView>
         <Button
           onPress={() => this.props.onFinishSelectImages(this.state.images)}
@@ -319,7 +321,8 @@ const imageWidth = 100;
 const widgetStyles = StyleSheet.create({
   imageGallery: {
     flex: 1,
-    flexDirection: "row"
+    flexDirection: "row",
+    marginBottom: 20
   },
   imageGalleryTitle: {
     alignSelf: "center",
@@ -327,10 +330,12 @@ const widgetStyles = StyleSheet.create({
     fontSize: 18,
     textAlign: "center"
   },
+  lastImage: {
+    marginRight: 0
+  },
   emptyImage: {
     alignItems: "center",
     justifyContent: "center",
-    marginRight: 0,
     backgroundColor: colors.borderLine
   },
   plusIcon: {
