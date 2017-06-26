@@ -1,5 +1,11 @@
 import React, { Component } from "react";
-import { View, StyleSheet, TouchableOpacity, Animated } from "react-native";
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Animated,
+  Platform
+} from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import VectorDrawableView from "./VectorDrawableView";
 
@@ -101,7 +107,11 @@ export default class PolicyChoice extends Component {
 
 const styles = StyleSheet.create({
   boldedText: {
-    fontWeight: "500"
+    fontWeight: "500",
+    ...Platform.select({
+      ios: { color: "black" },
+      android: {}
+    })
   },
   policyContainer: {
     flexDirection: "row",
