@@ -15,7 +15,7 @@ export default class Coverage extends Component {
     this.state = { expanded: false };
   }
 
-  renderItem(item, idx, items) {
+  renderItem(covered, item, idx, items) {
     const lastIndex = idx === items.length - 1;
     return (
       <View
@@ -25,7 +25,9 @@ export default class Coverage extends Component {
         <View style={styles.iconContainer}>
           <VectorDrawableView resourceName={item.icon} style={styles.icon} />
         </View>
-        <Text style={styles.title}>{item.title.toUpperCase()}</Text>
+        <Text style={styles.title}>
+          {covered ? item.title.toUpperCase() : item.title}
+        </Text>
         <Text style={styles.description}>{item.description}</Text>
       </View>
     );
@@ -38,7 +40,7 @@ export default class Coverage extends Component {
     return (
       <View style={styles.coverages}>
         <Text style={[styles.title, styles.notCoveredTitle]}>Not Covered</Text>
-        {notCoveredItems.map(this.renderItem)}
+        {notCoveredItems.map((...params) => this.renderItem(false, ...params))}
       </View>
     );
   }
@@ -55,7 +57,9 @@ export default class Coverage extends Component {
           <View style={styles.container}>
             <View style={styles.coverages}>
               <Text style={[styles.title, styles.pageTitle]}>COVERED</Text>
-              {coveredItems.map(this.renderItem)}
+              {coveredItems.map((...params) =>
+                this.renderItem(true, ...params)
+              )}
             </View>
             <TouchableOpacity onPress={() => this.setState({ expanded: true })}>
               <Text style={styles.notCoveredOpenerText}>
