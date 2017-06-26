@@ -37,12 +37,6 @@ export default class PlanCarousel extends Component {
     this.handleSelectPlan = this.handleSelectPlan.bind(this);
   }
 
-  componentDidMount() {
-    if (this.props.plans.length <= 1) {
-      this.props.onSelectPlan(0);
-    }
-  }
-
   handleSelectPlan(planIndex) {
     return () => {
       if (typeof this.props.onSelectPlan === "function") {

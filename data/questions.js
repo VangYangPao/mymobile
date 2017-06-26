@@ -87,7 +87,7 @@ export const QUESTION_SETS = {
         { label: "Asia", value: "Asia" },
         { label: "Worldwide", value: "Worldwide" }
       ],
-      include: "Travel Protection",
+      include: ["Travel Protection"],
       id: "travelDestination"
     },
     {
@@ -99,36 +99,37 @@ export const QUESTION_SETS = {
         { label: "Insured & Children", value: "Insured & Children" },
         { label: "Family", value: "Family" }
       ],
-      include: "Travel Protection",
+      include: ["Travel Protection"],
       id: "recipient"
     },
     {
       question: "How many days will you be at <%= travelDestination %>?",
       responseType: ["number"],
-      include: "Travel Protection",
+      include: ["Travel Protection"],
       id: "travelDuration"
     },
     {
       question: "Let's get started. Which plan do you want to buy?",
       responseType: "number",
+      exclude: ["Phone Protection"],
       id: "planIndex"
     },
     {
       question: "Great! How long do you want to be covered with this plan?",
       responseType: "number",
       id: "coverageDuration",
-      exclude: "Travel Protection"
+      exclude: ["Phone Protection", "Travel Protection"]
     },
     {
       question:
         "Awesome. That would be $<%= (policy.plans[planIndex].premium * coverageDuration).toFixed(2) %>.",
       responseType: null,
-      exclude: "Travel Protection"
+      exclude: ["Travel Protection"]
     },
     {
       question: "Awesome. That would be $<%= price %>.",
       responseType: null,
-      include: "Travel Protection"
+      include: ["Travel Protection"]
     },
     {
       question: "Tell us about yourself. What's your full name?",

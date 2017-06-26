@@ -399,7 +399,7 @@ class ChatScreen extends Component {
       answering: true,
       renderInput: true,
       currentQuestionIndex: -1,
-      answers: { policy: props.policy }
+      answers: { policy: props.policy, planIndex: 0, coverageDuration: 12 }
     };
 
     if (props.questionSet) {
@@ -527,8 +527,6 @@ class ChatScreen extends Component {
   }
 
   handleSelectPlan(planIndex) {
-    if (this.state.answers && this.state.answers.planIndex !== undefined)
-      return;
     const planAlphabet = ["A", "B", "C", "D", "E"];
     const premium = this.props.policy.plans[planIndex].premium;
     this.setState(
@@ -536,7 +534,7 @@ class ChatScreen extends Component {
         type: "text",
         _id: uuid.v4(),
         text: `I choose Plan ${planAlphabet[planIndex]}. $${premium +
-          ""} for one month of protection.`,
+          ""} for ${this.props.policy.from} of protection.`,
         value: planIndex,
         user: CUSTOMER_USER
       }),
@@ -662,14 +660,14 @@ class ChatScreen extends Component {
     const nextQuestion = this.questions[currentQuestionIndex];
     if (
       nextQuestion.include !== undefined &&
-      nextQuestion.include !== this.props.policy.title
+      nextQuestion.include.indexOf(this.props.policy.title) === -1
     ) {
       this.setState({ currentQuestionIndex }, this.askNextQuestion);
       return;
     }
     if (
       nextQuestion.exclude !== undefined &&
-      nextQuestion.exclude === this.props.policy.title
+      nextQuestion.exclude.indexOf(this.props.policy.title) !== -1
     ) {
       this.setState({ currentQuestionIndex }, this.askNextQuestion);
       return;
