@@ -21,7 +21,7 @@ export default (coverageItems = {
   },
   "Overseas medical expenses": {
     title: "Overseas medical expenses",
-    icon: "ic_medical_reimbursement"
+    icon: "ic_overseas_medical_reimbursement"
   },
   "Medical expenses": {
     title: "Medical expenses",
@@ -29,19 +29,19 @@ export default (coverageItems = {
   },
   "Emergency medical evacuation": {
     title: "Emergency medical evacuation",
-    icon: "ic_medical_reimbursement"
+    icon: "ic_emergency_evacuation"
   },
   "Loss of benefit, personal effect, cash": {
     title: "Loss of benefit, personal effect, cash",
-    icon: "ic_accidental_death"
+    icon: "ic_baggage_loss"
   },
   "Delayed baggage and flight": {
     title: "Delayed baggage and flight",
-    icon: "ic_accidental_death"
+    icon: "ic_flight_delay"
   },
   "Loss or cancellation of trip": {
     title: "Loss or cancellation of trip",
-    icon: "ic_accidental_death"
+    icon: "ic_trip_cancellation"
   },
   "Personal liability": {
     title: "Personal liability",
@@ -49,7 +49,23 @@ export default (coverageItems = {
   },
   "Loss of home contents due to burglary": {
     title: "Loss of home contents due to burglary",
-    icon: "ic_accidental_death"
+    icon: "ic_burglary"
+  },
+  "Credit card outstanding settlement": {
+    title: "Credit card outstanding settlement",
+    icon: "ic_credit_card_settlement"
+  },
+  "Overseas Accidental Death": {
+    title: "Accidental death / permanent disability",
+    icon: "ic_overseas_accidental_death"
+  },
+  "Free Overseas Wi-Fi voucher": {
+    title: "Free Overseas Wi-Fi voucher",
+    icon: "ic_free_wifi"
+  },
+  "Free Airport VIP Lounge Access": {
+    title: "Free Airport VIP Lounge Access",
+    icon: "ic_free_vip"
   },
   "Accidental Death": {
     title: "Accidental Death",

@@ -3,17 +3,17 @@
   {
    "idiom": "universal", 
    "scale": "1x", 
-   "filename": "microassure-white.png"
+   "filename": "ic_microassure_white.png"
   }, 
   {
    "idiom": "universal", 
    "scale": "2x", 
-   "filename": "microassure-white@2x.png"
+   "filename": "ic_microassure_white@2x.png"
   }, 
   {
    "idiom": "universal", 
    "scale": "3x", 
-   "filename": "microassure-white@3x.png"
+   "filename": "ic_microassure_white@3x.png"
   }
  ], 
  "info": {
