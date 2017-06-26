@@ -9,7 +9,8 @@ import {
   View,
   Picker,
   ScrollView,
-  Platform
+  Platform,
+  Alert
 } from "react-native";
 import {
   GiftedChat,
@@ -261,6 +262,7 @@ class MultipleImagePicker extends Component {
   constructor(props) {
     super(props);
     this.handlePress = this.handlePress.bind(this);
+    this.handleFinishSelectImages = this.handleFinishSelectImages.bind(this);
     this.state = { images: [] };
   }
 
@@ -274,6 +276,14 @@ class MultipleImagePicker extends Component {
         this.setState({ images: this.state.images.concat(response.uri) });
       }
     });
+  }
+
+  handleFinishSelectImages() {
+    if (this.state.images < 1) {
+      Alert.alert("Must upload at least one image");
+      return;
+    }
+    this.props.onFinishSelectImages(this.state.images);
   }
 
   renderImage(imageUri, idx, images) {
@@ -305,7 +315,7 @@ class MultipleImagePicker extends Component {
           {this.state.images.reverse().map(this.renderImage)}
         </ScrollView>
         <Button
-          onPress={() => this.props.onFinishSelectImages(this.state.images)}
+          onPress={this.handleFinishSelectImages}
           style={widgetStyles.confirmUpload}
         >
           UPLOAD IMAGES
@@ -601,7 +611,17 @@ class ChatScreen extends Component {
   }
 
   handleFinishSelectImages(imagesUri) {
-    this.setState({ answering: false });
+    const s = imagesUri.length > 1 ? "s" : "";
+    this.setState(
+      this.concatMessage({
+        type: "text",
+        _id: uuid.v4(),
+        text: `These are the ${imagesUri.length} photo${s} you requested.`,
+        value: imagesUri,
+        user: CUSTOMER_USER
+      }),
+      () => this.setState({ answering: false, renderInput: true })
+    );
   }
 
   componentDidMount() {
