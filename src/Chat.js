@@ -7,9 +7,9 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
-  Picker,
   ScrollView,
   Platform,
+  Picker,
   Alert
 } from "react-native";
 import {
@@ -192,17 +192,17 @@ class DatePickerActionButton extends Component {
 class PickerActionButton extends Component {
   render() {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={widgetStyles.pickerContainer}>
         <Picker
-          prompt={this.props.label}
           onValueChange={(value, index) => {
+            if (!value) return;
             if (typeof this.props.onValueChange === "function") {
-              const item = this.props.items[index];
+              const item = this.props.items[index - 1];
               this.props.onValueChange(item.label, item.value);
             }
           }}
         >
-          {[{ label: "", value: "" }]
+          {[{ label: this.props.label, value: null }]
             .concat(this.props.items)
             .map(item =>
               <Picker.Item
@@ -329,6 +329,17 @@ const imageHeight = 150;
 const imageWidth = 100;
 
 const widgetStyles = StyleSheet.create({
+  pickerContainer: Platform.select({
+    ios: {
+      position: "absolute",
+      bottom: 0,
+      left: 0,
+      right: 0,
+      height: 200,
+      backgroundColor: "white"
+    },
+    android: { flex: 1 }
+  }),
   imageGallery: {
     flex: 1,
     flexDirection: "row",
@@ -864,7 +875,21 @@ class ChatScreen extends Component {
   renderInputToolbar(props) {
     if (this.props.isStartScreen) return null;
     const { currentQuestionIndex } = this.state;
-    const question = this.questions[currentQuestionIndex];
+    const currentQuestion = this.questions[currentQuestionIndex];
+    let { responseType } = currentQuestion;
+    responseType = [].concat(responseType);
+    if (responseType.indexOf("choice") !== -1 && Platform.OS === "ios") {
+      const label = currentQuestion.id === "recipient"
+        ? "SELECT RECIPIENT"
+        : "SELECT DESTINATION";
+      return (
+        <PickerActionButton
+          label={label}
+          items={currentQuestion.choices}
+          onValueChange={this.handlePickChoice}
+        />
+      );
+    }
     return (
       <InputToolbar
         {...props}
@@ -886,7 +911,10 @@ class ChatScreen extends Component {
 
     if (responseType.indexOf("date") !== -1) {
       return <DatePickerActionButton onPickDate={this.handlePickDate} />;
-    } else if (responseType.indexOf("choice") !== -1) {
+    } else if (
+      responseType.indexOf("choice") !== -1 &&
+      Platform.OS === "android"
+    ) {
       const label = currentQuestion.id === "recipient"
         ? "SELECT RECIPIENT"
         : "SELECT DESTINATION";
@@ -960,6 +988,7 @@ class ChatScreen extends Component {
           renderMessage={this.renderMessage}
           renderMessageText={this.renderMessageText}
           renderSend={this.renderSend}
+          renderInputToolbar={this.renderInputToolbar}
           renderComposer={this.renderComposer}
           minInputToolbarHeight={minInputToolbarHeight}
           listViewProps={listViewProps}
