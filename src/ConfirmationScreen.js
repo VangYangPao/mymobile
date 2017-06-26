@@ -47,7 +47,7 @@ export default class ConfirmationScreen extends Component {
       <CheckoutModal
         onCheckout={() => {
           ToastAndroid.show("Thank you for buying!", ToastAndroid.LONG);
-          this.props.navigation.navigate("ClaimStack");
+          this.props.navigation.navigate("MyPolicies");
         }}
         onClose={() => this.setState({ renderCheckoutModal: false })}
       />

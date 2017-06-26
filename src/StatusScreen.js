@@ -13,7 +13,7 @@ import colors from "./colors";
 
 export default class StatusScreen extends Component {
   static navigationOptions = {
-    title: "My Policy & Status"
+    title: "My Policies"
   };
 
   renderItem({ item, index }) {
