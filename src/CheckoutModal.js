@@ -7,7 +7,10 @@ import {
   Modal,
   TextInput,
   Dimensions,
-  Button
+  Button,
+  Alert,
+  ToastAndroid,
+  Platform
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { CreditCardInput } from "react-native-credit-card-input";
@@ -18,6 +21,32 @@ import colors from "./colors";
 const windowWidth = Dimensions.get("window").width;
 
 export default class CheckoutModal extends Component {
+  constructor(props) {
+    super(props);
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleCheckout = this.handleCheckout.bind(this);
+    this.state = { allValid: false };
+  }
+
+  handleInputChange(form) {
+    this.setState({ allValid: form.valid });
+  }
+
+  handleCheckout() {
+    if (!this.state.allValid) {
+      const msg = "Your credit card details are incomplete";
+      if (Platform.OS === "ios") {
+        Alert.alert(msg);
+      } else {
+        ToastAndroid.show(msg, ToastAndroid.SHORT);
+      }
+      return;
+    }
+    if (typeof this.props.onCheckout === "function") {
+      this.props.onCheckout();
+    }
+  }
+
   render() {
     return (
       <Modal
@@ -30,21 +59,17 @@ export default class CheckoutModal extends Component {
           <View style={styles.modalContentContainer}>
             <View style={styles.checkoutHeader}>
               <Text style={styles.checkoutTitle}>
-                Enter credit card details
+                Enter your credit card details
               </Text>
             </View>
             <View style={styles.checkoutContent}>
               <CreditCardInput
-                onChange={this._onChange}
+                onChange={this.handleInputChange}
                 inputStyle={styles.creditCardInputStyle}
               />
             </View>
             <Button
-              onPress={() => {
-                if (typeof this.props.onCheckout === "function") {
-                  this.props.onCheckout();
-                }
-              }}
+              onPress={this.handleCheckout}
               title="CONFIRM PURCHASE"
               color={colors.primaryOrange}
             />
@@ -63,6 +88,7 @@ const styles = StyleSheet.create({
   checkoutHeader: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "center",
     paddingVertical: 15,
     backgroundColor: colors.softBorderLine
   },
@@ -70,7 +96,8 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     color: colors.primaryText,
     fontSize: 20,
-    fontWeight: "500"
+    fontWeight: "500",
+    textAlign: "center"
   },
   modalContentContainer: {
     alignItems: "stretch",

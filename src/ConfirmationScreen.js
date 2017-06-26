@@ -6,7 +6,9 @@ import {
   TouchableOpacity,
   View,
   Button,
-  ToastAndroid
+  ToastAndroid,
+  Alert,
+  Platform
 } from "react-native";
 
 import { Text } from "./defaultComponents";
@@ -23,7 +25,28 @@ export default class ConfirmationScreen extends Component {
 
   constructor(props) {
     super(props);
+    this.handleCheckout = this.handleCheckout.bind(this);
     this.state = { renderCheckoutModal: false };
+    const { form } = this.props.navigation.state.params;
+    this.totalPremium = new Number(form.totalPremium);
+    delete form.totalPremium;
+  }
+
+  handleCheckout() {
+    if (Platform.OS === "ios") {
+      Alert.alert("Thank you!", "Your order is complete.", [
+        {
+          text: "OK",
+          onPress: () => this.props.navigation.navigate("MyPolicies")
+        }
+      ]);
+    } else {
+      ToastAndroid.show(
+        "Thank you! Your order is complete.",
+        ToastAndroid.LONG
+      );
+      this.props.navigation.navigate("MyPolicies");
+    }
   }
 
   renderField(key, value) {
@@ -37,18 +60,13 @@ export default class ConfirmationScreen extends Component {
 
   render() {
     const { form } = this.props.navigation.state.params;
-    const totalPremium = new Number(form.totalPremium);
-    delete form.totalPremium;
     let formArr = [];
     for (var key in form) {
       formArr.push({ key, value: form[key] });
     }
     const modal = (
       <CheckoutModal
-        onCheckout={() => {
-          ToastAndroid.show("Thank you for buying!", ToastAndroid.LONG);
-          this.props.navigation.navigate("MyPolicies");
-        }}
+        onCheckout={this.handleCheckout}
         onClose={() => this.setState({ renderCheckoutModal: false })}
       />
     );
@@ -58,7 +76,7 @@ export default class ConfirmationScreen extends Component {
         <View style={styles.pageContainer}>
           <Page>
             <Text style={styles.pageTitle}>Confirm your details</Text>
-            <PolicyPrice pricePerMonth={totalPremium} />
+            <PolicyPrice pricePerMonth={this.totalPremium} />
             {formArr.map(f => this.renderField(f.key, f.value))}
           </Page>
         </View>
@@ -91,7 +109,8 @@ const styles = StyleSheet.create({
   },
   pageTitle: {
     marginBottom: 20,
-    fontSize: 23
+    fontSize: 23,
+    textAlign: "center"
   },
   pageContainer: {
     flex: 1
