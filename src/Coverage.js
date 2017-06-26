@@ -76,7 +76,8 @@ const styles = StyleSheet.create({
   notCoveredOpenerText: {
     alignSelf: "center",
     color: colors.borderLine,
-    fontSize: 16
+    fontSize: 16,
+    textAlign: "center"
   },
   rowTitle: {
     textAlign: "center",

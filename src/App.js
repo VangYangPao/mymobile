@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   Image,
   InteractionManager,
-  Dimensions
+  Dimensions,
+  Platform
 } from "react-native";
 import {
   DrawerNavigator,
@@ -57,8 +58,16 @@ const styles = StyleSheet.create({
   headerTitle: {
     // fontSize: 20,
     alignSelf: "center",
-    paddingRight:
-      MENU_ICON_PADDING_LEFT + MENU_ICON_SIZE + MENU_ICON_PADDING_RIGHT,
+    paddingRight: 0,
+    ...Platform.select({
+      ios: {
+        paddingRight: 0
+      },
+      android: {
+        paddingRight:
+          MENU_ICON_PADDING_LEFT + MENU_ICON_SIZE + MENU_ICON_PADDING_RIGHT
+      }
+    }),
     color: colors.primaryText,
     fontWeight: "400",
     fontFamily: "Comfortaa-Bold"
@@ -288,8 +297,8 @@ const MyDrawerNavigator = DrawerNavigator(
 
 export default (Microsurance = StackNavigator(
   {
-    Intro: { screen: IntroScreen },
-    Auth: { screen: AuthScreen },
+    // Intro: { screen: IntroScreen },
+    // Auth: { screen: AuthScreen },
     Drawer: { screen: MyDrawerNavigator }
   },
   { headerMode: "none" }

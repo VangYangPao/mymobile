@@ -148,7 +148,7 @@ class LoginScreen extends Component {
     return (
       <View style={styles.container}>
         <VectorDrawableView
-          resourceName="microassure_white"
+          resourceName="ic_microassure_white"
           style={styles.logo}
         />
         <Form ref="form" type={UserLogin} options={userLoginOptions} />
