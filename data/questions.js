@@ -197,7 +197,12 @@ export const QUESTION_SETS = {
   ],
   claim: [
     {
-      question: "Hi. When did the accident happen?",
+      question: "Hi Denzel. Choose which policy you want to claim.",
+      responseType: "number",
+      id: "claimPolicyNo"
+    },
+    {
+      question: "Let's get started. When did the accident happen?",
       responseType: "date",
       id: "accidentDateTime"
     },

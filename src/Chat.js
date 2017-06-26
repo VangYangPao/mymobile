@@ -29,8 +29,10 @@ import Slider from "react-native-slider";
 import ImagePicker from "react-native-image-picker";
 import { template } from "lodash";
 
+import database from "./HackStorage";
 import PlanCarousel from "./PlanCarousel";
 import TravelInsurancePlanCarousel from "./TravelInsurancePlanCarousel";
+import { getDateStr } from "./utils";
 import { Text } from "./defaultComponents";
 import RangeSlider from "./RangeSlider";
 import PolicyChoice from "./PolicyChoice";
@@ -325,10 +327,78 @@ class MultipleImagePicker extends Component {
   }
 }
 
+class ClaimPolicyChoice extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { disabled: false };
+  }
+
+  handleSelectPolicy(policy) {
+    this.setState({ disabled: true });
+    this.props.onSelectPolicy(policy);
+  }
+
+  renderPolicy(policy, idx) {
+    return (
+      <TouchableOpacity
+        onPress={() => this.handleSelectPolicy.bind(this)(policy)}
+        disabled={this.state.disabled}
+        key={idx}
+      >
+        <View
+          style={[
+            widgetStyles.policyChoice,
+            this.state.disabled ? widgetStyles.disabledPolicyChoice : null
+          ]}
+        >
+          <Text style={widgetStyles.policyChoiceName}>{policy.name}</Text>
+          <Text>
+            Policy No.: PL{policy.id}
+          </Text>
+          <Text>
+            Purchase date: {getDateStr(policy.purchaseDate)}
+          </Text>
+          <Text>Paid: ${policy.paid}</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  }
+
+  render() {
+    return (
+      <View style={widgetStyles.choicesContainer}>
+        {database.policies
+          .filter(p => p.status === "active")
+          .map(this.renderPolicy.bind(this))}
+      </View>
+    );
+  }
+}
+
 const imageHeight = 150;
 const imageWidth = 100;
 
 const widgetStyles = StyleSheet.create({
+  disabledPolicyChoice: {
+    backgroundColor: colors.softBorderLine
+  },
+  policyChoiceName: {
+    fontSize: 17
+  },
+  choicesContainer: {
+    flex: 1,
+    marginTop: 20
+  },
+  policyChoice: {
+    flex: 1,
+    marginBottom: 20,
+    paddingVertical: 15,
+    paddingHorizontal: 15,
+    backgroundColor: "white"
+  },
+  policyPurchaseDate: {
+    fontSize: 15
+  },
   pickerContainer: Platform.select({
     ios: {
       position: "absolute",
@@ -446,6 +516,7 @@ class ChatScreen extends Component {
     this.handlePickImage = this.handlePickImage.bind(this);
     this.handlePickDate = this.handlePickDate.bind(this);
     this.handlePickChoice = this.handlePickChoice.bind(this);
+    this.handleSelectPolicyToClaim = this.handleSelectPolicyToClaim.bind(this);
     this.renderStartScreenMessages = this.renderStartScreenMessages.bind(this);
     this.askNextQuestion = this.askNextQuestion.bind(this);
     this.reaskQuestion = this.reaskQuestion.bind(this);
@@ -635,6 +706,19 @@ class ChatScreen extends Component {
     );
   }
 
+  handleSelectPolicyToClaim(policy) {
+    this.setState(
+      this.concatMessage({
+        type: "text",
+        _id: uuid.v4(),
+        text: `I want to claim policy ${policy.name} (PL${policy.id})`,
+        value: policy.id,
+        user: CUSTOMER_USER
+      }),
+      () => this.setState({ answering: false, renderInput: true })
+    );
+  }
+
   componentDidMount() {
     if (this.props.isStartScreen) {
       this.renderStartScreenMessages();
@@ -719,7 +803,13 @@ class ChatScreen extends Component {
           this.askNextQuestion();
           return;
         }
-        const widgets = ["planIndex", "coverageDuration", "icImage", "report"];
+        const widgets = [
+          "planIndex",
+          "coverageDuration",
+          "claimPolicyNo",
+          "icImage",
+          "report"
+        ];
         if (widgets.indexOf(currentQuestion.id) !== -1) {
           this.setState(
             this.concatMessage({
@@ -820,6 +910,10 @@ class ChatScreen extends Component {
   renderMessage(props) {
     const { currentMessage } = props;
     switch (currentMessage.type) {
+      case "claimPolicyNo":
+        return (
+          <ClaimPolicyChoice onSelectPolicy={this.handleSelectPolicyToClaim} />
+        );
       case "report":
       case "icImage":
         return (
@@ -957,7 +1051,7 @@ class ChatScreen extends Component {
     }
 
     let listViewProps = {};
-    if (!this.props.isStartScreen) {
+    if (this.state.currentQuestionIndex > 0) {
       listViewProps.onContentSizeChange = (contentWidth, contentHeight) => {
         if (this._messageContainerRef === null) {
           return;

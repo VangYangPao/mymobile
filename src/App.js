@@ -267,14 +267,11 @@ class LegalScreen extends Component {
 
 const MyDrawerNavigator = DrawerNavigator(
   {
-    // HomeStack: {
-    //   screen: HomeStackNavigatorWrapper
-    // },
-    BuyStack: {
-      screen: BuyStackNavigator
-    },
     ClaimStack: {
       screen: ClaimStackNavigator
+    },
+    BuyStack: {
+      screen: BuyStackNavigator
     },
     MyPolicies: {
       screen: StatusStackNavigator,
