@@ -165,37 +165,37 @@ export const QUESTION_SETS = {
       responseType: ["string", "phoneNumber"],
       id: "phoneNumber"
     },
-    {
-      question:
-        "Great! To collect your claims, we will need your bank name. 🏦 (Western Union accepted)",
-      responseType: "string",
-      id: "bankName"
-    },
-    {
-      question:
-        "Next, we will need your bank account number for us to bank into. 💵",
-      responseType: "number",
-      id: "bankAccount"
-    },
+    // {
+    //   question:
+    //     "Great! To collect your claims, we will need your bank name. 🏦 (Western Union accepted)",
+    //   responseType: "string",
+    //   id: "bankName"
+    // },
+    // {
+    //   question:
+    //     "Next, we will need your bank account number for us to bank into. 💵",
+    //   responseType: "number",
+    //   id: "bankAccount"
+    // },
     {
       question: "What's your beneficiary's full name?",
       responseType: "string",
       id: "beneficiaryName"
     },
+    // {
+    //   question:
+    //     "To bank into your beneficiary's bank account, we need his/her bank name. (Western Union accepted)",
+    //   responseType: "string",
+    //   id: "beneficiaryBankName"
+    // },
+    // {
+    //   question: "And what's your beneficiary's bank account number?",
+    //   responseType: "number",
+    //   id: "beneficiaryBankAccount"
+    // },
     {
       question:
-        "To bank into your beneficiary's bank account, we need his/her bank name. (Western Union accepted)",
-      responseType: "string",
-      id: "beneficiaryBankName"
-    },
-    {
-      question: "And what's your beneficiary's bank account number?",
-      responseType: "number",
-      id: "beneficiaryBankAccount"
-    },
-    {
-      question:
-        "Please send us the front and back of your NRIC for verification.",
+        "Please send us the front and back of your NRIC/passport for verification.",
       responseType: "images",
       id: "icImage"
     },
@@ -260,7 +260,7 @@ export const QUESTION_SETS = {
       responseType: ["boolean", "choice"],
       choices: [
         { label: "Yes I have!", value: true },
-        { label: "No, there are no damaged articles.", value: false }
+        { label: "No, I don't have them.", value: false }
       ],
       id: "haveDamagedArticles"
     },

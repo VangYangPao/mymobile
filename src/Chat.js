@@ -158,12 +158,12 @@ class DownloadFormActionButton extends Component {
     })
       .fetch("GET", downloadUrl)
       .then(res => {
-        this.props.onDownload();
         if (Platform.OS === "ios") {
           RNFetchBlob.ios.openDocument(res.path());
         } else {
           RNFetchBlob.android.actionViewIntent(res.path(), "application/pdf");
         }
+        this.props.onDownload();
       });
   }
 
@@ -804,7 +804,7 @@ class ChatScreen extends Component {
         value: policy.id,
         user: CUSTOMER_USER
       }),
-      () => this.setState({ answering: false })
+      () => this.setState({ answering: false, renderInput: true })
     );
   }
 
@@ -1183,6 +1183,11 @@ class ChatScreen extends Component {
       this.props.isStartScreen
     ) {
       minInputToolbarHeight = 0;
+    }
+    const { currentQuestionIndex } = this.state;
+    if (currentQuestionIndex >= 0) {
+      const currentQuestion = this.questions[currentQuestionIndex];
+      minInputToolbarHeight = 200;
     }
 
     let listViewProps = {};
