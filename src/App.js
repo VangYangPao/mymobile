@@ -267,11 +267,11 @@ class LegalScreen extends Component {
 
 const MyDrawerNavigator = DrawerNavigator(
   {
-    BuyStack: {
-      screen: BuyStackNavigator
-    },
     ClaimStack: {
       screen: ClaimStackNavigator
+    },
+    BuyStack: {
+      screen: BuyStackNavigator
     },
     MyPolicies: {
       screen: StatusStackNavigator,
@@ -302,8 +302,8 @@ const MyDrawerNavigator = DrawerNavigator(
 
 export default (Microsurance = StackNavigator(
   {
-    Intro: { screen: IntroScreen },
-    Auth: { screen: AuthScreen },
+    // Intro: { screen: IntroScreen },
+    // Auth: { screen: AuthScreen },
     Drawer: { screen: MyDrawerNavigator }
   },
   { headerMode: "none" }

@@ -51,6 +51,14 @@ function validateImages(arr) {
   );
 }
 
+function validateBoolean(bool) {
+  const isValid = typeof bool === "boolean";
+  return new ValidationResult(
+    isValid,
+    isValid || "Please enter a valid option"
+  );
+}
+
 const TypeValidators = {
   email: validateEmail,
   string: notEmptyString,
@@ -58,7 +66,8 @@ const TypeValidators = {
   phoneNumber: validatePhoneNumber,
   images: validateImages,
   date: validateDate,
-  choice: () => new ValidationResult(true, true)
+  choice: () => new ValidationResult(true, true),
+  boolean: validateBoolean
 };
 
 export function validateAnswer(question, answer) {
@@ -202,35 +211,100 @@ export const QUESTION_SETS = {
       id: "claimPolicyNo"
     },
     {
-      question: "Let's get started. When did the accident happen?",
-      responseType: "date",
-      id: "accidentDateTime"
+      question:
+        "You have selected <%= policyName %> as your claim. I will walk you through step by step, as I’ll do my best to get your claim money fast!",
+      responseType: null
     },
     {
-      question: "Thank you. Where did it happen?",
+      question:
+        "Firstly, you can download the TRAVEL CLAIM FORM here, and print it before you can fill up. Referring to the TRAVEL CLAIM FORM, there are several documents you have to prepare. Once you printed and filled up, we can proceed to the next step.",
+      responseType: "boolean",
+      id: "downloadForm"
+    },
+    {
+      question:
+        "Share with me the type of accident, loss or illness you wanted to claim",
+      responseType: ["string", "choice"],
+      choices: [
+        "Personal Accident, Medical, Dental and Other Expenses",
+        "Loss of Baggage & Personal Effects",
+        "Loss of Money & Documents",
+        "Baggage Delay",
+        "Trip Cancellation or Curtailment",
+        "Travel Delay or Misconnection or Overbooked Flight",
+        "Loss of Home Contents due to Burglary",
+        "Personal Liability",
+        "Others"
+      ].map(c => ({ label: c, value: c })),
+      id: "claimType"
+    },
+    {
+      question: "Where is the place of accident, loss or illness?",
       responseType: "string",
       id: "accidentLocation"
     },
     {
-      question: "Which police station did you report to?",
-      responseType: "string",
-      id: "policeStation"
+      question: "Tell me the exact date of accident, loss or illness?",
+      responseType: "date",
+      id: "accidentDateTime"
     },
     {
-      question: "Tell us about the accident.",
+      question:
+        "Please describe the accident, loss or illness. Do your best to be specific in your description.",
       responseType: "string",
       id: "description"
     },
     {
-      question: "Thank you. Tell us about your specific injuries.",
+      question:
+        "You are doing great so far! Great job! If you have the damaged articles, please keep the damaged articles for possible inspection.",
+      responseType: ["boolean", "choice"],
+      choices: [
+        { label: "Yes I have!", value: true },
+        { label: "No, there are no damaged articles.", value: false }
+      ],
+      id: "haveDamagedArticles"
+    },
+    {
+      question: "How much do you want to claim?",
       responseType: "string",
-      id: "injuryDetails"
+      id: "claimAmount"
     },
     {
       question:
-        "Please snap photos of the police report / medical report / death certificate.",
+        "No more writing from here onwards! Please switch to camera mode and snap a clear photo(s) of completed travel claim form",
       responseType: "images",
-      id: "report"
+      id: "claimForm"
+    },
+    {
+      question:
+        "Next, snap a clear photo of boarding pass, OR, flight itinerary, OR, passport personal info pages together with passport page(s) with stamps showing the date of departure and return to Singapore",
+      responseType: "images",
+      id: "travelDetails"
+    },
+    {
+      question:
+        "Here is the final step. Kindly submit the TRAVEL CLAIM FORM, together with the required documents stated in the claim form, by post to HL Assurance Office, 11 Keppel Road #11-01, ABI Plaza Singapore 089057",
+      responseType: null
+    },
+    {
+      question:
+        "Please take a moment to go through the Declaration, Authorization & Customer's Data Privacy statements",
+      responseType: null
+    },
+    {
+      question: `1.	I/We do solemnly and sincerely declare that the information given is true and correct to the best of my/our knowledge and belief.
+
+2.	I/We understand that any false or fraudulent statements or any attempt to suppress or conceal any material facts shall render the Policy void and we shall forfeit our rights to claim under the Policy.
+
+3.	I/We hereby authorise any hospital, medical practitioner or other person who has attended or examined me, to disclose when requested to do so by HL Assurance Pte. Ltd., or its authorised representative, any and all information with respect to any illness or injury, medical history, consultations, prescriptions or treatment, and copies of all hospital or medical records. A photo-stated copy of this authorisation shall be considered as effective and valid as the original.
+
+4.	I/We hereby authorise and request HL Assurance Pte.Ltd. to pay benefit due in respect of this claim to Denzel Tan (Name as per Identification Card and/or Bank Account)`,
+      responseType: ["boolean", "choice"],
+      choices: [
+        { label: "Agree", value: true },
+        { label: "Disagree", value: false }
+      ],
+      id: "agreeTerms"
     },
     {
       question: "Thank you. Please wait while I process your submission...",

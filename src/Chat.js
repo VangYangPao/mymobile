@@ -23,6 +23,7 @@ import {
   Send
 } from "react-native-gifted-chat";
 import moment from "moment";
+import RNFetchBlob from "react-native-fetch-blob";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Ionicon from "react-native-vector-icons/Ionicons";
 import Spinner from "react-native-spinkit";
@@ -129,6 +130,49 @@ class ActionButton extends Component {
           </View>
         </TouchableOpacity>
       </View>
+    );
+  }
+}
+
+class DownloadFormActionButton extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { downloading: false };
+  }
+
+  handlePress() {
+    const dirs = RNFetchBlob.fs.dirs;
+    const fileId = "0B_YbPr_3tGiPRjFxMThQVVZfX0VGa3JFeXczME1tbTI2OWMw";
+    const downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
+    this.setState({ downloading: true });
+
+    RNFetchBlob.config({
+      // response data will be saved to this path if it has access right.
+      addAndroidDownloads: {
+        useDownloadManager: true,
+        mime: "application/pdf",
+        mediaScannable: true,
+        notification: true
+      },
+      path: dirs.DocumentDir + "/ClaimsForm.pdf"
+    })
+      .fetch("GET", downloadUrl)
+      .then(res => {
+        this.props.onDownload();
+        if (Platform.OS === "ios") {
+          RNFetchBlob.ios.openDocument(res.path());
+        } else {
+          RNFetchBlob.android.actionViewIntent(res.path(), "application/pdf");
+        }
+      });
+  }
+
+  render() {
+    return (
+      <ActionButton
+        onPress={this.handlePress.bind(this)}
+        text={this.state.downloading ? "DOWNLOADING..." : "DOWNLOAD FORM"}
+      />
     );
   }
 }
@@ -747,12 +791,30 @@ class ChatScreen extends Component {
   }
 
   handleSelectPolicyToClaim(policy) {
+    let answers = Object.assign(this.state.answers, {
+      policyName: policy.name
+    });
+    this.setState({ answers });
+
     this.setState(
       this.concatMessage({
         type: "text",
         _id: uuid.v4(),
         text: `I want to claim policy ${policy.name} (PL${policy.id})`,
         value: policy.id,
+        user: CUSTOMER_USER
+      }),
+      () => this.setState({ answering: false })
+    );
+  }
+
+  handleDownload() {
+    this.setState(
+      this.concatMessage({
+        type: "text",
+        _id: uuid.v4(),
+        text: "I have printed and filled up, I am ready with the next step.",
+        value: true,
         user: CUSTOMER_USER
       }),
       () => this.setState({ answering: false, renderInput: true })
@@ -982,7 +1044,8 @@ class ChatScreen extends Component {
         return (
           <ClaimPolicyChoice onSelectPolicy={this.handleSelectPolicyToClaim} />
         );
-      case "report":
+      case "claimForm":
+      case "travelDetails":
       case "icImage":
         return (
           <MultipleImagePicker
@@ -1073,6 +1136,10 @@ class ChatScreen extends Component {
 
     if (responseType.indexOf("date") !== -1) {
       return <MyDatePicker onPickDate={this.handlePickDate} />;
+    } else if (currentQuestion.id === "downloadForm") {
+      return (
+        <DownloadFormActionButton onDownload={this.handleDownload.bind(this)} />
+      );
     } else if (
       responseType.indexOf("choice") !== -1 &&
       Platform.OS === "android"
