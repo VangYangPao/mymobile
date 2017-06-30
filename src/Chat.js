@@ -141,6 +141,9 @@ class DownloadFormActionButton extends Component {
   }
 
   handlePress() {
+    if (this.state.downloading) {
+      return;
+    }
     const dirs = RNFetchBlob.fs.dirs;
     const fileId = "0B_YbPr_3tGiPRjFxMThQVVZfX0VGa3JFeXczME1tbTI2OWMw";
     const downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
@@ -279,10 +282,20 @@ class DatePickerActionButton extends Component {
 }
 
 class PickerActionButton extends Component {
+  constructor(props) {
+    super(props);
+    const labelLengths = this.props.items.map(i => i.label.length);
+    this.maxLength = Math.max.apply(null, labelLengths);
+  }
+
   render() {
     return (
       <View style={widgetStyles.pickerContainer}>
         <Picker
+          itemStyle={{
+            backgroundColor: "white",
+            fontSize: this.maxLength > 32 ? 14 : 18
+          }}
           onValueChange={(value, index) => {
             if (!value) return;
             if (typeof this.props.onValueChange === "function") {
@@ -574,6 +587,7 @@ class ChatScreen extends Component {
     super(props);
     this.state = {
       messages: [],
+      minInputToolbarHeight: 44,
       answering: true,
       renderInput: true,
       currentQuestionIndex: -1,
@@ -938,7 +952,8 @@ class ChatScreen extends Component {
           "coverageDuration",
           "claimPolicyNo",
           "icImage",
-          "report"
+          "claimForm",
+          "travelDetails"
         ];
         if (widgets.indexOf(currentQuestion.id) !== -1) {
           this.setState(
@@ -955,15 +970,20 @@ class ChatScreen extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    const { currentQuestionIndex } = this.state;
+    const currentQuestion = this.questions[currentQuestionIndex];
     if (
       prevState.answering !== this.state.answering ||
-      prevState.renderInput !== this.state.renderInput
+      prevState.renderInput !== this.state.renderInput ||
+      (currentQuestion.responseType !== null &&
+        currentQuestion.responseType.indexOf("choice") !== -1)
     ) {
+      console.log("reset");
       this.refs.chat.resetInputToolbar();
     }
 
     if (this.state.answering !== prevState.answering && !this.state.answering) {
-      const { messages, currentQuestionIndex } = this.state;
+      const { messages } = this.state;
 
       // skip validation for bootstrap step-0
       if (messages.length === 0) {
@@ -1104,12 +1124,9 @@ class ChatScreen extends Component {
     let { responseType } = currentQuestion;
     responseType = [].concat(responseType);
     if (responseType.indexOf("choice") !== -1 && Platform.OS === "ios") {
-      const label = currentQuestion.id === "recipient"
-        ? "SELECT RECIPIENT"
-        : "SELECT DESTINATION";
       return (
         <PickerActionButton
-          label={label}
+          label={currentQuestion.label}
           items={currentQuestion.choices}
           onValueChange={this.handlePickChoice}
         />
@@ -1187,7 +1204,12 @@ class ChatScreen extends Component {
     const { currentQuestionIndex } = this.state;
     if (currentQuestionIndex >= 0) {
       const currentQuestion = this.questions[currentQuestionIndex];
-      minInputToolbarHeight = 200;
+      if (
+        currentQuestion.responseType !== null &&
+        currentQuestion.responseType.indexOf("choice") !== -1
+      ) {
+        minInputToolbarHeight = 200;
+      }
     }
 
     let listViewProps = {};
@@ -1198,7 +1220,8 @@ class ChatScreen extends Component {
         }
         let scrollHeight = contentHeight;
         if (Platform.OS === "ios") {
-          const supposedScrollHeight = contentHeight - WINDOW_HEIGHT * 0.8;
+          const supposedScrollHeight =
+            contentHeight - WINDOW_HEIGHT * 0.8 + minInputToolbarHeight;
           scrollHeight = supposedScrollHeight < 0 ? 0 : supposedScrollHeight;
         }
         this.refs.chat._messageContainerRef.scrollTo({
