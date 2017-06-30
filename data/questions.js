@@ -6,7 +6,7 @@ class ValidationResult {
 }
 
 function validateNumber(num) {
-  const isValid = Number.isInteger(num);
+  const isValid = true;
   return new ValidationResult(
     isValid,
     isValid || "Please enter a valid number"
@@ -91,6 +91,7 @@ export const QUESTION_SETS = {
     {
       question: "Let's get started. Where will you be travelling to?",
       responseType: ["string", "choice"],
+      label: "SELECT DESTINATION",
       choices: [
         { label: "ASEAN", value: "ASEAN" },
         { label: "Asia", value: "Asia" },
@@ -102,6 +103,7 @@ export const QUESTION_SETS = {
     {
       question: "Great! Who is the recipient for the travel insurance?",
       responseType: ["string", "choice"],
+      label: "SELECT RECIPIENT",
       choices: [
         { label: "Applicant", value: "Applicant" },
         { label: "Insured & Spouse", value: "Insured & Spouse" },
@@ -215,23 +217,24 @@ export const QUESTION_SETS = {
         "You have selected <%= policyName %> as your claim. I will walk you through step by step, as I’ll do my best to get your claim money fast!",
       responseType: null
     },
-    {
-      question:
-        "Firstly, you can download the TRAVEL CLAIM FORM here, and print it before you can fill up. Referring to the TRAVEL CLAIM FORM, there are several documents you have to prepare. Once you printed and filled up, we can proceed to the next step.",
-      responseType: "boolean",
-      id: "downloadForm"
-    },
+    // {
+    //   question:
+    //     "Firstly, you can download the TRAVEL CLAIM FORM here, and print it before you can fill up. Referring to the TRAVEL CLAIM FORM, there are several documents you have to prepare. Once you printed and filled up, we can proceed to the next step.",
+    //   responseType: "boolean",
+    //   id: "downloadForm"
+    // },
     {
       question:
         "Share with me the type of accident, loss or illness you wanted to claim",
       responseType: ["string", "choice"],
+      label: "SELECT TYPE",
       choices: [
-        "Personal Accident, Medical, Dental and Other Expenses",
+        "Personal Accident, Medical, Dental Expenses",
         "Loss of Baggage & Personal Effects",
         "Loss of Money & Documents",
         "Baggage Delay",
         "Trip Cancellation or Curtailment",
-        "Travel Delay or Misconnection or Overbooked Flight",
+        "Travel Delay / Misconnection / Overbooked Flight",
         "Loss of Home Contents due to Burglary",
         "Personal Liability",
         "Others"
@@ -258,6 +261,7 @@ export const QUESTION_SETS = {
       question:
         "You are doing great so far! Great job! If you have the damaged articles, please keep the damaged articles for possible inspection.",
       responseType: ["boolean", "choice"],
+      label: "DAMAGED ARTICLES",
       choices: [
         { label: "Yes I have!", value: true },
         { label: "No, I don't have them.", value: false }
@@ -292,14 +296,15 @@ export const QUESTION_SETS = {
       responseType: null
     },
     {
-      question: `1.	I/We do solemnly and sincerely declare that the information given is true and correct to the best of my/our knowledge and belief.
+      question: `1.	We do solemnly and sincerely declare that the information given is true and correct to the best of my/our knowledge and belief.
 
-2.	I/We understand that any false or fraudulent statements or any attempt to suppress or conceal any material facts shall render the Policy void and we shall forfeit our rights to claim under the Policy.
+2.	We understand that any false or fraudulent statements or any attempt to suppress or conceal any material facts shall render the Policy void and we shall forfeit our rights to claim under the Policy.
 
-3.	I/We hereby authorise any hospital, medical practitioner or other person who has attended or examined me, to disclose when requested to do so by HL Assurance Pte. Ltd., or its authorised representative, any and all information with respect to any illness or injury, medical history, consultations, prescriptions or treatment, and copies of all hospital or medical records. A photo-stated copy of this authorisation shall be considered as effective and valid as the original.
+3.	We hereby authorise any hospital, medical practitioner or other person who has attended or examined me, to disclose when requested to do so by HL Assurance Pte. Ltd., or its authorised representative, any and all information with respect to any illness or injury, medical history, consultations, prescriptions or treatment, and copies of all hospital or medical records. A photo-stated copy of this authorisation shall be considered as effective and valid as the original.
 
-4.	I/We hereby authorise and request HL Assurance Pte.Ltd. to pay benefit due in respect of this claim to Denzel Tan (Name as per Identification Card and/or Bank Account)`,
+4.	We hereby authorise and request HL Assurance Pte.Ltd. to pay benefit due in respect of this claim to Denzel Tan (Name as per Identification Card and/or Bank Account)`,
       responseType: ["boolean", "choice"],
+      label: "TERMS & CONDITIONS",
       choices: [
         { label: "Agree", value: true },
         { label: "Disagree", value: false }

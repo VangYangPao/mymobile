@@ -5,7 +5,6 @@ import android.app.Application;
 import com.facebook.react.ReactApplication;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.fileopener.FileOpenerPackage;
-import com.rnfs.RNFSPackage;
 import com.imagepicker.ImagePickerPackage;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
@@ -36,7 +35,6 @@ public class MainApplication extends Application implements ReactApplication {
           new MainReactPackage(),
             new RNFetchBlobPackage(),
             new FileOpenerPackage(),
-            new RNFSPackage(),
             new ImagePickerPackage(),
             new RNSoundPackage(),
             new VectorIconsPackage(),
