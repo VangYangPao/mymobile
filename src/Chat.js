@@ -297,7 +297,7 @@ class PickerActionButton extends Component {
             fontSize: this.maxLength > 32 ? 14 : 18
           }}
           onValueChange={(value, index) => {
-            if (!value) return;
+            if (value === null) return;
             if (typeof this.props.onValueChange === "function") {
               const item = this.props.items[index - 1];
               this.props.onValueChange(item.label, item.value);
@@ -971,15 +971,20 @@ class ChatScreen extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     const { currentQuestionIndex } = this.state;
-    const currentQuestion = this.questions[currentQuestionIndex];
     if (
       prevState.answering !== this.state.answering ||
-      prevState.renderInput !== this.state.renderInput ||
-      (currentQuestion.responseType !== null &&
-        currentQuestion.responseType.indexOf("choice") !== -1)
+      prevState.renderInput !== this.state.renderInput
     ) {
-      console.log("reset");
       this.refs.chat.resetInputToolbar();
+    }
+    if (currentQuestionIndex >= 0) {
+      const currentQuestion = this.questions[currentQuestionIndex];
+      if (
+        currentQuestion.responseType !== null &&
+        currentQuestion.responseType.indexOf("choice") !== -1
+      ) {
+        this.refs.chat.resetInputToolbar();
+      }
     }
 
     if (this.state.answering !== prevState.answering && !this.state.answering) {
@@ -1221,7 +1226,9 @@ class ChatScreen extends Component {
         let scrollHeight = contentHeight;
         if (Platform.OS === "ios") {
           const supposedScrollHeight =
-            contentHeight - WINDOW_HEIGHT * 0.8 + minInputToolbarHeight;
+            contentHeight -
+            WINDOW_HEIGHT * 0.8 +
+            (minInputToolbarHeight === 200 ? minInputToolbarHeight : 0);
           scrollHeight = supposedScrollHeight < 0 ? 0 : supposedScrollHeight;
         }
         this.refs.chat._messageContainerRef.scrollTo({
