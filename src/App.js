@@ -162,6 +162,7 @@ const ClaimStackNavigator = StackNavigator({
   Claim: {
     screen: ChatScreenWrapper("claim"),
     navigationOptions: ({ navigation }) => ({
+      headerStyle: styles.header,
       headerTitleStyle: styles.headerTitle,
       headerLeft: renderMenuButton(navigation)
     })
@@ -303,7 +304,7 @@ const MyDrawerNavigator = DrawerNavigator(
 export default (Microsurance = StackNavigator(
   {
     // Intro: { screen: IntroScreen },
-    // Auth: { screen: AuthScreen },
+    Auth: { screen: AuthScreen },
     Drawer: { screen: MyDrawerNavigator }
   },
   { headerMode: "none" }

@@ -1,3 +1,6 @@
+import React, { Component } from "react";
+import { ToastAndroid, Alert, Platform } from "react-native";
+
 export function getDateStr(datetime) {
   const day = datetime.getDate();
   const month = datetime.getMonth();
@@ -46,4 +49,18 @@ export function prettifyCamelCase(str) {
   }
 
   return output;
+}
+
+export function showAlert(text, cb) {
+  if (Platform.OS === "ios") {
+    Alert.alert(text, null, [
+      {
+        text: "OK",
+        onPress: cb
+      }
+    ]);
+  } else {
+    ToastAndroid.show(text, ToastAndroid.LONG);
+    cb();
+  }
 }

@@ -8,7 +8,8 @@ import {
   View,
   Picker,
   ScrollView,
-  InteractionManager
+  InteractionManager,
+  Switch
 } from "react-native";
 import { NavigationActions } from "react-navigation";
 import VectorDrawableView from "./VectorDrawableView";
@@ -17,6 +18,7 @@ const Form = t.form.Form;
 
 import colors from "./colors";
 import Button from "./Button";
+import { showAlert } from "./utils";
 import { Text } from "./defaultComponents";
 
 let formStyles = Object.assign({}, t.form.Form.stylesheet);
@@ -37,8 +39,7 @@ const UserSignUp = t.struct({
   fullName: t.String,
   telephone: t.String,
   password: t.String,
-  confirmPassword: t.String,
-  readAgreement: t.Boolean
+  confirmPassword: t.String
 });
 const userSignUpOptions = {
   auto: "placeholders",
@@ -65,10 +66,6 @@ const userSignUpOptions = {
     confirmPassword: {
       secureTextEntry: true,
       placeholderTextColor: "white"
-    },
-    readAgreement: {
-      label:
-        "I have read, understood and agreed to the Terms of Use and Privacy Policy"
     }
   }
 };
@@ -76,12 +73,20 @@ const userSignUpOptions = {
 class SignUpScreen extends Component {
   constructor(props) {
     super(props);
+    // this.state = { acceptTOS: false };
+    this.acceptTOS = false;
     this.handleSignUp = this.handleSignUp.bind(this);
   }
 
   handleSignUp() {
-    const formValues = this.refs.form.getValue();
+    const formValues = this.form.getValue();
     if (formValues) {
+      if (!this.acceptTOS) {
+        showAlert(
+          "You have to agree with the Terms of Use and Privacy Policy."
+        );
+        return;
+      }
       this.props.navigation.dispatch(resetToDrawerAction);
     }
   }
@@ -91,22 +96,59 @@ class SignUpScreen extends Component {
       <View>
         <ScrollView>
           <View style={styles.container}>
-            <Text style={styles.signUpHeader}>Sign up for microAssure</Text>
-            <Form ref="form" type={UserSignUp} options={userSignUpOptions} />
-            <Button
-              onPress={this.handleSignUp}
-              containerStyle={{ marginTop: 30 }}
-              style={styles.signinButton}
-            >
-              Sign Up
-            </Button>
-            <TouchableOpacity
-              onPress={this.props.onNavigateToLogin}
-              style={{ marginTop: 20 }}
-              activeOpacity={0.5}
-            >
-              <Text style={styles.bottomBtn}>Already a member? Login</Text>
-            </TouchableOpacity>
+            <View style={{ marginTop: 30, justifyContent: "center" }}>
+              <Text style={styles.signUpHeader}>Sign up for microAssure</Text>
+            </View>
+            <View style={{ flex: 0.1, justifyContent: "center" }}>
+              <Form
+                ref={form => this.form = form}
+                type={UserSignUp}
+                options={userSignUpOptions}
+              />
+            </View>
+            <View style={styles.textContainer}>
+              <Text style={styles.textContainerText}>
+                I have read, understood and agreed to the
+              </Text>
+              <TouchableOpacity>
+                <Text style={[styles.textContainerText, styles.touchableText]}>
+                  Terms of Use
+                </Text>
+              </TouchableOpacity>
+              <Text style={styles.textContainerText}> and </Text>
+              <TouchableOpacity>
+                <Text style={[styles.textContainerText, styles.touchableText]}>
+                  Privacy Policy
+                </Text>
+              </TouchableOpacity>
+              <Text style={styles.textContainerText}>.</Text>
+            </View>
+            <Switch
+              ref={tosSwitch => this.tosSwitch = tosSwitch}
+              onValueChange={val => {
+                // WTF HACK: setState re-renders Form component attached by ref
+                // so you do setNativeProps manually
+                this.acceptTOS = val;
+                this.tosSwitch._rctSwitch.setNativeProps({ value: val });
+              }}
+              value={false}
+              onTintColor={colors.tertiaryGreen}
+              style={styles.tosSwitch}
+            />
+            <View>
+              <Button onPress={this.handleSignUp} style={styles.signinButton}>
+                Sign Up
+              </Button>
+              <TouchableOpacity
+                onPress={this.props.onNavigateToLogin}
+                style={{ marginTop: 20 }}
+                activeOpacity={0.5}
+              >
+                <Text style={[styles.bottomBtn, { marginTop: 10 }]}>
+                  Already a member? Login
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </ScrollView>
       </View>
@@ -146,7 +188,7 @@ class LoginScreen extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, { justifyContent: "center" }]}>
         <VectorDrawableView
           resourceName="ic_microassure_white"
           style={styles.logo}
@@ -254,14 +296,32 @@ export default class AuthScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+  tosSwitch: {
+    marginBottom: 20
+  },
+  touchableText: {
+    fontWeight: "bold",
+    color: "black"
+  },
+  textContainerText: {
+    color: "white",
+    backgroundColor: "transparent"
+  },
+  textContainer: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    flexWrap: "wrap",
+    marginBottom: 5
+  },
   signinButton: {
     backgroundColor: "#8BC34A"
   },
   signUpHeader: {
-    marginBottom: 20,
+    marginBottom: 15,
     fontSize: 26,
     textAlign: "center",
-    color: "white"
+    color: "white",
+    backgroundColor: "transparent"
   },
   bottomBtn: {
     textAlign: "center",
@@ -275,7 +335,6 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    justifyContent: "center",
     paddingHorizontal: 30
   },
   logo: {
