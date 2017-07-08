@@ -215,6 +215,60 @@ class LoginScreen extends Component {
   }
 }
 
+const ForgotPassword = t.struct({
+  email: t.String
+});
+const forgotPasswordOptions = {
+  fields: {
+    email: {
+      label: "Enter your email address, we will send you an email to reset your password.",
+      keyboardType: "email-address",
+      error: "Enter a valid email"
+    }
+  }
+};
+
+class ForgotPasswordScreen extends Component {
+  handlePasswordReset() {
+    const formValues = this.refs.form.getValue();
+    if (formValues) {
+      showAlert("An password reset email has been sent to the email address");
+      this.props.onNavigateToLogin();
+    }
+  }
+
+  render() {
+    return (
+      <View style={[styles.container, { justifyContent: "center" }]}>
+        <VectorDrawableView
+          resourceName="ic_microassure_white"
+          style={styles.logo}
+        />
+        <Form
+          ref="form"
+          type={ForgotPassword}
+          options={forgotPasswordOptions}
+        />
+        <Button
+          onPress={this.handlePasswordReset.bind(this)}
+          style={styles.signinButton}
+        >
+          SEND EMAIL
+        </Button>
+        <TouchableOpacity
+          onPress={this.props.onNavigateToLogin}
+          style={{ marginTop: 20 }}
+          activeOpacity={0.5}
+        >
+          <Text style={[styles.bottomBtn, { marginTop: 10 }]}>
+            Already a member? Login
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+}
+
 export default class AuthScreen extends Component {
   constructor(props) {
     super(props);
@@ -268,7 +322,12 @@ export default class AuthScreen extends Component {
         );
         break;
       case "ForgotPassword":
-        page = null;
+        page = (
+          <ForgotPasswordScreen
+            navigation={this.props.navigation}
+            onNavigateToLogin={this.handleNavigateToLogin}
+          />
+        );
         break;
       default:
         break;
