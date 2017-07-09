@@ -72,17 +72,21 @@ function transposePolicyChoiceByTitle() {
 
 export default function ChatScreenWrapper(questionSet) {
   const wrapper = props => {
+    // have to reassign to _questionSet here
+    // solves weird scoping issue where questionSet will remain to be 'buy'
+    // when going back in the stack
+    let _questionSet = questionSet;
     const routeParams = props.navigation.state.params;
-    const isStartScreen = !routeParams && !questionSet;
+    const isStartScreen = !routeParams && !_questionSet;
     let policy;
     if (routeParams) {
-      questionSet = questionSet || routeParams.questionSet;
+      _questionSet = _questionSet || routeParams.questionSet;
       policy = routeParams.policy;
     }
     return (
       <ChatScreen
         isStartScreen={isStartScreen}
-        questionSet={questionSet}
+        questionSet={_questionSet}
         policy={policy}
         {...props}
       />
@@ -104,8 +108,9 @@ export default function ChatScreenWrapper(questionSet) {
       fontWeight: "300"
     },
     drawerLabel,
-    drawerIcon: ({ tintColor }) =>
+    drawerIcon: ({ tintColor }) => (
       <Icon name={drawerIcon} size={22} color={tintColor} />
+    )
   });
   return wrapper;
 }
@@ -306,13 +311,13 @@ class PickerActionButton extends Component {
         >
           {[{ label: this.props.label, value: null }]
             .concat(this.props.items)
-            .map(item =>
+            .map(item => (
               <Picker.Item
                 key={item.value}
                 label={item.label}
                 value={item.value}
               />
-            )}
+            ))}
         </Picker>
       </View>
     );
@@ -675,8 +680,7 @@ class ChatScreen extends Component {
               {
                 type: "text",
                 _id: 0,
-                text:
-                  "Hi I'm Eve, please choose the insurance plan you prefer. 😄",
+                text: "Hi I'm Eve, please choose the insurance plan you prefer. 😄",
                 createdAt: new Date(),
                 user: AGENT_USER
               }
@@ -726,8 +730,7 @@ class ChatScreen extends Component {
       this.concatMessage({
         type: "text",
         _id: uuid.v4(),
-        text: `I choose Plan ${planAlphabet[planIndex]}. $${premium +
-          ""} for ${this.props.policy.from} of protection.`,
+        text: `I choose Plan ${planAlphabet[planIndex]}. $${premium + ""} for ${this.props.policy.from} of protection.`,
         value: planIndex,
         user: CUSTOMER_USER
       }),
@@ -1163,8 +1166,7 @@ class ChatScreen extends Component {
         <DownloadFormActionButton onDownload={this.handleDownload.bind(this)} />
       );
     } else if (
-      responseType.indexOf("choice") !== -1 &&
-      Platform.OS === "android"
+      responseType.indexOf("choice") !== -1 && Platform.OS === "android"
     ) {
       const label = currentQuestion.id === "recipient"
         ? "SELECT RECIPIENT"
@@ -1182,7 +1184,12 @@ class ChatScreen extends Component {
     if (responseType.indexOf("email") !== -1) keyboardType = "email-address";
     if (responseType.indexOf("number") !== -1) keyboardType = "numeric";
     if (responseType.indexOf("phoneNumber") !== -1) keyboardType = "phone-pad";
-    let textInputProps = { keyboardType };
+    let textInputProps = {
+      keyboardType,
+      autoFocus: true,
+      autoCorrect: false,
+      autoCapitalize: "none"
+    };
     return (
       <Composer
         placeholder="Type your message here..."

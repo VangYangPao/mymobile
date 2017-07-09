@@ -65,8 +65,9 @@ const styles = StyleSheet.create({
         paddingRight: 0
       },
       android: {
-        paddingRight:
-          MENU_ICON_PADDING_LEFT + MENU_ICON_SIZE + MENU_ICON_PADDING_RIGHT
+        paddingRight: MENU_ICON_PADDING_LEFT +
+          MENU_ICON_SIZE +
+          MENU_ICON_PADDING_RIGHT
       }
     }),
     color: colors.primaryText,
@@ -237,8 +238,9 @@ class HomeStackNavigatorWrapper extends Component {
 function createDrawerNavOptions(drawerLabel, iconName) {
   return {
     drawerLabel,
-    drawerIcon: ({ tintColor }) =>
+    drawerIcon: ({ tintColor }) => (
       <Icon name={iconName} size={22} color={tintColor} />
+    )
   };
 }
 
@@ -303,7 +305,7 @@ const MyDrawerNavigator = DrawerNavigator(
 
 export default (Microsurance = StackNavigator(
   {
-    // Intro: { screen: IntroScreen },
+    Intro: { screen: IntroScreen },
     Auth: { screen: AuthScreen },
     Drawer: { screen: MyDrawerNavigator }
   },
