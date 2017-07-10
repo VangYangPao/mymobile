@@ -751,7 +751,7 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = LBMCMHK6QN;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -1306,10 +1306,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Wecare Tech LLP (LBMCMHK6QN)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Wecare Tech LLP (LBMCMHK6QN)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
-				DEVELOPMENT_TEAM = LBMCMHK6QN;
+				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1335,8 +1335,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.microumbrella.app;
 				PRODUCT_NAME = Microsurance;
-				PROVISIONING_PROFILE = "7297cd4d-40a9-40be-92b7-5f5da0775c25";
-				PROVISIONING_PROFILE_SPECIFIER = microUmbrella;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1346,9 +1346,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Wecare Tech LLP (LBMCMHK6QN)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Wecare Tech LLP (LBMCMHK6QN)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = LBMCMHK6QN;
+				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1374,8 +1374,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.microumbrella.app;
 				PRODUCT_NAME = Microsurance;
-				PROVISIONING_PROFILE = "7297cd4d-40a9-40be-92b7-5f5da0775c25";
-				PROVISIONING_PROFILE_SPECIFIER = microUmbrella;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

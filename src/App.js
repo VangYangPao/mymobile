@@ -280,15 +280,12 @@ const MyDrawerNavigator = DrawerNavigator(
       screen: StatusStackNavigator,
       navigationOptions: createDrawerNavOptions("My Polices & Status", "book")
     },
-    Profile: {
-      screen: StatusStackNavigator,
-      navigationOptions: createDrawerNavOptions("My Profile", "account-circle")
-    },
+    // Profile: {
+    //   screen: StatusStackNavigator,
+    //   navigationOptions: createDrawerNavOptions("My Profile", "account-circle")
+    // },
     Help: {
       screen: HelpScreen
-    },
-    Legal: {
-      screen: LegalScreen
     }
   },
   {
