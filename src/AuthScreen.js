@@ -73,7 +73,6 @@ const userSignUpOptions = {
 class SignUpScreen extends Component {
   constructor(props) {
     super(props);
-    // this.state = { acceptTOS: false };
     this.acceptTOS = false;
     this.handleSignUp = this.handleSignUp.bind(this);
   }
@@ -110,13 +109,17 @@ class SignUpScreen extends Component {
               <Text style={styles.textContainerText}>
                 I have read, understood and agreed to the
               </Text>
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => this.props.navigation.navigate("TermsOfUse")}
+              >
                 <Text style={[styles.textContainerText, styles.touchableText]}>
                   Terms of Use
                 </Text>
               </TouchableOpacity>
               <Text style={styles.textContainerText}> and </Text>
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => this.props.navigation.navigate("PrivacyPolicy")}
+              >
                 <Text style={[styles.textContainerText, styles.touchableText]}>
                   Privacy Policy
                 </Text>
@@ -356,6 +359,7 @@ export default class AuthScreen extends Component {
 
 const styles = StyleSheet.create({
   tosSwitch: {
+    marginTop: 10,
     marginBottom: 20
   },
   touchableText: {
