@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
     marginLeft: -5
   },
   footerBtnIcon: {
+    color: "#424242",
     marginRight: 10
   },
   footerBtn: {
@@ -55,6 +56,7 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   footerBtnText: {
+    color: "#424242",
     fontSize: 16
   },
   footer: {

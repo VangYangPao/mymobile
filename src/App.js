@@ -22,6 +22,7 @@ import StatusScreen from "./StatusScreen";
 import AuthScreen from "./AuthScreen";
 import HomeScreen from "./HomeScreen";
 import { TermsOfUseStack, PrivacyPolicyStack } from "./TermsAndPrivacyPolicy";
+import HelpScreen from "./HelpScreen";
 import colors from "./colors";
 import DrawerContent from "./DrawerContent";
 import {
@@ -89,14 +90,6 @@ class SettingsScreen extends Component {
   render() {}
 }
 
-class HelpScreen extends Component {
-  static navigationOptions = {
-    drawerLabel: () => null
-  };
-  render() {
-    return null;
-  }
-}
 const MyDrawerNavigator = DrawerNavigator(
   {
     BuyStack: {
@@ -131,7 +124,7 @@ const MyDrawerNavigator = DrawerNavigator(
 
 export default (Microsurance = StackNavigator(
   {
-    // Intro: { screen: IntroScreen },
+    Intro: { screen: IntroScreen },
     Auth: { screen: AuthScreen },
     TermsOfUse: { screen: TermsOfUseStack },
     PrivacyPolicy: { screen: PrivacyPolicyStack },
