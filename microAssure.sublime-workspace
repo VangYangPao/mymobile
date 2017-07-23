@@ -4,6 +4,54 @@
 		"selected_items":
 		[
 			[
+				"PrivacyPo",
+				"PrivacyPolicyScreen"
+			],
+			[
+				"back",
+				"backButtonNavOptions"
+			],
+			[
+				"renderBac",
+				"renderBackButton"
+			],
+			[
+				"navigation",
+				"navigationOptions"
+			],
+			[
+				"bac",
+				"backButtonNavOptions"
+			],
+			[
+				"terms",
+				"TermsOfUseScreen"
+			],
+			[
+				"Terms",
+				"TermsOfUseScreen"
+			],
+			[
+				"response",
+				"responseType"
+			],
+			[
+				"handle",
+				"handlePasswordReset"
+			],
+			[
+				"Forg",
+				"ForgotPasswordScreen"
+			],
+			[
+				"Forgot",
+				"ForgotPassword"
+			],
+			[
+				"next",
+				"nextState"
+			],
+			[
 				"margin-",
 				"margin-top"
 			],
@@ -136,10 +184,6 @@
 				"priceAmountDecimalContainer"
 			],
 			[
-				"handle",
-				"handleSelectStartDate"
-			],
-			[
 				"coverageDu",
 				"coverageDuration"
 			],
@@ -208,10 +252,6 @@
 				"ClaimStackNavigator"
 			],
 			[
-				"response",
-				"responseTypes"
-			],
-			[
 				"questionSet",
 				"questionSetParam"
 			],
@@ -222,10 +262,6 @@
 			[
 				"textINput",
 				"textInputStyle"
-			],
-			[
-				"back",
-				"backButton"
 			],
 			[
 				"headerTit",
@@ -376,19 +412,29 @@
 	"buffers":
 	[
 		{
-			"file": "src/Chat.js",
+			"file": "src/HelpScreen.js",
 			"settings":
 			{
-				"buffer_size": 35380,
+				"buffer_size": 1251,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "src/colors.js",
+			"file": "src/TermsAndPrivacyPolicy.js",
 			"settings":
 			{
-				"buffer_size": 138,
+				"buffer_size": 6135,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/navigations.js",
+			"settings":
+			{
+				"buffer_size": 2826,
+				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		}
@@ -459,6 +505,22 @@
 	],
 	"file_history":
 	[
+		"/Users/hao/Desktop/Microsurance/src/Chat.js",
+		"/Users/hao/Desktop/Microsurance/src/App.js",
+		"/Users/hao/Desktop/Microsurance/src/DrawerContent.js",
+		"/Users/hao/Desktop/Microsurance/src/AuthScreen.js",
+		"/Users/hao/Desktop/Microsurance/src/colors.js",
+		"/Users/hao/Desktop/Microsurance/data/policies.js",
+		"/Users/hao/Desktop/Microsurance/data/questions.js",
+		"/Users/hao/Desktop/Microsurance/src/Page.js",
+		"/Users/hao/Desktop/Microsurance/src/StatusScreen.js",
+		"/Users/hao/Desktop/Microsurance/src/IntroScreen.js",
+		"/Users/hao/Desktop/questions.txt",
+		"/Users/hao/Desktop/Microsurance/node_modules/react-native/Libraries/Renderer/src/renderers/shared/stack/reconciler/ReactCompositeComponent.js",
+		"/Users/hao/Desktop/Microsurance/src/utils.js",
+		"/Users/hao/Desktop/Microsurance/src/Toast.js",
+		"/Users/hao/Desktop/bucket_sort.py",
+		"/Users/hao/Desktop/bucket.js",
 		"/Users/hao/Desktop/dashboard/src/App.js",
 		"/Users/hao/Desktop/pos/index.html",
 		"/Users/hao/Desktop/pos-copy/index.html",
@@ -512,15 +574,12 @@
 		"/Users/hao/Desktop/microumbrella-dashboard/source/src/app/examples/elements/sidebars.tmpl.html",
 		"/Users/hao/Desktop/microumbrella-dashboard/source/protractor.conf.js",
 		"/Users/hao/Desktop/microumbrella-dashboard/source/src/app/layouts/toolbar/toolbar.controller.js",
-		"/Users/hao/Desktop/Microsurance/data/questions.js",
 		"/Users/hao/Desktop/parse-dashboard/.gitignore",
 		"/Users/hao/Desktop/parse-dashboard/Procfile",
 		"/Users/hao/Downloads/hungarian.py",
 		"/Users/hao/Desktop/parse-dashboard/parse-dashboard-config.json",
-		"/Users/hao/Desktop/Microsurance/data/policies.js",
 		"/Users/hao/IdeaProjects/Congkak/src/com/xsquare/controllers/GameController.java",
 		"/Users/hao/IdeaProjects/Congkak/src/com/xsquare/Main.java",
-		"/Users/hao/Desktop/Microsurance/src/Chat.js",
 		"/Users/hao/Desktop/website/partials/scripts.html",
 		"/Users/hao/Desktop/website/partials/footer.html",
 		"/Users/hao/Dropbox/microumbrella/website/partials/head.html",
@@ -545,7 +604,6 @@
 		"/Users/hao/Dropbox/microumbrella/website/privacy-policy/index.html",
 		"/Users/hao/Dropbox/microumbrella/website/about-hlmt/index.html",
 		"/Users/hao/Dropbox/microumbrella/website/terms/index.html",
-		"/Users/hao/Desktop/Microsurance/src/colors.js",
 		"/Users/hao/Dropbox/microumbrella/Lemonade. Forget Everything You Know About Insurance..html",
 		"/Users/hao/Dropbox/microumbrella/website/Lemonade. Forget Everything You Know About Insurance._files/application-c9f5580584f3159a5ff1aa5a61543a359d22831de75448346a9b27237c03ab2b.css",
 		"/Users/hao/Dropbox/microumbrella/Lemonade. Forget Everything You Know About Insurance._files/index-6a0cfb75a7b7e8ac4f5bb382f5f883b8f1cff6725931a5f928503aa45199a87b.css",
@@ -574,19 +632,7 @@
 		"/Users/hao/Downloads/myshell_15065303.java",
 		"/Users/hao/test.java",
 		"/Users/hao/Desktop/icons/microassure/comprehensive-coverage.svg",
-		"/Users/hao/Desktop/Microsurance/app.json",
-		"/Users/hao/Desktop/netlogs/checkin.py",
-		"/Users/hao/Desktop/netlogs/credentials.py",
-		"/Users/hao/Desktop/iCheckIn_com.sunu.icheckin_source_from_JADX/com/sunu/icheckin/CheckInFragment.java",
-		"/Users/hao/Desktop/lovehome/website/migrations/0021_caregiver_description.py",
-		"/Users/hao/Desktop/netlogs/fail-icheckin-code.txt",
-		"/Users/hao/Desktop/netlogs/fail-icheckin-activation.txt",
-		"/Users/hao/Desktop/netlogs/success-icheckin-activation.txt",
-		"/Users/hao/Desktop/netlogs/credentials.txt",
-		"/Users/hao/Desktop/Microsurance/node_modules/react-native-viewpager/ViewPager.js",
-		"/Users/hao/Desktop/Microsurance/package.json",
-		"/Users/hao/Desktop/Microsurance/src/PageIndicator.js",
-		"/Users/hao/Desktop/Microsurance/src/fail-icheckin-code.txt"
+		"/Users/hao/Desktop/Microsurance/app.json"
 	],
 	"find":
 	{
@@ -597,6 +643,7 @@
 		"height": 114.0,
 		"where_history":
 		[
+			"/Users/hao/Desktop/Microsurance/src",
 			"/Users/hao/Desktop/microumbrella-dashboard/source/src/app",
 			"<current file>",
 			"\\<current file>",
@@ -614,6 +661,51 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"help",
+			"tosswitch",
+			"backbuttonnav",
+			"backbutton",
+			"headerstyle",
+			"renderback",
+			"introscreen",
+			"createdraw",
+			"navigationaction",
+			"signupscreen",
+			"alert",
+			"choices",
+			"eve",
+			"fix",
+			"console.log",
+			"buy",
+			"questionset",
+			"chatscreenwrapper",
+			"isstartscre",
+			"asknextquestion()",
+			"asknextquestion",
+			"routeparams",
+			"chatscreenwrapper",
+			"rendermenu",
+			"resettodraw",
+			"navigation",
+			"reset",
+			"chatscreenwrapper",
+			"backbuttonnavoption",
+			"status",
+			"renderstart",
+			"startscreen",
+			"startscree",
+			"istartscreem",
+			"fix",
+			"FIX",
+			"forgotpass",
+			"rct",
+			"showalert",
+			"toast",
+			"container",
+			"loginscreen",
+			"switch",
+			"Picker",
+			"touchabletext",
 			"img",
 			"<img",
 			"td",
@@ -696,52 +788,7 @@
 			".css",
 			"check our",
 			"#FF0083",
-			"pink",
-			"::selection",
-			"css",
-			".svg",
-			"faq",
-			"seedsat",
-			"img",
-			"contact",
-			"services",
-			"id=\"service",
-			"contact",
-			"style",
-			"subtitle",
-			"header",
-			"export",
-			"知らな",
-			"renderPage",
-			"Tool",
-			"TOolbar",
-			"iconContainer",
-			"priceAmountDecim",
-			"priceA",
-			"priceAmountDec",
-			"handleSelec",
-			"coverages",
-			"pricePerMon",
-			"handle",
-			"PolicyOv",
-			"countPrice",
-			"PolicyChoice",
-			"plan",
-			"coverageAmo",
-			"PlanScreen",
-			"PlanOverview",
-			"Plans",
-			"PLANS",
-			"plans",
-			"RangeSlider",
-			"thumbStyle",
-			"handlerange",
-			"sliderProps",
-			"Ionic",
-			"maxi",
-			"Text",
-			"values",
-			"Slider"
+			"pink"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -777,29 +824,27 @@
 			[
 				{
 					"buffer": 0,
-					"file": "src/Chat.js",
+					"file": "src/HelpScreen.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 35380,
+						"buffer_size": 1251,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								20038,
-								20038
+								225,
+								225
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JSX/JSX.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
+							"syntax": "Packages/JSX/JSX.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 12921.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -807,19 +852,19 @@
 				},
 				{
 					"buffer": 1,
-					"file": "src/colors.js",
+					"file": "src/TermsAndPrivacyPolicy.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 138,
+						"buffer_size": 6135,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								45,
-								52
+								41,
+								0
 							]
 						],
 						"settings":
@@ -831,6 +876,36 @@
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "src/navigations.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2826,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1700,
+								1700
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JSX/JSX.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 668.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
 					"type": "text"
 				}
 			]
@@ -884,6 +959,50 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"drawr",
+				"src/DrawerContent.js"
+			],
+			[
+				"auth",
+				"src/AuthScreen.js"
+			],
+			[
+				"stats",
+				"src/StatusScreen.js"
+			],
+			[
+				"intros",
+				"src/IntroScreen.js"
+			],
+			[
+				"polic",
+				"data/policies.js"
+			],
+			[
+				"chat",
+				"src/Chat.js"
+			],
+			[
+				"stat",
+				"src/StatusScreen.js"
+			],
+			[
+				"app",
+				"src/App.js"
+			],
+			[
+				"quest",
+				"data/questions.js"
+			],
+			[
+				"col",
+				"src/colors.js"
+			],
+			[
+				"aut",
+				"src/AuthScreen.js"
+			],
 			[
 				"service",
 				"src/app/examples/dashboards/sales/sales.service.js"
@@ -985,14 +1104,6 @@
 				"src/index.html"
 			],
 			[
-				"quest",
-				"questions/index.html"
-			],
-			[
-				"app",
-				"Microsurance/app.json"
-			],
-			[
 				"crede",
 				"netlogs/credentials.py"
 			],
@@ -1003,10 +1114,6 @@
 			[
 				"check",
 				"netlogs/checkin.py"
-			],
-			[
-				"chat",
-				"Microsurance/src/Chat.js"
 			],
 			[
 				"colors",
@@ -1023,10 +1130,6 @@
 			[
 				"planov",
 				"Microsurance/src/PlanOverview.js"
-			],
-			[
-				"col",
-				"Microsurance/src/colors.js"
 			],
 			[
 				"colo",

@@ -85,7 +85,7 @@ export function validateAnswer(question, answer) {
 export const QUESTION_SETS = {
   buy: [
     {
-      question: "Thanks for choosing <%= policy.title %>. ☺️",
+      question: "<%= ['Great choice 😄', 'Awesome choice 😄', 'Nice choice 😄', 'Ahh... our most popular choice 😘', 'Fantastic 😉'][Math.floor(Math.random()*5)] %>",
       responseType: null
     },
     {
@@ -120,102 +120,97 @@ export const QUESTION_SETS = {
       id: "travelDuration"
     },
     {
-      question: "Let's get started. Which plan do you want to buy?",
+      question: "I'll walk you through step-by-step. Let's start with the plan you prefer.",
       responseType: "number",
       exclude: ["Phone Protection"],
       id: "planIndex"
     },
     {
-      question: "Great! How long do you want to be covered with this plan?",
+      question: "How long do you want to be covered?",
       responseType: "number",
       id: "coverageDuration",
       exclude: ["Phone Protection", "Travel Protection"]
     },
     {
-      question:
-        "Awesome. That would be $<%= (policy.plans[planIndex].premium * coverageDuration).toFixed(2) %>.",
+      question: "<%= ['Awesome', 'Nice', 'Great'][Math.floor(Math.random()*3)] %>. That would be $<%= (policy.plans[planIndex].premium * coverageDuration).toFixed(2) %>.",
       responseType: null,
       exclude: ["Travel Protection"]
     },
     {
-      question: "Awesome. That would be $<%= price %>.",
-      responseType: null,
-      include: ["Travel Protection"]
+      question: "For the next steps, I will be asking you some questions to get you covered instantly.",
+      responseType: null
     },
     {
-      question: "Tell us about yourself. What's your full name?",
+      question: "Please be patient with my questions. 😬",
+      responseType: null
+    },
+    {
+      question: "May I know your full name?",
       responseType: "string",
       id: "name"
     },
     {
-      question: "Hi <%= name %>, what's your IC number?",
+      question: "Nice to meet you <%= name %>! What's your NRIC/FIN/Passport?",
       responseType: "string",
-      id: "icNumber"
+      id: "ICNumber"
     },
     {
-      question: "Thanks, what email address can we contact you at?",
+      question: "What's your email address? ✉️",
       responseType: ["string", "email"],
       id: "email"
     },
     {
-      question: "How about your emergency email address?",
-      responseType: "email",
-      id: "emergencyEmail"
-    },
-    {
-      question: "What's your phone number?",
-      responseType: ["string", "phoneNumber"],
-      id: "phoneNumber"
-    },
-    // {
-    //   question:
-    //     "Great! To collect your claims, we will need your bank name. 🏦 (Western Union accepted)",
-    //   responseType: "string",
-    //   id: "bankName"
-    // },
-    // {
-    //   question:
-    //     "Next, we will need your bank account number for us to bank into. 💵",
-    //   responseType: "number",
-    //   id: "bankAccount"
-    // },
-    {
-      question: "What's your beneficiary's full name?",
+      question: "What's your mailing address?",
       responseType: "string",
-      id: "beneficiaryName"
+      id: "address"
+    },
+    {
+      question: "We are almost done.",
+      responseType: null
+    },
+    {
+      question: "As you are aware, I need your bank name for any future claims.",
+      responseType: "string",
+      id: "bankName"
+    },
+    {
+      question: "What's your bank account number?",
+      responseType: "number",
+      id: "bankAccountNumber"
     },
     // {
-    //   question:
-    //     "To bank into your beneficiary's bank account, we need his/her bank name. (Western Union accepted)",
+    //   question: "In the case of death claims, who would you choose to be your beneficiary/next of kin?",
     //   responseType: "string",
-    //   id: "beneficiaryBankName"
+    //   id: "beneficiaryName"
     // },
     // {
-    //   question: "And what's your beneficiary's bank account number?",
-    //   responseType: "number",
-    //   id: "beneficiaryBankAccount"
+    //   question: "And what's your beneficiary's NRIC/FIN/Passport?",
+    //   responseType: "string",
+    //   id: "beneficiaryICNumber"
     // },
     {
-      question:
-        "Please send us the front and back of your NRIC/passport for verification.",
-      responseType: "images",
-      id: "icImage"
-    },
-    {
-      question: "Thank you. Please wait while I process your information...",
+      question: "Thank you <%= name %> for the information. I will now bring you to the confirmation page.",
       responseType: null
     }
   ],
   claim: [
     {
-      question: "Hi Denzel. Choose which policy you want to claim.",
+      question: "Hi Denzel Tan. Which plan would you like to make a claim?",
       responseType: "number",
       id: "claimPolicyNo"
     },
     {
-      question:
-        "You have selected <%= policyName %> as your claim. I will walk you through step by step, as I’ll do my best to get your claim money fast!",
+      question: "Denzel, I will walk you through step by step. I'll do my best to get your claim fast 👍",
       responseType: null
+    },
+    {
+      question: "Firstly, are you planning to claim for DEATH or PERMANENT DISABILITY?",
+      responseType: ["string", "choice"],
+      label: "CHOOSE CLAIM",
+      choices: [
+        { label: "Death", value: "death" },
+        { label: "Permanent Disability", value: "permanentDisability" }
+      ]
     },
     // {
     //   question:
@@ -223,97 +218,123 @@ export const QUESTION_SETS = {
     //   responseType: "boolean",
     //   id: "downloadForm"
     // },
+    // {
+    //   question: "Share with me the type of accident, loss or illness you wanted to claim",
+    //   responseType: ["string", "choice"],
+    //   label: "SELECT TYPE",
+    //   choices: [
+    //     "Personal Accident, Medical, Dental Expenses",
+    //     "Loss of Baggage & Personal Effects",
+    //     "Loss of Money & Documents",
+    //     "Baggage Delay",
+    //     "Trip Cancellation or Curtailment",
+    //     "Travel Delay / Misconnection / Overbooked Flight",
+    //     "Loss of Home Contents due to Burglary",
+    //     "Personal Liability",
+    //     "Others"
+    //   ].map(c => ({ label: c, value: c })),
+    //   id: "claimType"
+    // },
     {
-      question:
-        "Share with me the type of accident, loss or illness you wanted to claim",
-      responseType: ["string", "choice"],
-      label: "SELECT TYPE",
-      choices: [
-        "Personal Accident, Medical, Dental Expenses",
-        "Loss of Baggage & Personal Effects",
-        "Loss of Money & Documents",
-        "Baggage Delay",
-        "Trip Cancellation or Curtailment",
-        "Travel Delay / Misconnection / Overbooked Flight",
-        "Loss of Home Contents due to Burglary",
-        "Personal Liability",
-        "Others"
-      ].map(c => ({ label: c, value: c })),
-      id: "claimType"
-    },
-    {
-      question: "Where is the place of accident, loss or illness?",
-      responseType: "string",
-      id: "accidentLocation"
-    },
-    {
-      question: "Tell me the exact date of accident, loss or illness?",
+      question: "Please share with me the date and time of accident",
       responseType: "date",
       id: "accidentDateTime"
     },
     {
-      question:
-        "Please describe the accident, loss or illness. Do your best to be specific in your description.",
+      question: "Where did it happen?",
+      responseType: "string",
+      id: "accidentLocation"
+    },
+    {
+      question: "What happened?",
       responseType: "string",
       id: "description"
     },
     {
-      question:
-        "You are doing great so far! Great job! If you have the damaged articles, please keep the damaged articles for possible inspection.",
+      question: "Do you have other coverage for this accident?",
       responseType: ["boolean", "choice"],
-      label: "DAMAGED ARTICLES",
+      label: "OTHER COVERAGE",
       choices: [
-        { label: "Yes I have!", value: true },
-        { label: "No, I don't have them.", value: false }
+        { label: "Yes, I have", value: true },
+        { label: "No, I don't have", value: false }
       ],
-      id: "haveDamagedArticles"
+      id: "haveOtherCoverage"
     },
     {
-      question: "How much do you want to claim?",
-      responseType: "string",
+      question: "Here is the final question, what's the amount you intend to claim?",
+      responseType: "number",
       id: "claimAmount"
     },
     {
-      question:
-        "No more writing from here onwards! Please switch to camera mode and snap a clear photo(s) of completed travel claim form",
-      responseType: "images",
-      id: "claimForm"
-    },
-    {
-      question:
-        "Next, snap a clear photo of boarding pass, OR, flight itinerary, OR, passport personal info pages together with passport page(s) with stamps showing the date of departure and return to Singapore",
-      responseType: "images",
-      id: "travelDetails"
-    },
-    {
-      question:
-        "Here is the final step. Kindly submit the TRAVEL CLAIM FORM, together with the required documents stated in the claim form, by post to HL Assurance Office, 11 Keppel Road #11-01, ABI Plaza Singapore 089057",
+      question: `Denzel, the Singapore Laws requires you to mail supporting documents. 
+
+A1) For death in Singapore – copy of death certificate 
+A2) For death outside Singapore 
+(a) Certified true copy of death certificate by your lawyer or any notary public 
+(b) Letter from Immigration and Checkpoint Authority (ICA) - this letter is issued by ICA for Singaporeans or permanent residents (PR) who died overseas. It confirms they saw the Singapore IC, passport and overseas death certificate 
+(c) Repatriation report (if the body was sent home to Singapore for cremation or burial) 
+
+B) Autopsy report, toxicological report or coroner’s findings
+
+C) Proof of policyholder’s or claimant’s relationship to the person who died
+
+D) Police or accident report (if death was due to accidental or violent causes)
+
+E) Last will of deceased or letter of administration
+
+F) Estate duty of certificate 
+
+Please MAIL these supporting documents to HL Assurance office at 11 Keppel Road #11-01 ABI Plaza Singapore 089057.`,
       responseType: null
     },
-    {
-      question:
-        "Please take a moment to go through the Declaration, Authorization & Customer's Data Privacy statements",
-      responseType: null
-    },
-    {
-      question: `1.	We do solemnly and sincerely declare that the information given is true and correct to the best of my/our knowledge and belief.
+    // {
+    //   question: "You are doing great so far! Great job! If you have the damaged articles, please keep the damaged articles for possible inspection.",
+    //   responseType: ["boolean", "choice"],
+    //   label: "DAMAGED ARTICLES",
+    //   choices: [
+    //     { label: "Yes I have!", value: true },
+    //     { label: "No, I don't have them.", value: false }
+    //   ],
+    //   id: "haveDamagedArticles"
+    // },
+    //     {
+    //       question: "No more writing from here onwards! Please switch to camera mode and snap a clear photo(s) of completed travel claim form",
+    //       responseType: "images",
+    //       id: "claimForm"
+    //     },
+    //     {
+    //       question: "Next, snap a clear photo of boarding pass, OR, flight itinerary, OR, passport personal info pages together with passport page(s) with stamps showing the date of departure and return to Singapore",
+    //       responseType: "images",
+    //       id: "travelDetails"
+    //     },
+    //     {
+    //       question: "Here is the final step. Kindly submit the TRAVEL CLAIM FORM, together with the required documents stated in the claim form, by post to HL Assurance Office, 11 Keppel Road #11-01, ABI Plaza Singapore 089057",
+    //       responseType: null
+    //     },
+    //     {
+    //       question: "Please take a moment to go through the Declaration, Authorization & Customer's Data Privacy statements",
+    //       responseType: null
+    //     },
+    //     {
+    //       question: `1. We do solemnly and sincerely declare that the information given is true and correct to the best of my/our knowledge and belief.
 
-2.	We understand that any false or fraudulent statements or any attempt to suppress or conceal any material facts shall render the Policy void and we shall forfeit our rights to claim under the Policy.
+    // 2.  We understand that any false or fraudulent statements or any attempt to suppress or conceal any material facts shall render the Policy void and we shall forfeit our rights to claim under the Policy.
 
-3.	We hereby authorise any hospital, medical practitioner or other person who has attended or examined me, to disclose when requested to do so by HL Assurance Pte. Ltd., or its authorised representative, any and all information with respect to any illness or injury, medical history, consultations, prescriptions or treatment, and copies of all hospital or medical records. A photo-stated copy of this authorisation shall be considered as effective and valid as the original.
+    // 3.  We hereby authorise any hospital, medical practitioner or other person who has attended or examined me, to disclose when requested to do so by HL Assurance Pte. Ltd., or its authorised representative, any and all information with respect to any illness or injury, medical history, consultations, prescriptions or treatment, and copies of all hospital or medical records. A photo-stated copy of this authorisation shall be considered as effective and valid as the original.
 
-4.	We hereby authorise and request HL Assurance Pte.Ltd. to pay benefit due in respect of this claim to Denzel Tan (Name as per Identification Card and/or Bank Account)`,
-      responseType: ["boolean", "choice"],
-      label: "TERMS & CONDITIONS",
-      choices: [
-        { label: "Agree", value: true },
-        { label: "Disagree", value: false }
-      ],
-      id: "agreeTerms"
-    },
+    // 4.  We hereby authorise and request HL Assurance Pte.Ltd. to pay benefit due in respect of this claim to Denzel Tan (Name as per Identification Card and/or Bank Account)`,
+    //       responseType: ["boolean", "choice"],
+    //       label: "TERMS & CONDITIONS",
+    //       choices: [
+    //         { label: "Agree", value: true },
+    //         { label: "Disagree", value: false }
+    //       ],
+    //       id: "agreeTerms"
+    //     },
     {
       question: "Thank you. Please wait while I process your submission...",
-      responseType: null
+      responseType: "boolean",
+      id: "confirm"
     }
   ]
 };

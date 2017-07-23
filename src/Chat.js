@@ -680,7 +680,7 @@ class ChatScreen extends Component {
               {
                 type: "text",
                 _id: 0,
-                text: "Hi I'm Eve, please choose the insurance plan you prefer. 😄",
+                text: "Hello, I'm Eve. Welcome to microUmbrella. I'll be your host and here are the protection plans that may interest you. 😄",
                 createdAt: new Date(),
                 user: AGENT_USER
               }
@@ -730,7 +730,7 @@ class ChatScreen extends Component {
       this.concatMessage({
         type: "text",
         _id: uuid.v4(),
-        text: `I choose Plan ${planAlphabet[planIndex]}. $${premium + ""} for ${this.props.policy.from} of protection.`,
+        text: `I choose Plan ${planAlphabet[planIndex]}`,
         value: planIndex,
         user: CUSTOMER_USER
       }),
