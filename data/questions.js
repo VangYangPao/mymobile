@@ -323,8 +323,8 @@ export const QUESTION_SETS = {
       responseType: ["boolean", "choice"],
       label: "HOSPITAL LEAVE",
       choices: [
-        { label: "Yes, I have", value: true },
-        { label: "No, I have not", value: false }
+        { label: "Yes, I do", value: true },
+        { label: "No, I do not", value: false }
       ],
       id: "medicalLeave",
       include: ["permanentDisability"]

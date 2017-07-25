@@ -6,6 +6,7 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
+  TouchableHighlight,
   View,
   ScrollView,
   Platform,
@@ -495,10 +496,90 @@ class ClaimPolicyChoice extends Component {
   }
 }
 
+const CHOICE_SEPARATOR_WIDTH = 2;
+
+class ChoiceList extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { disabled: false };
+    this.handlePickChoice = this.handlePickChoice.bind(this);
+    this.renderChoice = this.renderChoice.bind(this);
+  }
+
+  handlePickChoice(choice) {
+    if (this.state.disabled) return;
+    this.setState({ disabled: true });
+    this.props.onPickChoice(choice.label, choice.value);
+  }
+
+  renderChoice(choice, index, choices) {
+    const len = choices.length;
+    const startStylesOrNull = index === 0 ? widgetStyles.choicesStart : null;
+    const endStylesOrNull = index === len - 1 ? widgetStyles.choicesEnd : null;
+    return (
+      <TouchableHighlight
+        onPress={() => this.handlePickChoice(choice)}
+        style={[
+          widgetStyles.choiceTouchable,
+          startStylesOrNull,
+          endStylesOrNull
+        ]}
+        activeOpacity={0.6}
+        underlayColor={colors.softBorderLine}
+        key={choice.value}
+      >
+        <View style={[startStylesOrNull, endStylesOrNull]}>
+          <Text style={widgetStyles.choiceText}>{choice.label}</Text>
+        </View>
+      </TouchableHighlight>
+    );
+  }
+
+  render() {
+    const disabledStyle = this.state.disabled
+      ? widgetStyles.disabledChoiceList
+      : null;
+    return (
+      <View style={[widgetStyles.choicesList, disabledStyle]}>
+        {this.props.choices.map(this.renderChoice)}
+      </View>
+    );
+  }
+}
+
 const imageHeight = 150;
 const imageWidth = 100;
 
 const widgetStyles = StyleSheet.create({
+  disabledChoiceList: {
+    backgroundColor: colors.softBorderLine
+  },
+  choicesList: {
+    borderRadius: 15,
+    marginLeft: 50,
+    marginRight: 60,
+    marginBottom: 50,
+    borderColor: colors.primaryOrange,
+    borderWidth: CHOICE_SEPARATOR_WIDTH,
+    backgroundColor: "white"
+  },
+  choiceText: {
+    fontSize: 16
+  },
+  choiceTouchable: {
+    padding: 15,
+    borderBottomWidth: CHOICE_SEPARATOR_WIDTH,
+    borderColor: colors.primaryOrange
+  },
+  choicesStart: {
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15
+  },
+  choicesEnd: {
+    borderBottomLeftRadius: 15,
+    borderBottomRightRadius: 15,
+    borderBottomWidth: 0
+  },
   policyDetailText: {
     marginTop: 7
   },
@@ -647,7 +728,6 @@ class ChatScreen extends Component {
     this.renderMessage = this.renderMessage.bind(this);
     this.renderBubble = this.renderBubble.bind(this);
     this.renderMessageText = this.renderMessageText.bind(this);
-    this.renderInputToolbar = this.renderInputToolbar.bind(this);
     this.renderComposer = this.renderComposer.bind(this);
     this.renderSend = this.renderSend.bind(this);
 
@@ -830,7 +910,7 @@ class ChatScreen extends Component {
         value,
         text: label
       }),
-      () => this.setState({ answering: false })
+      () => this.setState({ answering: false, renderInput: true })
     );
   }
 
@@ -971,7 +1051,6 @@ class ChatScreen extends Component {
         const policy = database.policies.find(
           p => p.id === this.state.answers.claimPolicyNo
         );
-        console.log(policy);
         checkAgainst = policy.name;
         if (nextQuestion.id !== "claimType") {
           checkAgainst = this.state.answers.claimType;
@@ -1015,21 +1094,27 @@ class ChatScreen extends Component {
           "claimPolicyNo"
           // "travelDetails"
         ];
-        const appendWidget = key =>
+        const typeWidgets = ["images", "choice"];
+        const appendWidget = (key, additionalProps) =>
           this.setState(
             this.concatMessage({
               type: key,
               _id: uuid.v4(),
-              user: AGENT_USER
+              user: AGENT_USER,
+              ...additionalProps
             }),
             () => this.setState({ renderInput: false })
           );
         if (widgets.indexOf(currentQuestion.id) !== -1) {
           appendWidget(currentQuestion.id);
         }
-        if (currentQuestion.responseType === "images") {
-          appendWidget("images");
-        }
+        const responseTypes = [].concat(currentQuestion.responseType);
+        responseTypes.forEach(type => {
+          if (type === "images") appendWidget("images");
+          if (type === "choice") {
+            appendWidget("choice", { choices: currentQuestion.choices });
+          }
+        });
       }
     );
   }
@@ -1044,10 +1129,7 @@ class ChatScreen extends Component {
     }
     if (currentQuestionIndex >= 0) {
       const currentQuestion = this.questions[currentQuestionIndex];
-      if (
-        currentQuestion.responseType !== null &&
-        currentQuestion.responseType.indexOf("choice") !== -1
-      ) {
+      if (currentQuestion.responseType !== null) {
         this.refs.chat.resetInputToolbar();
       }
     }
@@ -1134,6 +1216,13 @@ class ChatScreen extends Component {
         return (
           <ClaimPolicyChoice onSelectPolicy={this.handleSelectPolicyToClaim} />
         );
+      case "choice":
+        return (
+          <ChoiceList
+            choices={currentMessage.choices}
+            onPickChoice={this.handlePickChoice}
+          />
+        );
       case "images":
         return (
           <MultipleImagePicker
@@ -1185,33 +1274,6 @@ class ChatScreen extends Component {
     }
   }
 
-  renderInputToolbar(props) {
-    if (this.props.isStartScreen) return null;
-    const { currentQuestionIndex } = this.state;
-    const currentQuestion = this.questions[currentQuestionIndex];
-    let { responseType } = currentQuestion;
-    responseType = [].concat(responseType);
-    if (responseType.indexOf("choice") !== -1 && Platform.OS === "ios") {
-      return (
-        <PickerActionButton
-          label={currentQuestion.label}
-          items={currentQuestion.choices}
-          onValueChange={this.handlePickChoice}
-        />
-      );
-    }
-    return (
-      <InputToolbar
-        {...props}
-        containerStyle={
-          !this.state.answering
-            ? { backgroundColor: colors.softBorderLine }
-            : null
-        }
-      />
-    );
-  }
-
   renderComposer(props) {
     const { currentQuestionIndex } = this.state;
     if (currentQuestionIndex < 0) return;
@@ -1224,19 +1286,6 @@ class ChatScreen extends Component {
     } else if (currentQuestion.id === "downloadForm") {
       return (
         <DownloadFormActionButton onDownload={this.handleDownload.bind(this)} />
-      );
-    } else if (
-      responseType.indexOf("choice") !== -1 && Platform.OS === "android"
-    ) {
-      const label = currentQuestion.id === "recipient"
-        ? "SELECT RECIPIENT"
-        : "SELECT DESTINATION";
-      return (
-        <PickerActionButton
-          label={label}
-          items={currentQuestion.choices}
-          onValueChange={this.handlePickChoice}
-        />
       );
     }
 
@@ -1274,15 +1323,6 @@ class ChatScreen extends Component {
       minInputToolbarHeight = 0;
     }
     const { currentQuestionIndex } = this.state;
-    if (currentQuestionIndex >= 0) {
-      const currentQuestion = this.questions[currentQuestionIndex];
-      if (
-        currentQuestion.responseType !== null &&
-        currentQuestion.responseType.indexOf("choice") !== -1
-      ) {
-        minInputToolbarHeight = 200;
-      }
-    }
 
     let listViewProps = {};
     if (this.state.currentQuestionIndex > 0) {
@@ -1292,10 +1332,7 @@ class ChatScreen extends Component {
         }
         let scrollHeight = contentHeight;
         if (Platform.OS === "ios") {
-          const supposedScrollHeight =
-            contentHeight -
-            WINDOW_HEIGHT * 0.8 +
-            (minInputToolbarHeight === 200 ? minInputToolbarHeight : 0);
+          const supposedScrollHeight = contentHeight - WINDOW_HEIGHT * 0.8;
           scrollHeight = supposedScrollHeight < 0 ? 0 : supposedScrollHeight;
         }
         this.refs.chat._messageContainerRef.scrollTo({
@@ -1319,7 +1356,6 @@ class ChatScreen extends Component {
           renderMessage={this.renderMessage}
           renderMessageText={this.renderMessageText}
           renderSend={this.renderSend}
-          renderInputToolbar={this.renderInputToolbar}
           renderComposer={this.renderComposer}
           minInputToolbarHeight={minInputToolbarHeight}
           listViewProps={listViewProps}
