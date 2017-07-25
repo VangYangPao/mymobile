@@ -195,50 +195,64 @@ export const QUESTION_SETS = {
   ],
   claim: [
     {
-      question: "Hi Denzel Tan. Which plan would you like to make a claim?",
+      question: "Welcome back <%= fullName %>, here are your protection plans. Which plan would you like to make a claim?",
       responseType: "number",
       id: "claimPolicyNo"
     },
     {
-      question: "Denzel, I will walk you through step by step. I'll do my best to get your claim fast 👍",
+      question: "I will walk you through step by step. I'll do my best to get your claim 👍",
       responseType: null
     },
     {
-      question: "Firstly, are you planning to claim for DEATH or PERMANENT DISABILITY?",
+      question: "Firstly, are you planning to claim for",
       responseType: ["string", "choice"],
-      label: "CHOOSE CLAIM",
+      label: "CHOOSE CLAIM TYPE",
       choices: [
         { label: "Death", value: "death" },
         { label: "Permanent Disability", value: "permanentDisability" }
-      ]
+      ],
+      include: ["Accidental Death / Permanent Disability"],
+      id: "claimType"
     },
-    // {
-    //   question:
-    //     "Firstly, you can download the TRAVEL CLAIM FORM here, and print it before you can fill up. Referring to the TRAVEL CLAIM FORM, there are several documents you have to prepare. Once you printed and filled up, we can proceed to the next step.",
-    //   responseType: "boolean",
-    //   id: "downloadForm"
-    // },
-    // {
-    //   question: "Share with me the type of accident, loss or illness you wanted to claim",
-    //   responseType: ["string", "choice"],
-    //   label: "SELECT TYPE",
-    //   choices: [
-    //     "Personal Accident, Medical, Dental Expenses",
-    //     "Loss of Baggage & Personal Effects",
-    //     "Loss of Money & Documents",
-    //     "Baggage Delay",
-    //     "Trip Cancellation or Curtailment",
-    //     "Travel Delay / Misconnection / Overbooked Flight",
-    //     "Loss of Home Contents due to Burglary",
-    //     "Personal Liability",
-    //     "Others"
-    //   ].map(c => ({ label: c, value: c })),
-    //   id: "claimType"
-    // },
     {
-      question: "Please share with me the date and time of accident",
+      question: "Firstly, are you planning to claim for",
+      responseType: ["string", "choice"],
+      label: "CHOOSE CLAIM TYPE",
+      choices: [
+        { label: "Death", value: "death" },
+        { label: "Permanent Disability", value: "permanentDisability" },
+        { label: "Medical Reimbursement", value: "medicalReimbursement" }
+      ],
+      include: [
+        "Accidental Death / Permanent Disability with Medical Reimbursement"
+      ],
+      id: "claimType"
+    },
+    {
+      question: "Firstly, are you planning to claim for",
+      responseType: ["string", "choice"],
+      label: "CHOOSE CLAIM TYPE",
+      choices: [
+        { label: "Death", value: "death" },
+        { label: "Permanent Disability", value: "permanentDisability" },
+        { label: "Weekly Compensation", value: "weeklyCompensation" }
+      ],
+      include: [
+        "Accidental Death / Permanent Disability with Weekly Indemnity"
+      ],
+      id: "claimType"
+    },
+    {
+      question: "I'm so sorry to hear that. I assume you are <%= fullName %>’s claimant/next of kin. Please share with me the date and time of the accident",
       responseType: "date",
-      id: "accidentDateTime"
+      id: "accidentDate",
+      include: ["death"]
+    },
+    {
+      question: "Oh… I am sad to hear that. Let me help out on the claim fast. Please share with me the date and time of the accident",
+      responseType: "date",
+      id: "accidentDate",
+      include: ["permanentDisability"]
     },
     {
       question: "Where did it happen?",
@@ -246,93 +260,163 @@ export const QUESTION_SETS = {
       id: "accidentLocation"
     },
     {
-      question: "What happened?",
+      question: "What happened in detail?",
       responseType: "string",
+      responseLength: 1800,
       id: "description"
     },
     {
-      question: "Do you have other coverage for this accident?",
+      question: "Please snap a clear photo of the police report, it would be very helpful for this claim.",
+      responseType: "images",
+      responseLength: 10,
+      id: "policeReport"
+    },
+    {
+      question: "What is the injury you suffered? What is the extent of your injury?",
+      responseType: "string",
+      id: "injuryType",
+      include: ["permanentDisability"]
+    },
+    {
+      question: "Try to recall for a moment, have you suffered the same injury before?",
       responseType: ["boolean", "choice"],
-      label: "OTHER COVERAGE",
+      label: "SUFFERED SAME INJURY",
       choices: [
         { label: "Yes, I have", value: true },
-        { label: "No, I don't have", value: false }
+        { label: "No, I have not", value: false }
       ],
-      id: "haveOtherCoverage"
+      id: "sufferedSameInjury",
+      include: ["permanentDisability"]
     },
     {
-      question: "Here is the final question, what's the amount you intend to claim?",
-      responseType: "number",
-      id: "claimAmount"
+      question: "When did the symptoms first appear?",
+      responseType: "date",
+      id: "symptomsAppearDate",
+      include: ["permanentDisability"]
     },
     {
-      question: `Denzel, the Singapore Laws requires you to mail supporting documents. 
-
-A1) For death in Singapore – copy of death certificate 
-A2) For death outside Singapore 
-(a) Certified true copy of death certificate by your lawyer or any notary public 
-(b) Letter from Immigration and Checkpoint Authority (ICA) - this letter is issued by ICA for Singaporeans or permanent residents (PR) who died overseas. It confirms they saw the Singapore IC, passport and overseas death certificate 
-(c) Repatriation report (if the body was sent home to Singapore for cremation or burial) 
-
-B) Autopsy report, toxicological report or coroner’s findings
-
-C) Proof of policyholder’s or claimant’s relationship to the person who died
-
-D) Police or accident report (if death was due to accidental or violent causes)
-
-E) Last will of deceased or letter of administration
-
-F) Estate duty of certificate 
-
-Please MAIL these supporting documents to HL Assurance office at 11 Keppel Road #11-01 ABI Plaza Singapore 089057.`,
+      question: "Does <%= fullName %> have other insurance coverage for this accident?",
+      responseType: ["boolean", "choice"],
+      id: "otherInsuranceCoverage",
+      label: "OTHER INSURANCE COVERAGE",
+      choices: [{ label: "Yes", value: true }, { label: "No", value: false }]
+    },
+    {
+      question: "Have you completed your treatment?",
+      responseType: ["boolean", "choice"],
+      label: "COMPLETED TREATMENT",
+      choices: [
+        { label: "Yes, I have", value: true },
+        { label: "No, I have not", value: false }
+      ],
+      id: "completedTreatment",
+      include: ["permanentDisability"]
+    },
+    {
+      question: "When is the treatment is expected to be completed?",
+      responseType: "date",
+      id: "treatmentCompleteDate",
+      include: ["permanentDisability"]
+    },
+    {
+      question: "Do you have any hospital or medical leave?",
+      responseType: ["boolean", "choice"],
+      label: "HOSPITAL LEAVE",
+      choices: [
+        { label: "Yes, I have", value: true },
+        { label: "No, I have not", value: false }
+      ],
+      id: "medicalLeave",
+      include: ["permanentDisability"]
+    },
+    {
+      question: "We are almost done to get you claim fast. I need your help to snap or upload some photos.",
       responseType: null
     },
-    // {
-    //   question: "You are doing great so far! Great job! If you have the damaged articles, please keep the damaged articles for possible inspection.",
-    //   responseType: ["boolean", "choice"],
-    //   label: "DAMAGED ARTICLES",
-    //   choices: [
-    //     { label: "Yes I have!", value: true },
-    //     { label: "No, I don't have them.", value: false }
-    //   ],
-    //   id: "haveDamagedArticles"
-    // },
-    //     {
-    //       question: "No more writing from here onwards! Please switch to camera mode and snap a clear photo(s) of completed travel claim form",
-    //       responseType: "images",
-    //       id: "claimForm"
-    //     },
-    //     {
-    //       question: "Next, snap a clear photo of boarding pass, OR, flight itinerary, OR, passport personal info pages together with passport page(s) with stamps showing the date of departure and return to Singapore",
-    //       responseType: "images",
-    //       id: "travelDetails"
-    //     },
-    //     {
-    //       question: "Here is the final step. Kindly submit the TRAVEL CLAIM FORM, together with the required documents stated in the claim form, by post to HL Assurance Office, 11 Keppel Road #11-01, ABI Plaza Singapore 089057",
-    //       responseType: null
-    //     },
-    //     {
-    //       question: "Please take a moment to go through the Declaration, Authorization & Customer's Data Privacy statements",
-    //       responseType: null
-    //     },
-    //     {
-    //       question: `1. We do solemnly and sincerely declare that the information given is true and correct to the best of my/our knowledge and belief.
-
-    // 2.  We understand that any false or fraudulent statements or any attempt to suppress or conceal any material facts shall render the Policy void and we shall forfeit our rights to claim under the Policy.
-
-    // 3.  We hereby authorise any hospital, medical practitioner or other person who has attended or examined me, to disclose when requested to do so by HL Assurance Pte. Ltd., or its authorised representative, any and all information with respect to any illness or injury, medical history, consultations, prescriptions or treatment, and copies of all hospital or medical records. A photo-stated copy of this authorisation shall be considered as effective and valid as the original.
-
-    // 4.  We hereby authorise and request HL Assurance Pte.Ltd. to pay benefit due in respect of this claim to Denzel Tan (Name as per Identification Card and/or Bank Account)`,
-    //       responseType: ["boolean", "choice"],
-    //       label: "TERMS & CONDITIONS",
-    //       choices: [
-    //         { label: "Agree", value: true },
-    //         { label: "Disagree", value: false }
-    //       ],
-    //       id: "agreeTerms"
-    //     },
     {
-      question: "Thank you. Please wait while I process your submission...",
+      question: "Please snap a clear photo of the original medical bills and/or receipts",
+      responseType: "images",
+      responseLength: 30,
+      id: "originalMedicalBill",
+      include: ["permanentDisability"]
+    },
+    {
+      question: "<%= fullName %>, to complete your claim, I need your help to post the ORIGINAL MEDICAL BILLS AND/OR RECEIPTS to: HLAS, 11 Keppel Road #11-01 ABI Plaza Singapore 089057, within 48 hours",
+      responseType: null,
+      include: ["permanentDisability"]
+    },
+    {
+      question: "If you have submitted the original bills and receipts to other insurer or your employer, please snap a clear photo of the photocopy medical bills and/or receipts",
+      responseType: "images",
+      responseLength: 30,
+      id: "medicalBill",
+      include: ["permanentDisability"]
+    },
+    {
+      question: "If you have submitted the original bills and receipts to other insurer or your employer, please snap a clear photo of reimbursement letter, or discharge voucher from insurer, or letter from employer indicating the amount paid to you. Either one will do.",
+      responseType: "images",
+      responseLength: 10,
+      id: "reimbursementLetter",
+      include: ["permanentDisability"]
+    },
+    {
+      question: "Please snap a clear photo of <%= fullName %>’s autopsy report, or, toxicological report, or, coroner’s findings.",
+      responseType: "images",
+      responseLength: 10,
+      id: "autopsyReport",
+      include: ["death"]
+    },
+    {
+      question: "Please snap a clear photo of police, or accident report - if death was due to accidental or violent causes.",
+      responseType: "images",
+      responseLength: 10,
+      id: "accidentReport",
+      include: ["death"]
+    },
+    {
+      question: "Please snap a clear photo <%= fullName %>’s Last Will of deceased, or, Letter of Administration",
+      responseType: "images",
+      responseLength: 10,
+      id: "will",
+      include: ["death"]
+    },
+    {
+      question: "Please snap a clear photo of <%= fullName %>’s Estate Duty of Certificate",
+      responseType: "images",
+      responseLength: 10,
+      id: "estateDutyOfCertificate",
+      include: ["death"]
+    },
+    {
+      question: "Please snap a clear photo of any proof of claimant’s relationship to the person who died",
+      responseType: "images",
+      responseLength: 10,
+      id: "relationshipProof",
+      include: ["death"]
+    },
+    {
+      question: "For death which happened outside Singapore, please snap a clear photo of <%= fullName %>’s death certificate that is certified true copy by your lawyer or any notary public",
+      responseType: "images",
+      responseLength: 10,
+      id: "deathCertificate",
+      include: ["death"]
+    },
+    {
+      question: "For death which happened outside Singapore, please snap a clear photo of the letter from Immigration and Checkpoint Authority, ICA. This letter is issued by ICA for Singaporeans or Permanent Residents, PR who died overseas. The letter confirms ICA saw the Singapore IC, passport and overseas death certificate.",
+      responseType: "images",
+      responseLength: 10,
+      id: "immigrationLetter",
+      include: ["death"]
+    },
+    {
+      question: "For death happened outside Singapore, please snap a clear photo of the repatriation report. This report is issued if the body was sent home to Singapore for cremation or burial.",
+      responseType: "images",
+      responseLength: 10,
+      id: "repatriationReport",
+      include: ["death"]
+    },
+    {
+      question: "Thank you for your patience. Please keep this phone with you at all times, as I shall send you notifications and messages on your claim. Please switch on the notification.",
       responseType: "boolean",
       id: "confirm"
     }

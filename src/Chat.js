@@ -370,6 +370,7 @@ class MultipleImagePicker extends Component {
     super(props);
     this.handlePress = this.handlePress.bind(this);
     this.handleFinishSelectImages = this.handleFinishSelectImages.bind(this);
+    this.handleSkipUpload = this.handleSkipUpload.bind(this);
     this.state = { images: [] };
   }
 
@@ -391,6 +392,10 @@ class MultipleImagePicker extends Component {
       return;
     }
     this.props.onFinishSelectImages(this.state.images);
+  }
+
+  handleSkipUpload() {
+    this.props.onFinishSelectImages([]);
   }
 
   renderImage(imageUri, idx, images) {
@@ -427,6 +432,14 @@ class MultipleImagePicker extends Component {
         >
           UPLOAD IMAGES
         </Button>
+        <Button
+          onPress={this.handleSkipUpload}
+          containerStyle={widgetStyles.skipUploadContainer}
+          style={widgetStyles.skipUpload}
+          textStyle={widgetStyles.skipUploadText}
+        >
+          SKIP UPLOAD
+        </Button>
       </View>
     );
   }
@@ -452,18 +465,20 @@ class ClaimPolicyChoice extends Component {
       >
         <View
           style={[
-            widgetStyles.policyChoice,
+            widgetStyles.policyContainer,
             this.state.disabled ? widgetStyles.disabledPolicyChoice : null
           ]}
         >
           <Text style={widgetStyles.policyChoiceName}>{policy.name}</Text>
-          <Text>
+          <Text style={widgetStyles.policyDetailText}>
             Policy No.: PL{policy.id}
           </Text>
-          <Text>
+          <Text style={widgetStyles.policyDetailText}>
             Purchase date: {getDateStr(policy.purchaseDate)}
           </Text>
-          <Text>Paid: ${policy.paid}</Text>
+          <Text style={widgetStyles.policyDetailText}>
+            Paid: ${policy.paid}
+          </Text>
         </View>
       </TouchableOpacity>
     );
@@ -484,6 +499,27 @@ const imageHeight = 150;
 const imageWidth = 100;
 
 const widgetStyles = StyleSheet.create({
+  policyDetailText: {
+    marginTop: 7
+  },
+  policyContainer: {
+    backgroundColor: "white",
+    marginHorizontal: 20,
+    marginVertical: 10,
+    padding: 15,
+    borderRadius: 3
+  },
+  skipUploadContainer: {
+    marginTop: 15
+  },
+  skipUpload: {
+    paddingVertical: 12,
+    backgroundColor: "#E0E0E0"
+  },
+  skipUploadText: {
+    color: colors.primaryText,
+    fontSize: 15
+  },
   disabledPolicyChoice: {
     backgroundColor: colors.softBorderLine
   },
@@ -596,7 +632,12 @@ class ChatScreen extends Component {
       answering: true,
       renderInput: true,
       currentQuestionIndex: -1,
-      answers: { policy: props.policy, planIndex: 0, coverageDuration: 12 }
+      answers: {
+        fullName: "Denzel Tan",
+        policy: props.policy,
+        planIndex: 0,
+        coverageDuration: 12
+      }
     };
 
     if (props.questionSet) {
@@ -799,7 +840,9 @@ class ChatScreen extends Component {
       this.concatMessage({
         type: "text",
         _id: uuid.v4(),
-        text: `These are the ${imagesUri.length} photo${s} you requested.`,
+        text: imagesUri.length
+          ? `These are the ${imagesUri.length} photo${s} you requested.`
+          : "I prefer to skip this",
         value: imagesUri,
         user: CUSTOMER_USER
       }),
@@ -920,16 +963,32 @@ class ChatScreen extends Component {
     }
 
     const nextQuestion = this.questions[currentQuestionIndex];
+    let checkAgainst;
+    if (this.props.questionSet !== "claim") {
+      checkAgainst = this.props.policy.title;
+    } else {
+      if (this.state.answers.claimPolicyNo) {
+        const policy = database.policies.find(
+          p => p.id === this.state.answers.claimPolicyNo
+        );
+        console.log(policy);
+        checkAgainst = policy.name;
+        if (nextQuestion.id !== "claimType") {
+          checkAgainst = this.state.answers.claimType;
+        }
+      }
+    }
+    // console.log(checkAgainst, nextQuestion.include);
     if (
       nextQuestion.include !== undefined &&
-      nextQuestion.include.indexOf(this.props.policy.title) === -1
+      nextQuestion.include.indexOf(checkAgainst) === -1
     ) {
       this.setState({ currentQuestionIndex }, this.askNextQuestion);
       return;
     }
     if (
       nextQuestion.exclude !== undefined &&
-      nextQuestion.exclude.indexOf(this.props.policy.title) !== -1
+      nextQuestion.exclude.indexOf(checkAgainst) !== -1
     ) {
       this.setState({ currentQuestionIndex }, this.askNextQuestion);
       return;
@@ -953,20 +1012,23 @@ class ChatScreen extends Component {
         const widgets = [
           "planIndex",
           "coverageDuration",
-          "claimPolicyNo",
-          "icImage",
-          "claimForm",
-          "travelDetails"
+          "claimPolicyNo"
+          // "travelDetails"
         ];
-        if (widgets.indexOf(currentQuestion.id) !== -1) {
+        const appendWidget = key =>
           this.setState(
             this.concatMessage({
-              type: currentQuestion.id,
+              type: key,
               _id: uuid.v4(),
               user: AGENT_USER
             }),
             () => this.setState({ renderInput: false })
           );
+        if (widgets.indexOf(currentQuestion.id) !== -1) {
+          appendWidget(currentQuestion.id);
+        }
+        if (currentQuestion.responseType === "images") {
+          appendWidget("images");
         }
       }
     );
@@ -1072,9 +1134,7 @@ class ChatScreen extends Component {
         return (
           <ClaimPolicyChoice onSelectPolicy={this.handleSelectPolicyToClaim} />
         );
-      case "claimForm":
-      case "travelDetails":
-      case "icImage":
+      case "images":
         return (
           <MultipleImagePicker
             onFinishSelectImages={this.handleFinishSelectImages}
