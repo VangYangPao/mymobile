@@ -46,6 +46,7 @@ import colors from "./colors";
 import POLICIES from "../data/policies";
 import { validateAnswer, QUESTION_SETS } from "../data/questions";
 import Button from "./Button";
+import { createEasyPayURL } from "./telemoney";
 
 // Enable playback in silence mode (iOS only)
 Sound.setCategory("Playback");
