@@ -1,6 +1,12 @@
 import React, { Component } from "react";
 import { ToastAndroid, Alert, Platform } from "react-native";
 
+export function objectToUrlParams(data) {
+  return Object.keys(data)
+    .map(key => `${key}=${encodeURIComponent(data[key])}`)
+    .join("&");
+}
+
 export function getDateStr(datetime) {
   const day = datetime.getDate();
   const month = datetime.getMonth();
