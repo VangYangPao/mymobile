@@ -12,7 +12,8 @@ import {
   Platform,
   Picker,
   Alert,
-  ToastAndroid
+  ToastAndroid,
+  TextInput
 } from "react-native";
 import {
   GiftedChat,
@@ -104,7 +105,7 @@ export default function ChatScreenWrapper(questionSet) {
     drawerIcon = "attach-money";
   }
   wrapper.navigationOptions = ({ screenProps }) => ({
-    title: "microAssure",
+    title: "microUmbrella",
     headerTitleStyle: {
       fontWeight: "300"
     },
@@ -547,10 +548,85 @@ class ChoiceList extends Component {
   }
 }
 
+class MultiInput extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { values: [] };
+    for (var i = 0; i < props.inputs.length; i++) {
+      this.state.values.push("");
+    }
+    this.renderInput = this.renderInput.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleSubmit() {
+    const inputs = this.state.values.map((value, idx) => ({
+      value,
+      id: this.props.inputs[idx].id
+    }));
+    this.props.onSubmit(inputs);
+  }
+
+  renderInput(input, index, inputs) {
+    const len = inputs.length;
+    const startStylesOrNull = index === 0 ? widgetStyles.choicesStart : null;
+    const endStylesOrNull = index === len - 1 ? widgetStyles.choicesEnd : null;
+    return (
+      <View
+        key={input.id}
+        style={[widgetStyles.textInputContainer, startStylesOrNull]}
+      >
+        <TextInput
+          style={widgetStyles.textInput}
+          placeholder={input.label}
+          autoCorrect={false}
+          autoCapitalize="none"
+          onChangeText={text => {
+            const values = this.state.values.slice();
+            values[index] = text;
+            this.setState({ values });
+          }}
+          value={this.state.values[index]}
+        />
+      </View>
+    );
+  }
+
+  render() {
+    return (
+      <View style={[widgetStyles.choicesList]}>
+        {this.props.inputs.map(this.renderInput)}
+        <Button
+          onPress={this.handleSubmit}
+          style={widgetStyles.sendButtonContainer}
+        >
+          SEND
+        </Button>
+      </View>
+    );
+  }
+}
+
 const imageHeight = 150;
 const imageWidth = 100;
 
 const widgetStyles = StyleSheet.create({
+  sendButtonContainer: {
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+    borderBottomLeftRadius: 13,
+    borderBottomRightRadius: 13,
+    borderBottomWidth: 0
+  },
+  textInputContainer: {
+    borderBottomWidth: CHOICE_SEPARATOR_WIDTH,
+    borderColor: colors.borderLine
+  },
+  textInput: {
+    height: 40,
+    paddingHorizontal: 10,
+    marginVertical: 5
+  },
   disabledChoiceList: {
     backgroundColor: colors.softBorderLine
   },
@@ -559,7 +635,7 @@ const widgetStyles = StyleSheet.create({
     marginLeft: 50,
     marginRight: 60,
     marginBottom: 50,
-    borderColor: colors.primaryOrange,
+    borderColor: colors.borderLine,
     borderWidth: CHOICE_SEPARATOR_WIDTH,
     backgroundColor: "white"
   },
@@ -569,7 +645,7 @@ const widgetStyles = StyleSheet.create({
   choiceTouchable: {
     padding: 15,
     borderBottomWidth: CHOICE_SEPARATOR_WIDTH,
-    borderColor: colors.primaryOrange
+    borderColor: colors.borderLine
   },
   choicesStart: {
     borderTopLeftRadius: 15,
@@ -744,6 +820,7 @@ class ChatScreen extends Component {
     this.handlePickDate = this.handlePickDate.bind(this);
     this.handlePickChoice = this.handlePickChoice.bind(this);
     this.handleSelectPolicyToClaim = this.handleSelectPolicyToClaim.bind(this);
+    this.handleMultiInputSubmit = this.handleMultiInputSubmit.bind(this);
     this.renderStartScreenMessages = this.renderStartScreenMessages.bind(this);
     this.askNextQuestion = this.askNextQuestion.bind(this);
     this.reaskQuestion = this.reaskQuestion.bind(this);
@@ -961,6 +1038,22 @@ class ChatScreen extends Component {
     );
   }
 
+  handleMultiInputSubmit(inputs) {
+    let { messages } = this.state;
+    messages = messages.slice(0, messages.length - 1);
+    messages = messages.concat({
+      type: "text",
+      _id: uuid.v4(),
+      text: inputs.map(i => i.value).join(" "),
+      value: inputs,
+      user: CUSTOMER_USER,
+      multi: true
+    });
+    this.setState({ messages }, () =>
+      this.setState({ answering: false, renderInput: true })
+    );
+  }
+
   componentDidMount() {
     if (this.props.isStartScreen) {
       this.renderStartScreenMessages();
@@ -1083,18 +1176,6 @@ class ChatScreen extends Component {
         answering: true
       },
       () => {
-        const currentQuestion = this.questions[this.state.currentQuestionIndex];
-        if (currentQuestion.responseType === null) {
-          this.askNextQuestion();
-          return;
-        }
-        const widgets = [
-          "planIndex",
-          "coverageDuration",
-          "claimPolicyNo"
-          // "travelDetails"
-        ];
-        const typeWidgets = ["images", "choice"];
         const appendWidget = (key, additionalProps) =>
           this.setState(
             this.concatMessage({
@@ -1105,6 +1186,27 @@ class ChatScreen extends Component {
             }),
             () => this.setState({ renderInput: false })
           );
+        const currentQuestion = this.questions[this.state.currentQuestionIndex];
+        if (currentQuestion.responseType === null) {
+          this.askNextQuestion();
+          return;
+        }
+        if (currentQuestion.id instanceof Array) {
+          const inputs = currentQuestion.id.map((id, idx) => ({
+            id,
+            type: currentQuestion.responseType[idx],
+            label: currentQuestion.labels[idx]
+          }));
+          appendWidget("multiInput", { inputs });
+          return;
+        }
+        const widgets = [
+          "planIndex",
+          "coverageDuration",
+          "claimPolicyNo"
+          // "travelDetails"
+        ];
+        const typeWidgets = ["images", "choice"];
         if (widgets.indexOf(currentQuestion.id) !== -1) {
           appendWidget(currentQuestion.id);
         }
@@ -1163,9 +1265,15 @@ class ChatScreen extends Component {
 
         if (result.isValid) {
           let newAnswer = {};
-          newAnswer[lastQuestion.id] = lastMessage.value !== undefined
-            ? lastMessage.value
-            : lastMessage.text;
+          if (lastMessage.multi) {
+            answer.forEach(input => {
+              newAnswer[input.id] = input.value;
+            });
+          } else {
+            newAnswer[lastQuestion.id] = lastMessage.value !== undefined
+              ? lastMessage.value
+              : lastMessage.text;
+          }
           const answers = Object.assign(this.state.answers, newAnswer);
           this.setState({ answers }, this.askNextQuestion);
         } else {
@@ -1215,6 +1323,13 @@ class ChatScreen extends Component {
       case "claimPolicyNo":
         return (
           <ClaimPolicyChoice onSelectPolicy={this.handleSelectPolicyToClaim} />
+        );
+      case "multiInput":
+        return (
+          <MultiInput
+            onSubmit={this.handleMultiInputSubmit}
+            inputs={currentMessage.inputs}
+          />
         );
       case "choice":
         return (

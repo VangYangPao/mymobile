@@ -144,13 +144,24 @@ export const QUESTION_SETS = {
       question: "Please be patient with my questions. 😬",
       responseType: null
     },
+    // {
+    //   question: "May I know your full name?",
+    //   responseType: ["string", "string"],
+    //   id: ["firstName", "lastName"],
+    //   labels: ["First name", "Last name"]
+    // },
     {
-      question: "May I know your full name?",
+      question: "May I know your first name?",
       responseType: "string",
-      id: "name"
+      id: "firstName"
     },
     {
-      question: "Nice to meet you <%= name %>! What's your NRIC/FIN/Passport?",
+      question: "May I know your last name?",
+      responseType: "string",
+      id: "lastName"
+    },
+    {
+      question: "Nice to meet you <%= lastName %> <%= firstName %>! What's your NRIC/FIN/Passport?",
       responseType: "string",
       id: "ICNumber"
     },
@@ -168,28 +179,19 @@ export const QUESTION_SETS = {
       question: "We are almost done.",
       responseType: null
     },
+    // {
+    //   question: "As you are aware, I need your bank account for any future claims.",
+    //   responseType: ["string", "string"],
+    //   id: ["bankName", "bankAccountNumber"],
+    //   labels: ["Bank name", "Bank account number"]
+    // },
     {
-      question: "As you are aware, I need your bank name for any future claims.",
+      question: "As you are aware, I need your bank account for any future claims.",
       responseType: "string",
-      id: "bankName"
-    },
-    {
-      question: "What's your bank account number?",
-      responseType: "number",
       id: "bankAccountNumber"
     },
-    // {
-    //   question: "In the case of death claims, who would you choose to be your beneficiary/next of kin?",
-    //   responseType: "string",
-    //   id: "beneficiaryName"
-    // },
-    // {
-    //   question: "And what's your beneficiary's NRIC/FIN/Passport?",
-    //   responseType: "string",
-    //   id: "beneficiaryICNumber"
-    // },
     {
-      question: "Thank you <%= name %> for the information. I will now bring you to the confirmation page.",
+      question: "Thank you <%= lastName %> <%= firstName %> for the information. I will now bring you to the confirmation page.",
       responseType: null
     }
   ],
