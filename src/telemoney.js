@@ -27,12 +27,14 @@ function generateFormData(payload) {
   let formData = new FormData();
   for (var key in payload) {
     if (payload.hasOwnProperty(key)) {
+      // formData.append(key, encodeURIComponent(payload[key]));
       formData.append(key, payload[key]);
     }
   }
   return formData;
 }
 
+export function verifyEnrolment(cardDetails, paytype, amt) {
   const ref = generateRef();
   const validity = generateValidity();
   const transtype = "vereq";
@@ -92,6 +94,7 @@ export function acsRedirection(acsUrl, PaReq, TermUrl, MD) {
     });
 }
 
+export function performPaymentAuthRequest(ref, amt, pares) {
   const validity = generateValidity();
   const transtype = "pares";
   const securitySeq = amt + ref + cur + mid + transtype + securityKey;
@@ -132,9 +135,11 @@ export function acsRedirection(acsUrl, PaReq, TermUrl, MD) {
 }
 
 export function create3dsAuthorizationRequest(
+  cardDetails,
   ref,
   paytype,
   threeDSStatus,
+  amt,
   eci,
   /*  For enrolled cards, the value is based on TM_ECI field in Payment Authentication (Response)
     For non-enrolled cards, the value is based on TM_ECI field in Verify Enrollment (Response) */
@@ -145,6 +150,7 @@ export function create3dsAuthorizationRequest(
   const transtype = "SALE";
   const securitySeq = amt + ref + cur + mid + transtype + securityKey;
   const signature = sha512(securitySeq);
+  const { ccnum, ccdate, cccvv } = cardDetails;
   let payload = {
     mid,
     ref,
@@ -156,12 +162,14 @@ export function create3dsAuthorizationRequest(
     ccdate,
     cccvv,
     "3dsstatus": threeDSStatus,
+    // returnurl: "http://microumbrella.com",
     signature,
     validity,
     version: API_VERSION
   };
   if (threeDSStatus !== "CNE") {
     payload["eci"] = eci;
+    payload["cavv"] = encodeURIComponent(cavv);
     payload["xid"] = xid;
   }
   console.log(payload);
@@ -183,7 +191,10 @@ export function create3dsAuthorizationRequest(
     });
 }
 
+export function doFull3DSTransaction(cardDetails, paytype, amtFloat) {
   let ref;
+  const amt = amtFloat.toFixed(2);
+  return verifyEnrolment(cardDetails, paytype, amt)
     .then(res => {
       const { Acsurl, PaReq, TM_RefNo } = res;
       ref = TM_RefNo;
@@ -205,11 +216,13 @@ export function create3dsAuthorizationRequest(
       return performPaymentAuthRequest(ref, amt, PaRes);
     })
     .catch(err => {
+      console.error("payment authentication", err);
     })
     .then(res => {
       const { TM_3DSStatus, TM_ECI, TM_CAVV, TM_XID } = res;
-      console.log("payment authorized");
+      console.log("payment authenticated");
       return create3dsAuthorizationRequest(
+        cardDetails,
         ref,
         paytype,
         TM_3DSStatus,
@@ -220,6 +233,7 @@ export function create3dsAuthorizationRequest(
       );
     })
     .catch(err => {
+      console.error("3DS", err);
     })
     .then(res => {
       console.log("3DS sale done");
