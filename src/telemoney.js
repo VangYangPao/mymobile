@@ -1,20 +1,249 @@
-import { fetch } from "react-native";
+import * as cheerio from "cheerio";
 import { sha512 } from "js-sha512";
 import moment from "moment";
 
-function objectToUrlParams(data) {
-  return Object.keys(data)
-    .map(key => `${key}=${encodeURIComponent(data[key])}`)
-    .join("&");
+import { objectToUrlParams, getObjectFromUrlParams } from "./utils";
+
+const PAYMENT_PROCESS_URL =
+  "https://test.wirecard.com.sg/easypay2/paymentprocess.do";
+const cur = "SGD";
+const mid = "20151111011";
+const securityKey = "ABC123456";
+const API_VERSION = 2;
+
+const CARDS = {
+  "2": {
+    ccnum: "5453010000064154",
+    ccdate: "2101",
+    cccvv: 123,
+    ccname: "Chan"
+  },
+  "3": {
+    ccnum: "4005550000000001",
+    ccdate: "2101",
+    cccvv: "602",
+    ccname: "Chan"
+  }
+};
+
+export function generateRef() {
+  const now = new Date();
+  return "WT" + moment(now).format("DDMMYYHHmm");
 }
 
-const mid = "20151111011";
+export function generateValidity() {
+  const now = new Date();
+  const fiveMinsLater = new Date(now.getTime() + 5 * 60000);
+  return moment(fiveMinsLater).format("YYYY-MM-DD-HH:mm:SS");
+}
+
+function generateFormData(payload) {
+  let formData = new FormData();
+  for (var key in payload) {
+    if (payload.hasOwnProperty(key)) {
+      formData.append(key, payload[key]);
+    }
+  }
+  return formData;
+}
+
+export function verifyEnrolment(paytype, amtFloat) {
+  const ref = generateRef();
+  const validity = generateValidity();
+  const cardDetails = CARDS[paytype];
+  const amt = amtFloat.toFixed(2);
+  const transtype = "vereq";
+  const securitySeq = amt + ref + cur + mid + transtype + securityKey;
+  const signature = sha512(securitySeq);
+  const payload = {
+    mid,
+    ref,
+    transtype,
+    cur,
+    amt,
+    signature,
+    validity,
+    paytype,
+    ccnum: cardDetails.ccnum,
+    ccdate: cardDetails.ccdate,
+    cccvv: cardDetails.cccvv,
+    returnurl: "http://microumbrella.com",
+    version: API_VERSION
+  };
+  // const params = console.log(
+  //   `${PAYMENT_PROCESS_URL}/${objectToUrlParams(payload)}`
+  // );
+  const formData = generateFormData(payload);
+
+  return fetch(PAYMENT_PROCESS_URL, {
+    method: "POST",
+    body: formData
+  })
+    .then(res => res.text())
+    .catch(err => {
+      throw err;
+    })
+    .then(resStr => {
+      const res = getObjectFromUrlParams(resStr);
+      if (res.TM_Status === "NO") {
+        throw new Error(JSON.stringify(res));
+      }
+      return res;
+    })
+    .catch(err => {
+      throw err;
+    });
+}
+
+export function acsRedirection(acsUrl, PaReq, TermUrl, MD) {
+  const payload = { PaReq, TermUrl, MD };
+  const params = objectToUrlParams(payload);
+  const formData = generateFormData(payload);
+  return fetch(acsUrl, {
+    method: "POST",
+    body: formData
+  })
+    .then(res => res.text())
+    .catch(err => {
+      throw err;
+    });
+}
+
+export function performPaymentAuthRequest(ref, amtFloat, pares) {
+  const validity = generateValidity();
+  const amt = amtFloat.toFixed(2);
+  const transtype = "pares";
+  const securitySeq = amt + ref + cur + mid + transtype + securityKey;
+  const signature = sha512(securitySeq);
+  let payload = {
+    mid,
+    ref,
+    cur,
+    amt,
+    pares,
+    ref,
+    transtype,
+    subtranstype: "vereq",
+    md: ref
+    // signature,
+    // validity,
+    // version: API_VERSION
+  };
+  const formData = generateFormData(payload);
+  return fetch(PAYMENT_PROCESS_URL, {
+    method: "POST",
+    body: formData
+  })
+    .then(res => res.text())
+    .catch(err => {
+      throw err;
+    })
+    .then(resStr => {
+      const res = getObjectFromUrlParams(resStr);
+      if (res.TM_Status === "NO") {
+        throw new Error(JSON.stringify(res));
+      }
+      return res;
+    })
+    .catch(err => {
+      throw err;
+    });
+}
+
+export function create3dsAuthorizationRequest(
+  ref,
+  paytype,
+  threeDSStatus,
+  amt,
+  eci,
+  /*  For enrolled cards, the value is based on TM_ECI field in Payment Authentication (Response)
+    For non-enrolled cards, the value is based on TM_ECI field in Verify Enrollment (Response) */
+  cavv, // The value is based on TM_CAVV field in Payment Authentication (Response)
+  xid // The value is based on TM_XID field in Payment Authentication (Response)
+) {
+  const validity = generateValidity();
+  const transtype = "sale";
+  const securitySeq = amt + ref + cur + mid + transtype + securityKey;
+  const signature = sha512(securitySeq);
+  const { ccnum, ccdate, cccvv } = CARDS[paytype];
+  let payload = {
+    mid,
+    ref,
+    cur,
+    amt,
+    transtype,
+    ccnum,
+    ccdate,
+    cccvv,
+    "3dsstatus": threeDSStatus,
+    returnurl: "http://microumbrella.com",
+    signature,
+    validity
+  };
+  if (threeDSStatus !== "CNE") {
+    payload["eci"] = xid;
+    payload["cavv"] = cavv;
+    payload["xid"] = xid;
+  }
+  console.log(payload);
+  const formData = generateFormData(payload);
+  return fetch(PAYMENT_PROCESS_URL, {
+    method: "POST",
+    body: formData
+  })
+    .then(res => res.text())
+    .catch(err => {
+      throw err;
+    });
+}
+
+export function doFull3DSTransaction(paytype, amt) {
+  let ref;
+  return verifyEnrolment(paytype, amt)
+    .then(res => {
+      const { Acsurl, PaReq, TM_RefNo } = res;
+      ref = TM_RefNo;
+      console.log("verified enrolment");
+      return acsRedirection(
+        Acsurl,
+        PaReq,
+        "http://microumbrella.com/term",
+        TM_RefNo
+      );
+    })
+    .catch(err => {
+      console.error("verify enrolment", err);
+    })
+    .then(html => {
+      console.log("acs redirected");
+      const $ = cheerio.load(html);
+      console.log(html);
+      const PaRes = $('input[name="PaRes"]').val();
+      return performPaymentAuthRequest(ref, amt, PaRes);
+    })
+    .then(res => {
+      console.log(res);
+      const { TM_3DSStatus, TM_ECI, TM_CAVV, TM_XID } = res;
+      return create3dsAuthorizationRequest(
+        ref,
+        paytype,
+        TM_3DSStatus,
+        amt,
+        TM_ECI,
+        TM_CAVV,
+        TM_XID
+      );
+    })
+    .catch(err => {
+      console.error("payment authentication", err);
+    })
+    .then(res => res.text());
+}
 
 export function createEasyPaySaleURL(amtFloat) {
   const url = "https://test.wirecard.com.sg/easypay2/paymentpage.do";
   const amt = amtFloat.toFixed(2);
   const now = new Date();
-  const fiveMinsLater = new Date(now.getTime() + 5 * 60000);
   const validity = moment(fiveMinsLater).format("YYYY-MM-DD-HH:mm:SS");
   const ref = "WT" + moment(now).format("DDMMYYHHmm");
   const cur = "SGD";

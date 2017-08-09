@@ -27,13 +27,16 @@
     "react-native-vectordrawable-android": "https://github.com/mavenave/react-native-vectordrawable-android/tarball/master",
     "react-native-viewpager": "^0.2.13",
     "react-navigation": "git+https://github.com/react-community/react-navigation.git#b8dbbe964eb534f1870cb000c592d730ac0eabfd",
-    "tcomb-form-native": "^0.6.8"
+    "tcomb-form-native": "^0.6.8",
+    "uuid": "^3.1.0"
   },
   "devDependencies": {
     "babel-jest": "19.0.0",
     "babel-preset-react-native": "1.9.1",
-    "jest": "19.0.2",
+    "cheerio": "^1.0.0-rc.2",
     "isomorphic-fetch": "^2.2.1",
+    "isomorphic-form-data": "^1.0.0",
+    "jest": "19.0.2",
     "react-test-renderer": "16.0.0-alpha.6"
   },
   "jest": {

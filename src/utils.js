@@ -7,6 +7,15 @@ export function objectToUrlParams(data) {
     .join("&");
 }
 
+export function getObjectFromUrlParams(query) {
+  var result = {};
+  query.split("&").forEach(function(part) {
+    var item = part.split("=");
+    result[item[0]] = decodeURIComponent(item[1]);
+  });
+  return result;
+}
+
 export function getDateStr(datetime) {
   const day = datetime.getDate();
   const month = datetime.getMonth();
