@@ -6,25 +6,11 @@ import { objectToUrlParams, getObjectFromUrlParams } from "./utils";
 
 const PAYMENT_PROCESS_URL =
   "https://test.wirecard.com.sg/easypay2/paymentprocess.do";
+const SALE_STATUS_URL = "https://shell-club.glitch.me/status";
 const cur = "SGD";
 const mid = "20151111011";
 const securityKey = "ABC123456";
 const API_VERSION = 2;
-
-const CARDS = {
-  "2": {
-    ccnum: "5453010000064154",
-    ccdate: "2101",
-    cccvv: 123,
-    ccname: "Chan"
-  },
-  "3": {
-    ccnum: "4005550000000001",
-    ccdate: "2101",
-    cccvv: "602",
-    ccname: "Chan"
-  }
-};
 
 export function generateRef() {
   const now = new Date();
@@ -47,11 +33,8 @@ function generateFormData(payload) {
   return formData;
 }
 
-export function verifyEnrolment(paytype, amtFloat) {
   const ref = generateRef();
   const validity = generateValidity();
-  const cardDetails = CARDS[paytype];
-  const amt = amtFloat.toFixed(2);
   const transtype = "vereq";
   const securitySeq = amt + ref + cur + mid + transtype + securityKey;
   const signature = sha512(securitySeq);
@@ -109,9 +92,7 @@ export function acsRedirection(acsUrl, PaReq, TermUrl, MD) {
     });
 }
 
-export function performPaymentAuthRequest(ref, amtFloat, pares) {
   const validity = generateValidity();
-  const amt = amtFloat.toFixed(2);
   const transtype = "pares";
   const securitySeq = amt + ref + cur + mid + transtype + securityKey;
   const signature = sha512(securitySeq);
@@ -154,19 +135,16 @@ export function create3dsAuthorizationRequest(
   ref,
   paytype,
   threeDSStatus,
-  amtFloat,
   eci,
   /*  For enrolled cards, the value is based on TM_ECI field in Payment Authentication (Response)
     For non-enrolled cards, the value is based on TM_ECI field in Verify Enrollment (Response) */
   cavv, // The value is based on TM_CAVV field in Payment Authentication (Response)
   xid // The value is based on TM_XID field in Payment Authentication (Response)
 ) {
-  const amt = amtFloat.toFixed(2);
   const validity = generateValidity();
   const transtype = "SALE";
   const securitySeq = amt + ref + cur + mid + transtype + securityKey;
   const signature = sha512(securitySeq);
-  const { ccnum, ccdate, cccvv } = CARDS[paytype];
   let payload = {
     mid,
     ref,
@@ -178,14 +156,12 @@ export function create3dsAuthorizationRequest(
     ccdate,
     cccvv,
     "3dsstatus": threeDSStatus,
-    returnurl: "http://microumbrella.com",
     signature,
     validity,
     version: API_VERSION
   };
   if (threeDSStatus !== "CNE") {
     payload["eci"] = eci;
-    payload["cavv"] = cavv;
     payload["xid"] = xid;
   }
   console.log(payload);
@@ -207,9 +183,7 @@ export function create3dsAuthorizationRequest(
     });
 }
 
-export function doFull3DSTransaction(paytype, amt) {
   let ref;
-  return verifyEnrolment(paytype, amt)
     .then(res => {
       const { Acsurl, PaReq, TM_RefNo } = res;
       ref = TM_RefNo;
@@ -231,7 +205,6 @@ export function doFull3DSTransaction(paytype, amt) {
       return performPaymentAuthRequest(ref, amt, PaRes);
     })
     .catch(err => {
-      console.error("acs redirection", err);
     })
     .then(res => {
       const { TM_3DSStatus, TM_ECI, TM_CAVV, TM_XID } = res;
@@ -247,14 +220,10 @@ export function doFull3DSTransaction(paytype, amt) {
       );
     })
     .catch(err => {
-      console.error("payment authorization", err);
     })
     .then(res => {
       console.log("3DS sale done");
       return res;
-    })
-    .catch(err => {
-      console.error("payment authorization", err);
     });
 }
 

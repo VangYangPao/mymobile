@@ -12,6 +12,21 @@ import {
   doFull3DSTransaction
 } from "../src/telemoney";
 
+const CARDS = {
+  "2": {
+    ccnum: "5453010000064154",
+    ccdate: "2101",
+    cccvv: "123",
+    ccname: "Chan"
+  },
+  "3": {
+    ccnum: "4005550000000001",
+    ccdate: "2101",
+    cccvv: "602",
+    ccname: "Chan"
+  }
+};
+
 // it("verifies enrolment correctly", () => {
 //   verifyEnrolment(2, 10.0)
 //     .then(res => {
@@ -76,8 +91,7 @@ import {
 // });
 
 it("does 3DS authorization correctly", () => {
-  const paytype = 3;
   const amt = 10.0;
-
-  doFull3DSTransaction(paytype, amt).then(res => console.log(res));
+  // doFull3DSTransaction(CARDS[2], 2, amt).then(res => console.log(res));
+  doFull3DSTransaction(CARDS[3], 3, amt).then(res => console.log(res));
 });
