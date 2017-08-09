@@ -76,12 +76,8 @@ import {
 // });
 
 it("does 3DS authorization correctly", () => {
-  const paytype = 2;
+  const paytype = 3;
   const amt = 10.0;
 
-  doFull3DSTransaction(paytype, amt)
-    .then(res => console.log(res))
-    .catch(err => {
-      throw err;
-    });
+  doFull3DSTransaction(paytype, amt).then(res => console.log(res));
 });

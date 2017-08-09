@@ -124,10 +124,10 @@ export function performPaymentAuthRequest(ref, amtFloat, pares) {
     ref,
     transtype,
     subtranstype: "vereq",
-    md: ref
-    // signature,
-    // validity,
-    // version: API_VERSION
+    md: ref,
+    signature,
+    validity,
+    version: API_VERSION
   };
   const formData = generateFormData(payload);
   return fetch(PAYMENT_PROCESS_URL, {
@@ -154,15 +154,16 @@ export function create3dsAuthorizationRequest(
   ref,
   paytype,
   threeDSStatus,
-  amt,
+  amtFloat,
   eci,
   /*  For enrolled cards, the value is based on TM_ECI field in Payment Authentication (Response)
     For non-enrolled cards, the value is based on TM_ECI field in Verify Enrollment (Response) */
   cavv, // The value is based on TM_CAVV field in Payment Authentication (Response)
   xid // The value is based on TM_XID field in Payment Authentication (Response)
 ) {
+  const amt = amtFloat.toFixed(2);
   const validity = generateValidity();
-  const transtype = "sale";
+  const transtype = "SALE";
   const securitySeq = amt + ref + cur + mid + transtype + securityKey;
   const signature = sha512(securitySeq);
   const { ccnum, ccdate, cccvv } = CARDS[paytype];
@@ -172,16 +173,18 @@ export function create3dsAuthorizationRequest(
     cur,
     amt,
     transtype,
+    paytype,
     ccnum,
     ccdate,
     cccvv,
     "3dsstatus": threeDSStatus,
     returnurl: "http://microumbrella.com",
     signature,
-    validity
+    validity,
+    version: API_VERSION
   };
   if (threeDSStatus !== "CNE") {
-    payload["eci"] = xid;
+    payload["eci"] = eci;
     payload["cavv"] = cavv;
     payload["xid"] = xid;
   }
@@ -192,6 +195,13 @@ export function create3dsAuthorizationRequest(
     body: formData
   })
     .then(res => res.text())
+    .then(resStr => {
+      const res = getObjectFromUrlParams(resStr);
+      if (res.TM_Status === "NO") {
+        throw new Error(JSON.stringify(res));
+      }
+      return res;
+    })
     .catch(err => {
       throw err;
     });
@@ -217,13 +227,15 @@ export function doFull3DSTransaction(paytype, amt) {
     .then(html => {
       console.log("acs redirected");
       const $ = cheerio.load(html);
-      console.log(html);
       const PaRes = $('input[name="PaRes"]').val();
       return performPaymentAuthRequest(ref, amt, PaRes);
     })
+    .catch(err => {
+      console.error("acs redirection", err);
+    })
     .then(res => {
-      console.log(res);
       const { TM_3DSStatus, TM_ECI, TM_CAVV, TM_XID } = res;
+      console.log("payment authorized");
       return create3dsAuthorizationRequest(
         ref,
         paytype,
@@ -235,9 +247,15 @@ export function doFull3DSTransaction(paytype, amt) {
       );
     })
     .catch(err => {
-      console.error("payment authentication", err);
+      console.error("payment authorization", err);
     })
-    .then(res => res.text());
+    .then(res => {
+      console.log("3DS sale done");
+      return res;
+    })
+    .catch(err => {
+      console.error("payment authorization", err);
+    });
 }
 
 export function createEasyPaySaleURL(amtFloat) {
