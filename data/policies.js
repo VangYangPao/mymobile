@@ -11,6 +11,7 @@ const notCovered = [
 
 export default (policies = [
   {
+    id: "pa",
     title: "Accidental Death / Permanent Disability",
     imageSource: "ic_ad_pd",
     from: "1 month",
@@ -45,6 +46,7 @@ export default (policies = [
     notCovered
   },
   {
+    id: "pa_mr",
     title: "Accidental Death / Permanent Disability with Medical Reimbursement",
     subtitle: "Up to $10,000",
     imageSource: "ic_ad_pd_medical_reimbursement",
@@ -90,6 +92,7 @@ export default (policies = [
     notCovered
   },
   {
+    id: "pa_wi",
     title: "Accidental Death / Permanent Disability with Weekly Indemnity",
     subtitle: "Requires medical record (TCM / Physiotherapy)",
     imageSource: "ic_ad_pd_weekly_indemnity",
@@ -134,6 +137,7 @@ export default (policies = [
     notCovered
   },
   {
+    id: "travel",
     title: "Travel Protection",
     imageSource: "ic_travel_protection",
     description: "At a super-low price, this is a super-big comprehensive plan that covers most of your financial loss and unforeseen expenses when you travel overseas. It covers you and your family's medical expenses, loss of baggage, loss of cash, and loss of home contents. You and your family enjoy unlimited emergency medical evacuation, cash compensation for flight delay, diversion or cancellation. In the event accidental death or permanent disability, your loved ones will receive a lump sum cash within days. These are just some highlights, and we are constantly adding more benefits and coverage to make you travel happily and peacefully!",
@@ -157,6 +161,7 @@ export default (policies = [
     notCovered
   },
   {
+    id: "phone",
     title: "Phone Protection",
     imageSource: "ic_phone_protection",
     from: "1 year",
