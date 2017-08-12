@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import Slider from "react-native-slider";
 
 import colors from "./colors";
@@ -27,7 +27,7 @@ export default class RangeSlider extends Component {
     const sliderProps = {
       minimumValue: 0,
       maximumValue: this.props.elements.length - 1,
-      value: 0,
+      value: this.state.currentIndex,
       step: 1,
       maximumTrackTintColor: colors.borderLine,
       minimumTrackTintColor: colors.primaryOrange,

@@ -46,7 +46,6 @@ import colors from "./colors";
 import POLICIES from "../data/policies";
 import { validateAnswer, QUESTION_SETS } from "../data/questions";
 import Button from "./Button";
-import { createEasyPayURL } from "./telemoney";
 
 // Enable playback in silence mode (iOS only)
 Sound.setCategory("Playback");
@@ -1151,7 +1150,7 @@ class ChatScreen extends Component {
         }
       }
     }
-    // console.log(checkAgainst, nextQuestion.include);
+    // skip questions here
     if (
       nextQuestion.include !== undefined &&
       nextQuestion.include.indexOf(checkAgainst) === -1
@@ -1166,6 +1165,15 @@ class ChatScreen extends Component {
       this.setState({ currentQuestionIndex }, this.askNextQuestion);
       return;
     }
+    // eval only when needed
+    if (nextQuestion.condition) {
+      if (!eval(nextQuestion.condition)) {
+        // condition is not met
+        this.setState({ currentQuestionIndex }, this.askNextQuestion);
+        return;
+      }
+    }
+
     const nextQuestionText = template(nextQuestion.question)(
       this.state.answers
     );
