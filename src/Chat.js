@@ -44,7 +44,12 @@ import RangeSlider from "./RangeSlider";
 import PolicyChoice from "./PolicyChoice";
 import colors from "./colors";
 import POLICIES from "../data/policies";
-import { validateAnswer, QUESTION_SETS } from "../data/questions";
+import {
+  validateAnswer,
+  QUESTION_SETS,
+  paClaimQuestions,
+  travelClaimQuestions
+} from "../data/questions";
 import Button from "./Button";
 
 // Enable playback in silence mode (iOS only)
@@ -459,6 +464,7 @@ class ClaimPolicyChoice extends Component {
   }
 
   renderPolicy(policy, idx) {
+    const { title } = POLICIES.find(p => p.id === policy.policyType);
     return (
       <TouchableOpacity
         onPress={() => this.handleSelectPolicy.bind(this)(policy)}
@@ -471,7 +477,7 @@ class ClaimPolicyChoice extends Component {
             this.state.disabled ? widgetStyles.disabledPolicyChoice : null
           ]}
         >
-          <Text style={widgetStyles.policyChoiceName}>{policy.name}</Text>
+          <Text style={widgetStyles.policyChoiceName}>{title}</Text>
           <Text style={widgetStyles.policyDetailText}>
             Policy No.: PL{policy.id}
           </Text>
@@ -1008,16 +1014,23 @@ class ChatScreen extends Component {
   }
 
   handleSelectPolicyToClaim(policy) {
+    const { title } = POLICIES.find(p => p.id === policy.policyType);
     let answers = Object.assign(this.state.answers, {
-      policyName: policy.name
+      policyName: title
     });
     this.setState({ answers });
+
+    if (policy.policyType.indexOf("pa") !== -1) {
+      this.questions.push.apply(this.questions, paClaimQuestions);
+    } else if (policy.policyType.indexOf("travel") !== -1) {
+      this.questions.push.apply(this.questions, travelClaimQuestions);
+    }
 
     this.setState(
       this.concatMessage({
         type: "text",
         _id: uuid.v4(),
-        text: `I want to claim policy ${policy.name} (PL${policy.id})`,
+        text: `I want to claim policy ${title} (PL${policy.id})`,
         value: policy.id,
         user: CUSTOMER_USER
       }),
@@ -1093,7 +1106,7 @@ class ChatScreen extends Component {
           delete form.policy;
           delete form.planIndex;
           delete form.icImage;
-          if (policy.title === "Travel Protection") {
+          if (policy.id === "travel") {
             form.totalPremium = new Number(form.price);
             delete form.price;
           } else {
@@ -1107,7 +1120,7 @@ class ChatScreen extends Component {
             p => p.id === this.state.answers.claimPolicyNo
           );
           const policy = database.policies[policyIndex];
-          const { id, paid, purchaseDate } = policy;
+          const { id, paid, policyType, purchaseDate } = policy;
           database.claims.push({
             id,
             paid,
@@ -1138,18 +1151,19 @@ class ChatScreen extends Component {
     const nextQuestion = this.questions[currentQuestionIndex];
     let checkAgainst;
     if (this.props.questionSet !== "claim") {
-      checkAgainst = this.props.policy.title;
+      checkAgainst = this.props.policy.id;
     } else {
       if (this.state.answers.claimPolicyNo) {
         const policy = database.policies.find(
           p => p.id === this.state.answers.claimPolicyNo
         );
-        checkAgainst = policy.name;
+        checkAgainst = policy.policyType;
         if (nextQuestion.id !== "claimType") {
           checkAgainst = this.state.answers.claimType;
         }
       }
     }
+    console.log("checkAgainst", checkAgainst);
     // skip questions here
     if (
       nextQuestion.include !== undefined &&
