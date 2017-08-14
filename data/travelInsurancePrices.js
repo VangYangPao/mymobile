@@ -99,13 +99,8 @@ Per Week,39,47,60,75,76,91,117,147,57,69,90,112,77,93,121,151`;
 
 function csvToDict(csvStr) {
   let lines = csvStr.split("\n").map(line => line.split(","));
-  const insuredCategory = [
-    "Applicant",
-    "Insured & Spouse",
-    "Insured & Children",
-    "Family"
-  ];
-  const plans = ["Basic", "Enhanced", "Superior", "Premier"];
+  const insuredCategory = ["applicant", "spouse", "children", "family"];
+  const plans = ["Basic", "Enhanced", "Superior"];
 
   let periods = {};
   lines.forEach(line => {

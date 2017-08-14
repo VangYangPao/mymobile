@@ -230,16 +230,25 @@ class MyDatePicker extends Component {
     this.state = { date: new Date() };
   }
 
+  onPickDate(dateStr) {
+    const date = moment(dateStr).toDate();
+    this.setState({ date }, () => this.props.onPickDate(this.props.mode, date));
+  }
+
   render() {
     const now = new Date();
+    const mode = this.props.mode || "datetime";
+    const allowFuture = this.props.allowFuture || false;
+    const format = mode === "datetime" ? "YYYY-MM-DD HH:mm" : "YYYY-MM-DD";
+    const maxDate = allowFuture ? null : now;
     return (
       <DatePicker
         style={{ flex: 1, paddingHorizontal: 10 }}
-        date={now}
-        mode="datetime"
+        date={this.state.date}
+        mode={mode}
         placeholder="SELECT DATE"
-        format="YYYY-MM-DD HH:mm"
-        maxDate={now}
+        format={format}
+        maxDate={maxDate}
         confirmBtnText="Confirm"
         cancelBtnText="Cancel"
         customStyles={{
@@ -256,9 +265,7 @@ class MyDatePicker extends Component {
             color: colors.primaryOrange
           }
         }}
-        onDateChange={dateStr => {
-          this.props.onPickDate(moment(dateStr).toDate());
-        }}
+        onDateChange={this.onPickDate.bind(this)}
       />
     );
   }
@@ -452,6 +459,102 @@ class MultipleImagePicker extends Component {
   }
 }
 
+class ImageTable extends Component {
+  constructor(props) {
+    super(props);
+    this.handlePress = this.handlePress.bind(this);
+    this.state = { images: {} };
+    const { columns } = this.props;
+    for (var i = 0; i < columns.length; i++) {
+      this.state.images[columns[i].id] = null;
+    }
+  }
+
+  handlePress(id) {
+    return () => {
+      ImagePicker.showImagePicker(this.options, response => {
+        if (response.didCancel) {
+          console.log("User cancelled image picker");
+        } else if (response.error) {
+          console.log("ImagePicker Error: ", response.error);
+        } else {
+          let newImages = Object.assign({}, this.state.images);
+          newImages[id] = response.uri;
+          this.setState({ images: newImages });
+        }
+      });
+    };
+  }
+
+  render() {
+    const { columns } = this.props;
+    let i, j, chunk = 2;
+    let rows = [];
+    for ((i = 0), (j = columns.length); i < j; i += chunk) {
+      const row = columns.slice(i, i + chunk);
+      const rowElements = row.map(r => {
+        const imageUri = this.state.images[r.id];
+        return (
+          <TouchableOpacity
+            key={r.id}
+            onPress={this.handlePress(r.id)}
+            activeOpacity={0.6}
+            style={{
+              flex: 0.5,
+              borderWidth: 1,
+              borderColor: colors.softBorderLine,
+              backgroundColor: "white"
+            }}
+          >
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "flex-end",
+                paddingHorizontal: 15,
+                paddingVertical: 12
+              }}
+            >
+              <Text style={{ flex: 1, textAlign: "center", marginBottom: 10 }}>
+                {r.label}
+              </Text>
+              {imageUri === null
+                ? <Icon
+                    name="add"
+                    size={55}
+                    style={[
+                      widgetStyles.plusIcon,
+                      { color: colors.softBorderLine }
+                    ]}
+                  />
+                : <Image
+                    style={{ width: 70, height: 100, resizeMode: "cover" }}
+                    source={{ uri: imageUri }}
+                  />}
+            </View>
+          </TouchableOpacity>
+        );
+      });
+      rows.push(
+        <View key={i} style={{ flexDirection: "row" }}>
+          {rowElements}
+        </View>
+      );
+    }
+    return (
+      <View style={{ marginVertical: 25 }}>
+        {rows}
+        <Button
+          onPress={() => this.props.onFinishSelectImages(this.state.images)}
+          style={widgetStyles.confirmUpload}
+        >
+          UPLOAD IMAGES
+        </Button>
+      </View>
+    );
+  }
+}
+
 class ClaimPolicyChoice extends Component {
   constructor(props) {
     super(props);
@@ -562,7 +665,16 @@ class MultiInput extends Component {
       this.state.values.push("");
     }
     this.renderInput = this.renderInput.bind(this);
+    this.handlePickDate = this.handlePickDate.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handlePickDate(index) {
+    return (mode, date) => {
+      const values = [].concat(this.state.values);
+      values[index] = date;
+      this.setState({ values });
+    };
   }
 
   handleSubmit() {
@@ -577,11 +689,20 @@ class MultiInput extends Component {
     const len = inputs.length;
     const startStylesOrNull = index === 0 ? widgetStyles.choicesStart : null;
     const endStylesOrNull = index === len - 1 ? widgetStyles.choicesEnd : null;
-    return (
-      <View
-        key={input.id}
-        style={[widgetStyles.textInputContainer, startStylesOrNull]}
-      >
+
+    let inputElement;
+    if (
+      input.type.indexOf("date") !== -1 || input.type.indexOf("datetime") !== -1
+    ) {
+      inputElement = (
+        <MyDatePicker mode={input.type} onPickDate={this.handlePickDate} />
+      );
+    } else {
+      let keyboardType = "default";
+      if (input.type.indexOf("number") !== -1) keyboardType = "numeric";
+      if (input.type.indexOf("email") !== -1) keyboardType = "email-address";
+      if (input.type.indexOf("") !== -1) keyboardType = "email-address";
+      inputElement = (
         <TextInput
           style={widgetStyles.textInput}
           placeholder={input.label}
@@ -594,13 +715,22 @@ class MultiInput extends Component {
           }}
           value={this.state.values[index]}
         />
+      );
+    }
+
+    return (
+      <View
+        key={input.id}
+        style={[widgetStyles.textInputContainer, startStylesOrNull]}
+      >
+        {inputElement}
       </View>
     );
   }
 
   render() {
     return (
-      <View style={[widgetStyles.choicesList]}>
+      <View style={[widgetStyles.choicesList, { marginBottom: 100 }]}>
         {this.props.inputs.map(this.renderInput)}
         <Button
           onPress={this.handleSubmit}
@@ -822,6 +952,7 @@ class ChatScreen extends Component {
     );
     this.handleSelectDuration = this.handleSelectDuration.bind(this);
     this.handleFinishSelectImages = this.handleFinishSelectImages.bind(this);
+    this.handleFinishImageTable = this.handleFinishImageTable.bind(this);
     this.handlePickImage = this.handlePickImage.bind(this);
     this.handlePickDate = this.handlePickDate.bind(this);
     this.handlePickChoice = this.handlePickChoice.bind(this);
@@ -913,7 +1044,7 @@ class ChatScreen extends Component {
   }
 
   handleSelectTravelInsurancePlan(planIndex, price) {
-    const plans = ["Basic", "Enhanced", "Superior", "Premier"];
+    const plans = ["Basic", "Enhanced", "Superior"];
     const answers = Object.assign(this.state.answers, { price });
     this.setState(
       this.concatMessage({
@@ -958,14 +1089,16 @@ class ChatScreen extends Component {
     );
   }
 
-  handlePickDate(date) {
+  handlePickDate(mode, date) {
+    const format = mode === "datetime" ? "YYYY-MM-DD HH:mm A" : "YYYY-MM-DD";
+    const dateStr = moment(date).format(format);
     this.setState(
       this.concatMessage({
         type: "text",
         _id: uuid.v4(),
         user: CUSTOMER_USER,
         value: date,
-        text: `It happened on ${moment(date).format("YYYY-MM-DD HH:mm A")}`
+        text: `${dateStr}`
       }),
       () => this.setState({ answering: false })
     );
@@ -1007,6 +1140,23 @@ class ChatScreen extends Component {
           ? `These are the ${imagesUri.length} photo${s} you requested.`
           : "I prefer to skip this",
         value: imagesUri,
+        user: CUSTOMER_USER
+      }),
+      () => this.setState({ answering: false, renderInput: true })
+    );
+  }
+
+  handleFinishImageTable(images) {
+    const imageLen = Object.keys(images).length;
+    const s = imageLen > 1 ? "s" : "";
+    this.setState(
+      this.concatMessage({
+        type: "text",
+        _id: uuid.v4(),
+        text: imageLen
+          ? `These are the ${imageLen} photo${s} you requested.`
+          : "I prefer to skip this",
+        value: images,
         user: CUSTOMER_USER
       }),
       () => this.setState({ answering: false, renderInput: true })
@@ -1163,7 +1313,6 @@ class ChatScreen extends Component {
         }
       }
     }
-    console.log("checkAgainst", checkAgainst);
     // skip questions here
     if (
       nextQuestion.include !== undefined &&
@@ -1229,7 +1378,7 @@ class ChatScreen extends Component {
           "claimPolicyNo"
           // "travelDetails"
         ];
-        const typeWidgets = ["images", "choice"];
+        const typeWidgets = ["images", "imageTable", "choice"];
         if (widgets.indexOf(currentQuestion.id) !== -1) {
           appendWidget(currentQuestion.id);
         }
@@ -1239,6 +1388,11 @@ class ChatScreen extends Component {
           if (type === "choice") {
             appendWidget("choice", { choices: currentQuestion.choices });
           }
+          if (type === "imageTable") {
+            const { columns } = currentQuestion;
+            appendWidget("imageTable", { columns });
+          }
+          // appendWidget(type, currentQuestion);
         });
       }
     );
@@ -1284,6 +1438,7 @@ class ChatScreen extends Component {
         ) {
           answer = parseFloat(answer);
         }
+        console.log(answer);
         const result = validateAnswer(lastQuestion, answer);
 
         if (result.isValid) {
@@ -1367,6 +1522,13 @@ class ChatScreen extends Component {
             onFinishSelectImages={this.handleFinishSelectImages}
           />
         );
+      case "imageTable":
+        return (
+          <ImageTable
+            columns={currentMessage.columns}
+            onFinishSelectImages={this.handleFinishImageTable}
+          />
+        );
       case "policies":
         return <PolicyChoice onSelectPolicy={this.handleSelectPolicy} />;
       case "planIndex":
@@ -1378,12 +1540,15 @@ class ChatScreen extends Component {
           const {
             travelDestination,
             recipient,
-            travelDuration
+            departureDate,
+            returnDate
           } = this.state.answers;
+          var days =
+            Math.abs(returnDate - departureDate) / (1000 * 60 * 60 * 24);
           const additionalProps = {
             travelDestination,
             recipient,
-            travelDuration
+            travelDuration: days
           };
           return (
             <TravelInsurancePlanCarousel
@@ -1420,7 +1585,21 @@ class ChatScreen extends Component {
     responseType = [].concat(responseType);
 
     if (responseType.indexOf("date") !== -1) {
-      return <MyDatePicker onPickDate={this.handlePickDate} />;
+      return (
+        <MyDatePicker
+          allowFuture={currentQuestion.allowFuture}
+          mode="date"
+          onPickDate={this.handlePickDate}
+        />
+      );
+    } else if (responseType.indexOf("datetime") !== -1) {
+      return (
+        <MyDatePicker
+          allowFuture={currentQuestion.allowFuture}
+          mode="datetime"
+          onPickDate={this.handlePickDate}
+        />
+      );
     } else if (currentQuestion.id === "downloadForm") {
       return (
         <DownloadFormActionButton onDownload={this.handleDownload.bind(this)} />
@@ -1433,7 +1612,6 @@ class ChatScreen extends Component {
     if (responseType.indexOf("phoneNumber") !== -1) keyboardType = "phone-pad";
     let textInputProps = {
       keyboardType,
-      autoFocus: true,
       autoCorrect: false,
       autoCapitalize: "none"
     };

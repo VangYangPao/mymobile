@@ -105,7 +105,9 @@ const TypeValidators = {
   number: validateNumber,
   phoneNumber: validatePhoneNumber,
   images: validateImages,
+  imageTable: () => new ValidationResult(true, true),
   date: validateDate,
+  datetime: validateDate,
   choice: () => new ValidationResult(true, true),
   nric: validateNRIC,
   boolean: validateBoolean
@@ -114,6 +116,19 @@ const TypeValidators = {
 export function validateAnswer(question, answer) {
   const { responseType } = question;
   const responseTypes = [].concat(responseType);
+  if (Array.isArray(question.id)) {
+    // for (var i = 0; i < answer.length; i++) {
+    //   const
+    //   for (var j = 0; j < responseType.length; j++) {
+    //     const res
+    //   }
+    //   validateFunc = TypeValidators[responseTypes[i]];
+    //   response = validateFunc(answer);
+    //   if (!response.isValid) return response;
+    // }
+    // return response;
+    return new ValidationResult(true, true);
+  }
   var validateFunc;
   for (var i = 0; i < responseTypes.length; i++) {
     validateFunc = TypeValidators[responseTypes[i]];
@@ -175,13 +190,13 @@ export const paClaimQuestions = [
 
   {
     question: "I'm so sorry to hear that. I assume you are <%= fullName %>’s claimant/next of kin. Please share with me the date and time of the accident",
-    responseType: "date",
+    responseType: "datetime",
     id: "accidentDate",
     include: ["death"]
   },
   {
     question: "Oh… I am sad to hear that. Let me help out on the claim fast. Please share with me the date and time of the accident",
-    responseType: "date",
+    responseType: "datetime",
     id: "accidentDate",
     include: ["permanentDisability"]
   },
@@ -206,7 +221,7 @@ export const paClaimQuestions = [
 
   {
     question: "Please share with me the date and time of the accident?",
-    responseType: "date",
+    responseType: "datetime",
     include: ["weeklyCompensation"]
   },
   {
@@ -549,34 +564,73 @@ export const travelClaimQuestions = [
     id: "claimType"
   },
   {
+    question: "We are almost done to get you claim fast. I need your help to snap or upload some photos. Refer to the boxes below, try your best to snap/upload the right images for each box",
+    responseType: "imageTable",
+    columns: [
+      { label: "Boarding pass/Flight itinerary", id: "boardingPass" },
+      {
+        label: "Death certificate that is certified true copy by your lawyer or any notary public",
+        id: "deathCertificate"
+      },
+      {
+        label: "Letter from Immigration and Checkpoint Authority, ICA",
+        id: "immigrationLetter"
+      },
+      {
+        label: "Repatriation report",
+        id: "repatriationReport"
+      },
+      {
+        label: "Document proof of claimant’s relationship to the person who died",
+        id: "relationshipProof"
+      },
+      {
+        label: "Police report (if any)",
+        id: "policeReport"
+      }
+    ],
+    include: ["death"],
+    id: "deathClaimImages"
+  },
+  {
     question: "I’m so sorry to hear that. I assume you are FULLNAME’s claimant/next of kin. Please share with me the date and time of the accident",
-    responseType: "date",
+    responseType: "datetime",
     id: "claimDate",
     include: ["death"]
   },
   {
     question: "Oh… I am sad to hear that. Let me help out on the claim fast. Please share with me the date and time of the accident",
-    responseType: "date",
+    responseType: "datetime",
     id: "claimDate",
     include: ["permanentDisability"]
   },
   {
     question: "FULLNAME, I wish you get well soon. Let me help out on the claim fast. Please share with me the date and time of the accident",
-    responseType: "date",
+    responseType: "datetime",
     id: "claimDate",
     include: ["medicalReimbursement"]
   },
   {
     question: "FULLNAME, you just selected the option to claim for damaged or loss of baggage while in the custody of others. Please share with me the date and time of damage or loss",
-    responseType: "date",
+    responseType: "datetime",
     id: "claimDate",
     include: ["baggageDamaged"]
   },
   {
     question: "FULLNAME, you just selected the option to claim for loss of personal document. Please share with me the date and time of loss",
-    responseType: "date",
+    responseType: "datetime",
     id: "claimDate",
     include: ["lossOfPersonalDocument"]
+  },
+  {
+    question: "FULLNAME, you just selected the option to claim for trip curtailment (shortening of trip) or cancellation or loss of travel deposit ",
+    responseType: null,
+    include: ["tripCurtailment"]
+  },
+  {
+    question: "FULLNAME, you just selected personal liability ",
+    responseType: null,
+    include: ["personalLiability"]
   },
   {
     question: "FULLNAME, you just selected the option to claim for travel delay, baggage delay, or flight misconnection. Please share with me the flight details",
@@ -616,21 +670,146 @@ export const travelClaimQuestions = [
     question: "What is the amount you claimed?",
     responseType: "number",
     id: "claimAmountFromOtherSource",
-    include: ["travelDelay"]
+    include: ["travelDelay"],
+    condition: "this.state.answers.hasClaimedFromOtherSource"
   },
   {
     question: "What is the ORIGINAL departure date, time and departing airport?",
-    responseType: ["date", "string"],
+    responseType: ["datetime", "string"],
     labels: ["Original Departure Date", "Departure Airport"],
     id: ["originalFlightDepartureDate", "originalFlightDepartureAirport"],
     include: ["travelDelay"]
   },
   {
     question: "What is the ACTUAL departure date, time and departing airport?",
-    responseType: ["date", "string"],
+    responseType: ["datetime", "string"],
     labels: ["Actual Departure Date", "Departure Airport"],
     id: ["actualFlightDepartureDate", "actualFlightDepartureAirport"],
     include: ["travelDelay"]
+  },
+  {
+    question: "What is the cause of trip curtailment or cancellation? ",
+    responseType: "string",
+    responseLength: 600,
+    id: "causeOfTripCurtailment",
+    include: ["tripCurtailment"]
+  },
+  {
+    question: "Please share with me the date of trip curtailment or cancellation",
+    responseType: "date",
+    id: "tripCurtailmentDate",
+    include: ["tripCurtailment"]
+  },
+  {
+    question: "If the trip curtailment or cancellation was caused by your medical condition, or your family member’s medical condition, have you or your family member suffered from this condition before? ",
+    responseType: ["boolean", "choice"],
+    choices: [
+      {
+        label: "Yes",
+        value: true
+      },
+      { label: "No", value: false }
+    ],
+    id: "sufferedFromConditionBefore",
+    include: ["tripCurtailment"]
+  },
+  {
+    question: "Please explain the medical condition in detail",
+    responseType: "string",
+    id: "medicalCondition",
+    include: ["tripCurtailment"],
+    condition: "this.state.answers.sufferedFromConditionBefore"
+  },
+  {
+    question: "Please share with me the NAME, ADDRESS and CONTACT of the attending physician",
+    responseType: ["string", "string", "string"],
+    labels: ["Name", "Address", "Contact number"],
+    id: ["physicianName", "physicianAddress", "physicianContact"],
+    include: ["tripCurtailment"],
+    condition: "this.state.answers.sufferedFromConditionBefore"
+  },
+  {
+    question: "What happened in detail leading to personal liability? ",
+    responseType: "string",
+    responseLength: 600,
+    id: "personalLiabilityDetail",
+    include: ["personalLiability"]
+  },
+  {
+    question: "Was the accident due to carelessness or negligence on your part? ",
+    responseType: ["boolean", "choice"],
+    choices: [
+      {
+        label: "Yes",
+        value: true
+      },
+      { label: "No", value: false }
+    ],
+    id: "isDueToCarelessness",
+    include: ["personalLiability"]
+  },
+  {
+    question: "Have you admitted fault? ",
+    responseType: ["boolean", "choice"],
+    choices: [
+      {
+        label: "Yes",
+        value: true
+      },
+      { label: "No", value: false }
+    ],
+    id: "hasAdmittedFault",
+    include: ["personalLiability"]
+  },
+  // {
+  //   question: "Please provide the name and contact of witness",
+  //   responseType: "table",
+  //   columns: [
+  //     { label: "Name", id: "name", type: "string" },
+  //     { label: "Contact", id: "contact", type: "string" }
+  //   ],
+  //   id: "witnesses",
+  //   include: ["personalLiability"]
+  // },
+  {
+    question: "Is there any injury sustained by any person or persons?",
+    responseType: ["boolean", "choice"],
+    choices: [
+      {
+        label: "Yes",
+        value: true
+      },
+      { label: "No", value: false }
+    ],
+    id: "injurySustainedByAnyPerson",
+    include: ["personalLiability"]
+  },
+  {
+    question: "Please share in detail the injury sustained by the person or persons",
+    responseType: "string",
+    id: "injuryDetail",
+    include: ["personalLiability"],
+    condition: "this.state.answers.injurySustainedByAnyPerson"
+  },
+  {
+    question: "Is there any damage to property or belongings? ",
+    responseType: ["boolean", "choice"],
+    choices: [
+      {
+        label: "Yes",
+        value: true
+      },
+      { label: "No", value: false }
+    ],
+    id: "hasDamageToProperty",
+    include: ["personalLiability"]
+  },
+  {
+    question: "Please share in detail the extent of damage",
+    responseType: "string",
+    id: "damageDetail",
+    include: ["personalLiability"],
+    condition: "this.state.answers.hasDamageToProperty"
   },
   {
     question: "Is your baggage delayed?",
@@ -647,7 +826,7 @@ export const travelClaimQuestions = [
   },
   {
     question: "What is your baggage's ORIGINAL departure date, time and departing airport? ",
-    responseType: ["date", "string"],
+    responseType: ["datetime", "string"],
     labels: ["Original Departure Date", "Departure Airport"],
     id: ["originalBaggageDepartureDate", "originalBaggageDepartureAirport"],
     include: ["travelDelay"],
@@ -655,11 +834,51 @@ export const travelClaimQuestions = [
   },
   {
     question: "What is your baggage's ACTUAL departure date, time and departing airport? ",
-    responseType: ["date", "string"],
+    responseType: ["datetime", "string"],
     labels: ["Actual Departure Date", "Departure Airport"],
     id: ["actualBaggageDepartureDate", "actualBaggageDepartureAirport"],
     include: ["travelDelay"],
     condition: "this.state.answers.isBaggageDelayed"
+  },
+  {
+    question: "We are almost done to get you claim fast. I need your help to snap or upload some photos. Refer to the boxes below, try your best to snap/upload the right images for each box",
+    responseType: "imageTable",
+    columns: [
+      {
+        label: "Original receipt or invoice of deposit paid in advance by you ",
+        id: "originalReceipt"
+      },
+      {
+        label: "Written confirmation from airline, or hotel, or travel agency, or service provider indicating non-refundable amount due to unavoidable trip cancellation by you",
+        id: "writtenConfirmation"
+      },
+      {
+        label: "Terms and conditions from airline, or hotel, or travel agency, or service provider indicating non-refundable clause",
+        id: "termsAndCondition"
+      },
+      {
+        label: "Relationship proof of immediate family member if postponement of trip is due to serious injury/illness/death of immediate family member",
+        id: "relationshipProof"
+      },
+      {
+        label: "Original receipt for additional travelling and/or hotel accommodation (if any)",
+        id: "travelReceipt"
+      },
+      {
+        label: "Death certificate of immediate family member (if any)",
+        id: "familyDeathCertificate"
+      },
+      {
+        label: "Memo/letter from registered medical practitioner certifying your travel companion or immediate family member injury/illness is critical or life-threatening (if any)",
+        id: "letterForTravelCompanion"
+      },
+      {
+        label: "Memo/letter from registered medical practitioner certifying you are unfit to travel (if any)",
+        id: "letterForSelf"
+      }
+    ],
+    id: "tripCurtailmentImages",
+    include: ["tripCurtailment"]
   },
   {
     question: "We are almost done to get you claim fast. I need your help to snap or upload some photos. Refer to the boxes below, try your best to snap/upload the right images for each box",
@@ -750,23 +969,23 @@ export const travelClaimQuestions = [
     id: "lossOfPersonalDocumentImages",
     include: ["lossOfPersonalDocument"]
   },
-  {
-    question: "We are almost done here. I need your help to itemise what are lost or damaged",
-    responseType: "table",
-    columns: [
-      {
-        label: "Description (make and model)",
-        id: "description",
-        type: "string"
-      },
-      { label: "Date of Purchase", id: "dateOfPurchase", type: "date" },
-      { label: "Place of Purchase", id: "placeOfPurchase", type: "string" },
-      { label: "Original Price", id: "originalPrice", type: "number" },
-      { label: "Claim Amount", id: "claimAmount", type: "number" }
-    ],
-    id: "baggageItems",
-    include: ["baggageDamaged"]
-  },
+  // {
+  //   question: "We are almost done here. I need your help to itemise what are lost or damaged",
+  //   responseType: "table",
+  //   columns: [
+  //     {
+  //       label: "Description (make and model)",
+  //       id: "description",
+  //       type: "string"
+  //     },
+  //     { label: "Date of Purchase", id: "dateOfPurchase", type: "date" },
+  //     { label: "Place of Purchase", id: "placeOfPurchase", type: "string" },
+  //     { label: "Original Price", id: "originalPrice", type: "number" },
+  //     { label: "Claim Amount", id: "claimAmount", type: "number" }
+  //   ],
+  //   id: "baggageItems",
+  //   include: ["baggageDamaged"]
+  // },
   {
     question: "We are almost done to get you claim fast. I need your help to snap or upload some photos. Refer to the boxes below, try your best to snap/upload the right images for each box",
     responseType: "imageTable",
@@ -792,6 +1011,24 @@ export const travelClaimQuestions = [
     ],
     id: "baggageDamagedImages",
     include: ["baggageDamaged"]
+  },
+  {
+    question: "We are almost done to get you claim fast. I need your help to snap or upload some photos. Refer to the boxes below, try your best to snap/upload the right images for each box",
+    responseType: "imageTable",
+    columns: [
+      { label: "Boarding pass/Flight itinerary", id: "boardingPass" },
+      {
+        label: "Tour itinerary",
+        id: "tourItinerary"
+      },
+      { label: "Police report", id: "policeReport" },
+      {
+        label: "Document proof by third party for claiming bodily injury or property damage against you",
+        id: "documentProof"
+      }
+    ],
+    id: "personalLiabilityImages",
+    include: ["personalLiability"]
   },
   {
     question: "What is the injury you suffered? What is the extent of your injury?",
@@ -920,7 +1157,7 @@ export const travelClaimQuestions = [
   {
     question: "FULLNAME, to complete your claim, I need your help to post the ORIGINAL MEDICAL BILLS AND/OR RECEIPTS to: HLAS, 11 Keppel Road #11-01 ABI Plaza Singapore 089057, within 48 hours ",
     responseType: null,
-    include: ["permanentDisability", "medicalReimbursement"]
+    include: ["permanentDisability", "medicalReimbursement", "tripCurtailment"]
   },
   {
     question: "If you have submitted the original bills and/or receipts to other insurer or your employer, please snap a clear photo of reimbursement letter, or discharge voucher from insurer, or letter from employer indicating the amount paid to you. Either one will do.",
@@ -930,61 +1167,61 @@ export const travelClaimQuestions = [
     include: ["permanentDisability"]
   },
 
-  // {
-  //   question: "We are almost done to get you claim fast. I need your help to snap or upload some photos. Refer to the boxes below, try your best to snap/upload the right images for each box",
-  //   responseType: "imageTable",
-  //   columns: [
-  //     { label: "Boarding pass/Flight itinerary", id: "boardingPass" },
-  //     {
-  //       label: "Original medical bills/receipts (if any)",
-  //       id: "medicalBill"
-  //     },
-  //     { label: "Discharge summary", id: "dischargeSummary" },
-  //     {
-  //       label: "Photocopy medical bills/receipts if original is submitted to other insurer",
-  //       id: "photocopyMedicalBill"
-  //     },
-  //     {
-  //       label: "Medical report",
-  //       id: "medicalReport"
-  //     },
-  //     {
-  //       label: "Police report (if any)",
-  //       id: "policeReport"
-  //     }
-  //   ],
-  //   include: ["medicalReimbursement"],
-  //   id: "medicalReimbursementImages"
-  // },
-  // {
-  //   question: "We are almost done to get you claim fast. I need your help to snap or upload some photos. Refer to the boxes below, try your best to snap/upload the right images for each box",
-  //   responseType: "imageTable",
-  //   columns: [
-  //     { label: "Boarding pass/Flight itinerary", id: "boardingPass" },
-  //     {
-  //       label: "Death certificate that is certified true copy by your lawyer or any notary public",
-  //       id: "deathCertificate"
-  //     },
-  //     {
-  //       label: "Letter from Immigration and Checkpoint Authority, ICA",
-  //       id: "immigrationLetter"
-  //     },
-  //     {
-  //       label: "Repatriation report",
-  //       id: "repatriationReport"
-  //     },
-  //     {
-  //       label: "Document proof of claimant’s relationship to the person who died",
-  //       id: "relationshipProof"
-  //     },
-  //     {
-  //       label: "Police report (if any)",
-  //       id: "policeReport"
-  //     }
-  //   ],
-  //   include: ["death"],
-  //   id: "deathClaimImages"
-  // },
+  {
+    question: "We are almost done to get you claim fast. I need your help to snap or upload some photos. Refer to the boxes below, try your best to snap/upload the right images for each box",
+    responseType: "imageTable",
+    columns: [
+      { label: "Boarding pass/Flight itinerary", id: "boardingPass" },
+      {
+        label: "Original medical bills/receipts (if any)",
+        id: "medicalBill"
+      },
+      { label: "Discharge summary", id: "dischargeSummary" },
+      {
+        label: "Photocopy medical bills/receipts if original is submitted to other insurer",
+        id: "photocopyMedicalBill"
+      },
+      {
+        label: "Medical report",
+        id: "medicalReport"
+      },
+      {
+        label: "Police report (if any)",
+        id: "policeReport"
+      }
+    ],
+    include: ["medicalReimbursement"],
+    id: "medicalReimbursementImages"
+  },
+  {
+    question: "We are almost done to get you claim fast. I need your help to snap or upload some photos. Refer to the boxes below, try your best to snap/upload the right images for each box",
+    responseType: "imageTable",
+    columns: [
+      { label: "Boarding pass/Flight itinerary", id: "boardingPass" },
+      {
+        label: "Death certificate that is certified true copy by your lawyer or any notary public",
+        id: "deathCertificate"
+      },
+      {
+        label: "Letter from Immigration and Checkpoint Authority, ICA",
+        id: "immigrationLetter"
+      },
+      {
+        label: "Repatriation report",
+        id: "repatriationReport"
+      },
+      {
+        label: "Document proof of claimant’s relationship to the person who died",
+        id: "relationshipProof"
+      },
+      {
+        label: "Police report (if any)",
+        id: "policeReport"
+      }
+    ],
+    include: ["death"],
+    id: "deathClaimImages"
+  },
   {
     question: "Thank you for your patience. Please keep this phone with you at all times, as I shall send you notifications and messages on your claim. Please switch on the notification. ",
     responseType: null
@@ -1013,24 +1250,40 @@ export const QUESTION_SETS = {
     {
       question: "When are you departing?",
       responseType: "date",
-      id: "departureDate"
+      allowFuture: true,
+      id: "departureDate",
+      include: ["travel"]
     },
     {
       question: "When are you returning?",
       responseType: "date",
-      id: "returnDate"
+      allowFuture: true,
+      id: "returnDate",
+      include: ["travel"]
+    },
+    {
+      question: "Nice. Who do you want to insure?",
+      responseType: ["string", "choice"],
+      choices: [
+        { label: "Myself", value: "applicant" },
+        { label: "Me and my spouse", value: "spouse" },
+        { label: "Me and my children", value: "children" },
+        { label: "My family", value: "family" }
+      ],
+      id: "recipient",
+      include: ["travel"]
     },
     {
       question: "I'll walk you through step-by-step. Let's start with the plan you prefer.",
       responseType: "number",
-      exclude: ["Phone Protection"],
+      exclude: ["phone"],
       id: "planIndex"
     },
     {
       question: "How long do you want to be covered for?",
       responseType: "number",
       id: "coverageDuration",
-      exclude: ["Phone Protection", "travel"]
+      exclude: ["phone", "travel"]
     },
     {
       question: "<%= ['Awesome', 'Nice', 'Great'][Math.floor(Math.random()*3)] %>. That would be $<%= (policy.plans[planIndex].premium * coverageDuration).toFixed(2) %>.",

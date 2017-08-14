@@ -9,9 +9,13 @@ export default function TravelInsurancePlanCarousel({
   travelDuration,
   onSelectPlan
 }) {
-  const planTitles = ["Basic", "Enhanced", "Superior", "Premier"];
+  const planTitles = ["Basic", "Enhanced", "Superior"];
   const getPlanTitle = index => planTitles[index] + " Plan";
   const renderCoverages = plan => null;
+  // console.log(
+  //   Object.keys(travelInsurancePrices[travelDestination].travelInsurancePrices)
+  // );
+  console.log(travelDestination, travelDuration, recipient);
   const planPrices =
     travelInsurancePrices[travelDestination][travelDuration][recipient];
   const plans = planTitles.map(p => ({ premium: planPrices[p] }));
