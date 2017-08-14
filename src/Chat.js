@@ -48,7 +48,8 @@ import {
   validateAnswer,
   QUESTION_SETS,
   paClaimQuestions,
-  travelClaimQuestions
+  travelClaimQuestions,
+  mobileClaimQuestions
 } from "../data/questions";
 import Button from "./Button";
 
@@ -1174,6 +1175,8 @@ class ChatScreen extends Component {
       this.questions.push.apply(this.questions, paClaimQuestions);
     } else if (policy.policyType.indexOf("travel") !== -1) {
       this.questions.push.apply(this.questions, travelClaimQuestions);
+    } else if (policy.policyType.indexOf("mobile") !== -1) {
+      this.questions.push.apply(this.questions, mobileClaimQuestions);
     }
 
     this.setState(

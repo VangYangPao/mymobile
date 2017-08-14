@@ -161,7 +161,7 @@ export default (policies = [
     notCovered
   },
   {
-    id: "phone",
+    id: "mobile",
     title: "Phone Protection",
     imageSource: "ic_phone_protection",
     from: "1 year",

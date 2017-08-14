@@ -11,7 +11,7 @@ export default (database = {
     {
       id: 15,
       status: "active",
-      policyType: "pa_wi",
+      policyType: "mobile",
       purchaseDate: new Date(2017, 5, 26, 16, 43),
       paid: 10.99
     },
