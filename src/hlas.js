@@ -14,6 +14,10 @@ const postHeaders = {
   "Content-Type": "application/json"
 };
 
+function generateRandomNumberFromRange(min, max) {
+  return Math.floor(Math.random() * max) + min;
+}
+
 function sendPOSTRequest(url, payload, errorResponse) {
   return fetch(url, {
     method: "POST",
@@ -28,8 +32,7 @@ function sendPOSTRequest(url, payload, errorResponse) {
         throw new Error(errorResponse + ": " + JSON.stringify(response));
       }
       return response;
-    })
-    .catch(error => console.error(error));
+    });
 }
 
 export function getPhoneProtectQuote() {
@@ -71,8 +74,7 @@ export function getAccidentQuote(
         );
       }
       return response;
-    })
-    .catch(error => console.error(error));
+    });
 }
 
 export function verifyApplicationAccident() {
@@ -162,17 +164,18 @@ export function getTravelQuote(
         throw new Error("Error getting quote: " + JSON.stringify(response));
       }
       return response;
-    })
-    .catch(error => console.error(error));
+    });
 }
 
-export function verifyApplicationTravelSingle() {
-  const WebAppID = uuidv4();
+export function verifyApplicationTravelSingle(WebAppID) {
   const today = new Date();
   const todayStr = moment(today).format("YYYY-MM-DD");
   const twoDaysLater = new Date(today.getTime() + 2 * 24 * 60 * 60 * 1000);
   const twoDaysLaterStr = moment(twoDaysLater).format("YYYY-MM-DD");
-  const now = new Date();
+  let numbers = "";
+  for (let i = 0; i < 7; i++) {
+    numbers += "" + generateRandomNumberFromRange(1, 10);
+  }
   const payload = {
     Premium: 10,
     WebAppID,
@@ -187,7 +190,7 @@ export function verifyApplicationTravelSingle() {
     PolicyHolder: {
       Surname: "test",
       GivenName: "test",
-      IDNumber: "S1799591B",
+      IDNumber: "S" + numbers + "C",
       DateOfBirth: "1988-07-22",
       GenderID: 1,
       MobileTelephone: "91234567",
@@ -236,4 +239,146 @@ export function verifyApplicationTravelSingle() {
   };
   const url = `${HLAS_URL}/api/Travel/VerifyApp_TravelSingle`;
   return sendPOSTRequest(url, payload, "Error verifying travel application");
+}
+
+export function createPaymentTransactionTravelSingle(WebAppID, PASAppID) {
+  const today = new Date();
+  const todayStr = moment(today).format("YYYY-MM-DD");
+  const twoDaysLater = new Date(today.getTime() + 2 * 24 * 60 * 60 * 1000);
+  const twoDaysLaterStr = moment(twoDaysLater).format("YYYY-MM-DD");
+  const payload = {
+    WebAppID,
+    CountryID: 86,
+    TravelStartDate: todayStr,
+    TravelEndDate: twoDaysLaterStr,
+    ProductPlanID: 1,
+    CoverageID: 13,
+    NumberOfChildren: 0,
+    PolicyHolder: {
+      Surname: "test",
+      GivenName: "test",
+      IDNumber: "S0086294J" + Math.floor(Math.random() * 6) + 1,
+      DateOfBirth: "1988-07-22",
+      GenderID: 1,
+      MobileTelephone: "91234567",
+      Email: "ayethet.san@hlas.com.sg",
+      UnitNumber: "11",
+      BlockHouseNumber: "11",
+      BuildingName: "sample string 12",
+      StreetName: "sample string 13",
+      PostalCode: "089057"
+    },
+    InsuredTravellers: [
+      {
+        Surname: "test",
+        GivenName: "test",
+        IDNumber: "S0086294J",
+        IDNumberType: 0,
+        DateOfBirth: "1988-07-22T16:06:27.4082335+08:00",
+        GenderID: 1,
+        RelationshipID: 4
+      }
+    ],
+    NetPremium: 16.0,
+    GrossPremium: 17.0,
+    PaymentInfo: {
+      PaymentReferenceNumber: `A${PASAppID}-WT1608170248`,
+      // Note A stands for Application 8919 is the ID returned from successful verified, WDF26F6 unique sequence generated
+      NameOnCard: "Test test",
+      CardNumber: "4005550000000001",
+      CardType: 0,
+      CardSecurityCode: "602",
+      CardExpiryYear: 2021,
+      CardExpiryMonth: 1,
+      BankID: 143,
+      PayByApplicant: true,
+      Surname: "test",
+      GivenName: "test",
+      IDNumber: "S0086294J",
+      // Note : Assumed always pay by applicant is true in the backend system
+      IDNumberType: 0,
+      TelephoneNumber: "91234567",
+
+      TelemoneyTransactionResponse: "TM_MCode=20151111011&TM_RefNo=WT1608170248&TM_TrnType=sale&TM_SubTrnType=&TM_Status=YES&TM_Error=&TM_Currency=SGD&TM_DebitAmt=11.00&TM_PaymentType=3&TM_BankRespCode=00&TM_ApprovalCode=878429&TM_ErrorMsg=&TM_UserField1=&TM_UserField2=&TM_UserField3=&TM_UserField4=&TM_UserField5=&TM_Original_RefNo=&TM_CCLast4Digit=0001&TM_RecurrentId=&TM_CCNum=xxxxxxxxxxxx0001&TM_ExpiryDate=2101&TM_IPP_FirstPayment=&TM_IPP_LastPayment=&TM_IPP_MonthlyPayment=&TM_IPP_TransTenure=&TM_IPP_TotalInterest=&TM_IPP_DownPayment=&TM_IPP_MonthlyInterest=&TM_OriginalPayType=3&TM_Version=2&TM_Signature=E5ADA760E8E251F8DBDDB8ADC8767949E694C6C6DC171558BA01F580D0900F8E12C72698991F86720AC2DC4AC39844FABA56FB3DCC47CD8371288B0D7750F9C9"
+      //Note: Telemoney Payment response result
+    },
+    OptIn: true,
+    IPAddress: "sample string 18"
+  };
+  const url = `${HLAS_URL}/api/Travel/CreatePaymentTransaction`;
+  return sendPOSTRequest(
+    url,
+    payload,
+    "Error creating payment transaction - Travel"
+  );
+}
+
+export function updatePaymentTransactionTravelSingle(WebAppID, PASAppID) {
+  const payload = {
+    WebAppID,
+    CurrentStep: 0,
+    CountryID: 86,
+    TravelStartDate: "2017-07-30",
+    TravelEndDate: "2017-08-04",
+    ProductPlanID: 1,
+    CoverageID: 13,
+    NumberOfChildren: 0,
+    PolicyHolder: {
+      Surname: "test",
+      GivenName: "test",
+      IDNumber: "S0086294J",
+      DateOfBirth: "1988-07-22",
+      GenderID: 1,
+      MobileTelephone: "91234567",
+      Email: "ayethet.san@hlas.com.sg",
+      UnitNumber: "11",
+      BlockHouseNumber: "11",
+      BuildingName: "sample string 12",
+      StreetName: "sample string 13",
+      PostalCode: "089057"
+    },
+    InsuredTravellers: [
+      {
+        Surname: "test",
+        GivenName: "test",
+        IDNumber: "S0086294J",
+        IDNumberType: 0,
+        DateOfBirth: "1988-07-22T16:06:27.4082335+08:00",
+        GenderID: 1,
+        RelationshipID: 4
+      }
+    ],
+    NetPremium: 16.0,
+    GrossPremium: 17.0,
+    PaymentInfo: {
+      PaymentReferenceNumber: `A${PASAppID}-WT1608170248`,
+      NameOnCard: "Test test",
+      CardNumber: "4005550000000001",
+      CardType: 0,
+      CardSecurityCode: "602",
+      CardExpiryYear: 2021,
+      CardExpiryMonth: 1,
+      BankID: 143,
+
+      PayByApplicant: true,
+      Surname: "test",
+      GivenName: "test",
+      IDNumber: "S0086294J",
+      IDNumberType: 0,
+      TelephoneNumber: "91234567",
+      TelemoneyTransactionResponse: "TM_MCode=20151111011&TM_RefNo=WT1608170248&TM_TrnType=sale&TM_SubTrnType=&TM_Status=YES&TM_Error=&TM_Currency=SGD&TM_DebitAmt=11.00&TM_PaymentType=3&TM_BankRespCode=00&TM_ApprovalCode=878429&TM_ErrorMsg=&TM_UserField1=&TM_UserField2=&TM_UserField3=&TM_UserField4=&TM_UserField5=&TM_Original_RefNo=&TM_CCLast4Digit=0001&TM_RecurrentId=&TM_CCNum=xxxxxxxxxxxx0001&TM_ExpiryDate=2101&TM_IPP_FirstPayment=&TM_IPP_LastPayment=&TM_IPP_MonthlyPayment=&TM_IPP_TransTenure=&TM_IPP_TotalInterest=&TM_IPP_DownPayment=&TM_IPP_MonthlyInterest=&TM_OriginalPayType=3&TM_Version=2&TM_Signature=E5ADA760E8E251F8DBDDB8ADC8767949E694C6C6DC171558BA01F580D0900F8E12C72698991F86720AC2DC4AC39844FABA56FB3DCC47CD8371288B0D7750F9C9",
+      TelemoneyPaymentResultRow: "TM_MCode=20151111011&TM_RefNo=WT1608170248&TM_TrnType=sale&TM_SubTrnType=&TM_Status=YES&TM_Error=&TM_Currency=SGD&TM_DebitAmt=11.00&TM_PaymentType=3&TM_BankRespCode=00&TM_ApprovalCode=878429&TM_ErrorMsg=&TM_UserField1=&TM_UserField2=&TM_UserField3=&TM_UserField4=&TM_UserField5=&TM_Original_RefNo=&TM_CCLast4Digit=0001&TM_RecurrentId=&TM_CCNum=xxxxxxxxxxxx0001&TM_ExpiryDate=2101&TM_IPP_FirstPayment=&TM_IPP_LastPayment=&TM_IPP_MonthlyPayment=&TM_IPP_TransTenure=&TM_IPP_TotalInterest=&TM_IPP_DownPayment=&TM_IPP_MonthlyInterest=&TM_OriginalPayType=3&TM_Version=2&TM_Signature=E5ADA760E8E251F8DBDDB8ADC8767949E694C6C6DC171558BA01F580D0900F8E12C72698991F86720AC2DC4AC39844FABA56FB3DCC47CD8371288B0D7750F9C9",
+      // Note : result row from Telemoney
+      paymentSuccessful: true
+      // Note: to update the payment status
+    },
+    OptIn: true,
+    IPAddress: "sample string 18"
+  };
+  const url = `${HLAS_URL}/api/Travel/UpdatePaymentTransactionStatus`;
+  return sendPOSTRequest(
+    url,
+    payload,
+    "Error updating payment transaction - Travel"
+  );
 }
