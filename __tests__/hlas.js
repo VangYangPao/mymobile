@@ -5,35 +5,38 @@ import {
   verifyApplicationTravelSingle,
   submitApplicationTravelSingle,
   getAccidentQuote,
-  getPhoneProtectQuote
+  getPhoneProtectQuote,
+  verifyApplicationAccident
 } from "../src/hlas";
 
 const API_SOURCE = "mu-test";
 
-// it("gets phone protect quote correctly", () => {
-//   getPhoneProtectQuote().then(res => {
-//     console.log(res);
-//     done();
-//   });
-// });
+it("gets phone protect quote correctly", () => {
+  return getPhoneProtectQuote().then(res => {
+    console.log(res);
+  });
+});
 
-// it("gets accident quote correctly", () => {
-//   const planid = 100;
-//   const policytermid = 1;
-//   const optionid = 1;
-//   const commencementDate = new Date().toISOString();
-//   const source = API_SOURCE;
-//   getAccidentQuote(
-//     planid,
-//     policytermid,
-//     optionid,
-//     commencementDate,
-//     source
-//   ).then(res => {
-//     console.log(res);
-//     done();
-//   });
-// });
+it("gets accident quote correctly", () => {
+  const planid = 100;
+  const policytermid = 1;
+  const optionid = 1;
+  const commencementDate = new Date().toISOString();
+  return getAccidentQuote(
+    planid,
+    policytermid,
+    optionid,
+    commencementDate
+  ).then(res => {
+    console.log(res);
+  });
+});
+
+it("verifies accident application correctly", () => {
+  return verifyApplicationAccident().then(res => {
+    console.log(res);
+  });
+});
 
 it("gets travel quote correctly", () => {
   const countryid = 8;
@@ -41,29 +44,19 @@ it("gets travel quote correctly", () => {
   const planid = 1;
   const hasSpouse = true;
   const hasChildren = false;
-  const source = API_SOURCE;
-  getTravelQuote(
+  return getTravelQuote(
     countryid,
     tripDurationInDays,
     planid,
     hasSpouse,
-    hasChildren,
-    source
+    hasChildren
   ).then(res => {
     console.log(res);
   });
 });
 
-it("verifies single travel application correctly", done => {
-  verifyApplicationTravelSingle().then(res => {
+it("verifies single travel application correctly", () => {
+  return verifyApplicationTravelSingle().then(res => {
     console.log(res);
-    done();
   });
 });
-
-// it("submits single travel application correctly", () => {
-//   submitApplicationTravelSingle().then(res => {
-//     console.log(res);
-//     done();
-//   });
-// });

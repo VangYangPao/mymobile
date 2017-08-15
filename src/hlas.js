@@ -14,6 +14,24 @@ const postHeaders = {
   "Content-Type": "application/json"
 };
 
+function sendPOSTRequest(url, payload, errorResponse) {
+  return fetch(url, {
+    method: "POST",
+    headers: postHeaders,
+    body: JSON.stringify(payload)
+  })
+    .then(response => {
+      return response.json();
+    })
+    .then(response => {
+      if (!response.Success) {
+        throw new Error(errorResponse + ": " + JSON.stringify(response));
+      }
+      return response;
+    })
+    .catch(error => console.error(error));
+}
+
 export function getPhoneProtectQuote() {
   const url = `${HLAS_URL}/api/Phone/GetPhoneProtectQuote`;
   return fetch(url).then(res => res.json()).catch(err => console.error(err));
@@ -23,9 +41,9 @@ export function getAccidentQuote(
   planid,
   policytermid,
   optionid,
-  commencementDate,
-  source
+  commencementDate
 ) {
+  const source = AGENT_CODE;
   const paramStr = objectToUrlParams({
     planid,
     policytermid,
@@ -35,7 +53,6 @@ export function getAccidentQuote(
   });
   const path = "api/Accident/GetQuoteAccident";
   const url = `${HLAS_URL}/${path}?${paramStr}`;
-  console.log(url);
   return fetch(url, {
     method: "GET",
     headers: {
@@ -49,11 +66,67 @@ export function getAccidentQuote(
     })
     .then(response => {
       if (!response.Success) {
-        throw new Error("Error getting quote");
+        throw new Error(
+          "Error getting accident quote: " + JSON.stringify(response)
+        );
       }
       return response;
     })
     .catch(error => console.error(error));
+}
+
+export function verifyApplicationAccident() {
+  const tomorrow = moment(new Date()).add(1, "days");
+  const tomorrowStr = tomorrow.format("YYYY-MM-DD");
+  const WebAppID = uuidv4();
+  const payload = {
+    Premium: 10,
+    WebAppID: uuidv4(),
+    PolicyCommencementDate: tomorrowStr,
+    PolicyHolder: {
+      Surname: "sample string",
+      GivenName: "sample string",
+      IDNumber: "S9582168E",
+      IDNumberType: 0,
+      DateOfBirth: "1988-07-27T18:06:55.8940692+08:00",
+      GenderID: 2,
+      MobileTelephone: "91234568",
+      Email: "kendrick@microassure.com",
+      UnitNumber: "sample string 10",
+      BlockHouseNumber: "sample string 11",
+      BuildingName: "sample string 12",
+      StreetName: "sample string 13",
+      PostalCode: "089057"
+    },
+    AccidentDetails: {
+      ProductPlanID: 100,
+      OccupationID: 61,
+      PolicyTermsID: 1,
+      OptionsID: 1
+    },
+    PaymentInfo: {
+      PaymentReferenceNumber: "sample string 1",
+      NameOnCard: "sample string 2",
+      CardNumber: "sample string 3",
+      CardType: 0,
+      CardSecurityCode: "sample string 4",
+      CardExpiryYear: 5,
+      CardExpiryMonth: 6,
+      BankID: 7,
+      BankName: "sample string 8",
+      PayByApplicant: true,
+      Surname: "sample string 9",
+      GivenName: "sample string 10",
+      IDNumber: "sample string 11",
+      IDNumberType: 0,
+      TelephoneNumber: "sample string 12",
+      TelemoneyTransactionResponse: "sample string 13"
+    },
+    OptIn: true,
+    IPAddress: "sample string 18"
+  };
+  const url = `${HLAS_URL}/api/Accident/VerifyNewApplication`;
+  return sendPOSTRequest(url, payload, "Error verifying accident application");
 }
 
 export function getTravelQuote(
@@ -61,8 +134,7 @@ export function getTravelQuote(
   tripDurationInDays,
   planid,
   hasSpouse,
-  hasChildren,
-  source
+  hasChildren
 ) {
   const paramStr = objectToUrlParams({
     countryid,
@@ -70,7 +142,7 @@ export function getTravelQuote(
     planid,
     hasSpouse,
     hasChildren,
-    source
+    source: AGENT_CODE
   });
   const path = "api/Travel/GetQuoteSingleTravel";
   const url = `${HLAS_URL}/${path}?${paramStr}`;
@@ -87,7 +159,7 @@ export function getTravelQuote(
     })
     .then(response => {
       if (!response.Success) {
-        throw new Error("Error getting quote");
+        throw new Error("Error getting quote: " + JSON.stringify(response));
       }
       return response;
     })
@@ -163,179 +235,5 @@ export function verifyApplicationTravelSingle() {
     IPAddress: "sample string 18"
   };
   const url = `${HLAS_URL}/api/Travel/VerifyApp_TravelSingle`;
-  return fetch(url, {
-    method: "POST",
-    headers: postHeaders,
-    body: JSON.stringify(payload)
-  })
-    .then(response => response.json())
-    .catch(error => console.error(error));
-}
-
-export function submitApplicationTravelSingle() {
-  const payload = {
-    WebAppID: "sample string 1",
-    PASAppID: 2,
-    CurrentStep: 0,
-    CountryID: 3,
-    CountryName: "sample string 4",
-    AgentCode: "sample string 5",
-    AgentWCC: "sample string 6",
-    AreaID: 7,
-    AreaName: "sample string 8",
-    ReferralSouceID: 9,
-    ReferralSource: "sample string 10",
-    TravelStartDate: "2017-08-06T23:13:30.0439212+08:00",
-    TravelEndDate: "2017-08-06T23:13:30.0439212+08:00",
-    ProductPlanID: 1,
-    ProductPlanName: "sample string 12",
-    CoverageID: 13,
-    CoverageName: "sample string 14",
-    NumberOfChildren: 15,
-    PolicyHolder: {
-      Surname: "sample string 1",
-      GivenName: "sample string 2",
-      IDNumber: "sample string 3",
-      IDNumberType: 0,
-      DateOfBirth: "2017-08-06T23:13:30.0439212+08:00",
-      GenderID: 4,
-      GenderName: "sample string 5",
-      HomeTelephone: "sample string 6",
-      OfficeTelephone: "sample string 7",
-      MobileTelephone: "sample string 8",
-      Email: "guanhao3797@gmail.com",
-      UnitNumber: "sample string 10",
-      BlockHouseNumber: "sample string 11",
-      BuildingName: "sample string 12",
-      StreetName: "sample string 13",
-      PostalCode: "sample string 14"
-    },
-    InsuredPersons_Spouse: {
-      Surname: "sample string 1",
-      GivenName: "sample string 2",
-      IDNumber: "sample string 3",
-      IDNumberType: 0,
-      DateOfBirth: "2017-08-06T23:13:30.0439212+08:00",
-      GenderID: 4,
-      GenderName: "sample string 5",
-      RelationshipID: 6,
-      RelationshipName: "sample string 7"
-    },
-    InsuredPersons_child1: {
-      Surname: "sample string 1",
-      GivenName: "sample string 2",
-      IDNumber: "sample string 3",
-      IDNumberType: 0,
-      DateOfBirth: "2017-08-06T23:13:30.0439212+08:00",
-      GenderID: 4,
-      GenderName: "sample string 5",
-      RelationshipID: 6,
-      RelationshipName: "sample string 7"
-    },
-    InsuredPersons_child2: {
-      Surname: "sample string 1",
-      GivenName: "sample string 2",
-      IDNumber: "sample string 3",
-      IDNumberType: 0,
-      DateOfBirth: "2017-08-06T23:13:30.0439212+08:00",
-      GenderID: 4,
-      GenderName: "sample string 5",
-      RelationshipID: 6,
-      RelationshipName: "sample string 7"
-    },
-    InsuredPersons_child3: {
-      Surname: "sample string 1",
-      GivenName: "sample string 2",
-      IDNumber: "sample string 3",
-      IDNumberType: 0,
-      DateOfBirth: "2017-08-06T23:13:30.0439212+08:00",
-      GenderID: 4,
-      GenderName: "sample string 5",
-      RelationshipID: 6,
-      RelationshipName: "sample string 7"
-    },
-    InsuredPersons_child4: {
-      Surname: "sample string 1",
-      GivenName: "sample string 2",
-      IDNumber: "sample string 3",
-      IDNumberType: 0,
-      DateOfBirth: "2017-08-06T23:13:30.0439212+08:00",
-      GenderID: 4,
-      GenderName: "sample string 5",
-      RelationshipID: 6,
-      RelationshipName: "sample string 7"
-    },
-    InsuredTravellers: [
-      {
-        Surname: "sample string 1",
-        GivenName: "sample string 2",
-        IDNumber: "sample string 3",
-        IDNumberType: 0,
-        DateOfBirth: "2017-08-06T23:13:30.0439212+08:00",
-        GenderID: 4,
-        GenderName: "sample string 5",
-        RelationshipID: 6,
-        RelationshipName: "sample string 7",
-        DisplayControlID: "sample string 8"
-      },
-      {
-        Surname: "sample string 1",
-        GivenName: "sample string 2",
-        IDNumber: "sample string 3",
-        IDNumberType: 0,
-        DateOfBirth: "2017-08-06T23:13:30.0439212+08:00",
-        GenderID: 4,
-        GenderName: "sample string 5",
-        RelationshipID: 6,
-        RelationshipName: "sample string 7",
-        DisplayControlID: "sample string 8"
-      },
-      {
-        Surname: "sample string 1",
-        GivenName: "sample string 2",
-        IDNumber: "sample string 3",
-        IDNumberType: 0,
-        DateOfBirth: "2017-08-06T23:13:30.0439212+08:00",
-        GenderID: 4,
-        GenderName: "sample string 5",
-        RelationshipID: 6,
-        RelationshipName: "sample string 7",
-        DisplayControlID: "sample string 8"
-      }
-    ],
-    NetPremium: 16.0,
-    GrossPremium: 17.0,
-    PaymentInfo: {
-      PaymentReferenceNumber: "sample string 1",
-      NameOnCard: "sample string 2",
-      CardNumber: "sample string 3",
-      CardType: 0,
-      CardSecurityCode: "sample string 4",
-      CardExpiryYear: 5,
-      CardExpiryMonth: 6,
-      BankID: 7,
-      BankName: "sample string 8",
-      PayByApplicant: true,
-      Surname: "sample string 9",
-      GivenName: "sample string 10",
-      IDNumber: "sample string 11",
-      IDNumberType: 0,
-      TelephoneNumber: "sample string 12",
-      TelemoneyTransactionResponse: "sample string 13",
-      TelemoneyPaymentResultRow: "sample string 14",
-      paymentSuccessful: true
-    },
-    OptIn: true,
-    IPAddress: "sample string 18"
-  };
-  const url = `${HLAS_URL}/api/Travel/SubmitApplication_SingleTravel`;
-  return fetch(url, {
-    method: "POST",
-    headers: postHeaders,
-    body: JSON.stringify(payload)
-  })
-    .then(response => {
-      return response.json();
-    })
-    .catch(error => console.error(error));
+  return sendPOSTRequest(url, payload, "Error verifying travel application");
 }
