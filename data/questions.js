@@ -189,7 +189,7 @@ export const paClaimQuestions = [
   },
 
   {
-    question: "I'm so sorry to hear that. I assume you are <%= fullName %>’s claimant/next of kin. Please share with me the date and time of the accident",
+    question: "I'm so sorry to hear that. I assume you are <%= <%= fullName %> %>’s claimant/next of kin. Please share with me the date and time of the accident",
     responseType: "datetime",
     id: "accidentDate",
     include: ["death"]
@@ -201,12 +201,12 @@ export const paClaimQuestions = [
     include: ["permanentDisability"]
   },
   {
-    question: "FULLNAME, you just selected the option to claim for weekly compensation. To claim, you need to be medically unfit to work for a minimum of 7 days continuously.",
+    question: "<%= fullName %>, you just selected the option to claim for weekly compensation. To claim, you need to be medically unfit to work for a minimum of 7 days continuously.",
     responseType: null,
     include: ["weeklyCompensation"]
   },
   {
-    question: "FULLNAME, you just selected the option to claim for medical reimbursement. How much are you planning to claim?",
+    question: "<%= fullName %>, you just selected the option to claim for medical reimbursement. How much are you planning to claim?",
     responseType: ["boolean", "choice"],
     id: "reimbursementMoreThan5000",
     choices: [
@@ -287,7 +287,7 @@ export const paClaimQuestions = [
     include: ["permanentDisability", "medicalReimbursement"]
   },
   {
-    question: "Does <%= fullName %> have other insurance coverage for this accident?",
+    question: "Does <%= <%= fullName %> %> have other insurance coverage for this accident?",
     responseType: ["boolean", "choice"],
     id: "hasOtherInsuranceCoverage",
     label: "OTHER INSURANCE COVERAGE",
@@ -371,7 +371,7 @@ export const paClaimQuestions = [
     include: ["permanentDisability"]
   },
   {
-    question: "Here is the final question, has <%= fullName %>'s' employer purchased any insurance coverage for this accident? ",
+    question: "Here is the final question, has <%= <%= fullName %> %>'s' employer purchased any insurance coverage for this accident? ",
     responseType: ["string", "string"],
     responseType: ["boolean", "choice"],
     id: "hasEmployerInsuranceCoverage",
@@ -411,7 +411,7 @@ export const paClaimQuestions = [
     exclude: ["death"]
   },
   {
-    question: "<%= fullName %>, to complete your claim, I need your help to post the ORIGINAL MEDICAL BILLS AND/OR RECEIPTS to: HLAS, 11 Keppel Road #11-01 ABI Plaza Singapore 089057, within 48 hours",
+    question: "<%= <%= fullName %> %>, to complete your claim, I need your help to post the ORIGINAL MEDICAL BILLS AND/OR RECEIPTS to: HLAS, 11 Keppel Road #11-01 ABI Plaza Singapore 089057, within 48 hours",
     responseType: null,
     exclude: ["death"]
   },
@@ -456,7 +456,7 @@ export const paClaimQuestions = [
 
   // DEATH
   {
-    question: "Please snap a clear photo of FULLNAME death certificate",
+    question: "Please snap a clear photo of <%= fullName %> death certificate",
     responseType: "images",
     responseLength: 10,
     id: "deathCertificate",
@@ -464,7 +464,7 @@ export const paClaimQuestions = [
     condition: "this.state.answers.deathInSingapore === true"
   },
   {
-    question: "Please snap a clear photo of <%= fullName %>’s autopsy report, or, toxicological report, or, coroner’s findings.",
+    question: "Please snap a clear photo of <%= <%= fullName %> %>’s autopsy report, or, toxicological report, or, coroner’s findings.",
     responseType: "images",
     responseLength: 10,
     id: "autopsyReport",
@@ -480,7 +480,7 @@ export const paClaimQuestions = [
     condition: "this.state.answers.deathInSingapore === true"
   },
   {
-    question: "Please snap a clear photo <%= fullName %>’s Last Will of deceased, or, Letter of Administration",
+    question: "Please snap a clear photo <%= <%= fullName %> %>’s Last Will of deceased, or, Letter of Administration",
     responseType: "images",
     responseLength: 10,
     id: "will",
@@ -488,7 +488,7 @@ export const paClaimQuestions = [
     condition: "this.state.answers.deathInSingapore === true"
   },
   {
-    question: "Please snap a clear photo of <%= fullName %>’s Estate Duty of Certificate",
+    question: "Please snap a clear photo of <%= <%= fullName %> %>’s Estate Duty of Certificate",
     responseType: "images",
     responseLength: 10,
     id: "estateDutyOfCertificate",
@@ -593,7 +593,7 @@ export const travelClaimQuestions = [
     id: "deathClaimImages"
   },
   {
-    question: "I’m so sorry to hear that. I assume you are FULLNAME’s claimant/next of kin. Please share with me the date and time of the accident",
+    question: "I’m so sorry to hear that. I assume you are <%= fullName %>’s claimant/next of kin. Please share with me the date and time of the accident",
     responseType: "datetime",
     id: "claimDate",
     include: ["death"]
@@ -605,35 +605,35 @@ export const travelClaimQuestions = [
     include: ["permanentDisability"]
   },
   {
-    question: "FULLNAME, I wish you get well soon. Let me help out on the claim fast. Please share with me the date and time of the accident",
+    question: "<%= fullName %>, I wish you get well soon. Let me help out on the claim fast. Please share with me the date and time of the accident",
     responseType: "datetime",
     id: "claimDate",
     include: ["medicalReimbursement"]
   },
   {
-    question: "FULLNAME, you just selected the option to claim for damaged or loss of baggage while in the custody of others. Please share with me the date and time of damage or loss",
+    question: "<%= fullName %>, you just selected the option to claim for damaged or loss of baggage while in the custody of others. Please share with me the date and time of damage or loss",
     responseType: "datetime",
     id: "claimDate",
     include: ["baggageDamaged"]
   },
   {
-    question: "FULLNAME, you just selected the option to claim for loss of personal document. Please share with me the date and time of loss",
+    question: "<%= fullName %>, you just selected the option to claim for loss of personal document. Please share with me the date and time of loss",
     responseType: "datetime",
     id: "claimDate",
     include: ["lossOfPersonalDocument"]
   },
   {
-    question: "FULLNAME, you just selected the option to claim for trip curtailment (shortening of trip) or cancellation or loss of travel deposit ",
+    question: "<%= fullName %>, you just selected the option to claim for trip curtailment (shortening of trip) or cancellation or loss of travel deposit ",
     responseType: null,
     include: ["tripCurtailment"]
   },
   {
-    question: "FULLNAME, you just selected personal liability ",
+    question: "<%= fullName %>, you just selected personal liability ",
     responseType: null,
     include: ["personalLiability"]
   },
   {
-    question: "FULLNAME, you just selected the option to claim for travel delay, baggage delay, or flight misconnection. Please share with me the flight details",
+    question: "<%= fullName %>, you just selected the option to claim for travel delay, baggage delay, or flight misconnection. Please share with me the flight details",
     responseType: ["string", "string"],
     labels: ["Airline company", "Flight number"],
     id: ["airlineCompany", "flightNo"],
@@ -1061,7 +1061,7 @@ export const travelClaimQuestions = [
   },
 
   {
-    question: "Does FULLNAME have other insurance coverage for this accident?",
+    question: "Does <%= fullName %> have other insurance coverage for this accident?",
     responseType: ["boolean", "choice"],
     id: "hasOtherInsuranceCoverage",
     choices: [{ label: "Yes", value: true }, { label: "No", value: false }],
@@ -1155,7 +1155,7 @@ export const travelClaimQuestions = [
     include: ["permanentDisability"]
   },
   {
-    question: "FULLNAME, to complete your claim, I need your help to post the ORIGINAL MEDICAL BILLS AND/OR RECEIPTS to: HLAS, 11 Keppel Road #11-01 ABI Plaza Singapore 089057, within 48 hours ",
+    question: "<%= fullName %>, to complete your claim, I need your help to post the ORIGINAL MEDICAL BILLS AND/OR RECEIPTS to: HLAS, 11 Keppel Road #11-01 ABI Plaza Singapore 089057, within 48 hours ",
     responseType: null,
     include: ["permanentDisability", "medicalReimbursement", "tripCurtailment"]
   },
