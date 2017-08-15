@@ -46,17 +46,17 @@ export function verifyEnrolment(cardDetails, paytype, amt) {
     transtype,
     cur,
     amt,
-    signature,
-    validity,
     paytype,
     ccnum: cardDetails.ccnum,
     ccdate: cardDetails.ccdate,
     cccvv: cardDetails.cccvv,
-    returnurl: "http://microumbrella.com",
-    version: API_VERSION
+    version: API_VERSION,
+    signature,
+    validity
   };
-  // const params = console.log(
-  //   `${PAYMENT_PROCESS_URL}/${objectToUrlParams(payload)}`
+  // console.log(payload);
+  // console.log(
+  //   `${PAYMENT_PROCESS_URL}?${objectToUrlParams(payload)}`
   // );
   const formData = generateFormData(payload);
 
@@ -162,7 +162,8 @@ export function create3dsAuthorizationRequest(
     ccdate,
     cccvv,
     "3dsstatus": threeDSStatus,
-    // returnurl: "http://microumbrella.com",
+    returnurl: SALE_STATUS_URL,
+    // recurrentid: "INIT",
     signature,
     validity,
     version: API_VERSION

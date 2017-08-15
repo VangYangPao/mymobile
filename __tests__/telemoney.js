@@ -9,7 +9,8 @@ import {
   verifyEnrolment,
   acsRedirection,
   performPaymentAuthRequest,
-  doFull3DSTransaction
+  doFull3DSTransaction,
+  tokenizeTransaction
 } from "../src/telemoney";
 
 const CARDS = {
@@ -28,70 +29,99 @@ const CARDS = {
 };
 
 // it("verifies enrolment correctly", () => {
-//   verifyEnrolment(2, 10.0)
-//     .then(res => {
-//       console.log(res);
-//     })
-//     .catch(err => {
-//       console.error("verify enrolment", err);
-//     });
+//   const amt = Math.floor(Math.random() * 100) + 1;
+//   let paytype;
+//   for (let i = 0; i < 10; i++) {
+//     paytype = i % 2 === 0 ? 2 : 3;
+//     verifyEnrolment(CARDS[paytype], paytype, amt.toFixed(2))
+//       .then(res => {
+//         // console.log(res);
+//       })
+//       .catch(err => {
+//         console.error("verify enrolment", err);
+//       });
+//   }
 // });
 
 // it("does acs redirection correctly", () => {
-//   verifyEnrolment(2, 10.0)
-//     .then(res => {
-//       const { Acsurl, PaReq, TM_RefNo } = res;
-//       console.log(res);
-//       return acsRedirection(Acsurl, PaReq, "microumbrella.com/term", TM_RefNo);
-//     })
-//     .catch(err => {
-//       console.error("verify enrolment", err);
-//     })
-//     .then(res => {
-//       console.log(res);
-//     })
-//     .catch(err => {
-//       console.error("acs redirection", err);
-//     });
+//   const amt = Math.floor(Math.random() * 100) + 1;
+//   let paytype;
+//   for (let i = 0; i < 10; i++) {
+//     paytype = i % 2 === 0 ? 2 : 3;
+//     verifyEnrolment(CARDS[paytype], paytype, amt)
+//       .then(res => {
+//         const { Acsurl, PaReq, TM_RefNo } = res;
+//         // console.log(res);
+//         return acsRedirection(
+//           Acsurl,
+//           PaReq,
+//           "http://microumbrella.com/term",
+//           TM_RefNo
+//         );
+//       })
+//       .catch(err => {
+//         console.error("verify enrolment", err);
+//       })
+//       .then(res => {
+//         // console.log(res);
+//       })
+//       .catch(err => {
+//         console.error("acs redirection", err);
+//       });
+//   }
 // });
 
 // it("does payment authentication correctly", () => {
-//   const paytype = 3;
-//   const amt = 10.0;
+//   const amt = Math.floor(Math.random() * 100) + 1;
+//   let paytype;
 
-//   let ref;
-//   return verifyEnrolment(paytype, amt)
-//     .then(res => {
-//       const { Acsurl, PaReq, TM_RefNo } = res;
-//       ref = TM_RefNo;
-//       console.log("verified enrolment");
-//       return acsRedirection(
-//         Acsurl,
-//         PaReq,
-//         "http://microumbrella.com/term",
-//         TM_RefNo
-//       );
-//     })
-//     .catch(err => {
-//       console.error("verify enrolment", err);
-//     })
-//     .then(html => {
-//       console.log("acs redirected");
-//       console.log(html);
-//       const $ = cheerio.load(html);
-//       const PaRes = $('input[name="PaRes"]').val();
-//       return performPaymentAuthRequest(ref, amt, PaRes);
-//     })
-//     .then(res => {
-//       console.log(res);
-//     })
-//     .catch(err => {
-//       console.error("payment authentication", err);
-//     });
+//   for (let i = 0; i < 10; i++) {
+//     paytype = i % 2 === 0 ? 2 : 3;
+//     let ref;
+//     return verifyEnrolment(CARDS[paytype], paytype, amt)
+//       .then(res => {
+//         const { Acsurl, PaReq, TM_RefNo } = res;
+//         ref = TM_RefNo;
+//         console.log("verified enrolment");
+//         return acsRedirection(
+//           Acsurl,
+//           PaReq,
+//           "http://microumbrella.com/term",
+//           TM_RefNo
+//         );
+//       })
+//       .catch(err => {
+//         console.error("verify enrolment", err);
+//       })
+//       .then(html => {
+//         console.log("acs redirected");
+//         // console.log(html);
+//         const $ = cheerio.load(html);
+//         const PaRes = $('input[name="PaRes"]').val();
+//         return performPaymentAuthRequest(ref, amt, PaRes);
+//       })
+//       .then(res => {
+//         // console.log(res);
+//       })
+//       .catch(err => {
+//         console.error("payment authentication", err);
+//       });
+//   }
 // });
 
 it("does 3DS authorization correctly", () => {
-  const amt = 10.0;
-  // doFull3DSTransaction(CARDS[2], 2, amt).then(res => console.log(res));
-  doFull3DSTransaction(CARDS[3], 3, amt).then(res => console.log(res));
+  let paytype = 3;
+
+  for (let i = 0; i < 1; i++) {
+    // const amt = Math.floor(Math.random() * 100) + 1;
+    doFull3DSTransaction(CARDS[paytype], paytype, 11).then(res =>
+      console.log(res)
+    );
+  }
 });
+
+// it("does tokenization of transaction correctly", () => {
+//   tokenizeTransaction(CARDS[2], "10.00").catch(err => {
+//     console.error(err);
+//   });
+// });
