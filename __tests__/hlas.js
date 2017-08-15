@@ -8,7 +8,8 @@ import {
   getPhoneProtectQuote,
   verifyApplicationAccident,
   createPaymentTransactionTravelSingle,
-  updatePaymentTransactionTravelSingle
+  updatePaymentTransactionTravelSingle,
+  submitApplicationTravelSingle
 } from "../src/hlas";
 import { create3dsAuthorizationRequest } from "../src/telemoney";
 
@@ -76,8 +77,28 @@ import { create3dsAuthorizationRequest } from "../src/telemoney";
 //     });
 // });
 
-it("updates payment transaction for single travel correctly", () => {
-  expect.assertions(3);
+// it("updates payment transaction for single travel correctly", () => {
+//   expect.assertions(3);
+//   let PASAppID;
+//   const WebAppID = uuidv4();
+//   return verifyApplicationTravelSingle(WebAppID)
+//     .then(res => {
+//       expect(typeof res.ApplciationNo).toBe("number");
+//       PASAppID = res.ApplciationNo;
+//       return createPaymentTransactionTravelSingle(WebAppID, PASAppID);
+//     })
+//     .then(res => {
+//       expect(res.Success).toBe(true);
+//       return updatePaymentTransactionTravelSingle(WebAppID, PASAppID);
+//     })
+//     .then(res => {
+//       console.log(res);
+//       expect(res.Success).toBe(true);
+//     });
+// });
+
+it("submits application for single travel correctly", () => {
+  expect.assertions(5);
   let PASAppID;
   const WebAppID = uuidv4();
   return verifyApplicationTravelSingle(WebAppID)
@@ -91,7 +112,12 @@ it("updates payment transaction for single travel correctly", () => {
       return updatePaymentTransactionTravelSingle(WebAppID, PASAppID);
     })
     .then(res => {
+      expect(res.Success).toBe(true);
+      return submitApplicationTravelSingle(WebAppID, PASAppID);
+    })
+    .then(res => {
       console.log(res);
-      return expect(res.Success).toBe(true);
+      expect(res.Success).toBe(true);
+      expect(typeof res.PolicyNo).toBe("string");
     });
 });

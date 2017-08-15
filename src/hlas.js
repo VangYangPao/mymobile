@@ -257,11 +257,11 @@ export function createPaymentTransactionTravelSingle(WebAppID, PASAppID) {
     PolicyHolder: {
       Surname: "test",
       GivenName: "test",
-      IDNumber: "S0086294J" + Math.floor(Math.random() * 6) + 1,
+      IDNumber: "S0086294J",
       DateOfBirth: "1988-07-22",
       GenderID: 1,
       MobileTelephone: "91234567",
-      Email: "ayethet.san@hlas.com.sg",
+      Email: "guanhao3797@gmail.com",
       UnitNumber: "11",
       BlockHouseNumber: "11",
       BuildingName: "sample string 12",
@@ -330,7 +330,7 @@ export function updatePaymentTransactionTravelSingle(WebAppID, PASAppID) {
       DateOfBirth: "1988-07-22",
       GenderID: 1,
       MobileTelephone: "91234567",
-      Email: "ayethet.san@hlas.com.sg",
+      Email: "guanhao3797@gmail.com",
       UnitNumber: "11",
       BlockHouseNumber: "11",
       BuildingName: "sample string 12",
@@ -380,5 +380,74 @@ export function updatePaymentTransactionTravelSingle(WebAppID, PASAppID) {
     url,
     payload,
     "Error updating payment transaction - Travel"
+  );
+}
+
+export function submitApplicationTravelSingle(WebAppID, PASAppID) {
+  const payload = {
+    WebAppID,
+    PASAppID,
+    CurrentStep: 0,
+    CountryID: 86,
+    TravelStartDate: "2017-07-30",
+    TravelEndDate: "2017-08-04",
+    ProductPlanID: 1,
+    CoverageID: 13,
+    NumberOfChildren: 0,
+    PolicyHolder: {
+      Surname: "test",
+      GivenName: "test",
+      IDNumber: "S0086294J",
+      DateOfBirth: "1988-07-22",
+      GenderID: 1,
+      MobileTelephone: "91234567",
+      Email: "guanhao3797@gmail.com",
+      UnitNumber: "11",
+      BlockHouseNumber: "11",
+      BuildingName: "sample string 12",
+      StreetName: "sample string 13",
+      PostalCode: "089057"
+    },
+    InsuredTravellers: [
+      {
+        Surname: "test",
+        GivenName: "test",
+        IDNumber: "S0086294J",
+        IDNumberType: 0,
+        DateOfBirth: "1988-07-22T16:06:27.4082335+08:00",
+        GenderID: 1,
+        RelationshipID: 4
+      }
+    ],
+    NetPremium: 16.0,
+    GrossPremium: 17.0,
+    PaymentInfo: {
+      PaymentReferenceNumber: `A${PASAppID}-WT1608170248`,
+      NameOnCard: "Test test",
+      CardNumber: "4005550000000001",
+      CardType: 0,
+      CardSecurityCode: "602",
+      CardExpiryYear: 2018,
+      CardExpiryMonth: 8,
+      BankID: 143,
+
+      PayByApplicant: true,
+      Surname: "test",
+      GivenName: "test",
+      IDNumber: "S0086294J",
+      IDNumberType: 0,
+      TelephoneNumber: "91234567",
+      TelemoneyTransactionResponse: "TM_MCode=20151111011&TM_RefNo=WT1608170248&TM_TrnType=sale&TM_SubTrnType=&TM_Status=YES&TM_Error=&TM_Currency=SGD&TM_DebitAmt=11.00&TM_PaymentType=3&TM_BankRespCode=00&TM_ApprovalCode=878429&TM_ErrorMsg=&TM_UserField1=&TM_UserField2=&TM_UserField3=&TM_UserField4=&TM_UserField5=&TM_Original_RefNo=&TM_CCLast4Digit=0001&TM_RecurrentId=&TM_CCNum=xxxxxxxxxxxx0001&TM_ExpiryDate=2101&TM_IPP_FirstPayment=&TM_IPP_LastPayment=&TM_IPP_MonthlyPayment=&TM_IPP_TransTenure=&TM_IPP_TotalInterest=&TM_IPP_DownPayment=&TM_IPP_MonthlyInterest=&TM_OriginalPayType=3&TM_Version=2&TM_Signature=E5ADA760E8E251F8DBDDB8ADC8767949E694C6C6DC171558BA01F580D0900F8E12C72698991F86720AC2DC4AC39844FABA56FB3DCC47CD8371288B0D7750F9C9",
+      TelemoneyPaymentResultRow: "TM_MCode=20151111011&TM_RefNo=WT1608170248&TM_TrnType=sale&TM_SubTrnType=&TM_Status=YES&TM_Error=&TM_Currency=SGD&TM_DebitAmt=11.00&TM_PaymentType=3&TM_BankRespCode=00&TM_ApprovalCode=878429&TM_ErrorMsg=&TM_UserField1=&TM_UserField2=&TM_UserField3=&TM_UserField4=&TM_UserField5=&TM_Original_RefNo=&TM_CCLast4Digit=0001&TM_RecurrentId=&TM_CCNum=xxxxxxxxxxxx0001&TM_ExpiryDate=2101&TM_IPP_FirstPayment=&TM_IPP_LastPayment=&TM_IPP_MonthlyPayment=&TM_IPP_TransTenure=&TM_IPP_TotalInterest=&TM_IPP_DownPayment=&TM_IPP_MonthlyInterest=&TM_OriginalPayType=3&TM_Version=2&TM_Signature=E5ADA760E8E251F8DBDDB8ADC8767949E694C6C6DC171558BA01F580D0900F8E12C72698991F86720AC2DC4AC39844FABA56FB3DCC47CD8371288B0D7750F9C9",
+      paymentSuccessful: true
+    },
+    OptIn: true,
+    IPAddress: "sample string 18"
+  };
+  const url = `${HLAS_URL}/api/Travel/SubmitApplication_SingleTravel`;
+  return sendPOSTRequest(
+    url,
+    payload,
+    "Error in submitting application - Travel"
   );
 }
