@@ -3,6 +3,8 @@ import moment from "moment";
 
 import { objectToUrlParams } from "./utils";
 
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
+
 const HLAS_URL = "http://42.61.99.229:8080";
 const AGENT_CODE = "MIC00002"; // just to track microassurce account
 const AGENT_WCC = "MIC"; // // just to track the sale from microassurance . please use “MIC” – should be the same in the production.
@@ -16,6 +18,14 @@ const postHeaders = {
 
 function generateRandomNumberFromRange(min, max) {
   return Math.floor(Math.random() * max) + min;
+}
+
+function generateNRIC() {
+  let numbers = "";
+  for (let i = 0; i < 7; i++) {
+    numbers += "" + generateRandomNumberFromRange(1, 10);
+  }
+  return "S" + numbers + "C";
 }
 
 function sendPOSTRequest(url, payload, errorResponse) {
@@ -77,23 +87,22 @@ export function getAccidentQuote(
     });
 }
 
-export function verifyApplicationAccident() {
+export function verifyApplicationAccident(WebAppID) {
   const tomorrow = moment(new Date()).add(1, "days");
   const tomorrowStr = tomorrow.format("YYYY-MM-DD");
-  const WebAppID = uuidv4();
   const payload = {
     Premium: 10,
-    WebAppID: uuidv4(),
+    WebAppID,
     PolicyCommencementDate: tomorrowStr,
     PolicyHolder: {
       Surname: "sample string",
       GivenName: "sample string",
-      IDNumber: "S9582168E",
+      IDNumber: generateNRIC(),
       IDNumberType: 0,
       DateOfBirth: "1988-07-27T18:06:55.8940692+08:00",
       GenderID: 2,
       MobileTelephone: "91234568",
-      Email: "kendrick@microassure.com",
+      Email: "guanhao3797@gmail.com",
       UnitNumber: "sample string 10",
       BlockHouseNumber: "sample string 11",
       BuildingName: "sample string 12",
@@ -129,6 +138,238 @@ export function verifyApplicationAccident() {
   };
   const url = `${HLAS_URL}/api/Accident/VerifyNewApplication`;
   return sendPOSTRequest(url, payload, "Error verifying accident application");
+}
+
+export function createPaymentTransactionAccident(WebAppID, PASAppID) {
+  const tomorrow = moment(new Date()).add(1, "days");
+  const tomorrowStr = tomorrow.format("YYYY-MM-DD");
+  const payload = {
+    Premium: 1.0,
+    WebAppID,
+    PASAppID,
+    AutoRenew: true,
+    MeetsRequirements: "sample string 4",
+    ReferralSouceID: 5,
+    ReferralSource: "sample string 6",
+    ProductPlanID: 7,
+    ProductPlanName: "sample string 8",
+    PropertyTypeID: 9,
+    PropertyTypeName: "sample string 10",
+    InsuranceBackFromPayment: "sample string 11",
+    PersonalCoverage: true,
+    PolicyCommencementDate: tomorrowStr,
+    CoverageID: 12,
+    CoverageName: "sample string 13",
+    PolicyHolder: {
+      Surname: "test",
+      GivenName: "test",
+      IDNumber: "S0086294J",
+      DateOfBirth: "1988-07-22",
+      GenderID: 1,
+      MobileTelephone: "91234567",
+      Email: "guanhao3797@gmail.com",
+      UnitNumber: "11",
+      BlockHouseNumber: "11",
+      BuildingName: "sample string 12",
+      StreetName: "sample string 13",
+      PostalCode: "089057"
+    },
+    AccidentDetails: {
+      ProductPlanID: 1,
+      OccupationID: 2,
+      PolicyTermsID: 3,
+      OptionsID: 4
+    },
+    PlanPremium: 14.0,
+    PersonalCoveragePremium: 15.0,
+    TotalPremium: 16.0,
+    FirstPremium: 17.0,
+    PaymentInfo: {
+      PaymentReferenceNumber: `A${PASAppID}-WT1608170248`,
+      // Note A stands for Application 8919 is the ID returned from successful verified, WDF26F6 unique sequence generated
+      NameOnCard: "Test test",
+      CardNumber: "4005550000000001",
+      CardType: 0,
+      CardSecurityCode: "602",
+      CardExpiryYear: 2021,
+      CardExpiryMonth: 1,
+      BankID: 143,
+      PayByApplicant: true,
+      Surname: "test",
+      GivenName: "test",
+      IDNumber: "S0086294J",
+      // Note : Assumed always pay by applicant is true in the backend system
+      IDNumberType: 0,
+      TelephoneNumber: "91234567",
+
+      TelemoneyTransactionResponse: "TM_MCode=20151111011&TM_RefNo=WT1608170248&TM_TrnType=sale&TM_SubTrnType=&TM_Status=YES&TM_Error=&TM_Currency=SGD&TM_DebitAmt=11.00&TM_PaymentType=3&TM_BankRespCode=00&TM_ApprovalCode=878429&TM_ErrorMsg=&TM_UserField1=&TM_UserField2=&TM_UserField3=&TM_UserField4=&TM_UserField5=&TM_Original_RefNo=&TM_CCLast4Digit=0001&TM_RecurrentId=&TM_CCNum=xxxxxxxxxxxx0001&TM_ExpiryDate=2101&TM_IPP_FirstPayment=&TM_IPP_LastPayment=&TM_IPP_MonthlyPayment=&TM_IPP_TransTenure=&TM_IPP_TotalInterest=&TM_IPP_DownPayment=&TM_IPP_MonthlyInterest=&TM_OriginalPayType=3&TM_Version=2&TM_Signature=E5ADA760E8E251F8DBDDB8ADC8767949E694C6C6DC171558BA01F580D0900F8E12C72698991F86720AC2DC4AC39844FABA56FB3DCC47CD8371288B0D7750F9C9"
+      //Note: Telemoney Payment response result
+    },
+    OptIn: true,
+    IPAddress: "sample string 18"
+  };
+  const url = `${HLAS_URL}/api/Accident/CreatePaymentTransaction`;
+  return sendPOSTRequest(
+    url,
+    payload,
+    "Error creating payment transaction - Accident"
+  );
+}
+
+export function updatePaymentTransactionAccident(WebAppID, PASAppID) {
+  const tomorrow = moment(new Date()).add(1, "days");
+  const tomorrowStr = tomorrow.format("YYYY-MM-DD");
+  const payload = {
+    Premium: 1.0,
+    WebAppID,
+    PASAppID,
+    AutoRenew: true,
+    MeetsRequirements: "sample string 4",
+    ReferralSouceID: 5,
+    ReferralSource: "sample string 6",
+    ProductPlanID: 7,
+    ProductPlanName: "sample string 8",
+    PropertyTypeID: 9,
+    PropertyTypeName: "sample string 10",
+    InsuranceBackFromPayment: "sample string 11",
+    PersonalCoverage: true,
+    PolicyCommencementDate: tomorrowStr,
+    CoverageID: 12,
+    CoverageName: "sample string 13",
+    PolicyHolder: {
+      Surname: "test",
+      GivenName: "test",
+      IDNumber: "S0086294J",
+      DateOfBirth: "1988-07-22",
+      GenderID: 1,
+      MobileTelephone: "91234567",
+      Email: "guanhao3797@gmail.com",
+      UnitNumber: "11",
+      BlockHouseNumber: "11",
+      BuildingName: "sample string 12",
+      StreetName: "sample string 13",
+      PostalCode: "089057"
+    },
+    AccidentDetails: {
+      ProductPlanID: 1,
+      OccupationID: 2,
+      PolicyTermsID: 3,
+      OptionsID: 4
+    },
+    PlanPremium: 14.0,
+    PersonalCoveragePremium: 15.0,
+    TotalPremium: 16.0,
+    FirstPremium: 17.0,
+    PaymentInfo: {
+      PaymentReferenceNumber: `A${PASAppID}-WT1608170248`,
+      // Note A stands for Application 8919 is the ID returned from successful verified, WDF26F6 unique sequence generated
+      NameOnCard: "Test test",
+      CardNumber: "4005550000000001",
+      CardType: 0,
+      CardSecurityCode: "602",
+      CardExpiryYear: 2021,
+      CardExpiryMonth: 1,
+      BankID: 143,
+      PayByApplicant: true,
+      Surname: "test",
+      GivenName: "test",
+      IDNumber: "S0086294J",
+      // Note : Assumed always pay by applicant is true in the backend system
+      IDNumberType: 0,
+      TelephoneNumber: "91234567",
+
+      TelemoneyTransactionResponse: "TM_MCode=20151111011&TM_RefNo=WT1608170248&TM_TrnType=sale&TM_SubTrnType=&TM_Status=YES&TM_Error=&TM_Currency=SGD&TM_DebitAmt=11.00&TM_PaymentType=3&TM_BankRespCode=00&TM_ApprovalCode=878429&TM_ErrorMsg=&TM_UserField1=&TM_UserField2=&TM_UserField3=&TM_UserField4=&TM_UserField5=&TM_Original_RefNo=&TM_CCLast4Digit=0001&TM_RecurrentId=&TM_CCNum=xxxxxxxxxxxx0001&TM_ExpiryDate=2101&TM_IPP_FirstPayment=&TM_IPP_LastPayment=&TM_IPP_MonthlyPayment=&TM_IPP_TransTenure=&TM_IPP_TotalInterest=&TM_IPP_DownPayment=&TM_IPP_MonthlyInterest=&TM_OriginalPayType=3&TM_Version=2&TM_Signature=E5ADA760E8E251F8DBDDB8ADC8767949E694C6C6DC171558BA01F580D0900F8E12C72698991F86720AC2DC4AC39844FABA56FB3DCC47CD8371288B0D7750F9C9",
+      TelemoneyPaymentResultRow: "TM_MCode=20151111011&TM_RefNo=WT1608170248&TM_TrnType=sale&TM_SubTrnType=&TM_Status=YES&TM_Error=&TM_Currency=SGD&TM_DebitAmt=11.00&TM_PaymentType=3&TM_BankRespCode=00&TM_ApprovalCode=878429&TM_ErrorMsg=&TM_UserField1=&TM_UserField2=&TM_UserField3=&TM_UserField4=&TM_UserField5=&TM_Original_RefNo=&TM_CCLast4Digit=0001&TM_RecurrentId=&TM_CCNum=xxxxxxxxxxxx0001&TM_ExpiryDate=2101&TM_IPP_FirstPayment=&TM_IPP_LastPayment=&TM_IPP_MonthlyPayment=&TM_IPP_TransTenure=&TM_IPP_TotalInterest=&TM_IPP_DownPayment=&TM_IPP_MonthlyInterest=&TM_OriginalPayType=3&TM_Version=2&TM_Signature=E5ADA760E8E251F8DBDDB8ADC8767949E694C6C6DC171558BA01F580D0900F8E12C72698991F86720AC2DC4AC39844FABA56FB3DCC47CD8371288B0D7750F9C9",
+      //Note: Telemoney Payment response result
+      paymentSuccessful: true
+    },
+    OptIn: true,
+    IPAddress: "sample string 18"
+  };
+  const url = `${HLAS_URL}/api/Accident/UpdatePaymentTransactionStatus`;
+  return sendPOSTRequest(
+    url,
+    payload,
+    "Error updating payment transaction status - Accident"
+  );
+}
+
+export function submitApplicationAccident(WebAppID, PASAppID) {
+  const tomorrow = moment(new Date()).add(1, "days");
+  const tomorrowStr = tomorrow.format("YYYY-MM-DD");
+  const payload = {
+    Premium: 1.0,
+    WebAppID,
+    PASAppID,
+    AutoRenew: true,
+    MeetsRequirements: "sample string 4",
+    ReferralSouceID: 5,
+    ReferralSource: "sample string 6",
+    ProductPlanID: 7,
+    ProductPlanName: "sample string 8",
+    PropertyTypeID: 9,
+    PropertyTypeName: "sample string 10",
+    InsuranceBackFromPayment: "sample string 11",
+    PersonalCoverage: true,
+    PolicyCommencementDate: tomorrowStr,
+    CoverageID: 12,
+    CoverageName: "sample string 13",
+    PolicyHolder: {
+      Surname: "test",
+      GivenName: "test",
+      IDNumber: "S0086294J",
+      DateOfBirth: "1988-07-22",
+      GenderID: 1,
+      MobileTelephone: "91234567",
+      Email: "guanhao3797@gmail.com",
+      UnitNumber: "11",
+      BlockHouseNumber: "11",
+      BuildingName: "sample string 12",
+      StreetName: "sample string 13",
+      PostalCode: "089057"
+    },
+    AccidentDetails: {
+      ProductPlanID: 1,
+      OccupationID: 2,
+      PolicyTermsID: 3,
+      OptionsID: 4
+    },
+    PlanPremium: 14.0,
+    PersonalCoveragePremium: 15.0,
+    TotalPremium: 16.0,
+    FirstPremium: 17.0,
+    PaymentInfo: {
+      PaymentReferenceNumber: `A${PASAppID}-WT1608170248`,
+      // Note A stands for Application 8919 is the ID returned from successful verified, WDF26F6 unique sequence generated
+      NameOnCard: "Test test",
+      CardNumber: "4005550000000001",
+      CardType: 0,
+      CardSecurityCode: "602",
+      CardExpiryYear: 2021,
+      CardExpiryMonth: 1,
+      BankID: 143,
+      PayByApplicant: true,
+      Surname: "test",
+      GivenName: "test",
+      IDNumber: "S0086294J",
+      // Note : Assumed always pay by applicant is true in the backend system
+      IDNumberType: 0,
+      TelephoneNumber: "91234567",
+
+      TelemoneyTransactionResponse: "TM_MCode=20151111011&TM_RefNo=WT1608170248&TM_TrnType=sale&TM_SubTrnType=&TM_Status=YES&TM_Error=&TM_Currency=SGD&TM_DebitAmt=11.00&TM_PaymentType=3&TM_BankRespCode=00&TM_ApprovalCode=878429&TM_ErrorMsg=&TM_UserField1=&TM_UserField2=&TM_UserField3=&TM_UserField4=&TM_UserField5=&TM_Original_RefNo=&TM_CCLast4Digit=0001&TM_RecurrentId=&TM_CCNum=xxxxxxxxxxxx0001&TM_ExpiryDate=2101&TM_IPP_FirstPayment=&TM_IPP_LastPayment=&TM_IPP_MonthlyPayment=&TM_IPP_TransTenure=&TM_IPP_TotalInterest=&TM_IPP_DownPayment=&TM_IPP_MonthlyInterest=&TM_OriginalPayType=3&TM_Version=2&TM_Signature=E5ADA760E8E251F8DBDDB8ADC8767949E694C6C6DC171558BA01F580D0900F8E12C72698991F86720AC2DC4AC39844FABA56FB3DCC47CD8371288B0D7750F9C9",
+      TelemoneyPaymentResultRow: "TM_MCode=20151111011&TM_RefNo=WT1608170248&TM_TrnType=sale&TM_SubTrnType=&TM_Status=YES&TM_Error=&TM_Currency=SGD&TM_DebitAmt=11.00&TM_PaymentType=3&TM_BankRespCode=00&TM_ApprovalCode=878429&TM_ErrorMsg=&TM_UserField1=&TM_UserField2=&TM_UserField3=&TM_UserField4=&TM_UserField5=&TM_Original_RefNo=&TM_CCLast4Digit=0001&TM_RecurrentId=&TM_CCNum=xxxxxxxxxxxx0001&TM_ExpiryDate=2101&TM_IPP_FirstPayment=&TM_IPP_LastPayment=&TM_IPP_MonthlyPayment=&TM_IPP_TransTenure=&TM_IPP_TotalInterest=&TM_IPP_DownPayment=&TM_IPP_MonthlyInterest=&TM_OriginalPayType=3&TM_Version=2&TM_Signature=E5ADA760E8E251F8DBDDB8ADC8767949E694C6C6DC171558BA01F580D0900F8E12C72698991F86720AC2DC4AC39844FABA56FB3DCC47CD8371288B0D7750F9C9",
+      //Note: Telemoney Payment response result
+      paymentSuccessful: true
+    },
+    OptIn: true,
+    IPAddress: "sample string 18"
+  };
+  const url = `${HLAS_URL}/api/Accident/SubmitApplication`;
+  return sendPOSTRequest(
+    url,
+    payload,
+    "Error submitting application - Accident"
+  );
 }
 
 export function getTravelQuote(
@@ -172,10 +413,6 @@ export function verifyApplicationTravelSingle(WebAppID) {
   const todayStr = moment(today).format("YYYY-MM-DD");
   const twoDaysLater = new Date(today.getTime() + 2 * 24 * 60 * 60 * 1000);
   const twoDaysLaterStr = moment(twoDaysLater).format("YYYY-MM-DD");
-  let numbers = "";
-  for (let i = 0; i < 7; i++) {
-    numbers += "" + generateRandomNumberFromRange(1, 10);
-  }
   const payload = {
     Premium: 10,
     WebAppID,
@@ -190,7 +427,7 @@ export function verifyApplicationTravelSingle(WebAppID) {
     PolicyHolder: {
       Surname: "test",
       GivenName: "test",
-      IDNumber: "S" + numbers + "C",
+      IDNumber: generateNRIC(),
       DateOfBirth: "1988-07-22",
       GenderID: 1,
       MobileTelephone: "91234567",

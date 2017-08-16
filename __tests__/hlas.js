@@ -2,11 +2,14 @@ import "react-native";
 import "isomorphic-fetch";
 import uuidv4 from "uuid/v4";
 import {
+  getPhoneProtectQuote,
+  getAccidentQuote,
+  verifyApplicationAccident,
+  createPaymentTransactionAccident,
+  updatePaymentTransactionAccident,
+  submitApplicationAccident,
   getTravelQuote,
   verifyApplicationTravelSingle,
-  getAccidentQuote,
-  getPhoneProtectQuote,
-  verifyApplicationAccident,
   createPaymentTransactionTravelSingle,
   updatePaymentTransactionTravelSingle,
   submitApplicationTravelSingle
@@ -34,12 +37,6 @@ import { create3dsAuthorizationRequest } from "../src/telemoney";
 //   });
 // });
 
-// it("verifies accident application correctly", () => {
-//   return verifyApplicationAccident().then(res => {
-//     console.log(res);
-//   });
-// });
-
 // it("gets travel quote correctly", () => {
 //   const countryid = 8;
 //   const tripDurationInDays = 2;
@@ -57,48 +54,35 @@ import { create3dsAuthorizationRequest } from "../src/telemoney";
 //   });
 // });
 
-// it("verifies single travel application correctly", () => {
-//   return verifyApplicationTravelSingle().then(res => {
-//     console.log(res);
-//   });
-// });
-
-// it("creates payment transaction for single travel correctly", () => {
-//   expect.assertions(2);
-//   const WebAppID = uuidv4();
-//   return verifyApplicationTravelSingle(WebAppID)
-//     .then(res => {
-//       expect(typeof res.ApplciationNo).toBe("number");
-//       return createPaymentTransactionTravelSingle(WebAppID, res.ApplciationNo);
-//     })
-//     .then(res => {
-//       expect(res.Success).toBe(true);
-//       console.log(res);
-//     });
-// });
-
-// it("updates payment transaction for single travel correctly", () => {
-//   expect.assertions(3);
-//   let PASAppID;
-//   const WebAppID = uuidv4();
-//   return verifyApplicationTravelSingle(WebAppID)
-//     .then(res => {
-//       expect(typeof res.ApplciationNo).toBe("number");
-//       PASAppID = res.ApplciationNo;
-//       return createPaymentTransactionTravelSingle(WebAppID, PASAppID);
-//     })
-//     .then(res => {
-//       expect(res.Success).toBe(true);
-//       return updatePaymentTransactionTravelSingle(WebAppID, PASAppID);
-//     })
-//     .then(res => {
-//       console.log(res);
-//       expect(res.Success).toBe(true);
-//     });
-// });
+it("submits application for accident correctly", () => {
+  expect.assertions = 7;
+  let PASAppID;
+  const WebAppID = uuidv4();
+  return verifyApplicationAccident(WebAppID)
+    .then(res => {
+      expect(typeof res.ApplciationNo).toBe("number");
+      expect(res.Success).toBe(true);
+      PASAppID = res.ApplciationNo;
+      return createPaymentTransactionAccident(WebAppID, PASAppID);
+    })
+    .then(res => {
+      expect(res.Success).toBe(true);
+      return updatePaymentTransactionAccident(WebAppID, PASAppID);
+    })
+    .then(res => {
+      expect(res.Success).toBe(true);
+      return submitApplicationAccident(WebAppID, PASAppID);
+    })
+    .then(res => {
+      console.log(res);
+      expect(res.Success).toBe(true);
+      expect(typeof res.PolicyNo).toBe("string");
+      expect(res.PolicyNo).toMatch(/^AM/);
+    });
+});
 
 it("submits application for single travel correctly", () => {
-  expect.assertions(5);
+  expect.assertions = 6;
   let PASAppID;
   const WebAppID = uuidv4();
   return verifyApplicationTravelSingle(WebAppID)
@@ -119,5 +103,6 @@ it("submits application for single travel correctly", () => {
       console.log(res);
       expect(res.Success).toBe(true);
       expect(typeof res.PolicyNo).toBe("string");
+      expect(res.PolicyNo).toMatch(/^TR/);
     });
 });
