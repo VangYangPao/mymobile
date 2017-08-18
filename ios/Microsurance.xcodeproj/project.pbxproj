@@ -222,13 +222,6 @@
 			remoteGlobalIDString = 3D3CD9181DE5FBD800167DC4;
 			remoteInfo = "jschelpers-tvOS";
 		};
-		3F3365D71F427A44003DA40F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 540133F9A6C04693A58504EB /* RNSpinkit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 641194871EC9FD4A00D4FC03;
-			remoteInfo = "RNSpinkit-tvOS";
-		};
 		3F4102021EFF268D001B4303 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F943AD42BB094D8DA66761D9 /* RNImagePicker.xcodeproj */;
@@ -526,7 +519,6 @@
 			isa = PBXGroup;
 			children = (
 				3F4102091EFF268D001B4303 /* libRNSpinkit.a */,
-				3F3365D81F427A44003DA40F /* libRNSpinkit.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1009,13 +1001,6 @@
 			fileType = archive.ar;
 			path = libjschelpers.a;
 			remoteRef = 3DAD3EAE1DF850E9000B6D8A /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		3F3365D81F427A44003DA40F /* libRNSpinkit.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRNSpinkit.a;
-			remoteRef = 3F3365D71F427A44003DA40F /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		3F4102031EFF268D001B4303 /* libRNImagePicker.a */ = {
