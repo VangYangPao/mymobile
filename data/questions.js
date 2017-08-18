@@ -1355,11 +1355,7 @@ export const QUESTION_SETS = {
       exclude: ["travel"]
     },
     {
-      question: "For the next steps, I will be asking you some questions to get you covered instantly.",
-      responseType: null
-    },
-    {
-      question: "Please be patient with my questions. 😬",
+      question: "For the next steps, I will be asking you some questions to get you covered instantly. Please be patient with my questions. 😬",
       responseType: null
     },
     {
@@ -1381,7 +1377,7 @@ export const QUESTION_SETS = {
     {
       question: "Nice to meet you <%= lastName %> <%= firstName %>! What's your NRIC/FIN/Passport?",
       responseType: "string",
-      id: "ICNumber"
+      id: "NRIC"
     },
     {
       question: "What's your email address? ✉️",

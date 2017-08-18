@@ -964,10 +964,14 @@ class ChatScreen extends Component {
     this.reaskQuestion = this.reaskQuestion.bind(this);
     this.sendNewMessage = this.sendNewMessage.bind(this);
 
-    this.concatMessage = message => {
+    this.concatMessageUpdater = message => {
       return prevState => {
         return { messages: prevState.messages.concat(message) };
       };
+    };
+
+    this.concatMessage = message => {
+      this.setState({ messages: this.state.messages.concat(message) });
     };
 
     this.newMessageSound = new Sound(
@@ -1005,23 +1009,25 @@ class ChatScreen extends Component {
     });
 
     const renderPolicyChoice = () => {
-      this.handleAgentSend({ type: "policies", _id: 1, user: AGENT_USER });
+      this.concatMessage({
+        type: "policies",
+        _id: 1,
+        user: AGENT_USER
+      });
     };
 
-    setTimeout(() => {
+    const sendFirstMessage = setTimeout(() => {
       this.setState(
-        prevState => {
-          return {
-            messages: [
-              {
-                type: "text",
-                _id: 0,
-                text: "Hello, I'm Eve. Welcome to microUmbrella. I'll be your host and here are the protection plans that may interest you. 😄",
-                createdAt: new Date(),
-                user: AGENT_USER
-              }
-            ]
-          };
+        {
+          messages: [
+            {
+              type: "text",
+              _id: 0,
+              text: "Hello, I'm Eve. Welcome to microUmbrella. I'll be your host and here are the protection plans that may interest you. 😄",
+              createdAt: new Date(),
+              user: AGENT_USER
+            }
+          ]
         },
         () => setTimeout(renderPolicyChoice, POLICIES_FADE_IN_TIME)
       );
@@ -1029,13 +1035,38 @@ class ChatScreen extends Component {
   }
 
   handleUserSend(messages) {
-    this.setState(this.concatMessage(messages), () => {
+    this.setState(this.concatMessageUpdater(messages), () => {
       this.setState({ answering: false });
     });
   }
 
-  handleAgentSend(message) {
-    this.setState(this.concatMessage(message), this.playNewMessageSound);
+  handleAgentSend(message, cb) {
+    const loadingMessage = {
+      type: "loading",
+      _id: uuid.v4(),
+      text: "loading",
+      createdAt: new Date(),
+      user: AGENT_USER
+    };
+    let messageIndex;
+    const afterLoading = () => {
+      const messages = this.state.messages.slice();
+      messages.splice(messageIndex, 1, message);
+      this.setState({ renderInput: true, messages: messages }, cb);
+      this.playNewMessageSound();
+    };
+    this.setState(
+      prevState => {
+        messageIndex = prevState.messages.length;
+        return {
+          renderInput: false,
+          messages: prevState.messages.concat(loadingMessage)
+        };
+      },
+      () => {
+        setTimeout(afterLoading, 1500);
+      }
+    );
   }
 
   handleSelectPolicy(policyTitle) {
@@ -1048,7 +1079,7 @@ class ChatScreen extends Component {
     const plans = ["Basic", "Enhanced", "Superior"];
     const answers = Object.assign(this.state.answers, { price });
     this.setState(
-      this.concatMessage({
+      this.concatMessageUpdater({
         type: "text",
         _id: uuid.v4(),
         text: `${plans[planIndex]} plan`,
@@ -1063,7 +1094,7 @@ class ChatScreen extends Component {
     const planAlphabet = ["A", "B", "C", "D", "E"];
     const premium = this.props.policy.plans[planIndex].premium;
     this.setState(
-      this.concatMessage({
+      this.concatMessageUpdater({
         type: "text",
         _id: uuid.v4(),
         text: `I choose Plan ${planAlphabet[planIndex]}`,
@@ -1079,7 +1110,7 @@ class ChatScreen extends Component {
     if (currentQuestion.id !== "coverageDuration") return;
     const s = months > 1 ? "s" : "";
     this.setState(
-      this.concatMessage({
+      this.concatMessageUpdater({
         type: "text",
         _id: uuid.v4(),
         text: `I want to be covered for ${months} month${s}`,
@@ -1094,7 +1125,7 @@ class ChatScreen extends Component {
     const format = mode === "datetime" ? "YYYY-MM-DD HH:mm A" : "YYYY-MM-DD";
     const dateStr = moment(date).format(format);
     this.setState(
-      this.concatMessage({
+      this.concatMessageUpdater({
         type: "text",
         _id: uuid.v4(),
         user: CUSTOMER_USER,
@@ -1107,7 +1138,7 @@ class ChatScreen extends Component {
 
   handlePickImage(imageUri) {
     this.setState(
-      this.concatMessage({
+      this.concatMessageUpdater({
         type: "text",
         _id: uuid.v4(),
         user: CUSTOMER_USER,
@@ -1120,7 +1151,7 @@ class ChatScreen extends Component {
 
   handlePickChoice(label, value) {
     this.setState(
-      this.concatMessage({
+      this.concatMessageUpdater({
         type: "text",
         _id: uuid.v4(),
         user: CUSTOMER_USER,
@@ -1134,7 +1165,7 @@ class ChatScreen extends Component {
   handleFinishSelectImages(imagesUri) {
     const s = imagesUri.length > 1 ? "s" : "";
     this.setState(
-      this.concatMessage({
+      this.concatMessageUpdater({
         type: "text",
         _id: uuid.v4(),
         text: imagesUri.length
@@ -1151,7 +1182,7 @@ class ChatScreen extends Component {
     const imageLen = Object.keys(images).length;
     const s = imageLen > 1 ? "s" : "";
     this.setState(
-      this.concatMessage({
+      this.concatMessageUpdater({
         type: "text",
         _id: uuid.v4(),
         text: imageLen
@@ -1180,7 +1211,7 @@ class ChatScreen extends Component {
     }
 
     this.setState(
-      this.concatMessage({
+      this.concatMessageUpdater({
         type: "text",
         _id: uuid.v4(),
         text: `I want to claim policy ${title} (PL${policy.id})`,
@@ -1193,7 +1224,7 @@ class ChatScreen extends Component {
 
   handleDownload() {
     this.setState(
-      this.concatMessage({
+      this.concatMessageUpdater({
         type: "text",
         _id: uuid.v4(),
         text: "I have printed and filled up, I am ready with the next step.",
@@ -1229,14 +1260,17 @@ class ChatScreen extends Component {
     }
   }
 
-  sendNewMessage(msgText) {
-    this.handleAgentSend({
-      _id: uuid.v4(),
-      type: "text",
-      text: msgText,
-      createdAt: new Date(),
-      user: AGENT_USER
-    });
+  sendNewMessage(msgText, cb) {
+    this.handleAgentSend(
+      {
+        _id: uuid.v4(),
+        type: "text",
+        text: msgText,
+        createdAt: new Date(),
+        user: AGENT_USER
+      },
+      cb
+    );
   }
 
   reaskQuestion(errMessage) {
@@ -1343,62 +1377,71 @@ class ChatScreen extends Component {
     const nextQuestionText = template(nextQuestion.question)(
       this.state.answers
     );
-    this.sendNewMessage(nextQuestionText);
 
-    this.setState(
-      {
-        currentQuestionIndex,
-        answering: true
-      },
-      () => {
-        const appendWidget = (key, additionalProps) =>
-          this.setState(
-            this.concatMessage({
-              type: key,
-              _id: uuid.v4(),
-              user: AGENT_USER,
-              ...additionalProps
-            }),
-            () => this.setState({ renderInput: false })
-          );
-        const currentQuestion = this.questions[this.state.currentQuestionIndex];
-        if (currentQuestion.responseType === null) {
-          this.askNextQuestion();
-          return;
-        }
-        if (currentQuestion.id instanceof Array) {
-          const inputs = currentQuestion.id.map((id, idx) => ({
-            id,
-            type: currentQuestion.responseType[idx],
-            label: currentQuestion.labels[idx]
-          }));
-          appendWidget("multiInput", { inputs });
-          return;
-        }
-        const widgets = [
-          "planIndex",
-          "coverageDuration",
-          "claimPolicyNo"
-          // "travelDetails"
-        ];
-        const typeWidgets = ["images", "imageTable", "choice"];
-        if (widgets.indexOf(currentQuestion.id) !== -1) {
-          appendWidget(currentQuestion.id);
-        }
-        const responseTypes = [].concat(currentQuestion.responseType);
-        responseTypes.forEach(type => {
-          if (type === "images") appendWidget("images");
-          if (type === "choice") {
-            appendWidget("choice", { choices: currentQuestion.choices });
-          }
-          if (type === "imageTable") {
-            const { columns } = currentQuestion;
-            appendWidget("imageTable", { columns });
-          }
-          // appendWidget(type, currentQuestion);
-        });
+    const appendWidget = (key, additionalProps) => {
+      this.setState(
+        {
+          messages: this.state.messages.concat({
+            type: key,
+            _id: uuid.v4(),
+            user: AGENT_USER,
+            ...additionalProps
+          })
+        },
+        () => this.setState({ renderInput: false })
+      );
+    };
+
+    const handleAppendWidget = () => {
+      const currentQuestion = this.questions[this.state.currentQuestionIndex];
+      if (currentQuestion.responseType === null) {
+        this.askNextQuestion();
+        return;
       }
-    );
+      if (currentQuestion.id instanceof Array) {
+        const inputs = currentQuestion.id.map((id, idx) => ({
+          id,
+          type: currentQuestion.responseType[idx],
+          label: currentQuestion.labels[idx]
+        }));
+        appendWidget("multiInput", { inputs });
+        return;
+      }
+      const widgets = [
+        "planIndex",
+        "coverageDuration",
+        "claimPolicyNo"
+        // "travelDetails"
+      ];
+      const typeWidgets = ["images", "imageTable", "choice"];
+      if (widgets.indexOf(currentQuestion.id) !== -1) {
+        appendWidget(currentQuestion.id);
+      }
+      const responseTypes = [].concat(currentQuestion.responseType);
+      responseTypes.forEach(type => {
+        if (type === "images") appendWidget("images");
+        if (type === "choice") {
+          appendWidget("choice", { choices: currentQuestion.choices });
+        }
+        if (type === "imageTable") {
+          const { columns } = currentQuestion;
+          appendWidget("imageTable", { columns });
+        }
+        // appendWidget(type, currentQuestion);
+      });
+    };
+
+    const handleAfterSendMessage = () => {
+      this.setState(
+        {
+          currentQuestionIndex,
+          answering: true
+        },
+        handleAppendWidget
+      );
+    };
+
+    this.sendNewMessage(nextQuestionText, handleAfterSendMessage);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -1586,6 +1629,7 @@ class ChatScreen extends Component {
     const currentQuestion = this.questions[currentQuestionIndex];
     let { responseType } = currentQuestion;
     responseType = [].concat(responseType);
+    console.log("renderInput", this.state.renderInput);
 
     if (responseType.indexOf("date") !== -1) {
       return (
