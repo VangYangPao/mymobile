@@ -8,6 +8,8 @@ export default class RangeSlider extends Component {
   constructor(props) {
     super(props);
     this.handleValueChange = this.handleValueChange.bind(this);
+    this.renderLabel = this.renderLabel.bind(this);
+    this.renderTrackStep = this.renderTrackStep.bind(this);
     this.state = {
       currentIndex: 0
     };
@@ -18,6 +20,41 @@ export default class RangeSlider extends Component {
     this.setState({ currentIndex }, () => {
       if (this.props.onValueChange) this.props.onValueChange(value);
     });
+  }
+
+  renderLabel(lbl, idx) {
+    const activeStyle = idx === this.state.currentIndex
+      ? styles.activeLabel
+      : null;
+    return (
+      <TouchableOpacity
+        key={lbl}
+        activeOpacity={0.8}
+        onPress={() => this.handleValueChange(idx)}
+      >
+        <Text
+          key={lbl}
+          style={[styles.label, styles.labelsOffset, activeStyle]}
+        >
+          {lbl}
+        </Text>
+      </TouchableOpacity>
+    );
+  }
+
+  renderTrackStep(value, idx) {
+    const activeTrackStep = idx <= this.state.currentIndex
+      ? styles.activeTrackStep
+      : null;
+    return (
+      <TouchableOpacity
+        key={value}
+        activeOpacity={0.8}
+        onPress={() => this.handleValueChange(idx)}
+      >
+        <View style={[styles.trackStep, activeTrackStep]} />
+      </TouchableOpacity>
+    );
   }
 
   render() {
@@ -38,29 +75,12 @@ export default class RangeSlider extends Component {
     return (
       <View style={[styles.container, this.props.containerStyle]}>
         <View style={styles.labels}>
-          {labels.map((lbl, idx) => {
-            const activeStyle = idx === this.state.currentIndex
-              ? styles.activeLabel
-              : null;
-            return (
-              <Text
-                key={lbl}
-                style={[styles.label, styles.labelsOffset, activeStyle]}
-              >
-                {lbl}
-              </Text>
-            );
-          })}
-        </View>
-        <View style={[styles.labels, styles.trackStepsContainer]}>
-          {values.map((v, idx) => {
-            const activeTrackStep = idx <= this.state.currentIndex
-              ? styles.activeTrackStep
-              : null;
-            return <View key={v} style={[styles.trackStep, activeTrackStep]} />;
-          })}
+          {labels.map(this.renderLabel)}
         </View>
         <Slider {...sliderProps} onValueChange={this.handleValueChange} />
+        <View style={[styles.labels, styles.trackStepsContainer]}>
+          {values.map(this.renderTrackStep)}
+        </View>
       </View>
     );
   }
