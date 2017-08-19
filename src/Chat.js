@@ -10,7 +10,8 @@ import {
   ScrollView,
   Platform,
   Alert,
-  ToastAndroid
+  ToastAndroid,
+  Keyboard
 } from "react-native";
 import {
   GiftedChat,
@@ -129,6 +130,7 @@ class ChatScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      keyboardHeight: 0,
       messages: [],
       minInputToolbarHeight: 44,
       answering: true,
@@ -466,6 +468,28 @@ class ChatScreen extends Component {
       // trigger the initial componentDidUpdate
       this.setState({ answering: false });
     }
+    this.keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      this._keyboardDidShow.bind(this)
+    );
+    this.keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      this._keyboardDidHide.bind(this)
+    );
+  }
+
+  componentWillUnmount() {
+    this.keyboardDidShowListener.remove();
+    this.keyboardDidHideListener.remove();
+  }
+
+  _keyboardDidShow(e) {
+    const keyboardHeight = e.endCoordinates.height;
+    this.setState({ keyboardHeight });
+  }
+
+  _keyboardDidHide(e) {
+    this.setState({ keyboardHeight: 0 });
   }
 
   sendNewMessage(msgText, cb) {
@@ -837,7 +861,6 @@ class ChatScreen extends Component {
     const currentQuestion = this.questions[currentQuestionIndex];
     let { responseType } = currentQuestion;
     responseType = [].concat(responseType);
-    console.log("renderInput", this.state.renderInput);
 
     if (responseType.indexOf("date") !== -1) {
       return (
@@ -899,7 +922,8 @@ class ChatScreen extends Component {
         }
         let scrollHeight = contentHeight;
         if (Platform.OS === "ios") {
-          const supposedScrollHeight = contentHeight - WINDOW_HEIGHT * 0.8;
+          const supposedScrollHeight =
+            contentHeight - WINDOW_HEIGHT * 0.8 + this.state.keyboardHeight;
           scrollHeight = supposedScrollHeight < 0 ? 0 : supposedScrollHeight;
         }
         this.refs.chat._messageContainerRef.scrollTo({
