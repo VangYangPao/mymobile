@@ -35,8 +35,8 @@ function notEmptyString(str) {
   );
 }
 
-function validatePhoneNumber(s) {
-  const isValid = true;
+function validatePhoneNumber(phoneNumber) {
+  const isValid = phoneNumber[0] === "8" || phoneNumber[0] === "9";
   return new ValidationResult(
     isValid,
     isValid || "Please enter a valid phone number"
@@ -97,6 +97,17 @@ function validateNRIC(str) {
   }
 
   return new ValidationResult(icArray[8] === theAlpha, true);
+}
+
+function validateTravelStartDate(date) {
+  // 2.  Trip Start date must be same as application date or after.
+  // 3.  Trip Start date can be 182 days in advance of application Date
+  return new ValidationResult(true, true);
+}
+
+function validateTravelEndDate(date) {
+  // 4. Trip Start date can be 182 days in advance of application Date
+  return new ValidationResult(true, true);
 }
 
 const TypeValidators = {
@@ -191,12 +202,14 @@ export const paClaimQuestions = [
   {
     question: "I'm so sorry to hear that. I assume you are <%= <%= fullName %> %>’s claimant/next of kin. Please share with me the date and time of the accident",
     responseType: "datetime",
+    pastOnly: true,
     id: "accidentDate",
     include: ["death"]
   },
   {
     question: "Oh… I am sad to hear that. Let me help out on the claim fast. Please share with me the date and time of the accident",
     responseType: "datetime",
+    pastOnly: true,
     id: "accidentDate",
     include: ["permanentDisability"]
   },
@@ -222,6 +235,7 @@ export const paClaimQuestions = [
   {
     question: "Please share with me the date and time of the accident?",
     responseType: "datetime",
+    pastOnly: true,
     include: ["weeklyCompensation"]
   },
   {
@@ -268,6 +282,7 @@ export const paClaimQuestions = [
   {
     question: "When did the symptoms first appear?",
     responseType: "date",
+    pastOnly: true,
     id: "symptomsAppearDate",
     include: ["permanentDisability", "medicalReimbursement"],
     condition: "this.state.answers.hasSufferedSameInjury"
@@ -324,6 +339,7 @@ export const paClaimQuestions = [
   {
     question: "When is the treatment is expected to be completed?",
     responseType: ["date"],
+    pastOnly: true,
     id: "treatmentCompleteDate",
     condition: "!this.state.answers.hasCompletedTreatment",
     include: ["permanentDisability", "medicalReimbursement"]
@@ -345,6 +361,7 @@ export const paClaimQuestions = [
   {
     question: "Share with me the medical leave date",
     responseType: ["date"],
+    pastOnly: true,
     id: "medicalLeaveDate",
     condition: "!this.state.answers.hasOtherInsuranceCoverage && this.state.answers.hasMedicalLeave",
     include: ["permanentDisability"]
@@ -366,6 +383,7 @@ export const paClaimQuestions = [
   {
     question: "Share with me when you returned to work",
     responseType: ["date"],
+    pastOnly: true,
     id: "returnWorkDate",
     condition: "!this.state.answers.hasOtherInsuranceCoverage && this.state.answers.hasMedicalLeave && this.state.answers.hasReturnedToWork",
     include: ["permanentDisability"]
@@ -595,30 +613,35 @@ export const travelClaimQuestions = [
   {
     question: "I’m so sorry to hear that. I assume you are <%= fullName %>’s claimant/next of kin. Please share with me the date and time of the accident",
     responseType: "datetime",
+    pastOnly: true,
     id: "claimDate",
     include: ["death"]
   },
   {
     question: "Oh… I am sad to hear that. Let me help out on the claim fast. Please share with me the date and time of the accident",
     responseType: "datetime",
+    pastOnly: true,
     id: "claimDate",
     include: ["permanentDisability"]
   },
   {
     question: "<%= fullName %>, I wish you get well soon. Let me help out on the claim fast. Please share with me the date and time of the accident",
     responseType: "datetime",
+    pastOnly: true,
     id: "claimDate",
     include: ["medicalReimbursement"]
   },
   {
     question: "<%= fullName %>, you just selected the option to claim for damaged or loss of baggage while in the custody of others. Please share with me the date and time of damage or loss",
     responseType: "datetime",
+    pastOnly: true,
     id: "claimDate",
     include: ["baggageDamaged"]
   },
   {
     question: "<%= fullName %>, you just selected the option to claim for loss of personal document. Please share with me the date and time of loss",
     responseType: "datetime",
+    pastOnly: true,
     id: "claimDate",
     include: ["lossOfPersonalDocument"]
   },
@@ -697,6 +720,7 @@ export const travelClaimQuestions = [
   {
     question: "Please share with me the date of trip curtailment or cancellation",
     responseType: "date",
+    pastOnly: true,
     id: "tripCurtailmentDate",
     include: ["tripCurtailment"]
   },
@@ -722,7 +746,7 @@ export const travelClaimQuestions = [
   },
   {
     question: "Please share with me the NAME, ADDRESS and CONTACT of the attending physician",
-    responseType: ["string", "string", "string"],
+    responseType: ["string", "string", ["string", "phoneNumber"]],
     labels: ["Name", "Address", "Contact number"],
     id: ["physicianName", "physicianAddress", "physicianContact"],
     include: ["tripCurtailment"],
@@ -1056,6 +1080,7 @@ export const travelClaimQuestions = [
   {
     question: "When did the symptoms first appear?",
     responseType: "date",
+    pastOnly: true,
     id: "symptomsAppearDate",
     include: ["permanentDisability", "medicalReimbursement"]
   },
@@ -1095,6 +1120,7 @@ export const travelClaimQuestions = [
   {
     question: "When is the treatment is expected to be completed?",
     responseType: "date",
+    pastOnly: true,
     id: "treatmentCompleteDate",
     include: ["permanentDisability"],
     condition: "!this.state.answers.hasCompletedTreatment"
@@ -1112,6 +1138,7 @@ export const travelClaimQuestions = [
   {
     question: "Share with me the end date of the medical leave",
     responseType: "date",
+    pastOnly: true,
     id: "medicalLeaveDate",
     include: ["permanentDisability"],
     condition: "this.state.answers.hasMedicalLeave"
@@ -1130,6 +1157,7 @@ export const travelClaimQuestions = [
   {
     question: "Share with me when you returned to work…",
     responseType: "date",
+    pastOnly: true,
     id: "returnWorkDate",
     include: ["permanentDisability"],
     condition: "this.state.answers.hasReturnedToWork"
@@ -1232,6 +1260,7 @@ export const mobileClaimQuestions = [
   {
     question: "Oops… Don’t worry. I will walk you through step by step. I'll do my best to get your claim fast. Please share with me the date and time of the accident",
     responseType: "datetime",
+    pastOnly: true,
     id: "accidentDate"
   },
   {
@@ -1304,7 +1333,7 @@ export const QUESTION_SETS = {
       responseType: ["string", "choice"],
       label: "SELECT DESTINATION",
       choices: [
-        { label: "ASEAN", value: "ASEAN" },
+        { label: "South East Asia", value: "ASEAN" },
         { label: "Asia", value: "Asia" },
         { label: "Worldwide", value: "Worldwide" }
       ],
@@ -1313,17 +1342,19 @@ export const QUESTION_SETS = {
     },
     {
       question: "When are you departing?",
-      responseType: "date",
-      allowFuture: true,
+      responseType: ["date", "travelStartDate"],
+      futureOnly: true,
       id: "departureDate",
       include: ["travel"]
     },
     {
       question: "When are you returning?",
-      responseType: "date",
-      allowFuture: true,
+      responseType: ["date", "travelEndDate"],
+      futureOnly: true,
+      minDateFrom: "departureDate",
       id: "returnDate",
-      include: ["travel"]
+      include: ["travel"],
+      defaultValue: "this.state.answers.departureDate"
     },
     {
       question: "Nice. Who do you want to insure?",
@@ -1376,7 +1407,7 @@ export const QUESTION_SETS = {
     // },
     {
       question: "Nice to meet you <%= lastName %> <%= firstName %>! What's your NRIC/FIN/Passport?",
-      responseType: "string",
+      responseType: ["string", "nric"],
       id: "NRIC"
     },
     {
