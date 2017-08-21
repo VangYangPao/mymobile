@@ -33,7 +33,7 @@ const imageWidth = 100;
 export class MyDatePicker extends Component {
   constructor(props) {
     super(props);
-    this.state = { date: new Date() };
+    this.state = { date: props.minDate || new Date() };
   }
 
   onPickDate(dateStr) {
@@ -44,9 +44,12 @@ export class MyDatePicker extends Component {
   render() {
     const now = new Date();
     const mode = this.props.mode || "datetime";
-    const allowFuture = this.props.allowFuture || false;
     const format = mode === "datetime" ? "YYYY-MM-DD HH:mm" : "YYYY-MM-DD";
-    const maxDate = allowFuture ? null : now;
+    const maxDate = this.props.pastOnly ? now : null;
+    let minDate = this.props.futureOnly ? now : null;
+    if (this.props.minDate) {
+      minDate = this.props.minDate;
+    }
     return (
       <DatePicker
         style={{ flex: 1, paddingHorizontal: 10 }}
@@ -55,6 +58,7 @@ export class MyDatePicker extends Component {
         placeholder="SELECT DATE"
         format={format}
         maxDate={maxDate}
+        minDate={minDate}
         confirmBtnText="Confirm"
         cancelBtnText="Cancel"
         customStyles={{

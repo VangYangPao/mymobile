@@ -863,9 +863,18 @@ class ChatScreen extends Component {
     responseType = [].concat(responseType);
 
     if (responseType.indexOf("date") !== -1) {
+      let minDateFrom;
+      if (currentQuestion.minDateFrom) {
+        minDateFrom = moment(this.state.answers[currentQuestion.minDateFrom])
+          .add(1, "days")
+          .toDate();
+      }
+      console.log("minDateFrom", minDateFrom);
       return (
         <MyDatePicker
-          allowFuture={currentQuestion.allowFuture}
+          pastOnly={currentQuestion.pastOnly}
+          futureOnly={currentQuestion.futureOnly}
+          minDate={minDateFrom}
           mode="date"
           onPickDate={this.handlePickDate}
         />
