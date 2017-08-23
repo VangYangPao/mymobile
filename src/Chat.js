@@ -716,8 +716,7 @@ class ChatScreen extends Component {
         ) {
           answer = parseFloat(answer);
         }
-        console.log(answer);
-        const result = validateAnswer(lastQuestion, answer);
+        const result = validateAnswer(lastQuestion, answer, this.state.answers);
 
         if (result.isValid) {
           let newAnswer = {};

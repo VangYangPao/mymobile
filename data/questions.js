@@ -1,3 +1,5 @@
+import moment from "moment";
+
 class ValidationResult {
   constructor(isValid, errMessage) {
     this.isValid = isValid;
@@ -99,14 +101,34 @@ function validateNRIC(str) {
   return new ValidationResult(icArray[8] === theAlpha, true);
 }
 
-function validateTravelStartDate(date) {
+function validateTravelStartDate(startDate) {
   // 2.  Trip Start date must be same as application date or after.
   // 3.  Trip Start date can be 182 days in advance of application Date
+  startDate = moment(startDate);
+  const applicationDate = moment(new Date());
+  const dayDiff = startDate.diff(applicationDate, "days");
+  if (dayDiff < 0) {
+    return new ValidationResult(
+      false,
+      "Trip start date cannot be before application date."
+    );
+  } else if (dayDiff < 0 || dayDiff > 182) {
+    return new ValidationResult(
+      false,
+      "Trip start date cannot be more than 182 days in advance."
+    );
+  }
   return new ValidationResult(true, true);
 }
 
-function validateTravelEndDate(date) {
-  // 4. Trip Start date can be 182 days in advance of application Date
+function validateTravelEndDate(endDate, answers) {
+  // 1. Trip Period can't exceed for 182 days (Single Trip).
+  endDate = moment(endDate);
+  const startDate = answers.departureDate;
+  const dayDiff = endDate.diff(startDate, "days");
+  if (dayDiff > 182) {
+    return new ValidationResult(false, "Trip period cannot exceed 182 days.");
+  }
   return new ValidationResult(true, true);
 }
 
@@ -119,12 +141,14 @@ const TypeValidators = {
   imageTable: () => new ValidationResult(true, true),
   date: validateDate,
   datetime: validateDate,
+  travelStartDate: validateTravelStartDate,
+  travelEndDate: validateTravelEndDate,
   choice: () => new ValidationResult(true, true),
   nric: validateNRIC,
   boolean: validateBoolean
 };
 
-export function validateAnswer(question, answer) {
+export function validateAnswer(question, answer, answers) {
   const { responseType } = question;
   const responseTypes = [].concat(responseType);
   if (Array.isArray(question.id)) {
@@ -143,7 +167,7 @@ export function validateAnswer(question, answer) {
   var validateFunc;
   for (var i = 0; i < responseTypes.length; i++) {
     validateFunc = TypeValidators[responseTypes[i]];
-    response = validateFunc(answer);
+    response = validateFunc(answer, answers);
     if (!response.isValid) return response;
   }
   return response;

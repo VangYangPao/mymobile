@@ -124,10 +124,10 @@ const MyDrawerNavigator = DrawerNavigator(
 
 export default (Microsurance = StackNavigator(
   {
-    Intro: { screen: IntroScreen },
-    Auth: { screen: AuthScreen },
-    TermsOfUse: { screen: TermsOfUseStack },
-    PrivacyPolicy: { screen: PrivacyPolicyStack },
+    // Intro: { screen: IntroScreen },
+    // Auth: { screen: AuthScreen },
+    // TermsOfUse: { screen: TermsOfUseStack },
+    // PrivacyPolicy: { screen: PrivacyPolicyStack },
     Drawer: { screen: MyDrawerNavigator }
   },
   { headerMode: "none" }
