@@ -29,6 +29,7 @@ import Spinner from "react-native-spinkit";
 import Sound from "react-native-sound";
 import { template } from "lodash";
 
+import CheckoutModal from "./CheckoutModal";
 import {
   MultiInput,
   MultipleImagePicker,
@@ -36,7 +37,8 @@ import {
   MyDatePicker,
   CoverageDurationWidget,
   ImageTable,
-  ChoiceList
+  ChoiceList,
+  SuggestionList
 } from "./widgets";
 import database from "./HackStorage";
 import PlanCarousel from "./PlanCarousel";
@@ -130,6 +132,7 @@ class ChatScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      composerText: "",
       keyboardHeight: 0,
       messages: [],
       minInputToolbarHeight: 44,
@@ -153,9 +156,11 @@ class ChatScreen extends Component {
     this.renderMessageText = this.renderMessageText.bind(this);
     this.renderComposer = this.renderComposer.bind(this);
     this.renderSend = this.renderSend.bind(this);
+    this.renderChatFooter = this.renderChatFooter.bind(this);
 
     this.handleUserSend = this.handleUserSend.bind(this);
     this.handleAgentSend = this.handleAgentSend.bind(this);
+    this.handleSelectSuggestion = this.handleSelectSuggestion.bind(this);
     this.handleSelectPolicy = this.handleSelectPolicy.bind(this);
     this.handleSelectPlan = this.handleSelectPlan.bind(this);
     this.handleSelectTravelInsurancePlan = this.handleSelectTravelInsurancePlan.bind(
@@ -276,6 +281,19 @@ class ChatScreen extends Component {
       () => {
         setTimeout(afterLoading, 1500);
       }
+    );
+  }
+
+  handleSelectSuggestion(suggestion) {
+    this.setState(
+      this.concatMessageUpdater({
+        type: "text",
+        _id: uuid.v4(),
+        text: `${suggestion.label}`,
+        value: suggestion.value,
+        user: CUSTOMER_USER
+      }),
+      () => this.setState({ answering: false, renderInput: true })
     );
   }
 
@@ -854,6 +872,24 @@ class ChatScreen extends Component {
     }
   }
 
+  renderChatFooter() {
+    const { currentQuestionIndex } = this.state;
+    if (currentQuestionIndex < 0 || !this.state.renderInput) return null;
+    const currentQuestion = this.questions[currentQuestionIndex];
+
+    if (currentQuestion.id === "travelDestination") {
+      return (
+        <SuggestionList
+          items={currentQuestion.choices}
+          searchOptions={currentQuestion.searchOptions}
+          searchValue={this.state.composerText}
+          onSelectSuggestion={this.handleSelectSuggestion}
+        />
+      );
+    }
+    return null;
+  }
+
   renderComposer(props) {
     const { currentQuestionIndex } = this.state;
     if (currentQuestionIndex < 0) return;
@@ -868,7 +904,6 @@ class ChatScreen extends Component {
           .add(1, "days")
           .toDate();
       }
-      console.log("minDateFrom", minDateFrom);
       return (
         <MyDatePicker
           pastOnly={currentQuestion.pastOnly}
@@ -901,6 +936,10 @@ class ChatScreen extends Component {
       <Composer
         placeholder="Type your message here..."
         {...props}
+        text={this.state.composerText}
+        onTextChanged={text => {
+          this.setState({ composerText: text });
+        }}
         textInputProps={textInputProps}
       />
     );
@@ -911,6 +950,7 @@ class ChatScreen extends Component {
   }
 
   render() {
+    // return <CheckoutModal />;
     const additionalProps = {};
     let minInputToolbarHeight = 44;
     if (
@@ -956,6 +996,7 @@ class ChatScreen extends Component {
           renderMessageText={this.renderMessageText}
           renderSend={this.renderSend}
           renderComposer={this.renderComposer}
+          renderChatFooter={this.renderChatFooter}
           minInputToolbarHeight={minInputToolbarHeight}
           listViewProps={listViewProps}
         />

@@ -1,4 +1,5 @@
 import moment from "moment";
+import COUNTRIES from "./countries";
 
 class ValidationResult {
   constructor(isValid, errMessage) {
@@ -132,6 +133,15 @@ function validateTravelEndDate(endDate, answers) {
   return new ValidationResult(true, true);
 }
 
+function validateChoice(choice) {
+  const validChoice =
+    choice.hasOwnProperty("label") && choice.hasOwnProperty("value");
+  return new ValidationResult(
+    validChoice,
+    "You have selected an invalid option"
+  );
+}
+
 const TypeValidators = {
   email: validateEmail,
   string: notEmptyString,
@@ -143,7 +153,7 @@ const TypeValidators = {
   datetime: validateDate,
   travelStartDate: validateTravelStartDate,
   travelEndDate: validateTravelEndDate,
-  choice: () => new ValidationResult(true, true),
+  choice: validateChoice,
   nric: validateNRIC,
   boolean: validateBoolean
 };
@@ -1352,18 +1362,29 @@ export const QUESTION_SETS = {
       responseType: null
     },
     {
-      question: "Which region are you travelling to?",
-      responseType: "string",
-      responseType: ["string", "choice"],
-      label: "SELECT DESTINATION",
-      choices: [
-        { label: "South East Asia", value: "ASEAN" },
-        { label: "Asia", value: "Asia" },
-        { label: "Worldwide", value: "Worldwide" }
-      ],
+      question: "Which country are you travelling to?",
+      responseType: ["string"],
+      choices: COUNTRIES,
       include: ["travel"],
-      id: "travelDestination"
+      id: "travelDestination",
+      searchOptions: {
+        keys: ["label"],
+        threshold: 0.2
+      }
     },
+    // {
+    //   question: "Which region are you travelling to?",
+    //   responseType: "string",
+    //   responseType: ["string", "choice"],
+    //   label: "SELECT DESTINATION",
+    //   choices: [
+    //     { label: "South East Asia", value: "ASEAN" },
+    //     { label: "Asia", value: "Asia" },
+    //     { label: "Worldwide", value: "Worldwide" }
+    //   ],
+    //   include: ["travel"],
+    //   id: "travelDestination"
+    // },
     {
       question: "When are you departing?",
       responseType: ["date", "travelStartDate"],

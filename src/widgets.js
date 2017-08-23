@@ -18,6 +18,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import ImagePicker from "react-native-image-picker";
 import DatePicker from "react-native-datepicker";
 import moment from "moment";
+import Fuse from "fuse.js";
 
 import database from "./HackStorage";
 import POLICIES from "../data/policies";
@@ -498,7 +499,58 @@ export class MultiInput extends Component {
   }
 }
 
+export class SuggestionList extends Component {
+  constructor(props) {
+    super(props);
+    this.renderSuggestion = this.renderSuggestion.bind(this);
+  }
+
+  renderSuggestion(item) {
+    return (
+      <TouchableHighlight
+        onPress={() => {
+          this.props.onSelectSuggestion(item);
+        }}
+        key={item.value}
+      >
+        <View style={widgetStyles.suggestionContainer}>
+          <Text>{item.label}</Text>
+        </View>
+      </TouchableHighlight>
+    );
+  }
+
+  render() {
+    const fuse = new Fuse(this.props.items, this.props.searchOptions);
+    const matchedItems = fuse.search(this.props.searchValue);
+    return (
+      <ScrollView
+        style={widgetStyles.suggestionListScrollView}
+        contentContainerStyle={widgetStyles.suggestionListContainer}
+      >
+        {matchedItems.map(this.renderSuggestion)}
+      </ScrollView>
+    );
+  }
+}
+
 const widgetStyles = StyleSheet.create({
+  suggestionListContainer: {
+    flexGrow: 1,
+    justifyContent: "flex-end"
+  },
+  suggestionListScrollView: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: 150
+  },
+  suggestionContainer: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: "white"
+  },
   sendButtonContainer: {
     borderTopLeftRadius: 0,
     borderTopRightRadius: 0,
