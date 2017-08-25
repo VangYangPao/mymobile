@@ -68,7 +68,7 @@ const CUSTOMER_USER_ID = 1;
 const AGENT_USER = {
   _id: AGENT_USER_ID,
   name: "Carol",
-  avatar: require("../images/eve.png")
+  avatar: require("../images/eve.jpg")
 };
 const CUSTOMER_USER = {
   _id: CUSTOMER_USER_ID
@@ -932,14 +932,15 @@ class ChatScreen extends Component {
       autoCorrect: false,
       autoCapitalize: "none"
     };
+    const handleTextChanged = text => {
+      this.setState({ composerText: text }, () => props.onTextChanged(text));
+    };
     return (
       <Composer
         placeholder="Type your message here..."
         {...props}
         text={this.state.composerText}
-        onTextChanged={text => {
-          this.setState({ composerText: text });
-        }}
+        onTextChanged={handleTextChanged}
         textInputProps={textInputProps}
       />
     );
