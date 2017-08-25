@@ -25,6 +25,7 @@ export default class StatusScreen extends Component {
       active: styles.policyStatusTextActive,
       expiring: styles.policyStatusTextExpiring,
       expired: styles.policyStatusTextRejected,
+      paid: styles.policyStatusTextActive,
       pending: styles.policyStatusTextExpiring,
       rejected: styles.policyStatusTextRejected
     };
@@ -38,7 +39,8 @@ export default class StatusScreen extends Component {
             Purchased on: {dateStr}
           </Text>
           <Text style={styles.date}>
-            Amount: ${(section === "policies"
+            Amount: $
+            {(section === "policies"
               ? item.paid.toFixed(2)
               : item.claimAmount) + ""}
           </Text>

@@ -32,7 +32,15 @@ export default (database = {
   ],
   claims: [
     {
-      id: 11,
+      id: 15,
+      status: "paid",
+      policyType: "pa_wi",
+      purchaseDate: new Date(2017, 3, 26, 16, 43),
+      claimDate: new Date(2017, 5, 26, 16, 43),
+      claimAmount: 1000
+    },
+    {
+      id: 16,
       status: "pending",
       policyType: "pa_wi",
       purchaseDate: new Date(2017, 3, 26, 16, 43),
