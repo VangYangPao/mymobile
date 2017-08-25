@@ -134,12 +134,13 @@ function validateTravelEndDate(endDate, answers) {
 }
 
 function validateChoice(choice) {
-  const validChoice =
-    choice.hasOwnProperty("label") && choice.hasOwnProperty("value");
-  return new ValidationResult(
-    validChoice,
-    "You have selected an invalid option"
-  );
+  // const validChoice =
+  //   choice.hasOwnProperty("label") && choice.hasOwnProperty("value");
+  // return new ValidationResult(
+  //   validChoice,
+  //   "You have selected an invalid option"
+  // );
+  return new ValidationResult(true);
 }
 
 const TypeValidators = {
