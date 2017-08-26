@@ -34,7 +34,13 @@ const imageWidth = 100;
 export class MyDatePicker extends Component {
   constructor(props) {
     super(props);
-    this.state = { date: props.minDate || new Date() };
+    this.state = { date: new Date() };
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.minDate !== this.props.minDate) {
+      this.setState({ date: this.props.minDate });
+    }
   }
 
   onPickDate(dateStr) {

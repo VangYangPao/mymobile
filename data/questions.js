@@ -1363,6 +1363,12 @@ export const QUESTION_SETS = {
       responseType: null
     },
     {
+      question: "I'll walk you through step-by-step. Let's start with the plan you prefer.",
+      responseType: "number",
+      exclude: ["mobile"],
+      id: "planIndex"
+    },
+    {
       question: "Which country are you travelling to?",
       responseType: ["string"],
       choices: COUNTRIES,
@@ -1414,12 +1420,7 @@ export const QUESTION_SETS = {
       id: "recipient",
       include: ["travel"]
     },
-    {
-      question: "I'll walk you through step-by-step. Let's start with the plan you prefer.",
-      responseType: "number",
-      exclude: ["mobile"],
-      id: "planIndex"
-    },
+
     {
       question: "How long do you want to be covered for?",
       responseType: "number",
@@ -1465,10 +1466,6 @@ export const QUESTION_SETS = {
       question: "What's your mailing address?",
       responseType: "string",
       id: "address"
-    },
-    {
-      question: "We are almost done.",
-      responseType: null
     },
     // {
     //   question: "As you are aware, I need your bank account for any future claims.",

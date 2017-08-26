@@ -3,8 +3,6 @@ import moment from "moment";
 
 import { objectToUrlParams } from "./utils";
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
-
 const HLAS_URL = "http://42.61.99.229:8080";
 const AGENT_CODE = "MIC00002"; // just to track microassurce account
 const AGENT_WCC = "MIC"; // // just to track the sale from microassurance . please use “MIC” – should be the same in the production.

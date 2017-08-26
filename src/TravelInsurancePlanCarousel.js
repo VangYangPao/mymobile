@@ -9,23 +9,16 @@ export default function TravelInsurancePlanCarousel({
   travelDuration,
   onSelectPlan
 }) {
-  const planTitles = ["Basic", "Enhanced", "Superior"];
+  const planTitles = ["Basic", "Enhanced", "Superior", "Premier"];
   const getPlanTitle = index => planTitles[index] + " Plan";
   const renderCoverages = plan => null;
-  // console.log(
-  //   Object.keys(travelInsurancePrices[travelDestination].travelInsurancePrices)
-  // );
-  console.log(travelDestination, travelDuration, recipient);
-  const planPrices =
-    travelInsurancePrices[travelDestination][travelDuration][recipient];
-  const plans = planTitles.map(p => ({ premium: planPrices[p] }));
+  const plans = planTitles.map(p => ({}));
   return (
     <PlanCarousel
       getPlanTitle={getPlanTitle}
       renderCoverages={renderCoverages}
       onSelectPlan={planIndex => {
-        const price = planPrices[planTitles[planIndex]];
-        onSelectPlan(planIndex, price);
+        onSelectPlan(planIndex);
       }}
       plans={plans}
     />

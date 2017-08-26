@@ -16,6 +16,8 @@ import {
 } from "../src/hlas";
 import { create3dsAuthorizationRequest } from "../src/telemoney";
 
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
+
 // it("gets phone protect quote correctly", () => {
 //   return getPhoneProtectQuote().then(res => {
 //     console.log(res);
@@ -37,22 +39,22 @@ import { create3dsAuthorizationRequest } from "../src/telemoney";
 //   });
 // });
 
-// it("gets travel quote correctly", () => {
-//   const countryid = 8;
-//   const tripDurationInDays = 2;
-//   const planid = 1;
-//   const hasSpouse = true;
-//   const hasChildren = false;
-//   return getTravelQuote(
-//     countryid,
-//     tripDurationInDays,
-//     planid,
-//     hasSpouse,
-//     hasChildren
-//   ).then(res => {
-//     console.log(res);
-//   });
-// });
+it("gets travel quote correctly", () => {
+  const countryid = 8;
+  const tripDurationInDays = 2;
+  const planid = 1;
+  const hasSpouse = true;
+  const hasChildren = false;
+  return getTravelQuote(
+    countryid,
+    tripDurationInDays,
+    planid,
+    hasSpouse,
+    hasChildren
+  ).then(res => {
+    console.log(res);
+  });
+});
 
 it("submits application for accident correctly", () => {
   expect.assertions = 7;

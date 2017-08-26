@@ -59,7 +59,7 @@ import Button from "./Button";
 // Enable playback in silence mode (iOS only)
 Sound.setCategory("Playback");
 
-const FIRST_MSG_LOAD_TIME = 500;
+const MESSAGE_LOAD_TIME = 0;
 const POLICIES_FADE_IN_TIME = 400;
 
 const AGENT_USER_ID = 0;
@@ -246,7 +246,7 @@ class ChatScreen extends Component {
         },
         () => setTimeout(renderPolicyChoice, POLICIES_FADE_IN_TIME)
       );
-    }, FIRST_MSG_LOAD_TIME);
+    }, MESSAGE_LOAD_TIME);
   }
 
   handleUserSend(messages) {
@@ -279,7 +279,7 @@ class ChatScreen extends Component {
         };
       },
       () => {
-        setTimeout(afterLoading, 1500);
+        setTimeout(afterLoading, MESSAGE_LOAD_TIME);
       }
     );
   }
@@ -303,18 +303,18 @@ class ChatScreen extends Component {
     this.props.navigation.navigate("Policy", params);
   }
 
-  handleSelectTravelInsurancePlan(planIndex, price) {
-    const plans = ["Basic", "Enhanced", "Superior"];
-    const answers = Object.assign(this.state.answers, { price });
+  handleSelectTravelInsurancePlan(planIndex) {
+    const planID = [1, 2, 84, 85];
+    const plans = ["Basic", "Enhanced", "Superior", "Premier"];
     this.setState(
       this.concatMessageUpdater({
         type: "text",
         _id: uuid.v4(),
         text: `${plans[planIndex]} plan`,
-        value: planIndex,
+        value: planID[planIndex],
         user: CUSTOMER_USER
       }),
-      () => this.setState({ answering: false, renderInput: true, answers })
+      () => this.setState({ answering: false, renderInput: true })
     );
   }
 
@@ -540,8 +540,8 @@ class ChatScreen extends Component {
           // this.props.navigation.navigate("Policy", params);
           let form = Object.assign({}, this.state.answers);
           const { planIndex } = form;
-          delete form.policy;
-          delete form.planIndex;
+          // delete form.policy;
+          // delete form.planIndex;
           delete form.icImage;
           if (policy.id === "travel") {
             form.totalPremium = new Number(form.price);
@@ -710,6 +710,7 @@ class ChatScreen extends Component {
     }
 
     if (this.state.answering !== prevState.answering && !this.state.answering) {
+      this.setState({ composerText: "" });
       const { messages } = this.state;
 
       // skip validation for bootstrap step-0
@@ -748,6 +749,7 @@ class ChatScreen extends Component {
               : lastMessage.text;
           }
           const answers = Object.assign(this.state.answers, newAnswer);
+          /// setState here
           this.setState({ answers }, this.askNextQuestion);
         } else {
           this.reaskQuestion(result.errMessage);
@@ -903,6 +905,7 @@ class ChatScreen extends Component {
         minDateFrom = moment(this.state.answers[currentQuestion.minDateFrom])
           .add(1, "days")
           .toDate();
+        console.log("minDateFrom", minDateFrom);
       }
       return (
         <MyDatePicker
@@ -947,11 +950,17 @@ class ChatScreen extends Component {
   }
 
   renderSend(props) {
-    return <Send {...props} textStyle={styles.sendButton} />;
+    const { currentQuestionIndex } = this.state;
+    if (currentQuestionIndex < 0 || !this.state.renderInput) return null;
+    const currentQuestion = this.questions[currentQuestionIndex];
+
+    if (currentQuestion.id !== "travelDestination") {
+      return <Send {...props} textStyle={styles.sendButton} />;
+    }
   }
 
   render() {
-    // return <CheckoutModal />;
+    return <CheckoutModal price={35} />;
     const additionalProps = {};
     let minInputToolbarHeight = 44;
     if (

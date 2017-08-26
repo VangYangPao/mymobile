@@ -8,8 +8,10 @@ import {
   Button,
   ToastAndroid,
   Alert,
-  Platform
+  Platform,
+  ActivityIndicator
 } from "react-native";
+import moment from "moment";
 
 import database from "./HackStorage";
 import { Text } from "./defaultComponents";
@@ -18,6 +20,7 @@ import Page from "./Page";
 import Footer from "./Footer";
 import PolicyPrice from "./PolicyPrice";
 import CheckoutModal from "./CheckoutModal";
+import { getTravelQuote } from "./hlas";
 
 export default class ConfirmationScreen extends Component {
   static navigationOptions = {
@@ -29,15 +32,54 @@ export default class ConfirmationScreen extends Component {
     this.handleCheckout = this.handleCheckout.bind(this);
     this.state = { renderCheckoutModal: false };
     const { form } = this.props.navigation.state.params;
-    this.totalPremium = new Number(form.totalPremium);
-    delete form.totalPremium;
+    this.policy = form.policy;
+    delete form.policy;
+    this.state = {
+      totalPremium: null
+    };
+    if (form.totalPremium) {
+      this.state.totalPremium = form.totalPremium;
+      delete form.totalPremium;
+    }
+  }
+
+  componentDidMount() {
+    const { form } = this.props.navigation.state.params;
+    if (this.policy.id === "travel") {
+      const countryid = form.travelDestination;
+      const tripDurationInDays = moment(form.returnDate).diff(
+        form.departureDate,
+        "days"
+      );
+      const planid = form.planIndex;
+      let hasSpouse = false;
+      let hasChildren = false;
+      if (form.recipient === "spouse") {
+        hasSpouse = true;
+      } else if (form.recipient === "children") {
+        hasChildren = true;
+      } else if (form.recipient === "family") {
+        hasSpouse = true;
+        hasChildren = true;
+      }
+      getTravelQuote(
+        countryid,
+        tripDurationInDays,
+        planid,
+        hasSpouse,
+        hasChildren
+      ).then(res => {
+        console.log("get travel quote", res);
+        this.setState({ totalPremium: parseFloat(res.Data) });
+      });
+    }
   }
 
   handleCheckout() {
     const newId = database.policies[database.policies.length - 1].id + 1;
     database.policies.push({
       id: newId,
-      paid: this.totalPremium,
+      paid: this.state.totalPremium,
       purchaseDate: new Date(),
       status: "active"
     });
@@ -58,6 +100,8 @@ export default class ConfirmationScreen extends Component {
   }
 
   renderField(key, value) {
+    const isDate = moment.isDate(value);
+    value = isDate ? moment(value).format("DD MMMM YYYY") : value;
     return (
       <View style={styles.field} key={key}>
         <Text style={styles.fieldKey}>{prettifyCamelCase(key)}</Text>
@@ -74,19 +118,33 @@ export default class ConfirmationScreen extends Component {
     }
     const modal = (
       <CheckoutModal
+        price={this.state.totalPremium}
         onCheckout={this.handleCheckout}
         onClose={() => this.setState({ renderCheckoutModal: false })}
       />
     );
+    let pageContent;
+    if (!this.state.totalPremium) {
+      pageContent = <ActivityIndicator color="black" size="large" />;
+    } else {
+      pageContent = (
+        <Page>
+          <Text style={styles.pageTitle}>Confirm your details</Text>
+          <PolicyPrice pricePerMonth={this.state.totalPremium} />
+          {formArr.map(f => this.renderField(f.key, f.value))}
+        </Page>
+      );
+    }
     return (
       <View style={styles.container}>
         {this.state.renderCheckoutModal ? modal : null}
-        <View style={styles.pageContainer}>
-          <Page>
-            <Text style={styles.pageTitle}>Confirm your details</Text>
-            <PolicyPrice pricePerMonth={this.totalPremium} />
-            {formArr.map(f => this.renderField(f.key, f.value))}
-          </Page>
+        <View
+          style={[
+            styles.pageContainer,
+            this.state.totalPremium ? null : styles.pageContainerLoading
+          ]}
+        >
+          {pageContent}
         </View>
         <Footer
           onPress={() => this.setState({ renderCheckoutModal: true })}
@@ -119,6 +177,10 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     fontSize: 23,
     textAlign: "center"
+  },
+  pageContainerLoading: {
+    alignItems: "center",
+    justifyContent: "center"
   },
   pageContainer: {
     flex: 1

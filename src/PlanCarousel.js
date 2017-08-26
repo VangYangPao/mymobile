@@ -23,8 +23,9 @@ function wp(percentage) {
   return Math.round(value);
 }
 
-const slideWidth = wp(50);
-const itemHorizontalMargin = wp(1);
+const slideHeight = viewportHeight * 0.4;
+const slideWidth = wp(75);
+const itemHorizontalMargin = wp(2);
 
 const sliderWidth = viewportWidth;
 const itemWidth = slideWidth + itemHorizontalMargin * 2;
@@ -85,7 +86,7 @@ export default class PlanCarousel extends Component {
       >
         <View style={styles.plan}>
           <Text style={styles.planTitle}>{getPlanTitle(index)}</Text>
-          <PolicyPrice pricePerMonth={plan.premium} />
+          {plan.premium ? <PolicyPrice pricePerMonth={plan.premium} /> : null}
           {renderCoverages(plan)}
         </View>
       </TouchableOpacity>
