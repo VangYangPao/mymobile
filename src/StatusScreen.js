@@ -8,6 +8,7 @@ import {
   TouchableOpacity
 } from "react-native";
 
+import POLICIES from "../data/policies";
 import database from "./HackStorage";
 import { getDateStr } from "./utils";
 import { Text } from "./defaultComponents";
@@ -25,23 +26,26 @@ export default class StatusScreen extends Component {
       active: styles.policyStatusTextActive,
       expiring: styles.policyStatusTextExpiring,
       expired: styles.policyStatusTextRejected,
-      paid: styles.policyStatusTextActive,
+      approved: styles.policyStatusTextActive,
       pending: styles.policyStatusTextExpiring,
       rejected: styles.policyStatusTextRejected
     };
 
+    const policy = POLICIES.find(p => p.id === item.policyType);
+
     return (
       <View style={styles.policy}>
         <View style={styles.policyContent}>
-          <Text style={styles.policyName}>{item.name}</Text>
+          <Text style={styles.policyName}>{policy.title}</Text>
           <Text style={styles.date}>Policy No: {item.key}</Text>
           <Text style={styles.date}>
             Purchased on: {dateStr}
           </Text>
           <Text style={styles.date}>
-            Amount: $
+            {section === "policies" ? "Premium: " : "Claim amount: "}
+            $
             {(section === "policies"
-              ? item.paid.toFixed(2)
+              ? item.premium.toFixed(2)
               : item.claimAmount) + ""}
           </Text>
         </View>
@@ -83,7 +87,7 @@ export default class StatusScreen extends Component {
               renderItem: (...params) => this.renderItem("policies", ...params)
             },
             {
-              data: padItemsWith(database.claims, "CL"),
+              data: padItemsWith(database.claims, "PL"),
               title: "CLAIMS",
               key: "claims",
               renderItem: (...params) => this.renderItem("claims", ...params)
@@ -96,7 +100,7 @@ export default class StatusScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-  policyStatusText: { fontWeight: "400" },
+  policyStatusText: { fontSize: 18, fontWeight: "400" },
   policyStatusTextActive: { color: "green" },
   policyStatusTextExpiring: { color: "#FFC107" },
   policyStatusTextRejected: { color: "red" },
@@ -104,7 +108,7 @@ const styles = StyleSheet.create({
     flex: 1
   },
   policyStatus: {
-    flex: 0.3,
+    flex: 0.5,
     alignItems: "center",
     justifyContent: "center"
   },
@@ -113,7 +117,8 @@ const styles = StyleSheet.create({
     fontSize: 15
   },
   policyName: {
-    fontSize: 17
+    marginBottom: 15,
+    fontSize: 18
   },
   separator: {
     borderBottomColor: colors.borderLine,
