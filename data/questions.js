@@ -189,21 +189,17 @@ const claimIntro = [
     question: "Welcome back <%= fullName %>, here are your protection plans. Which plan would you like to make a claim?",
     responseType: "number",
     id: "claimPolicyNo"
-  },
-  {
-    question: "I will walk you through step by step. I'll do my best to get your claim 👍",
-    responseType: null
   }
 ];
 
 export const paClaimQuestions = [
   // CLAIM TYPE
   {
-    question: "Firstly, are you planning to claim for",
+    question: "I will walk you through step by step. I'll do my best to get your claim paid fast. Firstly, which are you planning to claim?",
     responseType: ["string", "choice"],
     label: "CHOOSE CLAIM TYPE",
     choices: [
-      { label: "Death", value: "death" },
+      { label: "Death of Kin", value: "death" },
       { label: "Permanent Disability", value: "permanentDisability" }
     ],
     include: ["pa"],
@@ -214,7 +210,7 @@ export const paClaimQuestions = [
     responseType: ["string", "choice"],
     label: "CHOOSE CLAIM TYPE",
     choices: [
-      { label: "Death", value: "death" },
+      { label: "Death of Kin", value: "death" },
       { label: "Permanent Disability", value: "permanentDisability" },
       { label: "Medical Reimbursement", value: "medicalReimbursement" }
     ],
@@ -226,23 +222,23 @@ export const paClaimQuestions = [
     responseType: ["string", "choice"],
     label: "CHOOSE CLAIM TYPE",
     choices: [
-      { label: "Death", value: "death" },
+      { label: "Death of Kin", value: "death" },
       { label: "Permanent Disability", value: "permanentDisability" },
-      { label: "Weekly Compensation", value: "weeklyCompensation" }
+      { label: "Weekly Cash Compensation", value: "weeklyCompensation" }
     ],
     include: ["pa_wi"],
     id: "claimType"
   },
 
   {
-    question: "I'm so sorry to hear that. I assume you are <%= <%= fullName %> %>’s claimant/next of kin. Please share with me the date and time of the accident",
+    question: "I'm so sorry to hear that. I assume you are <%= fullName %>’s claimant/next of kin. Please share with me the date and time of the accident",
     responseType: "datetime",
     pastOnly: true,
     id: "accidentDate",
     include: ["death"]
   },
   {
-    question: "Oh… I am sad to hear that. Let me help out on the claim fast. Please share with me the date and time of the accident",
+    question: "Oh… I am sad to hear that. Let me help you out to get the claim paid fast. Please share with me the date and time of the accident",
     responseType: "datetime",
     pastOnly: true,
     id: "accidentDate",
@@ -253,25 +249,17 @@ export const paClaimQuestions = [
     responseType: null,
     include: ["weeklyCompensation"]
   },
+
   {
-    question: "<%= fullName %>, you just selected the option to claim for medical reimbursement. How much are you planning to claim?",
-    responseType: ["boolean", "choice"],
-    id: "reimbursementMoreThan5000",
-    choices: [
-      {
-        label: "$1 - $5000",
-        value: false
-      },
-      { label: ">$5000", value: true }
-    ],
+    question: "Get well soon! Let me help you out to get the claim paid fast. Please share with me the date and time of the accident",
+    responseType: null,
     include: ["medicalReimbursement"]
   },
-
   {
     question: "Please share with me the date and time of the accident?",
     responseType: "datetime",
     pastOnly: true,
-    include: ["weeklyCompensation"]
+    include: ["medicalReimbursement", "weeklyCompensation"]
   },
   {
     question: "Where did it happen?",
@@ -281,23 +269,25 @@ export const paClaimQuestions = [
   {
     question: "What happened in detail?",
     responseType: "string",
-    responseLength: 1800,
-    id: "description"
+    responseLength: 600,
+    id: "description",
+    include: ["death"]
   },
   {
-    question: "Please snap a clear photo of the police report, it would be very helpful for this claim.",
-    responseType: "images",
-    responseLength: 10,
-    id: "policeReport"
-  },
-  {
-    question: "What is the injury you suffered? What is the extent of your injury?",
+    question: "Share with me how did you sustain your injury?",
     responseType: "string",
-    id: "injuryType",
+    responseLength: 600,
+    id: "description",
+    include: ["permanentDisability", "medicalReimbursement"]
+  },
+  {
+    question: "Oh I am concerned… may I know the extent of your injury?",
+    responseType: "string",
+    id: "injuryExtent",
     exclude: ["death"]
   },
   {
-    question: "Try to recall for a moment, have you suffered the same injury before?",
+    question: "Have you suffered the same injury before?",
     responseType: ["boolean", "choice"],
     label: "SUFFERED SAME INJURY",
     choices: [
@@ -314,16 +304,15 @@ export const paClaimQuestions = [
     exclude: ["death"],
     condition: "this.state.answers.hasSufferedSameInjury"
   },
+  // {
+  //   question: "When did the symptoms first appear? ",
+  //   responseType: "date",
+  //   id: "symptomsAppearDate",
+  //   include: ["medicalReimbursement", "weeklyCompensation"],
+  //   condition: "this.state.answers.hasSufferedSameInjury"
+  // },
   {
-    question: "When did the symptoms first appear?",
-    responseType: "date",
-    pastOnly: true,
-    id: "symptomsAppearDate",
-    include: ["permanentDisability", "medicalReimbursement"],
-    condition: "this.state.answers.hasSufferedSameInjury"
-  },
-  {
-    question: "Do you have other insurance coverage for this accident?",
+    question: "Try to recall, do you have other insurance coverage for this accident?",
     responseType: ["boolean", "choice"],
     id: "hasOtherInsuranceCoverage",
     label: "OTHER INSURANCE COVERAGE",
@@ -334,10 +323,11 @@ export const paClaimQuestions = [
       },
       { label: "No", value: false }
     ],
-    include: ["permanentDisability", "medicalReimbursement"]
+    exclude: ["death"],
+    condition: "this.state.answers.hasSufferedSameInjury"
   },
   {
-    question: "Does <%= <%= fullName %> %> have other insurance coverage for this accident?",
+    question: "Does <%= fullName %> have other insurance coverage for this accident?",
     responseType: ["boolean", "choice"],
     id: "hasOtherInsuranceCoverage",
     label: "OTHER INSURANCE COVERAGE",
@@ -355,7 +345,16 @@ export const paClaimQuestions = [
     responseType: ["string", "string"],
     id: ["otherInsuranceCo", "otherPolicyNumber"],
     labels: ["Insurance company name", "Policy number"],
-    condition: "this.state.answers.hasOtherInsuranceCoverage === true"
+    include: ["death"],
+    condition: "this.state.answers.hasOtherInsuranceCoverage===true"
+  },
+  {
+    question: "What is the insurance company and policy number?",
+    responseType: ["string", "string"],
+    id: ["otherInsuranceCo", "otherPolicyNumber"],
+    labels: ["Insurance company name", "Policy number"],
+    exclude: ["death"],
+    condition: "this.state.answers.hasSufferedSameInjury && this.state.answers.hasOtherInsuranceCoverage"
   },
   {
     question: "Have you completed your treatment?",
@@ -368,86 +367,82 @@ export const paClaimQuestions = [
       },
       { label: "No", value: false }
     ],
-    include: ["permanentDisability", "medicalReimbursement"],
-    condition: "this.state.answers.claimType === 'permanentDisability' || (this.state.answers.claimType === 'medicalReimbursement' && this.state.answers.reimbursementMoreThan5000)"
+    include: ["medicalReimbursement", "weeklyCompensation"],
+    condition: "this.state.answers.hasSufferedSameInjury"
   },
   {
-    question: "When is the treatment is expected to be completed?",
+    question: "When is the treatment expected to be completed?",
     responseType: ["date"],
     pastOnly: true,
     id: "treatmentCompleteDate",
-    condition: "!this.state.answers.hasCompletedTreatment",
-    include: ["permanentDisability", "medicalReimbursement"]
+    condition: "this.state.answers.hasSufferedSameInjury && !this.state.answers.hasCompletedTreatment",
+    include: ["medicalReimbursement"]
   },
-  {
-    question: "Do you have any hospital or medical leave? ",
-    responseType: ["boolean", "choice"],
-    id: "hasMedicalLeave",
-    choices: [
-      {
-        label: "Yes",
-        value: true
-      },
-      { label: "No", value: false }
-    ],
-    condition: "!this.state.answers.hasOtherInsuranceCoverage",
-    include: ["permanentDisability"]
-  },
-  {
-    question: "Share with me the medical leave date",
-    responseType: ["date"],
-    pastOnly: true,
-    id: "medicalLeaveDate",
-    condition: "!this.state.answers.hasOtherInsuranceCoverage && this.state.answers.hasMedicalLeave",
-    include: ["permanentDisability"]
-  },
-  {
-    question: "During your hospital or medical leave, have you returned to work to do full, or light duties? ",
-    responseType: ["boolean", "choice"],
-    id: "hasReturnedToWork",
-    choices: [
-      {
-        label: "Yes",
-        value: true
-      },
-      { label: "No", value: false }
-    ],
-    condition: "!this.state.answers.hasOtherInsuranceCoverage && this.state.answers.hasMedicalLeave",
-    include: ["permanentDisability"]
-  },
-  {
-    question: "Share with me when you returned to work",
-    responseType: ["date"],
-    pastOnly: true,
-    id: "returnWorkDate",
-    condition: "!this.state.answers.hasOtherInsuranceCoverage && this.state.answers.hasMedicalLeave && this.state.answers.hasReturnedToWork",
-    include: ["permanentDisability"]
-  },
-  {
-    question: "Here is the final question, has <%= <%= fullName %> %>'s' employer purchased any insurance coverage for this accident? ",
-    responseType: ["string", "string"],
-    responseType: ["boolean", "choice"],
-    id: "hasEmployerInsuranceCoverage",
-    label: "OTHER INSURANCE COVERAGE",
-    choices: [{ label: "Yes", value: true }, { label: "No", value: false }],
-    include: ["death"]
-  },
-  {
-    question: "What is the insurance company and policy number?",
-    responseType: ["string", "string"],
-    id: ["employerInsuranceCo", "employerPolicyNo"],
-    labels: ["Insurance company name", "Policy number"],
-    condition: "this.state.answers.hasEmployerInsuranceCoverage === true",
-    include: ["death"]
-  },
+  // {
+  //   question: "Do you have any hospital or medical leave? ",
+  //   responseType: ["boolean", "choice"],
+  //   id: "hasMedicalLeave",
+  //   choices: [
+  //     {
+  //       label: "Yes",
+  //       value: true
+  //     },
+  //     { label: "No", value: false }
+  //   ],
+  //   condition: "!this.state.answers.hasOtherInsuranceCoverage",
+  //   include: ["permanentDisability"]
+  // },
+  // {
+  //   question: "Share with me the medical leave date",
+  //   responseType: ["date"],
+  //   pastOnly: true,
+  //   id: "medicalLeaveDate",
+  //   condition: "!this.state.answers.hasOtherInsuranceCoverage && this.state.answers.hasMedicalLeave",
+  //   include: ["permanentDisability"]
+  // },
+  // {
+  //   question: "During your hospital or medical leave, have you returned to work to do full, or light duties? ",
+  //   responseType: ["boolean", "choice"],
+  //   id: "hasReturnedToWork",
+  //   choices: [
+  //     {
+  //       label: "Yes",
+  //       value: true
+  //     },
+  //     { label: "No", value: false }
+  //   ],
+  //   condition: "!this.state.answers.hasOtherInsuranceCoverage && this.state.answers.hasMedicalLeave",
+  //   include: ["permanentDisability"]
+  // },
+  // {
+  //   question: "Share with me when you returned to work",
+  //   responseType: ["date"],
+  //   pastOnly: true,
+  //   id: "returnWorkDate",
+  //   condition: "!this.state.answers.hasOtherInsuranceCoverage && this.state.answers.hasMedicalLeave && this.state.answers.hasReturnedToWork",
+  //   include: ["permanentDisability"]
+  // },
+  // {
+  //   question: "Here is the final question, has <%= fullName %> %>'s' employer purchased any insurance coverage for this accident? ",
+  //   responseType: ["string", "string"],
+  //   responseType: ["boolean", "choice"],
+  //   id: "hasEmployerInsuranceCoverage",
+  //   label: "OTHER INSURANCE COVERAGE",
+  //   choices: [{ label: "Yes", value: true }, { label: "No", value: false }],
+  //   include: ["death"]
+  // },
+  // {
+  //   question: "What is the insurance company and policy number?",
+  //   responseType: ["string", "string"],
+  //   id: ["employerInsuranceCo", "employerPolicyNo"],
+  //   labels: ["Insurance company name", "Policy number"],
+  //   condition: "this.state.answers.hasEmployerInsuranceCoverage === true",
+  //   include: ["death"]
+  // },
 
   // 2nd half
   {
-    question: "We are almost done to get you claim fast. I need your help to snap or upload some photos.",
-    responseType: null
-  },
-  {
-    question: "Did the death happen in Singapore or outside of Singapore?",
+    question: "May I know if FULLNAME passed away in Singapore or outside of Singapore?",
     responseType: ["string", "choice"],
     id: "deathInSingapore",
     choices: [
@@ -456,121 +451,156 @@ export const paClaimQuestions = [
     ],
     include: ["death"]
   },
+
   {
-    question: "Please snap a clear photo of the original medical bills and/or receipts",
-    responseType: "images",
-    responseLength: 30,
-    id: "originalMedicalBill",
-    exclude: ["death"]
+    question: "We are almost done to get your claim paid fast. I need your help to snap or upload some supporting documents. Do your best to snap or upload the right images for each box",
+    responseType: "imageTable",
+    columns: [
+      { label: "Original medical bills/receipts", id: "originalMedicalBill" },
+      {
+        label: "If original bills/receipts submitted to other insurer or your employer, snap/upload the reimbursement letter, or discharge voucher from insurer, or letter from employer indicating the amount paid to you",
+        id: "reimbursementLetter"
+      },
+      {
+        label: "Medical report",
+        id: "medicalReport"
+      },
+      {
+        label: "Police report",
+        id: "policeReport"
+      },
+      {
+        label: "Inpatient discharge summary",
+        id: "dischargeSummary"
+      },
+      {
+        label: "Medical leave certificate",
+        id: "medicalLeaveCertificate"
+      },
+      {
+        label: "Work permit (if any)",
+        id: "workPermit"
+      }
+    ],
+    include: [
+      "permanentDisability",
+      "medicalReimbursement",
+      "weeklyCompensation"
+    ],
+    id: "claimImages"
   },
+
   {
-    question: "<%= <%= fullName %> %>, to complete your claim, I need your help to post the ORIGINAL MEDICAL BILLS AND/OR RECEIPTS to: HLAS, 11 Keppel Road #11-01 ABI Plaza Singapore 089057, within 48 hours",
+    question: "<%= fullName %>, to complete your claim, I need your help to post the ORIGINAL MEDICAL BILLS AND/OR RECEIPTS to: HLAS, 11 Keppel Road #11-01 ABI Plaza Singapore 089057, within 48 hours",
     responseType: null,
     exclude: ["death"]
   },
-  {
-    question: "If you have submitted the original bills and receipts to other insurer or your employer, please snap a clear photo of the photocopy medical bills and/or receipts",
-    responseType: "images",
-    responseLength: 30,
-    id: "otherMedicalBill",
-    exclude: ["death"]
-  },
-  {
-    question: "If you have submitted the original bills and receipts to other insurer or your employer, please snap a clear photo of reimbursement letter, or discharge voucher from insurer, or letter from employer indicating the amount paid to you. Either one will do.",
-    responseType: "images",
-    responseLength: 10,
-    id: "reimbursementLetter",
-    exclude: ["death"]
-  },
-  {
-    question: "If you had hospital admission, please snap a clear photo of the In-patient Discharge Summary",
-    responseType: "images",
-    responseLength: 10,
-    id: "dischargeSummary",
-    include: ["medicalReimbursement"],
-    condition: "this.state.answers.reimbursementMoreThan5000"
-  },
-  {
-    question: "If you had hospital admission, please snap a clear photo of the Medical Report (indicating your diagnosis)",
-    responseType: "images",
-    responseLength: 10,
-    id: "medicalReport",
-    include: ["medicalReimbursement"],
-    condition: "this.state.answers.reimbursementMoreThan5000"
-  },
-  {
-    question: "If you had hospital admission, please download the ATTENDING PHYSICIAN STATEMENT. Print out, let your doctor fill up, and finally snap a clear photo of the APS",
-    responseType: "images",
-    responseLength: 10,
-    id: "physicianStatement",
-    include: ["medicalReimbursement"],
-    condition: "this.state.answers.reimbursementMoreThan5000"
-  },
 
-  // DEATH
+  // {
+  //   question: "Please snap a clear photo of the original medical bills and/or receipts",
+  //   responseType: "images",
+  //   responseLength: 30,
+  //   id: "originalMedicalBill",
+  //   exclude: ["death"]
+  // },
+
+  // {
+  //   question: "If you have submitted the original bills and receipts to other insurer or your employer, please snap a clear photo of the photocopy medical bills and/or receipts",
+  //   responseType: "images",
+  //   responseLength: 30,
+  //   id: "otherMedicalBill",
+  //   exclude: ["death"]
+  // },
+  // {
+  //   question: "If you have submitted the original bills and receipts to other insurer or your employer, please snap a clear photo of reimbursement letter, or discharge voucher from insurer, or letter from employer indicating the amount paid to you. Either one will do.",
+  //   responseType: "images",
+  //   responseLength: 10,
+  //   id: "reimbursementLetter",
+  //   exclude: ["death"]
+  // },
+  // {
+  //   question: "If you had hospital admission, please snap a clear photo of the In-patient Discharge Summary",
+  //   responseType: "images",
+  //   responseLength: 10,
+  //   id: "dischargeSummary",
+  //   include: ["medicalReimbursement"],
+  //   condition: "this.state.answers.reimbursementMoreThan5000"
+  // },
+  // {
+  //   question: "If you had hospital admission, please snap a clear photo of the Medical Report (indicating your diagnosis)",
+  //   responseType: "images",
+  //   responseLength: 10,
+  //   id: "medicalReport",
+  //   include: ["medicalReimbursement"],
+  //   condition: "this.state.answers.reimbursementMoreThan5000"
+  // },
+  // {
+  //   question: "If you had hospital admission, please download the ATTENDING PHYSICIAN STATEMENT. Print out, let your doctor fill up, and finally snap a clear photo of the APS",
+  //   responseType: "images",
+  //   responseLength: 10,
+  //   id: "physicianStatement",
+  //   include: ["medicalReimbursement"],
+  //   condition: "this.state.answers.reimbursementMoreThan5000"
+  // },
+
   {
-    question: "Please snap a clear photo of <%= fullName %> death certificate",
-    responseType: "images",
-    responseLength: 10,
-    id: "deathCertificate",
+    question: "We are almost done to get your claim paid fast. I need your help to snap or upload some supporting documents. Do your best to snap or upload the right images for each box",
+    responseType: "imageTable",
+    columns: [
+      { label: "Death certificate", id: "deathCertificate" },
+      {
+        label: "Autopsy report, or, toxicological report, or, coroner’s findings",
+        id: "autopsyReport"
+      },
+      {
+        label: "Last Will of deceased, or, Letter of Administration",
+        id: "lastWill"
+      },
+      {
+        label: "Estate Duty of Certificate",
+        id: "estateDuty"
+      },
+      {
+        label: "Document proof of claimant’s relationship to the person who died",
+        id: "relationshipProof"
+      },
+      {
+        label: "Police report (if any)",
+        id: "policeReport"
+      }
+    ],
     include: ["death"],
-    condition: "this.state.answers.deathInSingapore === true"
-  },
-  {
-    question: "Please snap a clear photo of <%= <%= fullName %> %>’s autopsy report, or, toxicological report, or, coroner’s findings.",
-    responseType: "images",
-    responseLength: 10,
-    id: "autopsyReport",
-    include: ["death"],
-    condition: "this.state.answers.deathInSingapore === true"
-  },
-  {
-    question: "Please snap a clear photo of police, or accident report - if death was due to accidental or violent causes.",
-    responseType: "images",
-    responseLength: 10,
-    id: "accidentReport",
-    include: ["death"],
-    condition: "this.state.answers.deathInSingapore === true"
-  },
-  {
-    question: "Please snap a clear photo <%= <%= fullName %> %>’s Last Will of deceased, or, Letter of Administration",
-    responseType: "images",
-    responseLength: 10,
-    id: "will",
-    include: ["death"],
-    condition: "this.state.answers.deathInSingapore === true"
-  },
-  {
-    question: "Please snap a clear photo of <%= <%= fullName %> %>’s Estate Duty of Certificate",
-    responseType: "images",
-    responseLength: 10,
-    id: "estateDutyOfCertificate",
-    include: ["death"],
-    condition: "this.state.answers.deathInSingapore === true"
-  },
-  {
-    question: "Please snap a clear photo of any proof of claimant’s relationship to the person who died",
-    responseType: "images",
-    responseLength: 10,
-    id: "relationshipProof",
-    include: ["death"],
-    condition: "this.state.answers.deathInSingapore === true"
+    id: "insideSGClaimImages",
+    condition: "this.state.answers.deathInSingapore"
   },
 
   {
-    question: "For death which happened outside Singapore, please snap a clear photo of the letter from Immigration and Checkpoint Authority, ICA. This letter is issued by ICA for Singaporeans or Permanent Residents, PR who died overseas. The letter confirms ICA saw the Singapore IC, passport and overseas death certificate.",
-    responseType: "images",
-    responseLength: 10,
-    id: "immigrationLetter",
+    question: "We are almost done to get your claim paid fast. I need your help to snap or upload some supporting documents. Do your best to snap or upload the right images for each box",
+    responseType: "imageTable",
+    columns: [
+      {
+        label: "Death certificate that is certified true copy by your lawyer or any notary public",
+        id: "deathCertificate"
+      },
+      {
+        label: "Letter from Immigration and Checkpoint Authority, ICA",
+        id: "immigrationLetter"
+      },
+      {
+        label: "Repatriation report (if any)",
+        id: "repatriationReport"
+      },
+      {
+        label: "Document proof of claimant’s relationship to the person who died",
+        id: "relationshipProof"
+      },
+      {
+        label: "Police report (if any)",
+        id: "policeReport"
+      }
+    ],
     include: ["death"],
-    condition: "!this.state.answers.deathInSingapore"
-  },
-  {
-    question: "For death happened outside Singapore, please snap a clear photo of the repatriation report. This report is issued if the body was sent home to Singapore for cremation or burial.",
-    responseType: "images",
-    responseLength: 10,
-    id: "repatriationReport",
-    include: ["death"],
+    id: "outsideSGClaimImages",
     condition: "!this.state.answers.deathInSingapore"
   },
 
@@ -585,7 +615,7 @@ export const paClaimQuestions = [
 
   // CONFIRM
   {
-    question: "Thank you for your patience. Please keep this phone with you at all times, as I shall send you notifications and messages on your claim. Please switch on the notification.",
+    question: "Thank you for your patience. Please keep this phone with you at all times, as I shall send you notifications and messages on your claim.",
     responseType: "boolean",
     id: "confirm"
   }
