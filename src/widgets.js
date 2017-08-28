@@ -608,33 +608,18 @@ const widgetStyles = StyleSheet.create({
   choiceText: {
     fontSize: 16
   },
-  choiceContainer: {
-    borderTopWidth: CHOICE_SEPARATOR_WIDTH,
-    borderBottomWidth: 0,
-    borderLeftWidth: CHOICE_SEPARATOR_WIDTH,
-    borderRightWidth: CHOICE_SEPARATOR_WIDTH,
-    borderColor: colors.borderLine
-  },
+  choiceContainer: {},
   choiceTouchable: {
+    borderWidth: CHOICE_SEPARATOR_WIDTH,
+    borderColor: colors.softBorderLine,
     padding: 15
   },
-  choiceTouchableEnd: {
-    // borderBottomLeftRadius: 15,
-    // borderBottomRightRadius: 15
-  },
+  choiceTouchableEnd: {},
   choicesStart: {
-    borderTopWidth: CHOICE_SEPARATOR_WIDTH,
-    borderBottomWidth: 0,
-    borderLeftWidth: CHOICE_SEPARATOR_WIDTH,
-    borderRightWidth: CHOICE_SEPARATOR_WIDTH
     // borderTopLeftRadius: 15,
     // borderTopRightRadius: 15
   },
-  choicesEnd: {
-    borderWidth: CHOICE_SEPARATOR_WIDTH,
-    borderBottomLeftRadius: 15,
-    borderBottomRightRadius: 15
-  },
+  choicesEnd: {},
   policyDetailText: {
     marginTop: 7
   },
