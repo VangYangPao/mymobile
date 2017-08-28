@@ -2,9 +2,20 @@
 export default (database = {
   policies: [
     {
-      id: 12,
+      id: 11,
       status: "active",
       policyType: "pa_mr",
+      purchaseDate: new Date(2017, 5, 26, 16, 43),
+      coverageSummary: [
+        { label: "Accidental Death", value: "$50,000" },
+        { label: "Permanent Disability", value: "$50,000" }
+      ],
+      premium: 15.66
+    },
+    {
+      id: 12,
+      status: "active",
+      policyType: "pa_wi",
       purchaseDate: new Date(2017, 5, 26, 16, 43),
       coverageSummary: [
         { label: "Accidental Death", value: "$50,000" },

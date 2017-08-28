@@ -623,7 +623,6 @@ class ChatScreen extends Component {
         return;
       }
     }
-
     const nextQuestionText = template(nextQuestion.question)(
       this.state.answers
     );
@@ -899,7 +898,17 @@ class ChatScreen extends Component {
     let { responseType } = currentQuestion;
     responseType = [].concat(responseType);
 
-    if (responseType.indexOf("date") !== -1) {
+    const dateIndex = responseType.indexOf("date");
+    const dateTimeIndex = responseType.indexOf("datetime");
+
+    if (dateIndex !== -1 || dateTimeIndex !== -1) {
+      let index;
+      if (dateIndex !== -1) {
+        index = dateIndex;
+      } else {
+        index = dateTimeIndex;
+      }
+      const pickerMode = responseType[index];
       let minDateFrom;
       if (currentQuestion.minDateFrom) {
         minDateFrom = moment(this.state.answers[currentQuestion.minDateFrom])
@@ -912,15 +921,7 @@ class ChatScreen extends Component {
           pastOnly={currentQuestion.pastOnly}
           futureOnly={currentQuestion.futureOnly}
           minDate={minDateFrom}
-          mode="date"
-          onPickDate={this.handlePickDate}
-        />
-      );
-    } else if (responseType.indexOf("datetime") !== -1) {
-      return (
-        <MyDatePicker
-          allowFuture={currentQuestion.allowFuture}
-          mode="datetime"
+          mode={pickerMode}
           onPickDate={this.handlePickDate}
         />
       );
@@ -960,7 +961,7 @@ class ChatScreen extends Component {
   }
 
   render() {
-    return <CheckoutModal price={35} />;
+    // return <CheckoutModal price={35} />;
     const additionalProps = {};
     let minInputToolbarHeight = 44;
     if (

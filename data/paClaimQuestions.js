@@ -36,6 +36,7 @@ export default (paClaimQuestions = [
     id: "claimType"
   },
 
+  // Intros
   {
     question: "I'm so sorry to hear that. I assume you are <%= fullName %>’s claimant/next of kin. Please share with me the date and time of the accident",
     responseType: "datetime",
@@ -51,22 +52,20 @@ export default (paClaimQuestions = [
     include: ["permanentDisability"]
   },
   {
-    question: "<%= fullName %>, you just selected the option to claim for weekly compensation. To claim, you need to be medically unfit to work for a minimum of 7 days continuously.",
-    responseType: null,
-    include: ["weeklyCompensation"]
-  },
-
-  {
     question: "Get well soon! Let me help you out to get the claim paid fast. Please share with me the date and time of the accident",
-    responseType: null,
+    responseType: "datetime",
+    pastOnly: true,
+    id: "accidentDate",
     include: ["medicalReimbursement"]
   },
   {
-    question: "Please share with me the date and time of the accident?",
+    question: "Don’t worry! Let me help you out to get your benefit paid fast. Please share with me the date and time of the accident",
     responseType: "datetime",
     pastOnly: true,
-    include: ["medicalReimbursement", "weeklyCompensation"]
+    id: "accidentDate",
+    include: ["weeklyCompensation"]
   },
+
   {
     question: "Where did it happen?",
     responseType: "string",
@@ -84,7 +83,11 @@ export default (paClaimQuestions = [
     responseType: "string",
     responseLength: 600,
     id: "description",
-    include: ["permanentDisability", "medicalReimbursement"]
+    include: [
+      "permanentDisability",
+      "medicalReimbursement",
+      "weeklyCompensation"
+    ]
   },
   {
     question: "Oh I am concerned… may I know the extent of your injury?",
@@ -110,6 +113,7 @@ export default (paClaimQuestions = [
     exclude: ["death"],
     condition: "this.state.answers.hasSufferedSameInjury"
   },
+  // FIX: THIS QUESTION CRASHES APP WHEN UNCOMMENTED
   // {
   //   question: "When did the symptoms first appear? ",
   //   responseType: "date",
@@ -182,69 +186,8 @@ export default (paClaimQuestions = [
     futureOnly: true,
     id: "treatmentCompleteDate",
     condition: "this.state.answers.hasSufferedSameInjury && !this.state.answers.hasCompletedTreatment",
-    include: ["medicalReimbursement"]
+    include: ["medicalReimbursement", "weeklyCompensation"]
   },
-  // {
-  //   question: "Do you have any hospital or medical leave? ",
-  //   responseType: ["boolean", "choice"],
-  //   id: "hasMedicalLeave",
-  //   choices: [
-  //     {
-  //       label: "Yes",
-  //       value: true
-  //     },
-  //     { label: "No", value: false }
-  //   ],
-  //   condition: "!this.state.answers.hasOtherInsuranceCoverage",
-  //   include: ["permanentDisability"]
-  // },
-  // {
-  //   question: "Share with me the medical leave date",
-  //   responseType: ["date"],
-  //   pastOnly: true,
-  //   id: "medicalLeaveDate",
-  //   condition: "!this.state.answers.hasOtherInsuranceCoverage && this.state.answers.hasMedicalLeave",
-  //   include: ["permanentDisability"]
-  // },
-  // {
-  //   question: "During your hospital or medical leave, have you returned to work to do full, or light duties? ",
-  //   responseType: ["boolean", "choice"],
-  //   id: "hasReturnedToWork",
-  //   choices: [
-  //     {
-  //       label: "Yes",
-  //       value: true
-  //     },
-  //     { label: "No", value: false }
-  //   ],
-  //   condition: "!this.state.answers.hasOtherInsuranceCoverage && this.state.answers.hasMedicalLeave",
-  //   include: ["permanentDisability"]
-  // },
-  // {
-  //   question: "Share with me when you returned to work",
-  //   responseType: ["date"],
-  //   pastOnly: true,
-  //   id: "returnWorkDate",
-  //   condition: "!this.state.answers.hasOtherInsuranceCoverage && this.state.answers.hasMedicalLeave && this.state.answers.hasReturnedToWork",
-  //   include: ["permanentDisability"]
-  // },
-  // {
-  //   question: "Here is the final question, has <%= fullName %> %>'s' employer purchased any insurance coverage for this accident? ",
-  //   responseType: ["string", "string"],
-  //   responseType: ["boolean", "choice"],
-  //   id: "hasEmployerInsuranceCoverage",
-  //   label: "OTHER INSURANCE COVERAGE",
-  //   choices: [{ label: "Yes", value: true }, { label: "No", value: false }],
-  //   include: ["death"]
-  // },
-  // {
-  //   question: "What is the insurance company and policy number?",
-  //   responseType: ["string", "string"],
-  //   id: ["employerInsuranceCo", "employerPolicyNo"],
-  //   labels: ["Insurance company name", "Policy number"],
-  //   condition: "this.state.answers.hasEmployerInsuranceCoverage === true",
-  //   include: ["death"]
-  // },
 
   // 2nd half
   {
@@ -257,98 +200,6 @@ export default (paClaimQuestions = [
     ],
     include: ["death"]
   },
-
-  {
-    question: "We are almost done to get your claim paid fast. I need your help to snap or upload some supporting documents. Do your best to snap or upload the right images for each box",
-    responseType: "imageTable",
-    columns: [
-      { label: "Original medical bills/receipts", id: "originalMedicalBill" },
-      {
-        label: "If original bills/receipts submitted to other insurer or your employer, snap/upload the reimbursement letter, or discharge voucher from insurer, or letter from employer indicating the amount paid to you",
-        id: "reimbursementLetter"
-      },
-      {
-        label: "Medical report",
-        id: "medicalReport"
-      },
-      {
-        label: "Police report",
-        id: "policeReport"
-      },
-      {
-        label: "Inpatient discharge summary",
-        id: "dischargeSummary"
-      },
-      {
-        label: "Medical leave certificate",
-        id: "medicalLeaveCertificate"
-      },
-      {
-        label: "Work permit (if any)",
-        id: "workPermit"
-      }
-    ],
-    include: [
-      "permanentDisability",
-      "medicalReimbursement",
-      "weeklyCompensation"
-    ],
-    id: "claimImages"
-  },
-
-  {
-    question: "<%= fullName %>, to complete your claim, I need your help to post the ORIGINAL MEDICAL BILLS AND/OR RECEIPTS to: HLAS, 11 Keppel Road #11-01 ABI Plaza Singapore 089057, within 48 hours",
-    responseType: null,
-    exclude: ["death"]
-  },
-
-  // {
-  //   question: "Please snap a clear photo of the original medical bills and/or receipts",
-  //   responseType: "images",
-  //   responseLength: 30,
-  //   id: "originalMedicalBill",
-  //   exclude: ["death"]
-  // },
-
-  // {
-  //   question: "If you have submitted the original bills and receipts to other insurer or your employer, please snap a clear photo of the photocopy medical bills and/or receipts",
-  //   responseType: "images",
-  //   responseLength: 30,
-  //   id: "otherMedicalBill",
-  //   exclude: ["death"]
-  // },
-  // {
-  //   question: "If you have submitted the original bills and receipts to other insurer or your employer, please snap a clear photo of reimbursement letter, or discharge voucher from insurer, or letter from employer indicating the amount paid to you. Either one will do.",
-  //   responseType: "images",
-  //   responseLength: 10,
-  //   id: "reimbursementLetter",
-  //   exclude: ["death"]
-  // },
-  // {
-  //   question: "If you had hospital admission, please snap a clear photo of the In-patient Discharge Summary",
-  //   responseType: "images",
-  //   responseLength: 10,
-  //   id: "dischargeSummary",
-  //   include: ["medicalReimbursement"],
-  //   condition: "this.state.answers.reimbursementMoreThan5000"
-  // },
-  // {
-  //   question: "If you had hospital admission, please snap a clear photo of the Medical Report (indicating your diagnosis)",
-  //   responseType: "images",
-  //   responseLength: 10,
-  //   id: "medicalReport",
-  //   include: ["medicalReimbursement"],
-  //   condition: "this.state.answers.reimbursementMoreThan5000"
-  // },
-  // {
-  //   question: "If you had hospital admission, please download the ATTENDING PHYSICIAN STATEMENT. Print out, let your doctor fill up, and finally snap a clear photo of the APS",
-  //   responseType: "images",
-  //   responseLength: 10,
-  //   id: "physicianStatement",
-  //   include: ["medicalReimbursement"],
-  //   condition: "this.state.answers.reimbursementMoreThan5000"
-  // },
-
   {
     question: "We are almost done to get your claim paid fast. I need your help to snap or upload some supporting documents. Do your best to snap or upload the right images for each box",
     responseType: "imageTable",
@@ -410,13 +261,47 @@ export default (paClaimQuestions = [
     condition: "!this.state.answers.deathInSingapore"
   },
 
-  // WEEKLY COMPENSATION
   {
-    question: "Please snap a clear photo of the medical certificate issued by a registered physician in Singapore",
-    responseType: "images",
-    responseLength: 10,
-    id: "medicalCertificate",
-    include: ["weeklyCompensation"]
+    question: "We are almost done to get your claim paid fast. I need your help to snap or upload some supporting documents. Do your best to snap or upload the right images for each box",
+    responseType: "imageTable",
+    columns: [
+      { label: "Original medical bills/receipts", id: "originalMedicalBill" },
+      {
+        label: "If original bills/receipts submitted to other insurer or your employer, snap/upload the reimbursement letter, or discharge voucher from insurer, or letter from employer indicating the amount paid to you",
+        id: "reimbursementLetter"
+      },
+      {
+        label: "Medical report",
+        id: "medicalReport"
+      },
+      {
+        label: "Police report",
+        id: "policeReport"
+      },
+      {
+        label: "Inpatient discharge summary",
+        id: "dischargeSummary"
+      },
+      {
+        label: "Medical leave certificate",
+        id: "medicalLeaveCertificate"
+      },
+      {
+        label: "Work permit (if any)",
+        id: "workPermit"
+      }
+    ],
+    include: [
+      "permanentDisability",
+      "medicalReimbursement",
+      "weeklyCompensation"
+    ],
+    id: "claimImages"
+  },
+  {
+    question: "<%= fullName %>, to complete your claim, I need your help to post the ORIGINAL MEDICAL BILLS AND/OR RECEIPTS to: HLAS, 11 Keppel Road #11-01 ABI Plaza Singapore 089057, within 48 hours",
+    responseType: null,
+    exclude: ["death"]
   },
 
   // CONFIRM
