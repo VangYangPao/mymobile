@@ -80,7 +80,7 @@ export default (paClaimQuestions = [
     include: ["death"]
   },
   {
-    question: "Share with me how did you sustain your injury?",
+    question: "Share with me how you sustained your injury?",
     responseType: "string",
     responseLength: 600,
     id: "description",
@@ -104,7 +104,7 @@ export default (paClaimQuestions = [
     exclude: ["death"]
   },
   {
-    question: "Please explain the injury in detail",
+    question: "Please explain the injury in detail?",
     responseType: "string",
     id: "injuryDetail",
     exclude: ["death"],
@@ -179,7 +179,7 @@ export default (paClaimQuestions = [
   {
     question: "When is the treatment expected to be completed?",
     responseType: ["date"],
-    pastOnly: true,
+    futureOnly: true,
     id: "treatmentCompleteDate",
     condition: "this.state.answers.hasSufferedSameInjury && !this.state.answers.hasCompletedTreatment",
     include: ["medicalReimbursement"]
