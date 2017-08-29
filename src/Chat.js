@@ -59,7 +59,7 @@ import Button from "./Button";
 // Enable playback in silence mode (iOS only)
 Sound.setCategory("Playback");
 
-const MESSAGE_LOAD_TIME = 0;
+const MESSAGE_LOAD_TIME = 1000;
 const POLICIES_FADE_IN_TIME = 400;
 
 const AGENT_USER_ID = 0;
