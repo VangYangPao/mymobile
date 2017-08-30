@@ -307,7 +307,7 @@ export default (paClaimQuestions = [
   // CONFIRM
   {
     question: "Thank you for your patience. Please keep this phone with you at all times, as I shall send you notifications and messages on your claim.",
-    responseType: "boolean",
+    responseType: null,
     id: "confirm"
   }
 ]);

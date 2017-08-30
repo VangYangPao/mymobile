@@ -4,7 +4,7 @@ export default (database = {
     {
       id: 11,
       status: "active",
-      policyType: "pa_mr",
+      policyType: "travel",
       purchaseDate: new Date(2017, 5, 26, 16, 43),
       coverageSummary: [
         { label: "Accidental Death", value: "$50,000" },
@@ -50,6 +50,14 @@ export default (database = {
     // }
   ],
   claims: [
+    {
+      id: 12,
+      status: "approved",
+      policyType: "pa_mr",
+      purchaseDate: new Date(2017, 3, 26, 16, 43),
+      claimDate: new Date(2017, 5, 26, 16, 43),
+      claimAmount: "5,600"
+    },
     {
       id: 12,
       status: "approved",
