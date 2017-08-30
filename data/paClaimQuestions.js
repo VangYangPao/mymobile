@@ -1,7 +1,7 @@
 export default (paClaimQuestions = [
   // CLAIM TYPE
   {
-    question: "I will walk you through step by step. I'll do my best to get your claim paid fast. Firstly, which are you planning to claim?",
+    question: "I will walk you through step by step. I'll do my best to get your claim paid fast. Firstly, which coverage are you planning to claim?",
     responseType: ["string", "choice"],
     label: "CHOOSE CLAIM TYPE",
     choices: [
@@ -12,25 +12,31 @@ export default (paClaimQuestions = [
     id: "claimType"
   },
   {
-    question: "Firstly, are you planning to claim for",
+    question: "I wish you a complete recovery.  Let me quickly guide you through the claims process.  Please share with me the date and time of the accident",
     responseType: ["string", "choice"],
     label: "CHOOSE CLAIM TYPE",
     choices: [
       { label: "Death of Kin", value: "death" },
       { label: "Permanent Disability", value: "permanentDisability" },
-      { label: "Medical Reimbursement", value: "medicalReimbursement" }
+      {
+        label: "Medical Reimbursement / Weekly Indemnity",
+        value: "medicalReimbursement"
+      }
     ],
     include: ["pa_mr"],
     id: "claimType"
   },
   {
-    question: "Firstly, are you planning to claim for",
+    question: "I wish you a complete recovery.  Let me quickly guide you through the claims process.  Please share with me the date and time of the accident",
     responseType: ["string", "choice"],
     label: "CHOOSE CLAIM TYPE",
     choices: [
       { label: "Death of Kin", value: "death" },
       { label: "Permanent Disability", value: "permanentDisability" },
-      { label: "Weekly Cash Compensation", value: "weeklyCompensation" }
+      {
+        label: "Medical Reimbursement / Weekly Indemnity",
+        value: "medicalReimbursement"
+      }
     ],
     include: ["pa_wi"],
     id: "claimType"
@@ -38,14 +44,15 @@ export default (paClaimQuestions = [
 
   // Intros
   {
-    question: "I'm so sorry to hear that. I assume you are <%= fullName %>’s claimant/next of kin. Please share with me the date and time of the accident",
+    question: "You must be FULLNAME’s claimant/next of kin. I am so sorry for your loss. My deepest condolences to you and your family! Please share with me the date and time of the accident",
     responseType: "datetime",
     pastOnly: true,
     id: "accidentDate",
     include: ["death"]
   },
   {
-    question: "Oh… I am sad to hear that. Let me help you out to get the claim paid fast. Please share with me the date and time of the accident",
+    question: "Oh… I am sad to hear that. Let me help you out to get your claim paid fast. Please share with me the date and time of the accident",
+
     responseType: "datetime",
     pastOnly: true,
     id: "accidentDate",
@@ -57,13 +64,6 @@ export default (paClaimQuestions = [
     pastOnly: true,
     id: "accidentDate",
     include: ["medicalReimbursement"]
-  },
-  {
-    question: "Don’t worry! Let me help you out to get your benefit paid fast. Please share with me the date and time of the accident",
-    responseType: "datetime",
-    pastOnly: true,
-    id: "accidentDate",
-    include: ["weeklyCompensation"]
   },
 
   {

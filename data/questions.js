@@ -190,7 +190,7 @@ export function validateAnswer(question, answer, answers) {
 
 const claimIntro = [
   {
-    question: "Welcome back <%= fullName %>, here are your protection plans. Which plan would you like to make a claim?",
+    question: "Welcome back <%= fullName %>, here are your protection plans. Which policy would you like to make a claim?",
     responseType: "number",
     id: "claimPolicyNo"
   }
