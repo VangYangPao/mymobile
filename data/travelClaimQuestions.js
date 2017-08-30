@@ -35,20 +35,20 @@ export default (travelClaimQuestions = [
     id: "accidentCause",
     include: ["death"]
   },
-  // {
-  //   question: "FULLNAME, I wish you a complete recovery. I’ll do my best to get your claim paid fast. Please share with me the date and time of the accident",
-  //   responseType: "datetime",
-  //   pastOnly: true,
-  //   id: "claimDate",
-  //   include: ["medicalReimbursement"]
-  // },
-  // {
-  //   question: "Please share with me the cause of the accident, injury, or illness?  ",
-  //   responseType: "string",
-  //   responseLength: 600,
-  //   id: "accidentCause",
-  //   include: ["medicalReimbursement"]
-  // },
+  {
+    question: "FULLNAME, I wish you a complete recovery. I’ll do my best to get your claim paid fast. Please share with me the date and time of the accident",
+    responseType: "datetime",
+    pastOnly: true,
+    id: "claimDate",
+    include: ["medicalReimbursement"]
+  },
+  {
+    question: "Please share with me the cause of the accident, injury, or illness?  ",
+    responseType: "string",
+    responseLength: 600,
+    id: "accidentCause",
+    include: ["medicalReimbursement"]
+  },
   // {
   //   question: "<%= fullName %>, I wish you get well soon. Let me help out on the claim fast. Please share with me the date and time of the accident",
   //   include: ["medicalReimbursement"]
@@ -476,36 +476,37 @@ export default (travelClaimQuestions = [
   //   id: "personalLiabilityImages",
   //   include: ["personalLiability"]
   // },
-  // {
-  //   question: "Oh, I am concerned! May I know the extent of your injury/illness?  ",
-  //   responseType: "string",
-  //   responseLength: 600,
-  //   include: ["medicalReimbursement"]
-  // },
-  // {
-  //   question: "Have you suffered the same injury/illness before?",
-  //   responseType: ["boolean", "choice"],
-  //   choices: [
-  //     { label: "Yes, I have", value: true },
-  //     { label: "No, I have not", value: false }
-  //   ],
-  //   id: "hasSufferedSameInjury",
-  //   include: ["medicalReimbursement"]
-  // },
-  // {
-  //   question: "Please explain the injury in detail",
-  //   responseType: "string",
-  //   id: "injuryDetail",
-  //   include: ["medicalReimbursement"],
-  //   condition: "this.state.answers.hasSufferedSameInjury"
-  // },
-  // // {
-  // //   question: "When did the symptoms first appear?",
-  // //   responseType: "date",
-  // //   pastOnly: true,
-  // //   id: "symptomsAppearDate",
-  // //   include: ["medicalReimbursement"]
-  // // },
+  {
+    question: "Oh, I am concerned! May I know the extent of your injury/illness?  ",
+    responseType: "string",
+    responseLength: 600,
+    include: ["medicalReimbursement"]
+  },
+  {
+    question: "Have you suffered the same injury/illness before?",
+    responseType: ["boolean", "choice"],
+    choices: [
+      { label: "Yes, I have", value: true },
+      { label: "No, I have not", value: false }
+    ],
+    id: "hasSufferedSameInjury",
+    include: ["medicalReimbursement"]
+  },
+  {
+    question: "Please explain the injury in detail",
+    responseType: "string",
+    id: "injuryDetail",
+    include: ["medicalReimbursement"],
+    condition: "this.state.answers.hasSufferedSameInjury"
+  },
+  {
+    question: "When did the symptoms first appear?",
+    responseType: "date",
+    pastOnly: true,
+    id: "symptomsAppearDate",
+    include: ["medicalReimbursement"],
+    condition: "this.state.answers.hasSufferedSameInjury"
+  },
 
   {
     question: "Does <%= fullName %> have other insurance coverage for this accident?",
@@ -514,20 +515,21 @@ export default (travelClaimQuestions = [
     choices: [{ label: "Yes", value: true }, { label: "No", value: false }],
     include: ["death"]
   },
-  // {
-  //   question: "Try to recall, do you have other insurance coverage for this accident? ",
-  //   responseType: ["boolean", "choice"],
-  //   id: "hasOtherInsuranceCoverage",
-  //   choices: [{ label: "Yes", value: true }, { label: "No", value: false }],
-  //   include: ["permanentDisability", "medicalReimbursement"]
-  // },
+  {
+    question: "Try to recall, do you have other insurance coverage for this accident? ",
+    responseType: ["boolean", "choice"],
+    id: "hasOtherInsuranceCoverage",
+    choices: [{ label: "Yes", value: true }, { label: "No", value: false }],
+    include: ["permanentDisability", "medicalReimbursement"],
+    condition: "this.state.answers.hasSufferedSameInjury"
+  },
   {
     question: "What is the insurance company and policy number?",
     responseType: ["string", "string"],
     id: ["otherInsuranceCo", "otherPolicyNumber"],
     labels: ["Insurance company name", "Policy number"],
-    condition: "this.state.answers.hasOtherInsuranceCoverage === true",
-    include: ["death", "permanentDisability", "medicalReimbursement"]
+    include: ["death", "permanentDisability", "medicalReimbursement"],
+    condition: "this.state.answers.hasOtherInsuranceCoverage"
   },
   // {
   //   question: "Have you completed your treatment?",
@@ -617,36 +619,36 @@ export default (travelClaimQuestions = [
   //   include: ["permanentDisability"]
   // },
 
-  // {
-  //   question: "We are almost done to get your claim paid fast. I need your help to snap or upload some supporting documents. Do your best to snap or upload the right images for each box",
-  //   responseType: "imageTable",
-  //   columns: [
-  //     {
-  //       label: "Original medical bills/receipts (if any)",
-  //       id: "medicalBill"
-  //     },
-  //     {
-  //       label: "If original bills/receipts submitted to other insurer or your employer, snap/upload the reimbursement letter, or discharge voucher from insurer, or letter from employer indicating the amount paid to you",
-  //       id: "reimbursementLetter"
-  //     },
-  //     {
-  //       label: "Medical report (if you are admitted to hospital)",
-  //       id: "medicalReport"
-  //     },
-  //     {
-  //       label: "Police report (if accidental)",
-  //       id: "policeReport"
-  //     },
-  //     {
-  //       label: "Inpatient discharge summary (if you are admitted to hospital)",
-  //       id: "dischargeSummary"
-  //     },
+  {
+    question: "We are almost done to get your claim paid fast. I need your help to snap or upload some supporting documents. Do your best to snap or upload the right images for each box",
+    responseType: "imageTable",
+    columns: [
+      {
+        label: "Original medical bills/receipts (if any)",
+        id: "medicalBill"
+      },
+      {
+        label: "If original bills/receipts submitted to other insurer or your employer, snap/upload the reimbursement letter, or discharge voucher from insurer, or letter from employer indicating the amount paid to you",
+        id: "reimbursementLetter"
+      },
+      {
+        label: "Medical report (if you are admitted to hospital)",
+        id: "medicalReport"
+      },
+      {
+        label: "Police report (if accidental)",
+        id: "policeReport"
+      },
+      {
+        label: "Inpatient discharge summary (if you are admitted to hospital)",
+        id: "dischargeSummary"
+      },
 
-  //     { label: "Boarding pass/Flight itinerary", id: "boardingPass" }
-  //   ],
-  //   include: ["medicalReimbursement"],
-  //   id: "medicalReimbursementImages"
-  // },
+      { label: "Boarding pass/Flight itinerary", id: "boardingPass" }
+    ],
+    include: ["medicalReimbursement"],
+    id: "medicalReimbursementImages"
+  },
   {
     question: "We are almost done to get your claim paid fast. I need your help to snap or upload some supporting documents. Do your best to snap or upload the right images for each box",
     responseType: "imageTable",
