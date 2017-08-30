@@ -31,6 +31,8 @@ export default class StatusScreen extends Component {
       rejected: styles.policyStatusTextRejected
     };
 
+    console.log(item);
+
     const policy = POLICIES.find(p => p.id === item.policyType);
 
     return (

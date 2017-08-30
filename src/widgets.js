@@ -598,8 +598,8 @@ const widgetStyles = StyleSheet.create({
     backgroundColor: colors.softBorderLine
   },
   choicesList: {
-    borderBottomLeftRadius: 15,
-    borderBottomRightRadius: 15,
+    borderBottomLeftRadius: 13,
+    borderBottomRightRadius: 13,
     marginLeft: 50,
     marginRight: 60,
     marginBottom: 50,
