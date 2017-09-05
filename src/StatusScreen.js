@@ -31,8 +31,6 @@ export default class StatusScreen extends Component {
       rejected: styles.policyStatusTextRejected
     };
 
-    console.log(item);
-
     const policy = POLICIES.find(p => p.id === item.policyType);
 
     return (
@@ -40,9 +38,7 @@ export default class StatusScreen extends Component {
         <View style={styles.policyContent}>
           <Text style={styles.policyName}>{policy.title}</Text>
           <Text style={styles.date}>Policy No: {item.key}</Text>
-          <Text style={styles.date}>
-            Purchased on: {dateStr}
-          </Text>
+          <Text style={styles.date}>Purchased on: {dateStr}</Text>
           <Text style={styles.date}>
             {section === "policies" ? "Premium: " : "Claim amount: "}
             $

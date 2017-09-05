@@ -566,6 +566,7 @@ class ChatScreen extends Component {
           const { id, paid, policyType, purchaseDate } = policy;
           database.claims.push({
             id,
+            policyType,
             paid,
             purchaseDate,
             status: "pending",

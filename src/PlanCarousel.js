@@ -24,8 +24,8 @@ function wp(percentage) {
 }
 
 const slideHeight = viewportHeight * 0.4;
-const slideWidth = wp(75);
-const itemHorizontalMargin = wp(2);
+const slideWidth = wp(50);
+const itemHorizontalMargin = wp(1);
 
 const sliderWidth = viewportWidth;
 const itemWidth = slideWidth + itemHorizontalMargin * 2;
@@ -72,12 +72,14 @@ export default class PlanCarousel extends Component {
   }
 
   renderPlan(plan, index) {
-    const renderCoverages = typeof this.props.renderCoverages === "function"
-      ? this.props.renderCoverages
-      : this.renderCoverages;
-    const getPlanTitle = typeof this.props.getPlanTitle === "function"
-      ? this.props.getPlanTitle
-      : this.getPlanTitle;
+    const renderCoverages =
+      typeof this.props.renderCoverages === "function"
+        ? this.props.renderCoverages
+        : this.renderCoverages;
+    const getPlanTitle =
+      typeof this.props.getPlanTitle === "function"
+        ? this.props.getPlanTitle
+        : this.getPlanTitle;
     return (
       <TouchableOpacity
         onPress={this.handleSelectPlan(index)}

@@ -59,7 +59,7 @@ export default (database = {
       claimAmount: "5,600"
     },
     {
-      id: 12,
+      id: 13,
       status: "approved",
       policyType: "pa_mr",
       purchaseDate: new Date(2017, 3, 26, 16, 43),

@@ -67,12 +67,14 @@ function validateBoolean(bool) {
 }
 
 function validateNRIC(str) {
+  return new ValidationResult(true, true);
   if (str.length != 9)
     return new ValidationResult(false, "Please enter a valid NRIC/FIN");
 
   str = str.toUpperCase();
 
-  var i, icArray = [];
+  var i,
+    icArray = [];
   for (i = 0; i < 9; i++) {
     icArray[i] = str.charAt(i);
   }
@@ -190,7 +192,8 @@ export function validateAnswer(question, answer, answers) {
 
 const claimIntro = [
   {
-    question: "Welcome back <%= fullName %>, here are your protection plans. Which policy would you like to make a claim?",
+    question:
+      "Welcome back <%= fullName %>, here are your protection plans. Which policy would you like to make a claim?",
     responseType: "number",
     id: "claimPolicyNo"
   }
@@ -199,11 +202,13 @@ const claimIntro = [
 export const QUESTION_SETS = {
   buy: [
     {
-      question: "<%= ['Great choice 😄', 'Awesome choice 😄', 'Nice choice 😄', 'Ahh... our most popular choice 😘', 'Fantastic 😉'][Math.floor(Math.random()*5)] %>",
+      question:
+        "<%= ['Great choice 😄', 'Awesome choice 😄', 'Nice choice 😄', 'Ahh... our most popular choice 😘', 'Fantastic 😉'][Math.floor(Math.random()*5)] %>",
       responseType: null
     },
     {
-      question: "I'll walk you through step-by-step. Let's start with the plan you prefer.",
+      question:
+        "I'll walk you through step-by-step. Let's start with the plan you prefer.",
       responseType: "number",
       exclude: ["mobile"],
       id: "planIndex"
@@ -268,12 +273,14 @@ export const QUESTION_SETS = {
       exclude: ["mobile", "travel"]
     },
     {
-      question: "<%= ['Awesome', 'Nice', 'Great'][Math.floor(Math.random()*3)] %>. That would be $<%= (policy.plans[planIndex].premium * coverageDuration).toFixed(2) %>.",
+      question:
+        "<%= ['Awesome', 'Nice', 'Great'][Math.floor(Math.random()*3)] %>. That would be $<%= (policy.plans[planIndex].premium * coverageDuration).toFixed(2) %>.",
       responseType: null,
       exclude: ["travel"]
     },
     {
-      question: "For the next steps, I will be asking you some questions to get you covered instantly. Please be patient with my questions. 😬",
+      question:
+        "For the next steps, I will be asking you some questions to get you covered instantly. Please be patient with my questions. 😬",
       responseType: null
     },
     {
@@ -293,7 +300,8 @@ export const QUESTION_SETS = {
     //   id: "lastName"
     // },
     {
-      question: "Nice to meet you <%= lastName %> <%= firstName %>! What's your NRIC/FIN/Passport?",
+      question:
+        "Nice to meet you <%= lastName %> <%= firstName %>! What's your NRIC/FIN/Passport?",
       responseType: ["string", "nric"],
       id: "NRIC"
     },
@@ -314,7 +322,8 @@ export const QUESTION_SETS = {
     //   labels: ["Bank name", "Bank account number"]
     // },
     {
-      question: "Thank you <%= lastName %> <%= firstName %> for the information. I will now bring you to the confirmation page.",
+      question:
+        "Thank you <%= lastName %> <%= firstName %> for the information. I will now bring you to the confirmation page.",
       responseType: null
     }
   ],
