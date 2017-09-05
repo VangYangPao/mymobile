@@ -92,9 +92,9 @@ class SettingsScreen extends Component {
 
 const MyDrawerNavigator = DrawerNavigator(
   {
-    BuyStack: {
-      screen: BuyStackNavigator
-    },
+    // BuyStack: {
+    //   screen: BuyStackNavigator
+    // },
     ClaimStack: {
       screen: ClaimStackNavigator
     },

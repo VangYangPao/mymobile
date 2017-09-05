@@ -52,8 +52,8 @@ export class MyDatePicker extends Component {
     const now = new Date();
     const mode = this.props.mode || "datetime";
     const format = mode === "datetime" ? "YYYY-MM-DD HH:mm" : "YYYY-MM-DD";
-    const maxDate = this.props.pastOnly ? now : null;
-    let minDate = this.props.futureOnly ? now : null;
+    const maxDate = this.props.pastOnly ? now : undefined;
+    let minDate = this.props.futureOnly ? now : undefined;
     if (this.props.minDate) {
       minDate = this.props.minDate;
     }
@@ -243,9 +243,11 @@ export class ImageTable extends Component {
 
   render() {
     const { columns } = this.props;
-    let i, j, chunk = 2;
+    let i,
+      j,
+      chunk = 2;
     let rows = [];
-    for ((i = 0), (j = columns.length); i < j; i += chunk) {
+    for (i = 0, j = columns.length; i < j; i += chunk) {
       const row = columns.slice(i, i + chunk);
       const rowElements = row.map(r => {
         const imageUri = this.state.images[r.id];
@@ -273,19 +275,21 @@ export class ImageTable extends Component {
               <Text style={{ flex: 1, textAlign: "center", marginBottom: 10 }}>
                 {r.label}
               </Text>
-              {imageUri === null
-                ? <Icon
-                    name="add"
-                    size={55}
-                    style={[
-                      widgetStyles.plusIcon,
-                      { color: colors.softBorderLine }
-                    ]}
-                  />
-                : <Image
-                    style={{ width: 70, height: 100, resizeMode: "cover" }}
-                    source={{ uri: imageUri }}
-                  />}
+              {imageUri === null ? (
+                <Icon
+                  name="add"
+                  size={55}
+                  style={[
+                    widgetStyles.plusIcon,
+                    { color: colors.softBorderLine }
+                  ]}
+                />
+              ) : (
+                <Image
+                  style={{ width: 70, height: 100, resizeMode: "cover" }}
+                  source={{ uri: imageUri }}
+                />
+              )}
             </View>
           </TouchableOpacity>
         );
@@ -355,9 +359,7 @@ export class ClaimPolicyChoice extends Component {
                     }}
                   >
                     <Text>{coverage.label}</Text>
-                    <Text>
-                      {coverage.value}
-                    </Text>
+                    <Text>{coverage.value}</Text>
                   </View>
                 );
               })}
@@ -402,9 +404,8 @@ export class ChoiceList extends Component {
     const len = choices.length;
     const startStylesOrNull = index === 0 ? widgetStyles.choicesStart : null;
     const endStylesOrNull = index === len - 1 ? widgetStyles.choicesEnd : null;
-    const choiceTouchableEnd = index === len - 1
-      ? widgetStyles.choiceTouchableEnd
-      : null;
+    const choiceTouchableEnd =
+      index === len - 1 ? widgetStyles.choiceTouchableEnd : null;
     return (
       <View
         style={[
@@ -475,7 +476,8 @@ export class MultiInput extends Component {
 
     let inputElement;
     if (
-      input.type.indexOf("date") !== -1 || input.type.indexOf("datetime") !== -1
+      input.type.indexOf("date") !== -1 ||
+      input.type.indexOf("datetime") !== -1
     ) {
       inputElement = (
         <MyDatePicker mode={input.type} onPickDate={this.handlePickDate} />
@@ -491,6 +493,7 @@ export class MultiInput extends Component {
           placeholder={input.label}
           autoCorrect={false}
           autoCapitalize="none"
+          underlineColorAndroid="transparent"
           onChangeText={text => {
             const values = this.state.values.slice();
             values[index] = text;

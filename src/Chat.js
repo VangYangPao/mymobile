@@ -11,7 +11,8 @@ import {
   Platform,
   Alert,
   ToastAndroid,
-  Keyboard
+  Keyboard,
+  InteractionManager
 } from "react-native";
 import {
   GiftedChat,
@@ -238,7 +239,8 @@ class ChatScreen extends Component {
             {
               type: "text",
               _id: 0,
-              text: "Hello, I'm Eve. Welcome to microUmbrella. I'll be your host and here are the protection plans that may interest you. 😄",
+              text:
+                "Hello, I'm Eve. Welcome to microUmbrella. I'll be your host and here are the protection plans that may interest you. 😄",
               createdAt: new Date(),
               user: AGENT_USER
             }
@@ -265,10 +267,14 @@ class ChatScreen extends Component {
     };
     let messageIndex;
     const afterLoading = () => {
-      const messages = this.state.messages.slice();
-      messages.splice(messageIndex, 1, message);
-      this.setState({ renderInput: true, messages: messages }, cb);
-      this.playNewMessageSound();
+      InteractionManager.runAfterInteractions(() => {
+        const messages = this.state.messages.slice();
+        messages.splice(messageIndex, 1, message);
+        this.setState({ renderInput: true, messages: messages }, () => {
+          this.playNewMessageSound();
+          cb();
+        });
+      });
     };
     this.setState(
       prevState => {
@@ -723,9 +729,10 @@ class ChatScreen extends Component {
         if (lastQuestion.responseType === null) {
           return;
         }
-        let answer = lastMessage.value !== undefined
-          ? lastMessage.value
-          : lastMessage.text.trim();
+        let answer =
+          lastMessage.value !== undefined
+            ? lastMessage.value
+            : lastMessage.text.trim();
 
         if (
           lastQuestion.responseType.indexOf("number") !== -1 &&
@@ -743,9 +750,10 @@ class ChatScreen extends Component {
               newAnswer[input.id] = input.value;
             });
           } else {
-            newAnswer[lastQuestion.id] = lastMessage.value !== undefined
-              ? lastMessage.value
-              : lastMessage.text;
+            newAnswer[lastQuestion.id] =
+              lastMessage.value !== undefined
+                ? lastMessage.value
+                : lastMessage.text;
           }
           const answers = Object.assign(this.state.answers, newAnswer);
           /// setState here
