@@ -19,7 +19,8 @@ export default (travelClaimQuestions = [
         label: "Trip Curtailment / Cancellation or Loss of Deposit",
         value: "tripCurtailment"
       },
-      { label: "Personal Liability", value: "personalLiability" }
+      { label: "Personal Liability", value: "personalLiability" },
+      { label: "Others", value: "others" }
     ],
     id: "claimType"
   },
@@ -95,6 +96,12 @@ export default (travelClaimQuestions = [
     responseType: null,
     include: ["personalLiability"]
   },
+  {
+    question: "FULLNAME, share with me what had happened? ",
+    responseType: "string",
+    id: "details",
+    include: ["others"]
+  },
 
   {
     question:
@@ -118,130 +125,68 @@ export default (travelClaimQuestions = [
     id: ["actualFlightDepartureDate", "actualFlightDepartureAirport"],
     include: ["travelDelay"]
   },
+  {
+    question:
+      "I am so sorry to hear about this.  Please share with me the cause of your trip curtailment or cancellation? ",
+    responseType: "string",
+    responseLength: 600,
+    id: "causeOfTripCurtailment",
+    include: ["tripCurtailment"]
+  },
+  {
+    question:
+      "Please share with me the date of trip curtailment or cancellation",
+    responseType: "date",
+    pastOnly: true,
+    id: "tripCurtailmentDate",
+    include: ["tripCurtailment"]
+  },
+  {
+    question:
+      "If the trip curtailment or cancellation was caused by your medical condition, or your family member’s medical condition, have you or your family member suffered from this condition before? ",
+    responseType: ["boolean", "choice"],
+    choices: [
+      {
+        label: "Yes",
+        value: true
+      },
+      { label: "No", value: false }
+    ],
+    id: "sufferedFromConditionBefore",
+    include: ["tripCurtailment"]
+  },
+  {
+    question: "Please explain the medical condition in detail",
+    responseType: "string",
+    id: "medicalCondition",
+    include: ["tripCurtailment"],
+    condition: "this.state.answers.sufferedFromConditionBefore"
+  },
+  {
+    question:
+      "Please share with me the NAME, ADDRESS and CONTACT of the attending physician",
+    responseType: ["string", "string", ["string", "phoneNumber"]],
+    labels: ["Name", "Address", "Contact number"],
+    id: ["physicianName", "physicianAddress", "physicianContact"],
+    include: ["tripCurtailment"],
+    condition: "this.state.answers.sufferedFromConditionBefore"
+  },
+  {
+    question: "What happened in detail leading to personal liability? ",
+    responseType: "string",
+    responseLength: 600,
+    id: "personalLiabilityDetail",
+    include: ["personalLiability"]
+  },
   // {
-  //   question: "I am so sorry to hear about this.  Please share with me the cause of your trip curtailment or cancellation? ",
-  //   responseType: "string",
-  //   responseLength: 600,
-  //   id: "causeOfTripCurtailment",
-  //   include: ["tripCurtailment"]
-  // },
-  // {
-  //   question: "Please share with me the date of trip curtailment or cancellation",
-  //   responseType: "date",
-  //   pastOnly: true,
-  //   id: "tripCurtailmentDate",
-  //   include: ["tripCurtailment"]
-  // },
-  // {
-  //   question: "If the trip curtailment or cancellation was caused by your medical condition, or your family member’s medical condition, have you or your family member suffered from this condition before? ",
-  //   responseType: ["boolean", "choice"],
-  //   choices: [
-  //     {
-  //       label: "Yes",
-  //       value: true
-  //     },
-  //     { label: "No", value: false }
+  //   question: "Please provide the name and contact of witness",
+  //   responseType: "table",
+  //   columns: [
+  //     { label: "Name", id: "name", type: "string" },
+  //     { label: "Contact", id: "contact", type: "string" }
   //   ],
-  //   id: "sufferedFromConditionBefore",
-  //   include: ["tripCurtailment"]
-  // },
-  // {
-  //   question: "Please explain the medical condition in detail",
-  //   responseType: "string",
-  //   id: "medicalCondition",
-  //   include: ["tripCurtailment"],
-  //   condition: "this.state.answers.sufferedFromConditionBefore"
-  // },
-  // {
-  //   question: "Please share with me the NAME, ADDRESS and CONTACT of the attending physician",
-  //   responseType: ["string", "string", ["string", "phoneNumber"]],
-  //   labels: ["Name", "Address", "Contact number"],
-  //   id: ["physicianName", "physicianAddress", "physicianContact"],
-  //   include: ["tripCurtailment"],
-  //   condition: "this.state.answers.sufferedFromConditionBefore"
-  // },
-  // {
-  //   question: "What happened in detail leading to personal liability? ",
-  //   responseType: "string",
-  //   responseLength: 600,
-  //   id: "personalLiabilityDetail",
+  //   id: "witnesses",
   //   include: ["personalLiability"]
-  // },
-  // {
-  //   question: "Was the accident due to carelessness or negligence on your part? ",
-  //   responseType: ["boolean", "choice"],
-  //   choices: [
-  //     {
-  //       label: "Yes",
-  //       value: true
-  //     },
-  //     { label: "No", value: false }
-  //   ],
-  //   id: "isDueToCarelessness",
-  //   include: ["personalLiability"]
-  // },
-  // {
-  //   question: "Have you admitted fault? ",
-  //   responseType: ["boolean", "choice"],
-  //   choices: [
-  //     {
-  //       label: "Yes",
-  //       value: true
-  //     },
-  //     { label: "No", value: false }
-  //   ],
-  //   id: "hasAdmittedFault",
-  //   include: ["personalLiability"]
-  // },
-  // // {
-  // //   question: "Please provide the name and contact of witness",
-  // //   responseType: "table",
-  // //   columns: [
-  // //     { label: "Name", id: "name", type: "string" },
-  // //     { label: "Contact", id: "contact", type: "string" }
-  // //   ],
-  // //   id: "witnesses",
-  // //   include: ["personalLiability"]
-  // // },
-  // {
-  //   question: "Is there any injury sustained by any person or persons?",
-  //   responseType: ["boolean", "choice"],
-  //   choices: [
-  //     {
-  //       label: "Yes",
-  //       value: true
-  //     },
-  //     { label: "No", value: false }
-  //   ],
-  //   id: "injurySustainedByAnyPerson",
-  //   include: ["personalLiability"]
-  // },
-  // {
-  //   question: "Please share in detail the injury sustained by the person or persons",
-  //   responseType: "string",
-  //   id: "injuryDetail",
-  //   include: ["personalLiability"],
-  //   condition: "this.state.answers.injurySustainedByAnyPerson"
-  // },
-  // {
-  //   question: "Is there any damage to property or belongings? ",
-  //   responseType: ["boolean", "choice"],
-  //   choices: [
-  //     {
-  //       label: "Yes",
-  //       value: true
-  //     },
-  //     { label: "No", value: false }
-  //   ],
-  //   id: "hasDamageToProperty",
-  //   include: ["personalLiability"]
-  // },
-  // {
-  //   question: "Please share in detail the extent of damage",
-  //   responseType: "string",
-  //   id: "damageDetail",
-  //   include: ["personalLiability"],
-  //   condition: "this.state.answers.hasDamageToProperty"
   // },
   {
     question:
@@ -566,6 +511,64 @@ export default (travelClaimQuestions = [
     ],
     id: "claimImages",
     include: ["tripCurtailment"]
+  },
+  {
+    question:
+      "We are almost done to get your claim paid fast. I need your help to snap or upload some supporting documents. Do your best to snap or upload the right images for each box",
+    responseType: "imageTable",
+    columns: [
+      {
+        label: "Boarding pass / Flight itinerary",
+        id: "boardingPass"
+      },
+      {
+        label: "Tour itinerary",
+        id: "tourItinerary"
+      },
+      {
+        label: "Police report",
+        id: "policeReport"
+      },
+      {
+        label:
+          "Document proof by third party for claiming bodily injury or property damage against you",
+        id: "damageDocumentProof"
+      },
+      {
+        label: "Any document that would help with this case (if any)",
+
+        id: "anyDocument"
+      }
+    ],
+    id: "claimImages",
+    include: ["personalLiability"]
+  },
+  {
+    question:
+      "If you are now overseas and require any emergency assistance immediately, please call our 24-Hour HOTLINE +6569226009",
+    responseType: null,
+    include: ["others"]
+  },
+  {
+    question:
+      "We are almost done to get your claim paid fast. I need your help to snap or upload some supporting documents. Do your best to snap or upload the right images for each box",
+    responseType: "imageTable",
+    columns: [
+      {
+        label: "Boarding pass / Flight itinerary",
+        id: "boardingPass"
+      },
+      {
+        label: "Tour itinerary",
+        id: "tourItinerary"
+      },
+      {
+        label: "Police report",
+        id: "policeReport"
+      }
+    ],
+    id: "claimImages",
+    include: ["others"]
   },
   {
     question:
