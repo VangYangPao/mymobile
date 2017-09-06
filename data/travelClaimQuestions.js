@@ -26,7 +26,7 @@ export default (travelClaimQuestions = [
   },
   {
     question:
-      "You must be FULLNAME’s claimant/next of kin. I am so sorry for your loss. My deepest condolences to you and your family! Please share with me the date and time of the accident",
+      "You must be <%= fullName %>’s claimant/next of kin. I am so sorry for your loss. My deepest condolences to you and your family! Please share with me the date and time of the accident",
     responseType: "datetime",
     pastOnly: true,
     id: "claimDate",
@@ -41,7 +41,7 @@ export default (travelClaimQuestions = [
   // causes crash
   {
     question:
-      "FULLNAME, I wish you a complete recovery. I’ll do my best to get your claim paid fast. Please share with me the date and time of the accident",
+      "<%= fullName %>, I wish you a complete recovery. I’ll do my best to get your claim paid fast. Please share with me the date and time of the accident",
     responseType: "datetime",
     pastOnly: true,
     id: "claimDate",
@@ -58,13 +58,15 @@ export default (travelClaimQuestions = [
   {
     question:
       "<%= fullName %>, I wish you get well soon. Let me help out on the claim fast. Please share with me the date and time of the accident",
-    responseType: null,
+    responseType: "datetime",
+    pastOnly: true,
+    id: "claimDate",
     include: ["medicalReimbursement"]
   },
   // causes crash
   {
     question:
-      "FULLNAME, you just selected the option to claim for loss or damaged items",
+      "<%= fullName %>, you just selected the option to claim for loss or damaged items",
     responseType: "datetime",
     pastOnly: true,
     id: "claimDate",
@@ -84,23 +86,12 @@ export default (travelClaimQuestions = [
     id: "travelDelayCause",
     include: ["travelDelay"]
   },
-
   {
-    question:
-      "FULLNAME, you just selected the option to claim for trip curtailment (shortening of trip) or trip cancellation or loss of travel deposit",
-    responseType: null,
-    include: ["tripCurtailment"]
-  },
-  {
-    question: "<%= fullName %>, you just selected personal liability ",
-    responseType: null,
-    include: ["personalLiability"]
-  },
-  {
-    question: "FULLNAME, share with me what had happened? ",
+    question: "<%= fullName %>, share with me what had happened?  ",
     responseType: "string",
+    responseLength: 600,
     id: "details",
-    include: ["others"]
+    include: ["personalLiability", "others"]
   },
 
   {
@@ -172,10 +163,16 @@ export default (travelClaimQuestions = [
     condition: "this.state.answers.sufferedFromConditionBefore"
   },
   {
-    question: "What happened in detail leading to personal liability? ",
-    responseType: "string",
-    responseLength: 600,
-    id: "personalLiabilityDetail",
+    question: "Have you admitted fault? ",
+    responseType: ["boolean", "choice"],
+    choices: [
+      {
+        label: "Yes",
+        value: true
+      },
+      { label: "No", value: false }
+    ],
+    id: "hasAdmittedFault",
     include: ["personalLiability"]
   },
   // {
@@ -188,6 +185,8 @@ export default (travelClaimQuestions = [
   //   id: "witnesses",
   //   include: ["personalLiability"]
   // },
+
+  // causes crash
   {
     question:
       "What is your baggage's ORIGINAL arrival date, time and arriving airport? ",
@@ -218,25 +217,6 @@ export default (travelClaimQuestions = [
     id: "lossDetails",
     include: ["lossOfPersonalDocument"]
   },
-  // {
-  //   question: "We are almost done to get you claim fast. I need your help to snap or upload some photos. Refer to the boxes below, try your best to snap/upload the right images for each box",
-  //   responseType: "imageTable",
-  //   columns: [
-  //     { label: "Boarding pass/Flight itinerary", id: "boardingPass" },
-  //     {
-  //       label: "Tour itinerary",
-  //       id: "tourItinerary"
-  //     },
-  //     { label: "Police report", id: "policeReport" },
-  //     {
-  //       label: "Document proof by third party for claiming bodily injury or property damage against you",
-  //       id: "documentProof"
-  //     }
-  //   ],
-  //   id: "personalLiabilityImages",
-  //   include: ["personalLiability"]
-  // },
-
   {
     question:
       "Oh, I am concerned! May I know the extent of your injury/illness?  ",
@@ -316,7 +296,7 @@ export default (travelClaimQuestions = [
         id: "repatriationReport"
       },
       {
-        label:
+        question:
           "Letter from Immigration and Checkpoint Authority (ICA) (if death occurs overseas)",
         id: "immigrationLetter"
       },
@@ -401,34 +381,6 @@ export default (travelClaimQuestions = [
   },
   {
     question:
-      "We are almost done to get you claim fast. I need your help to snap or upload some photos. Refer to the boxes below, try your best to snap/upload the right images for each box",
-    responseType: "imageTable",
-    columns: [
-      { label: "Boarding pass/Flight itinerary", id: "boardingPass" },
-      {
-        label: "Original receipt for replacement of personal document",
-        id: "replacementReceipt"
-      },
-      {
-        label:
-          "Original receipt for additional travelling and/or hotel accommodation ",
-        id: "travelReceipt"
-      },
-      {
-        label:
-          "Document stating the compensation from airlines and/or other sources ",
-        id: "compensationDocument"
-      },
-      {
-        label: "Police report lodged within 24 hours (if any)",
-        id: "policeReport"
-      }
-    ],
-    id: "claimImages",
-    include: ["lossOfPersonalDocument"]
-  },
-  {
-    question:
       "We are almost done to get your claim paid fast. I need your help to snap or upload some supporting documents. Do your best to snap or upload the right images for each box",
     responseType: "imageTable",
     columns: [
@@ -476,8 +428,8 @@ export default (travelClaimQuestions = [
       },
       {
         label:
-          "Written confirmation from airline, or hotel, or travel agency, or service provider indicating non-refundable amount due to unavoidable trip cancellation by you",
-        id: "writtenConfirmation"
+          "Original receipt for additional travelling and/or hotel accommodation (if any)",
+        id: "travelReceipt"
       },
       {
         label:
@@ -491,12 +443,17 @@ export default (travelClaimQuestions = [
       },
       {
         label:
-          "Original receipt for additional travelling and/or hotel accommodation (if any)",
-        id: "travelReceipt"
+          "Written confirmation from airline, or hotel, or travel agency, or, service provider indicating non-refundable amount due to unavoidable trip cancellation by you",
+        id: "writtenConfirmation"
       },
       {
         label: "Death certificate of immediate family member (if any)",
         id: "familyDeathCertificate"
+      },
+      {
+        label:
+          "Original receipt for additional travelling and/or hotel accommodation (if any)",
+        id: "travelReceipt"
       },
       {
         label:
@@ -507,6 +464,14 @@ export default (travelClaimQuestions = [
         label:
           "Memo/letter from registered medical practitioner certifying you are unfit to travel (if any)",
         id: "letterForSelf"
+      },
+      {
+        label: "Boarding pass/Flight itinerary",
+        id: "boardingPass"
+      },
+      {
+        label: "Tour itinerary and tour booking receipt",
+        id: "tourItinerary"
       }
     ],
     id: "claimImages",
@@ -517,27 +482,17 @@ export default (travelClaimQuestions = [
       "We are almost done to get your claim paid fast. I need your help to snap or upload some supporting documents. Do your best to snap or upload the right images for each box",
     responseType: "imageTable",
     columns: [
-      {
-        label: "Boarding pass / Flight itinerary",
-        id: "boardingPass"
-      },
-      {
-        label: "Tour itinerary",
-        id: "tourItinerary"
-      },
-      {
-        label: "Police report",
-        id: "policeReport"
-      },
+      { label: "Boarding pass / Flight itinerary", id: "boardingPass" },
+      { label: "Tour itinerary", id: "tourItinerary" },
+      { label: "Police report", id: "policeReport" },
       {
         label:
           "Document proof by third party for claiming bodily injury or property damage against you",
-        id: "damageDocumentProof"
+        id: "documentProof"
       },
       {
         label: "Any document that would help with this case (if any)",
-
-        id: "anyDocument"
+        id: "anyDocuments"
       }
     ],
     id: "claimImages",
@@ -554,25 +509,16 @@ export default (travelClaimQuestions = [
       "We are almost done to get your claim paid fast. I need your help to snap or upload some supporting documents. Do your best to snap or upload the right images for each box",
     responseType: "imageTable",
     columns: [
-      {
-        label: "Boarding pass / Flight itinerary",
-        id: "boardingPass"
-      },
-      {
-        label: "Tour itinerary",
-        id: "tourItinerary"
-      },
-      {
-        label: "Police report",
-        id: "policeReport"
-      }
+      { label: "Boarding pass / Flight itinerary", id: "boardingPass" },
+      { label: "Tour itinerary", id: "tourItinerary" },
+      { label: "Police report", id: "policeReport" }
     ],
     id: "claimImages",
     include: ["others"]
   },
   {
     question:
-      "FULLNAME, to complete your claim, I need your help to post all the ORIGINAL RECEIPTS to: HLAS, 11 Keppel Road #11-01 ABI Plaza Singapore 089057, within 48 hours",
+      "<%= fullName %>, to complete your claim, I need your help to post all the ORIGINAL RECEIPTS to: HLAS, 11 Keppel Road #11-01 ABI Plaza Singapore 089057, within 48 hours ",
     responseType: null
   },
   {

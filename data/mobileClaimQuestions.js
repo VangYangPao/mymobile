@@ -1,6 +1,7 @@
-export const mobileClaimQuestions = [
+export default (mobileClaimQuestions = [
   {
-    question: "Oops… Don’t worry. I will walk you through step by step. I'll do my best to get your claim fast. Please share with me the date and time of the accident",
+    question:
+      "Oops… Don’t worry. I will walk you through step by step. I'll do my best to get your claim fast. Please share with me the date and time of the accident",
     responseType: "datetime",
     pastOnly: true,
     id: "accidentDate"
@@ -17,7 +18,8 @@ export const mobileClaimQuestions = [
     id: "description"
   },
   {
-    question: "We are almost done to get your claim fast. I need your help to snap or upload some photos. Refer to the boxes below, try your best to snap/upload the right images for each box",
+    question:
+      "We are almost done to get your claim fast. I need your help to snap or upload some photos. Refer to the boxes below, try your best to snap/upload the right images for each box",
     responseType: "imageTable",
     columns: [
       { label: "NRIC", id: "nric" },
@@ -45,11 +47,13 @@ export const mobileClaimQuestions = [
     id: "mobileImages"
   },
   {
-    question: "Please bring a copy of the above images when you submit your mobile phone to any of our listed workshop for claim. Here is the list of workshops",
+    question:
+      "Please bring a copy of the above images when you submit your mobile phone to any of our listed workshop for claim. Here is the list of workshops",
     responseType: null
   },
   {
-    question: "Here is the final question, in the past 3 years, have you made any claim on mobile phone under any type of insurance policy? ",
+    question:
+      "Here is the final question, in the past 3 years, have you made any claim on mobile phone under any type of insurance policy? ",
     responseType: ["boolean", "choice"],
     choices: [
       { label: "Yes, I have", value: true },
@@ -58,7 +62,8 @@ export const mobileClaimQuestions = [
     id: "hasMadeClaim"
   },
   {
-    question: "Thank you for your patience. Please keep this phone with you at all times, as I shall send you notifications and messages on your claim. Please switch on the notification. ",
+    question:
+      "Thank you for your patience. Please keep this phone with you at all times, as I shall send you notifications and messages on your claim. Please switch on the notification. ",
     responseType: null
   }
-];
+]);

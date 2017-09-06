@@ -60,7 +60,7 @@ import Button from "./Button";
 // Enable playback in silence mode (iOS only)
 Sound.setCategory("Playback");
 
-const MESSAGE_LOAD_TIME = 1000;
+const MESSAGE_LOAD_TIME = 0;
 const POLICIES_FADE_IN_TIME = 400;
 
 const AGENT_USER_ID = 0;
@@ -441,6 +441,7 @@ class ChatScreen extends Component {
     } else if (policy.policyType.indexOf("travel") !== -1) {
       this.questions.push.apply(this.questions, travelClaimQuestions);
     } else if (policy.policyType.indexOf("mobile") !== -1) {
+      console.log(mobileClaimQuestions);
       this.questions.push.apply(this.questions, mobileClaimQuestions);
     }
 
@@ -923,7 +924,13 @@ class ChatScreen extends Component {
         minDateFrom = moment(this.state.answers[currentQuestion.minDateFrom])
           .add(1, "days")
           .toDate();
-        console.log("minDateFrom", minDateFrom);
+      }
+      if (
+        !this.state.answering ||
+        !this.state.renderInput ||
+        this.props.isStartScreen
+      ) {
+        return <Composer placeholder="Type your message here..." {...props} />;
       }
       return (
         <MyDatePicker
