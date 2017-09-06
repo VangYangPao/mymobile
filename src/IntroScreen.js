@@ -59,7 +59,7 @@ export default class IntroScreen extends Component {
     const buttonText = "CHECK OUT OUR SUPER-BIG COVERAGE\nAT SUPER-LOW PRICES";
     const signInButton = (
       <Button
-        onPress={() => this.props.navigation.navigate("Auth")}
+        onPress={() => this.props.navigation.navigate("TermsOfUse")}
         containerStyle={styles.buttonContainer}
         style={styles.signInButton}
       >
@@ -68,7 +68,7 @@ export default class IntroScreen extends Component {
     );
 
     const benefits = [
-      { title: "No Middlemen", resourceName: "ic_no_broker" },
+      { title: "Low Price", resourceName: "ic_low_price" },
       {
         title: "Comprehensive Coverage",
         resourceName: "ic_comprehensive_coverage"
@@ -78,14 +78,15 @@ export default class IntroScreen extends Component {
       { title: "Algorithm Powered", resourceName: "ic_algorithm_powered" },
       { title: "Click to Claim", resourceName: "ic_click_to_claim" }
     ];
-    const renderBenefit = b =>
+    const renderBenefit = b => (
       <View style={styles.benefit} key={b.resourceName}>
         <VectorDrawableView
           resourceName={b.resourceName}
           style={styles.benefitIcon}
         />
         <Text style={styles.benefitTitle}>{b.title}</Text>
-      </View>;
+      </View>
+    );
     const benefitsView = (
       <View style={styles.benefitsView}>
         <View style={styles.benefitsContainer}>
@@ -98,13 +99,13 @@ export default class IntroScreen extends Component {
     );
     return (
       <View style={styles.page}>
-        {page.type !== "benefits"
-          ? <Image
-              source={page.imageSource}
-              resizeMode="contain"
-              style={styles.image}
-            />
-          : null}
+        {page.type !== "benefits" ? (
+          <Image
+            source={page.imageSource}
+            resizeMode="contain"
+            style={styles.image}
+          />
+        ) : null}
         <View style={styles.appNameContainer}>
           <VectorDrawableView
             resourceName="ic_microassure"
@@ -113,9 +114,9 @@ export default class IntroScreen extends Component {
         </View>
         <View style={styles.contentContaier}>
           <Text style={styles.title}>{page.title}</Text>
-          {page.type === "cta"
-            ? null
-            : <Text style={styles.subtitle}>{page.subtitle}</Text>}
+          {page.type === "cta" ? null : (
+            <Text style={styles.subtitle}>{page.subtitle}</Text>
+          )}
           {page.type === "cta" ? signInButton : null}
         </View>
         {page.type === "benefits" ? benefitsView : null}
@@ -124,8 +125,9 @@ export default class IntroScreen extends Component {
   }
 
   render() {
-    const renderPageIndicator = props =>
-      <PageIndicator navigation={this.props.navigation} {...props} />;
+    const renderPageIndicator = props => (
+      <PageIndicator navigation={this.props.navigation} {...props} />
+    );
     return (
       <ViewPager
         dataSource={this.state.dataSource}
