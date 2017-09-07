@@ -56,6 +56,7 @@ import {
   mobileClaimQuestions
 } from "../data/questions";
 import Button from "./Button";
+import CHAT_STYLES from "./Chat.styles";
 
 // Enable playback in silence mode (iOS only)
 Sound.setCategory("Playback");
@@ -1046,34 +1047,11 @@ const styles = StyleSheet.create({
   datetimeContainer: {
     flex: 1
   },
-  textInput: {
-    backgroundColor: colors.softBorderLine
-  },
-  sendButton: {
-    color: colors.primaryOrange
-  },
-  bubbleLeft: {
-    backgroundColor: colors.primaryOrange
-  },
-  messageTextLeft: {
-    textDecorationLine: "none",
-    color: "white"
-  },
-  bubbleRight: {
-    backgroundColor: "white"
-  },
-  messageTextRight: {
-    textDecorationLine: "none",
-    color: colors.primaryText
-  },
   spinner: {
     marginLeft: 15,
     marginRight: 15,
     marginTop: 10,
     marginBottom: 10
   },
-  container: {
-    flex: 1,
-    paddingTop: 12
-  }
+  ...CHAT_STYLES
 });
