@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>microAssure</string>
+	<string>microUmbrella</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -52,11 +52,11 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Camera is used to take picture of documents &amp; reports</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string></string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Used to access documents &amp; reports from photo library</string>
 	<key>NSURLIsExcludedFromBackupKey</key>
-	<string/>
+	<string></string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Bitter.ttf</string>

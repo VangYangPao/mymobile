@@ -10,6 +10,7 @@
 #import "AppDelegate.h"
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
+#import <ZDCChat/ZDCChat.h>
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
@@ -19,6 +20,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   [Fabric with:@[[Crashlytics class]]];
+  
+  [ZDCChat initializeWithAccountKey:@"54COnYxIyuuyQhBGnus5hkJkNUvs4zpi"];
 
   NSURL *jsCodeLocation;
 

@@ -26,6 +26,7 @@
     "react-native-vector-icons": "^4.0.1",
     "react-native-vectordrawable-android": "https://github.com/mavenave/react-native-vectordrawable-android/tarball/master",
     "react-native-viewpager": "^0.2.13",
+    "react-native-zendesk-chat": "^0.2.1",
     "react-navigation": "git+https://github.com/react-community/react-navigation.git#b8dbbe964eb534f1870cb000c592d730ac0eabfd",
     "tcomb-form-native": "^0.6.8",
     "uuid": "^3.1.0"
