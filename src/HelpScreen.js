@@ -5,6 +5,7 @@ import { Text } from "./defaultComponents";
 import Page from "./Page";
 import { backButtonNavOptions } from "./navigations";
 import colors from "./colors";
+import ZendeskChat from "react-native-zendesk-chat";
 
 class HelpScreen extends Component {
   static navigationOptions = {
@@ -13,6 +14,13 @@ class HelpScreen extends Component {
   };
 
   render() {
+    // ZendeskChat.startChat({
+    //   name: user.full_name,
+    //   email: user.email,
+    //   phone: user.mobile_phone,
+    //   tags: ["tag1", "tag2"],
+    //   department: "Your department"
+    // });
     return (
       <Page>
         <Text style={styles.title}>

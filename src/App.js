@@ -103,13 +103,13 @@ const MyDrawerNavigator = DrawerNavigator(
       screen: StatusStackNavigator,
       navigationOptions: createDrawerNavOptions("My Polices & Status", "book")
     },
+    Help: {
+      screen: HelpScreen
+    }
     // Profile: {
     //   screen: StatusStackNavigator,
     //   navigationOptions: createDrawerNavOptions("My Profile", "account-circle")
     // },
-    Help: {
-      screen: HelpScreen
-    }
   },
   {
     drawerWidth: WINDOW_WIDTH * 0.65,
