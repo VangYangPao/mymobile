@@ -44,15 +44,19 @@ export default class TermsOfUse extends Component {
           <Button
             onPress={this.handleAccept.bind(this)}
             containerStyle={[styles.buttons, styles.acceptButton]}
+            style={{ backgroundColor: colors.primaryOrange }}
           >
-            <Text>You have read and agreed with the terms and conditions.</Text>
+            <Text>
+              I HAVE READ, UNDERSTOOD AND AGREED WITH THE TERMS OF USE AND
+              PRIVACY POLICY.
+            </Text>
           </Button>
           <Button
             onPress={this.handleDecline.bind(this)}
             containerStyle={[styles.buttons, styles.declineButton]}
             style={styles.declineButton}
           >
-            Decline
+            DISAGREE
           </Button>
         </View>
       </View>
@@ -63,7 +67,8 @@ export default class TermsOfUse extends Component {
 const styles = StyleSheet.create({
   buttons: {
     flex: 1,
-    alignSelf: "stretch"
+    alignSelf: "stretch",
+    borderRadius: 0
   },
   acceptButton: {
     flex: 0.6,

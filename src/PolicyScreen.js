@@ -75,10 +75,11 @@ export default class PolicyScreen extends Component {
 
   handlePurchase() {
     if (this.page === "info") {
-      this.props.navigation.navigate("Chat", {
-        policy: this.policy,
-        questionSet: "buy"
-      });
+      this.props.navigation.navigate("Auth");
+      // this.props.navigation.navigate("Chat", {
+      //   policy: this.policy,
+      //   questionSet: "buy"
+      // });
     }
   }
 

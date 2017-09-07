@@ -108,7 +108,7 @@ export default class IntroScreen extends Component {
         ) : null}
         <View style={styles.appNameContainer}>
           <VectorDrawableView
-            resourceName="ic_microassure"
+            resourceName="ic_microumbrella_word"
             style={styles.appName}
           />
         </View>

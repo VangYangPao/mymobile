@@ -100,7 +100,7 @@ class SignUpScreen extends Component {
             </View>
             <View style={{ flex: 0.1, justifyContent: "center" }}>
               <Form
-                ref={form => this.form = form}
+                ref={form => (this.form = form)}
                 type={UserSignUp}
                 options={userSignUpOptions}
               />
@@ -127,7 +127,7 @@ class SignUpScreen extends Component {
               <Text style={styles.textContainerText}>.</Text>
             </View>
             <Switch
-              ref={tosSwitch => this.tosSwitch = tosSwitch}
+              ref={tosSwitch => (this.tosSwitch = tosSwitch)}
               onValueChange={val => {
                 // WTF HACK: setState re-renders Form component attached by ref
                 // so you do setNativeProps manually
@@ -193,7 +193,7 @@ class LoginScreen extends Component {
     return (
       <View style={[styles.container, { justifyContent: "center" }]}>
         <VectorDrawableView
-          resourceName="ic_microassure_white"
+          resourceName="ic_microumbrella_word_white"
           style={styles.logo}
         />
         <Form ref="form" type={UserLogin} options={userLoginOptions} />
@@ -224,7 +224,8 @@ const ForgotPassword = t.struct({
 const forgotPasswordOptions = {
   fields: {
     email: {
-      label: "Enter your email address, we will send you an email to reset your password.",
+      label:
+        "Enter your email address, we will send you an email to reset your password.",
       keyboardType: "email-address",
       error: "Enter a valid email"
     }
@@ -244,7 +245,7 @@ class ForgotPasswordScreen extends Component {
     return (
       <View style={[styles.container, { justifyContent: "center" }]}>
         <VectorDrawableView
-          resourceName="ic_microassure_white"
+          resourceName="ic_microumbrella_word_white"
           style={styles.logo}
         />
         <Form

@@ -21,6 +21,7 @@ import ConfirmationScreen from "./ConfirmationScreen";
 import StatusScreen from "./StatusScreen";
 import AuthScreen from "./AuthScreen";
 import HomeScreen from "./HomeScreen";
+import TermsOfUse from "./TermsOfUse";
 import { TermsOfUseStack, PrivacyPolicyStack } from "./TermsAndPrivacyPolicy";
 import HelpScreen from "./HelpScreen";
 import colors from "./colors";
@@ -124,9 +125,9 @@ const MyDrawerNavigator = DrawerNavigator(
 
 export default (Microsurance = StackNavigator(
   {
-    // Intro: { screen: IntroScreen },
-    // Auth: { screen: AuthScreen },
-    // TermsOfUse: { screen: TermsOfUseStack },
+    Intro: { screen: IntroScreen },
+    Auth: { screen: AuthScreen },
+    TermsOfUse: { screen: TermsOfUse },
     // PrivacyPolicy: { screen: PrivacyPolicyStack },
     Drawer: { screen: MyDrawerNavigator }
   },
