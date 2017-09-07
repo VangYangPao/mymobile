@@ -29,10 +29,20 @@ formStyles.textbox.normal.color = "white";
 formStyles.fieldset.marginTop = 20;
 formStyles.fieldset.marginBottom = 10;
 
-const resetToDrawerAction = NavigationActions.reset({
-  index: 0,
-  actions: [NavigationActions.navigate({ routeName: "Drawer" })]
-});
+const createResetAction = policy => {
+  return NavigationActions.reset({
+    index: 0,
+    actions: [
+      NavigationActions.navigate({
+        routeName: "Drawer",
+        params: {
+          policy,
+          questionSet: "buy"
+        }
+      })
+    ]
+  });
+};
 
 const UserSignUp = t.struct({
   email: t.String,
@@ -80,13 +90,13 @@ class SignUpScreen extends Component {
   handleSignUp() {
     const formValues = this.form.getValue();
     if (formValues) {
-      if (!this.acceptTOS) {
-        showAlert(
-          "You have to agree with the Terms of Use and Privacy Policy."
-        );
-        return;
-      }
-      this.props.navigation.dispatch(resetToDrawerAction);
+      // if (!this.acceptTOS) {
+      //   showAlert(
+      //     "You have to agree with the Terms of Use and Privacy Policy."
+      //   );
+      //   return;
+      // }
+      this.props.onSignUp();
     }
   }
 
@@ -105,7 +115,7 @@ class SignUpScreen extends Component {
                 options={userSignUpOptions}
               />
             </View>
-            <View style={styles.textContainer}>
+            {/*<View style={styles.textContainer}>
               <Text style={styles.textContainerText}>
                 I have read, understood and agreed to the
               </Text>
@@ -137,7 +147,7 @@ class SignUpScreen extends Component {
               value={false}
               onTintColor={colors.tertiaryGreen}
               style={styles.tosSwitch}
-            />
+            />*/}
             <View>
               <Button onPress={this.handleSignUp} style={styles.signinButton}>
                 Sign Up
@@ -185,7 +195,7 @@ class LoginScreen extends Component {
   handleLogin() {
     const formValues = this.refs.form.getValue();
     if (formValues) {
-      this.props.navigation.dispatch(resetToDrawerAction);
+      this.props.onLogin();
     }
   }
 
@@ -196,6 +206,9 @@ class LoginScreen extends Component {
           resourceName="ic_microumbrella_word_white"
           style={styles.logo}
         />
+        <Text style={styles.mustLogin}>
+          You must login to purchase a protection plan.
+        </Text>
         <Form ref="form" type={UserLogin} options={userLoginOptions} />
         <Button onPress={this.handleLogin} style={styles.signinButton}>
           LOGIN
@@ -285,6 +298,12 @@ export default class AuthScreen extends Component {
     this.handleNavigateToForgotPassword = this.handleNavigateToForgotPassword.bind(
       this
     );
+    this.handleRedirectToPurchase = this.handleRedirectToPurchase.bind(this);
+  }
+
+  handleRedirectToPurchase() {
+    const policy = this.props.navigation.state.params.policy;
+    this.props.navigation.dispatch(createResetAction(policy));
   }
 
   handleNavigateToLogin() {
@@ -311,7 +330,7 @@ export default class AuthScreen extends Component {
       case "Login":
         page = (
           <LoginScreen
-            navigation={this.props.navigation}
+            onLogin={this.handleRedirectToPurchase}
             onNavigateToSignUp={this.handleNavigateToSignUp}
             onNavigateToForgotPassword={this.handleNavigateToForgotPassword}
           />
@@ -320,6 +339,7 @@ export default class AuthScreen extends Component {
       case "SignUp":
         page = (
           <SignUpScreen
+            onSignUp={this.handleRedirectToPurchase}
             navigation={this.props.navigation}
             onNavigateToLogin={this.handleNavigateToLogin}
           />
@@ -359,6 +379,12 @@ export default class AuthScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+  mustLogin: {
+    alignSelf: "center",
+    marginTop: 10,
+    fontSize: 15,
+    color: "white"
+  },
   tosSwitch: {
     marginTop: 10,
     marginBottom: 20
