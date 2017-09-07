@@ -28,6 +28,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import Ionicon from "react-native-vector-icons/Ionicons";
 import Spinner from "react-native-spinkit";
 import Sound from "react-native-sound";
+import Fuse from "fuse.js";
 import { template } from "lodash";
 
 import CheckoutModal from "./CheckoutModal";
@@ -273,7 +274,9 @@ class ChatScreen extends Component {
         messages.splice(messageIndex, 1, message);
         this.setState({ renderInput: true, messages: messages }, () => {
           this.playNewMessageSound();
-          cb();
+          if (typeof cb === "function") {
+            cb();
+          }
         });
       });
     };
@@ -890,11 +893,14 @@ class ChatScreen extends Component {
     const currentQuestion = this.questions[currentQuestionIndex];
 
     if (currentQuestion.id === "travelDestination") {
+      const fuse = new Fuse(
+        currentQuestion.choices,
+        currentQuestion.searchOptions
+      );
+      const matchedItems = fuse.search(this.state.composerText);
       return (
         <SuggestionList
-          items={currentQuestion.choices}
-          searchOptions={currentQuestion.searchOptions}
-          searchValue={this.state.composerText}
+          items={matchedItems}
           onSelectSuggestion={this.handleSelectSuggestion}
         />
       );

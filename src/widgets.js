@@ -18,7 +18,6 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import ImagePicker from "react-native-image-picker";
 import DatePicker from "react-native-datepicker";
 import moment from "moment";
-import Fuse from "fuse.js";
 
 import database from "./HackStorage";
 import POLICIES from "../data/policies";
@@ -551,14 +550,12 @@ export class SuggestionList extends Component {
   }
 
   render() {
-    const fuse = new Fuse(this.props.items, this.props.searchOptions);
-    const matchedItems = fuse.search(this.props.searchValue);
     return (
       <ScrollView
         style={widgetStyles.suggestionListScrollView}
         contentContainerStyle={widgetStyles.suggestionListContainer}
       >
-        {matchedItems.map(this.renderSuggestion)}
+        {this.props.items.map(this.renderSuggestion)}
       </ScrollView>
     );
   }

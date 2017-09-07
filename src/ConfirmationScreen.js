@@ -69,8 +69,7 @@ export default class ConfirmationScreen extends Component {
         hasSpouse,
         hasChildren
       ).then(res => {
-        console.log("get travel quote", res);
-        this.setState({ totalPremium: parseFloat(res.Data) });
+        this.setState({ totalPremium: parseFloat(res.data) });
       });
     }
   }
