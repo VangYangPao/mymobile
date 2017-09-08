@@ -57,6 +57,7 @@ const BuyStackNavigator = StackNavigator({
       };
     }
   },
+  Auth: { screen: AuthScreen },
   Policy: {
     screen: PolicyScreen,
     navigationOptions: backButtonNavOptions
@@ -91,6 +92,13 @@ class SettingsScreen extends Component {
   render() {}
 }
 
+const HelpStackNavigator = StackNavigator({
+  Help: {
+    screen: HelpScreen,
+    navigationOptions: backButtonNavOptions
+  }
+});
+
 const MyDrawerNavigator = DrawerNavigator(
   {
     BuyStack: {
@@ -102,10 +110,8 @@ const MyDrawerNavigator = DrawerNavigator(
     MyPolicies: {
       screen: StatusStackNavigator,
       navigationOptions: createDrawerNavOptions("My Polices & Status", "book")
-    },
-    Help: {
-      screen: HelpScreen
     }
+
     // Profile: {
     //   screen: StatusStackNavigator,
     //   navigationOptions: createDrawerNavOptions("My Profile", "account-circle")
@@ -125,11 +131,10 @@ const MyDrawerNavigator = DrawerNavigator(
 
 export default (Microsurance = StackNavigator(
   {
-    // Intro: { screen: IntroScreen },
-    // TermsOfUse: { screen: TermsOfUse },
-    // PrivacyPolicy: { screen: PrivacyPolicyStack },
+    Intro: { screen: IntroScreen },
+    TermsOfUse: { screen: TermsOfUse },
     Drawer: { screen: MyDrawerNavigator },
-    Auth: { screen: AuthScreen }
+    Help: { screen: HelpStackNavigator }
   },
   { headerMode: "none" }
 ));

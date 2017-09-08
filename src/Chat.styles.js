@@ -8,6 +8,7 @@ export default (styles = {
     color: colors.primaryOrange
   },
   bubbleLeft: {
+    borderRadius: 15,
     backgroundColor: colors.primaryOrange
   },
   messageTextLeft: {
@@ -15,6 +16,7 @@ export default (styles = {
     color: "white"
   },
   bubbleRight: {
+    borderRadius: 15,
     backgroundColor: "white"
   },
   messageTextRight: {
