@@ -64,9 +64,10 @@ export default class PolicyScreen extends Component {
 
   constructor(props) {
     super(props);
-    const { policy, page } = this.props.navigation.state.params;
+    const { policy, page, loggedIn } = this.props.navigation.state.params;
     this.policy = policy;
     this.page = page;
+    this.loggedIn = loggedIn;
     const pricePerMonth = this.policy.plans[0].premium;
     this.handlePricePerMonthChange = this.handlePricePerMonthChange.bind(this);
     this.handlePurchase = this.handlePurchase.bind(this);
@@ -74,12 +75,18 @@ export default class PolicyScreen extends Component {
   }
 
   handlePurchase() {
-    if (this.page === "info") {
+    console.log("loggedIn", this.loggedIn);
+    if (this.page === "info" && !this.loggedIn) {
       this.props.navigation.navigate("Auth", { policy: this.policy });
       // this.props.navigation.navigate("Chat", {
       //   policy: this.policy,
       //   questionSet: "buy"
       // });
+    } else {
+      this.props.navigation.navigate("Chat", {
+        policy: this.policy,
+        questionSet: "buy"
+      });
     }
   }
 

@@ -84,6 +84,8 @@ function transposePolicyChoiceByTitle() {
   return policyDict;
 }
 
+let loggedIn = false;
+
 export default function ChatScreenWrapper(questionSet) {
   const wrapper = props => {
     // have to reassign to _questionSet here
@@ -309,7 +311,7 @@ class ChatScreen extends Component {
 
   handleSelectPolicy(policyTitle) {
     const policy = transposePolicyChoiceByTitle()[policyTitle];
-    const params = { policy, page: "info" };
+    const params = { policy, page: "info", loggedIn };
     this.props.navigation.navigate("Policy", params);
   }
 
@@ -495,6 +497,7 @@ class ChatScreen extends Component {
       this.renderStartScreenMessages();
     } else {
       // trigger the initial componentDidUpdate
+      loggedIn = true;
       this.setState({ answering: false });
     }
     this.keyboardDidShowListener = Keyboard.addListener(

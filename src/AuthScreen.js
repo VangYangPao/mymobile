@@ -31,10 +31,11 @@ formStyles.fieldset.marginBottom = 10;
 
 const createResetAction = policy => {
   return NavigationActions.reset({
-    index: 0,
+    index: 1,
     actions: [
+      NavigationActions.navigate({ routeName: "Chat" }),
       NavigationActions.navigate({
-        routeName: "Drawer",
+        routeName: "Chat",
         params: {
           policy,
           questionSet: "buy"
