@@ -31,7 +31,7 @@ const CUSTOMER_USER_ID = 1;
 const AGENT_USER = {
   _id: AGENT_USER_ID,
   name: "Eve",
-  avatar: require("../images/eve.jpg")
+  avatar: require("../images/eve-avatar.jpg")
 };
 const CUSTOMER_USER = {
   _id: CUSTOMER_USER_ID
@@ -157,7 +157,7 @@ export default class HelpScreen extends Component {
       <View style={styles.footerContainer}>
         <Image
           style={styles.agentImage}
-          source={require("../images/eve.png")}
+          source={require("../images/eve-avatar.jpg")}
         />
         <Text style={styles.agentName}>EVE</Text>
         <Text style={styles.agentPosition}>Customer Support</Text>
