@@ -6,13 +6,14 @@ import {
   SectionList,
   ListItem,
   TouchableOpacity,
-  Platform
+  Platform,
+  Share
 } from "react-native";
 import Ionicon from "react-native-vector-icons/Ionicons";
 
 import POLICIES from "../data/policies";
 import database from "./HackStorage";
-import { getDateStr } from "./utils";
+import { getDateStr, generateID } from "./utils";
 import { Text } from "./defaultComponents";
 import colors from "./colors";
 
@@ -20,6 +21,20 @@ export default class StatusScreen extends Component {
   static navigationOptions = {
     title: "My Policies"
   };
+
+  handleSharePolicies() {
+    const title = "Share my policies - microUmbrella";
+    const code = generateID();
+    const url = `https://microumbrella.com/share/${code}`;
+    Share.share(
+      {
+        message: `I have enjoyed microUmbrella's service and would like to share my Policy Information with you for safekeeping. To accept, use this code: ${code} or click ${url}.`,
+        url,
+        title
+      },
+      { tintColor: colors.primaryOrange, dialogTitle: title }
+    );
+  }
 
   renderItem(section, length, { item, index }) {
     const dateStr = getDateStr(item.purchaseDate);
@@ -58,7 +73,10 @@ export default class StatusScreen extends Component {
           </View>
         </View>
         {renderSharePolicy ? (
-          <TouchableOpacity onPress={() => {}} activeOpacity={0.7}>
+          <TouchableOpacity
+            onPress={this.handleSharePolicies.bind(this)}
+            activeOpacity={0.7}
+          >
             <View style={styles.shareContainer}>
               <Ionicon
                 style={styles.shareIcon}
