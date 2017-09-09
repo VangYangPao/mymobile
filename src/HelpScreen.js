@@ -171,7 +171,7 @@ export default class HelpScreen extends Component {
         ) : (
           <Text style={styles.instructions}>
             To begin, type in your question below. We will try to match you with
-            questions in our database
+            questions in our database.
           </Text>
         )}
       </View>

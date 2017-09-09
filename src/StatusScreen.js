@@ -5,8 +5,10 @@ import {
   View,
   SectionList,
   ListItem,
-  TouchableOpacity
+  TouchableOpacity,
+  Platform
 } from "react-native";
+import Ionicon from "react-native-vector-icons/Ionicons";
 
 import POLICIES from "../data/policies";
 import database from "./HackStorage";
@@ -19,7 +21,7 @@ export default class StatusScreen extends Component {
     title: "My Policies"
   };
 
-  renderItem(section, { item, index }) {
+  renderItem(section, length, { item, index }) {
     const dateStr = getDateStr(item.purchaseDate);
 
     const styleMap = {
@@ -32,26 +34,45 @@ export default class StatusScreen extends Component {
     };
 
     const policy = POLICIES.find(p => p.id === item.policyType);
+    const renderSharePolicy = section === "policies" && index === length - 1;
 
     return (
-      <View style={styles.policy}>
-        <View style={styles.policyContent}>
-          <Text style={styles.policyName}>{policy.title}</Text>
-          <Text style={styles.date}>Policy No: {item.key}</Text>
-          <Text style={styles.date}>Purchased on: {dateStr}</Text>
-          <Text style={styles.date}>
-            {section === "policies" ? "Premium: " : "Claim amount: "}
-            $
-            {(section === "policies"
-              ? item.premium.toFixed(2)
-              : item.claimAmount) + ""}
-          </Text>
+      <View>
+        <View style={styles.policy}>
+          <View style={styles.policyContent}>
+            <Text style={styles.policyName}>{policy.title}</Text>
+            <Text style={styles.date}>Policy No: {item.key}</Text>
+            <Text style={styles.date}>Purchased on: {dateStr}</Text>
+            <Text style={styles.date}>
+              {section === "policies" ? "Premium: " : "Claim amount: "}
+              $
+              {(section === "policies"
+                ? item.premium.toFixed(2)
+                : item.claimAmount) + ""}
+            </Text>
+          </View>
+          <View style={styles.policyStatus}>
+            <Text style={[styles.policyStatusText, styleMap[item.status]]}>
+              {item.status.toUpperCase()}
+            </Text>
+          </View>
         </View>
-        <View style={styles.policyStatus}>
-          <Text style={[styles.policyStatusText, styleMap[item.status]]}>
-            {item.status.toUpperCase()}
-          </Text>
-        </View>
+        {renderSharePolicy ? (
+          <TouchableOpacity onPress={() => {}} activeOpacity={0.7}>
+            <View style={styles.shareContainer}>
+              <Ionicon
+                style={styles.shareIcon}
+                name={
+                  Platform.select({ ios: "ios", android: "android" }) + "-share"
+                }
+                size={25}
+              />
+              <Text style={styles.shareText}>
+                Share your policies with loved ones
+              </Text>
+            </View>
+          </TouchableOpacity>
+        ) : null}
       </View>
     );
   }
@@ -70,25 +91,26 @@ export default class StatusScreen extends Component {
         return { key: prefix + a.id, ...a };
       });
     }
+    const itemSeparatorComponent = () => <View style={styles.separator} />;
     return (
       <View style={styles.container}>
         <SectionList
-          ItemSeparatorComponent={() => <View style={styles.separator} />}
-          renderItem={this.renderItem}
+          ItemSeparatorComponent={itemSeparatorComponent}
           renderSectionHeader={this.renderSectionHeader}
           sections={[
-            // homogenous rendering between sections
             {
               data: padItemsWith(database.policies, "PL"),
               title: "POLICIES",
               key: "policies",
-              renderItem: (...params) => this.renderItem("policies", ...params)
+              renderItem: (...params) =>
+                this.renderItem("policies", database.policies.length, ...params)
             },
             {
               data: padItemsWith(database.claims, "PL"),
               title: "CLAIMS",
               key: "claims",
-              renderItem: (...params) => this.renderItem("claims", ...params)
+              renderItem: (...params) =>
+                this.renderItem("claims", database.claims.length, ...params)
             }
           ]}
         />
@@ -98,6 +120,22 @@ export default class StatusScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+  shareIcon: {
+    marginRight: 15,
+    color: "white"
+  },
+  shareText: {
+    color: "white",
+    fontSize: 18
+  },
+  shareContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+    backgroundColor: colors.primaryOrange
+  },
   policyStatusText: { fontSize: 18, fontWeight: "400" },
   policyStatusTextActive: { color: "green" },
   policyStatusTextExpiring: { color: "#FFC107" },
@@ -134,11 +172,11 @@ const styles = StyleSheet.create({
   },
   sectionHeader: {
     flex: 1,
-    backgroundColor: colors.primaryOrange,
+    backgroundColor: colors.softBorderLine,
     padding: 15
   },
   sectionHeaderText: {
-    color: "white",
+    color: colors.primaryText,
     fontSize: 18
   },
   container: {
