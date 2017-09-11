@@ -21,8 +21,8 @@ import Footer from "./Footer";
 import PolicyPrice from "./PolicyPrice";
 import CheckoutModal from "./CheckoutModal";
 import { getTravelQuote } from "./hlas";
-
-const PAGE_LOAD_TIME = 1500;
+import { CONFIRMATION_PAGE_LOAD_TIME } from "react-native-dotenv";
+const PAGE_LOAD_TIME = parseInt(CONFIRMATION_PAGE_LOAD_TIME, 10);
 
 export default class ConfirmationScreen extends Component {
   static navigationOptions = {

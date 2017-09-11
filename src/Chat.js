@@ -58,11 +58,12 @@ import {
 } from "../data/questions";
 import Button from "./Button";
 import CHAT_STYLES from "./Chat.styles";
+import { MESSAGE_LOAD_TIME as _MESSAGE_LOAD_TIME } from "react-native-dotenv";
 
 // Enable playback in silence mode (iOS only)
 Sound.setCategory("Playback");
 
-const MESSAGE_LOAD_TIME = 0;
+const MESSAGE_LOAD_TIME = parseInt(_MESSAGE_LOAD_TIME, 10);
 const POLICIES_FADE_IN_TIME = 400;
 
 const AGENT_USER_ID = 0;

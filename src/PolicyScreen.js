@@ -16,6 +16,7 @@ import PolicyOverview from "./PolicyOverview";
 import POLICIES from "../data/policies";
 import CoveragePage from "./Coverage";
 import colors from "./colors";
+import { ENV } from "react-native-dotenv";
 
 const tabStyles = {
   tabIndicator: {
@@ -75,13 +76,15 @@ export default class PolicyScreen extends Component {
   }
 
   handlePurchase() {
-    console.log("loggedIn", this.loggedIn);
     if (this.page === "info" && !this.loggedIn) {
-      this.props.navigation.navigate("Auth", { policy: this.policy });
-      // this.props.navigation.navigate("Chat", {
-      //   policy: this.policy,
-      //   questionSet: "buy"
-      // });
+      if (ENV === "development") {
+        this.props.navigation.navigate("Chat", {
+          policy: this.policy,
+          questionSet: "buy"
+        });
+      } else {
+        this.props.navigation.navigate("Auth", { policy: this.policy });
+      }
     } else {
       this.props.navigation.navigate("Chat", {
         policy: this.policy,
