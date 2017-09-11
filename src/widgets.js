@@ -488,10 +488,18 @@ class ErrorMessages extends Component {
     ).start();
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.nonce !== prevProps.nonce) {
+    }
+  }
+
   renderError(response, idx) {
     if (response.isValid) return null;
     return (
-      <View key={idx} style={widgetStyles.errMessage}>
+      <View
+        key={idx}
+        style={[widgetStyles.errMessage, { alignItems: "center" }]}
+      >
         <Text style={widgetStyles.errMessageText}>{response.errMessage}</Text>
       </View>
     );
@@ -501,7 +509,11 @@ class ErrorMessages extends Component {
     const { fadeAnim, topAnim } = this.state;
     return (
       <Animated.View
-        style={[widgetStyles.errContainer, { opacity: fadeAnim, top: topAnim }]}
+        style={[
+          widgetStyles.errContainer,
+          { marginHorizontal: 0 },
+          { opacity: fadeAnim, top: topAnim }
+        ]}
       >
         {this.props.responses.map(this.renderError)}
       </Animated.View>
