@@ -219,7 +219,8 @@ export class ImageTable extends Component {
   constructor(props) {
     super(props);
     this.handlePress = this.handlePress.bind(this);
-    this.state = { images: {} };
+    this.handleFinishSelectImages = this.handleFinishSelectImages.bind(this);
+    this.state = { images: {}, error: false };
     const { columns } = this.props;
     for (var i = 0; i < columns.length; i++) {
       this.state.images[columns[i].id] = null;
@@ -240,6 +241,20 @@ export class ImageTable extends Component {
         }
       });
     };
+  }
+
+  handleFinishSelectImages() {
+    const keys = Object.keys(this.state.images);
+    const imageURIs = keys.map(key => this.state.images[key]);
+    const imageURILen = imageURIs.length;
+    const numberOfNonNullImageURI = imageURIs.filter(i => i !== null).length;
+    // n-2 images sent
+    if (numberOfNonNullImageURI >= Math.max(imageURILen - 2, 0)) {
+      this.setState({ error: false });
+      this.props.onFinishSelectImages(this.state.images);
+      return;
+    }
+    this.setState({ error: true });
   }
 
   render() {
@@ -301,15 +316,21 @@ export class ImageTable extends Component {
         </View>
       );
     }
+    const minImages = Math.max(1, this.props.columns.length - 2);
+    const responses = [
+      { isValid: false, errMessage: `Must upload at least ${minImages} images` }
+    ];
     return (
       <View style={{ marginVertical: 25 }}>
         {rows}
         <Button
-          onPress={() => this.props.onFinishSelectImages(this.state.images)}
-          style={widgetStyles.confirmUpload}
+          containerStyle={widgetStyles.noBorderRadius}
+          onPress={this.handleFinishSelectImages}
+          style={[widgetStyles.confirmUpload, widgetStyles.noBorderRadius]}
         >
           UPLOAD IMAGES
         </Button>
+        {this.state.error ? <ErrorMessages responses={responses} /> : null}
       </View>
     );
   }
@@ -438,6 +459,52 @@ export class ChoiceList extends Component {
       <View style={[widgetStyles.choicesList, disabledStyle]}>
         {this.props.choices.map(this.renderChoice)}
       </View>
+    );
+  }
+}
+
+class ErrorMessages extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      fadeAnim: new Animated.Value(0),
+      topAnim: new Animated.Value(20)
+    };
+  }
+
+  componentDidMount() {
+    Animated.parallel(
+      [
+        Animated.timing(this.state.fadeAnim, {
+          toValue: 1 // Animate to opacity: 1, or fully opaque
+        }),
+        Animated.timing(this.state.topAnim, {
+          toValue: 0
+        })
+      ],
+      {
+        duration: 500
+      }
+    ).start();
+  }
+
+  renderError(response, idx) {
+    if (response.isValid) return null;
+    return (
+      <View key={idx} style={widgetStyles.errMessage}>
+        <Text style={widgetStyles.errMessageText}>{response.errMessage}</Text>
+      </View>
+    );
+  }
+
+  render() {
+    const { fadeAnim, topAnim } = this.state;
+    return (
+      <Animated.View
+        style={[widgetStyles.errContainer, { opacity: fadeAnim, top: topAnim }]}
+      >
+        {this.props.responses.map(this.renderError)}
+      </Animated.View>
     );
   }
 }
@@ -621,6 +688,9 @@ export class SuggestionList extends Component {
 }
 
 const widgetStyles = StyleSheet.create({
+  noBorderRadius: {
+    borderRadius: 0
+  },
   errContainer: {
     marginLeft: 50,
     marginRight: 60
