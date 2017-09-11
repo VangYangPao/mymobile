@@ -12,7 +12,7 @@
     "js-sha512": "^0.4.0",
     "react": "16.0.0-alpha.6",
     "react-native": "0.44.0",
-    "react-native-credit-card-input": "^0.3.3",
+    "react-native-credit-card-input": "git+ssh://git@github.com/mavenave/react-native-credit-card-input.git",
     "react-native-datepicker": "^1.6.0",
     "react-native-fetch-blob": "^0.10.6",
     "react-native-file-opener": "^0.2.0",

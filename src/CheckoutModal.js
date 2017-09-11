@@ -7,7 +7,6 @@ import {
   Modal,
   TextInput,
   Dimensions,
-  Button,
   Alert,
   ToastAndroid,
   Platform
@@ -17,6 +16,7 @@ import { CreditCardInput } from "react-native-credit-card-input";
 
 import { Text } from "./defaultComponents";
 import colors from "./colors";
+import Button from "./Button";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -25,21 +25,50 @@ export default class CheckoutModal extends Component {
     super(props);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleCheckout = this.handleCheckout.bind(this);
-    this.state = { allValid: false };
+    this.entries = ["number", "expiry", "cvc"];
+    this.state = { form: null, firstSubmit: false, afterSubmit: false };
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      this.state.afterSubmit !== prevState.afterSubmit &&
+      this.state.afterSubmit &&
+      this.creditCardInput
+    ) {
+      if (this.state.form && !this.state.form.valid) {
+        const invalidEntry = this.entries.find(
+          entry => this.state.form.status[entry] !== "valid"
+        );
+        this.creditCardInput.focus(invalidEntry);
+      }
+      if (!this.state.form) {
+        // not filled yet, just focus first one
+        this.creditCardInput.focus("number");
+      }
+    }
   }
 
   handleInputChange(form) {
-    this.setState({ allValid: form.valid });
+    this.setState({ form });
   }
 
   handleCheckout() {
-    if (!this.state.allValid) {
+    console.log(this.state.form);
+    if (!this.state.form || !this.state.form.valid) {
       const msg = "Your credit card details are incomplete";
       if (Platform.OS === "ios") {
         Alert.alert(msg);
       } else {
         ToastAndroid.show(msg, ToastAndroid.SHORT);
       }
+      let newState = { afterSubmit: true };
+      if (!this.state.firstSubmit) {
+        newState.firstSubmit = true;
+      }
+      this.setState(newState);
+      setTimeout(() => {
+        this.setState({ afterSubmit: false });
+      }, 300);
       return;
     }
     if (typeof this.props.onCheckout === "function") {
@@ -48,6 +77,21 @@ export default class CheckoutModal extends Component {
   }
 
   render() {
+    let additionalInputStyles = {};
+    if (this.state.firstSubmit) {
+      this.entries.forEach(entry => {
+        if (!this.state.form) {
+          additionalInputStyles[entry] = {
+            borderBottomColor: colors.errorRed
+          };
+          return;
+        }
+        const isValid = this.state.form.status[entry] === "valid";
+        const borderBottomColor = isValid ? colors.borderLine : colors.errorRed;
+        additionalInputStyles[entry] = { borderBottomColor };
+      });
+    }
+
     return (
       <Modal
         animationType={"slide"}
@@ -64,15 +108,20 @@ export default class CheckoutModal extends Component {
             </View>
             <View style={styles.checkoutContent}>
               <CreditCardInput
+                ref={c => (this.creditCardInput = c)}
+                inputContainerStyle={styles.inputContainerStyle}
+                invalidColor={colors.errorRed}
+                additionalInputStyles={additionalInputStyles}
                 onChange={this.handleInputChange}
-                inputStyle={styles.creditCardInputStyle}
               />
             </View>
             <Button
+              containerStyle={styles.noBorderRadius}
+              style={styles.noBorderRadius}
               onPress={this.handleCheckout}
-              title="CONFIRM PURCHASE"
-              color={colors.primaryOrange}
-            />
+            >
+              CONFIRM PURCHASE
+            </Button>
           </View>
         </View>
       </Modal>
@@ -81,6 +130,13 @@ export default class CheckoutModal extends Component {
 }
 
 const styles = StyleSheet.create({
+  inputContainerStyle: {
+    borderBottomWidth: 2,
+    borderBottomColor: colors.borderLine
+  },
+  noBorderRadius: {
+    borderRadius: 0
+  },
   closeIcon: {},
   checkoutContent: {
     paddingVertical: 20
@@ -89,7 +145,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 15,
+    paddingVertical: 25,
     backgroundColor: colors.softBorderLine
   },
   checkoutTitle: {
@@ -112,7 +168,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     right: 0,
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     backgroundColor: "rgba(0,0,0,0.5)"
   }
 });
