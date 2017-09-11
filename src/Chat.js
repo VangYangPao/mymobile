@@ -750,7 +750,13 @@ class ChatScreen extends Component {
         ) {
           answer = parseFloat(answer);
         }
-        const result = validateAnswer(lastQuestion, answer, this.state.answers);
+        let result = validateAnswer(lastQuestion, answer, this.state.answers);
+        console.log("result", result);
+
+        if (Array.isArray(result)) {
+          const isValid = result.every(r => r.isValid);
+          result = { isValid };
+        }
 
         if (result.isValid) {
           let newAnswer = {};
@@ -816,8 +822,11 @@ class ChatScreen extends Component {
           <ClaimPolicyChoice onSelectPolicy={this.handleSelectPolicyToClaim} />
         );
       case "multiInput":
+        const { currentQuestionIndex } = this.state;
+        const currentQuestion = this.questions[currentQuestionIndex];
         return (
           <MultiInput
+            question={currentQuestion}
             onSubmit={this.handleMultiInputSubmit}
             inputs={currentMessage.inputs}
           />

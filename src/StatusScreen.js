@@ -80,9 +80,7 @@ export default class StatusScreen extends Component {
             <View style={styles.shareContainer}>
               <Ionicon
                 style={styles.shareIcon}
-                name={
-                  Platform.select({ ios: "ios", android: "android" }) + "-share"
-                }
+                name={Platform.select({ ios: "ios", android: "md" }) + "-share"}
                 size={25}
               />
               <Text style={styles.shareText}>

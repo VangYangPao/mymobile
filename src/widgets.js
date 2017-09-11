@@ -12,7 +12,8 @@ import {
   Picker,
   Alert,
   ToastAndroid,
-  TextInput
+  TextInput,
+  Animated
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import ImagePicker from "react-native-image-picker";
@@ -26,6 +27,7 @@ import { Text } from "./defaultComponents";
 import colors from "./colors";
 import { getDateStr } from "./utils";
 import Button from "./Button";
+import { validateAnswer, ValidationResult } from "../data/questions";
 
 const imageHeight = 150;
 const imageWidth = 100;
@@ -443,13 +445,37 @@ export class ChoiceList extends Component {
 export class MultiInput extends Component {
   constructor(props) {
     super(props);
-    this.state = { values: [] };
+    this.state = {
+      values: [],
+      responses: [],
+      fadeAnim: new Animated.Value(0),
+      topAnim: new Animated.Value(20)
+    };
     for (var i = 0; i < props.inputs.length; i++) {
       this.state.values.push("");
+      this.state.responses.push(new ValidationResult(true, true));
     }
     this.renderInput = this.renderInput.bind(this);
     this.handlePickDate = this.handlePickDate.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.responses !== prevState.responses) {
+      Animated.parallel(
+        [
+          Animated.timing(this.state.fadeAnim, {
+            toValue: 1 // Animate to opacity: 1, or fully opaque
+          }),
+          Animated.timing(this.state.topAnim, {
+            toValue: 0
+          })
+        ],
+        {
+          duration: 500
+        }
+      ).start();
+    }
   }
 
   handlePickDate(index) {
@@ -463,15 +489,24 @@ export class MultiInput extends Component {
   handleSubmit() {
     const inputs = this.state.values.map((value, idx) => ({
       value,
+      label: this.props.inputs[idx].label,
       id: this.props.inputs[idx].id
     }));
-    this.props.onSubmit(inputs);
+    const responses = validateAnswer(this.props.question, inputs);
+    const allLegit = responses.every(r => r.isValid);
+    if (allLegit) {
+      this.props.onSubmit(inputs);
+      return;
+    }
+    this.setState({ responses });
   }
 
   renderInput(input, index, inputs) {
     const len = inputs.length;
     const startStylesOrNull = index === 0 ? widgetStyles.choicesStart : null;
     const endStylesOrNull = index === len - 1 ? widgetStyles.choicesEnd : null;
+
+    const response = this.state.responses[index];
 
     let inputElement;
     if (
@@ -506,23 +541,47 @@ export class MultiInput extends Component {
     return (
       <View
         key={input.id}
-        style={[widgetStyles.textInputContainer, startStylesOrNull]}
+        style={[
+          widgetStyles.textInputContainer,
+          !response.isValid ? widgetStyles.textInputError : null,
+          startStylesOrNull
+        ]}
       >
         {inputElement}
       </View>
     );
   }
 
-  render() {
+  renderError(response, idx) {
+    if (response.isValid) return null;
     return (
-      <View style={[widgetStyles.choicesList, { marginBottom: 100 }]}>
-        {this.props.inputs.map(this.renderInput)}
-        <Button
-          onPress={this.handleSubmit}
-          style={widgetStyles.sendButtonContainer}
+      <View key={idx} style={widgetStyles.errMessage}>
+        <Text style={widgetStyles.errMessageText}>{response.errMessage}</Text>
+      </View>
+    );
+  }
+
+  render() {
+    let { fadeAnim, topAnim } = this.state;
+    return (
+      <View>
+        <View style={[widgetStyles.choicesList]}>
+          {this.props.inputs.map(this.renderInput)}
+          <Button
+            onPress={this.handleSubmit}
+            style={widgetStyles.sendButtonContainer}
+          >
+            SEND
+          </Button>
+        </View>
+        <Animated.View
+          style={[
+            widgetStyles.errContainer,
+            { opacity: fadeAnim, top: topAnim }
+          ]}
         >
-          SEND
-        </Button>
+          {this.state.responses.map(this.renderError)}
+        </Animated.View>
       </View>
     );
   }
@@ -562,6 +621,19 @@ export class SuggestionList extends Component {
 }
 
 const widgetStyles = StyleSheet.create({
+  errContainer: {
+    marginLeft: 50,
+    marginRight: 60
+  },
+  errMessageText: {
+    color: colors.primaryText
+  },
+  errMessage: {
+    marginTop: 10,
+    padding: 15,
+    borderRadius: 5,
+    backgroundColor: "#FFCDD2"
+  },
   suggestionListContainer: {
     flexGrow: 1,
     justifyContent: "flex-end"
@@ -602,8 +674,11 @@ const widgetStyles = StyleSheet.create({
     borderBottomRightRadius: 13,
     marginLeft: 50,
     marginRight: 60,
-    marginBottom: 50,
     backgroundColor: "white"
+  },
+  textInputError: {
+    borderWidth: 2,
+    borderColor: colors.errorRed
   },
   choiceText: {
     fontSize: 16

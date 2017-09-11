@@ -5,15 +5,20 @@ import travelClaimQuestions from "./travelClaimQuestions";
 import mobileClaimQuestions from "./mobileClaimQuestions";
 export { paClaimQuestions, travelClaimQuestions, mobileClaimQuestions };
 
-class ValidationResult {
+export class ValidationResult {
   constructor(isValid, errMessage) {
     this.isValid = isValid;
     this.errMessage = errMessage;
   }
 }
 
+function isNumeric(n) {
+  !isNaN(parseFloat(n)) && isFinite(n);
+}
+
 function validateNumber(num) {
-  const isValid = true;
+  // accepts both actual numbers and numeric strings
+  const isValid = isNumeric(num) || !isNaN(num);
   return new ValidationResult(
     isValid,
     isValid || "Please enter a valid number"
@@ -43,7 +48,9 @@ function notEmptyString(str) {
 }
 
 function validatePhoneNumber(phoneNumber) {
-  const isValid = phoneNumber[0] === "8" || phoneNumber[0] === "9";
+  const isValid =
+    (phoneNumber[0] === "8" || phoneNumber[0] === "9") &&
+    phoneNumber.length === 8;
   return new ValidationResult(
     isValid,
     isValid || "Please enter a valid phone number"
@@ -67,9 +74,8 @@ function validateBoolean(bool) {
 }
 
 function validateNRIC(str) {
-  return new ValidationResult(true, true);
-  if (str.length != 9)
-    return new ValidationResult(false, "Please enter a valid NRIC/FIN");
+  const msg = "Please enter a valid NRIC/FIN";
+  if (str.length != 9) return new ValidationResult(false, msg);
 
   str = str.toUpperCase();
 
@@ -105,7 +111,8 @@ function validateNRIC(str) {
     theAlpha = fg[temp];
   }
 
-  return new ValidationResult(icArray[8] === theAlpha, true);
+  const isValid = icArray[8] === theAlpha;
+  return new ValidationResult(isValid, isValid || msg);
 }
 
 function validateTravelStartDate(startDate) {
@@ -146,7 +153,7 @@ function validateChoice(choice) {
   //   validChoice,
   //   "You have selected an invalid option"
   // );
-  return new ValidationResult(true);
+  return new ValidationResult(true, true);
 }
 
 const TypeValidators = {
@@ -165,29 +172,45 @@ const TypeValidators = {
   boolean: validateBoolean
 };
 
+function validateOneAnswer(responseTypes, answer, answers) {
+  var validateFunc;
+  console.log(responseTypes);
+  for (var i = 0; i < responseTypes.length; i++) {
+    validateFunc = TypeValidators[responseTypes[i]];
+    const response = validateFunc(answer, answers);
+    if (!response.isValid) return response;
+  }
+  return new ValidationResult(true, true);
+}
+
 export function validateAnswer(question, answer, answers) {
   const { responseType } = question;
   const responseTypes = [].concat(responseType);
   if (Array.isArray(question.id)) {
-    // for (var i = 0; i < answer.length; i++) {
-    //   const
-    //   for (var j = 0; j < responseType.length; j++) {
-    //     const res
-    //   }
-    //   validateFunc = TypeValidators[responseTypes[i]];
-    //   response = validateFunc(answer);
-    //   if (!response.isValid) return response;
-    // }
-    // return response;
-    return new ValidationResult(true, true);
+    const responses = answer.map((subAnswer, idx) => {
+      const responseType = responseTypes[idx];
+      const response = validateOneAnswer(
+        responseTypes,
+        subAnswer.value,
+        answers
+      );
+      // customize abit for string..
+      // rest use written type names
+      if (responseType === "string" && !response.isValid) {
+        response.errMessage = `${subAnswer.label} cannot be empty.`;
+      } else {
+        response.errMessage = `${subAnswer.label} is not a valid ${responseType}.`;
+      }
+      return response;
+    });
+    return responses;
+    // const allLegit = responses.every(r => r.isValid);
+    // if (allLegit) return new ValidationResult(true, true);
+    // // collate the messages together
+    // const collatedErrMessage = responses.map(r => r.errMessage).join(" ");
+    // return new ValidationResult(false, collatedErrMessage);
   }
-  var validateFunc;
-  for (var i = 0; i < responseTypes.length; i++) {
-    validateFunc = TypeValidators[responseTypes[i]];
-    response = validateFunc(answer, answers);
-    if (!response.isValid) return response;
-  }
-  return response;
+  return validateOneAnswer(responseTypes, answer, answers);
 }
 
 const claimIntro = [
