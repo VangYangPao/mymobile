@@ -33,6 +33,7 @@ import {
   renderMenuButton,
   createDrawerNavOptions
 } from "./navigations";
+import { ENV } from "react-native-dotenv";
 
 // global.___DEV___ = false
 
@@ -129,14 +130,20 @@ const MyDrawerNavigator = DrawerNavigator(
   }
 );
 
-export default (Microsurance = StackNavigator(
-  {
-    Intro: { screen: IntroScreen },
-    TermsOfUse: { screen: TermsOfUse },
-    Drawer: { screen: MyDrawerNavigator },
-    Help: { screen: HelpStackNavigator }
-  },
-  { headerMode: "none" }
-));
+const stackNavigatorScreens = {
+  Intro: { screen: IntroScreen },
+  TermsOfUse: { screen: TermsOfUse },
+  Drawer: { screen: MyDrawerNavigator },
+  Help: { screen: HelpStackNavigator }
+};
+
+if (ENV === "development") {
+  delete stackNavigatorScreens.Intro;
+  delete stackNavigatorScreens.TermsOfUse;
+}
+
+export default (Microsurance = StackNavigator(stackNavigatorScreens, {
+  headerMode: "none"
+}));
 
 AppRegistry.registerComponent("Microsurance", () => Microsurance);
