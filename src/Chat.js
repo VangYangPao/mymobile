@@ -996,7 +996,6 @@ class ChatScreen extends Component {
   }
 
   render() {
-    // return <CheckoutModal price={35} />;
     const additionalProps = {};
     let minInputToolbarHeight = 44;
     if (

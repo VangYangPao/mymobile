@@ -53,7 +53,6 @@ export default class CheckoutModal extends Component {
   }
 
   handleCheckout() {
-    console.log(this.state.form);
     if (!this.state.form || !this.state.form.valid) {
       const msg = "Your credit card details are incomplete";
       if (Platform.OS === "ios") {

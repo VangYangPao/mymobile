@@ -12,6 +12,7 @@ import {
   ActivityIndicator
 } from "react-native";
 import moment from "moment";
+import { NavigationActions } from "react-navigation";
 
 import database from "./HackStorage";
 import { Text } from "./defaultComponents";
@@ -49,7 +50,7 @@ export default class ConfirmationScreen extends Component {
 
   componentDidMount() {
     const { form } = this.props.navigation.state.params;
-    if (this.policy.id === "travel") {
+    if (this.policy && this.policy.id === "travel") {
       const countryid = form.travelDestination;
       const tripDurationInDays = moment(form.returnDate).diff(
         form.departureDate,
@@ -80,9 +81,19 @@ export default class ConfirmationScreen extends Component {
 
   handleCheckout() {
     const newId = database.policies[database.policies.length - 1].id + 1;
+    const resetAction = NavigationActions.reset({
+      index: 1,
+      actions: [
+        NavigationActions.navigate({ routeName: "Chat" }),
+        NavigationActions.navigate({ routeName: "Status" })
+      ]
+    });
+    const resetToStatusScreen = () =>
+      this.props.navigation.dispatch(resetAction);
     database.policies.push({
       id: newId,
-      paid: this.state.totalPremium,
+      policyType: this.policy.id,
+      premium: this.state.totalPremium,
       purchaseDate: new Date(),
       status: "active"
     });
@@ -90,7 +101,7 @@ export default class ConfirmationScreen extends Component {
       Alert.alert("Thank you!", "Your order is complete.", [
         {
           text: "OK",
-          onPress: () => this.props.navigation.navigate("Status")
+          onPress: resetToStatusScreen
         }
       ]);
     } else {
@@ -98,7 +109,7 @@ export default class ConfirmationScreen extends Component {
         "Thank you! Your order is complete.",
         ToastAndroid.LONG
       );
-      this.props.navigation.navigate("Status");
+      resetToStatusScreen();
     }
   }
 
@@ -127,9 +138,7 @@ export default class ConfirmationScreen extends Component {
       />
     );
     let pageContent;
-    console.log("totalPremium", this.state.totalPremium);
     if (!this.state.loading && typeof this.state.totalPremium === "number") {
-      console.log(this.state.totalPremium);
       pageContent = (
         <Page>
           <Text style={styles.pageTitle}>Confirm your details</Text>

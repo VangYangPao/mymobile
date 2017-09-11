@@ -30,7 +30,7 @@ function validateEmail(email) {
   const isValid = re.test(email);
   return new ValidationResult(
     isValid,
-    isValid || "Please enter a valid email, e.g. hello@microassure.com"
+    isValid || "Please enter a valid email, e.g. hello@microumbrella.com"
   );
 }
 

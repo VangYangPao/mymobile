@@ -347,7 +347,7 @@ export class ClaimPolicyChoice extends Component {
           <Text style={widgetStyles.policyDetailText}>
             Purchase date: {getDateStr(policy.purchaseDate)}
           </Text>
-          <View style={{ flexDirection: "row", marginVertical: 10 }}>
+          {/*<View style={{ flexDirection: "row", marginVertical: 10 }}>
             <Text style={{ flex: 0.3 }}>Coverage:</Text>
             <View style={{ flex: 1 }}>
               {policy.coverageSummary.map((coverage, idx) => {
@@ -365,7 +365,7 @@ export class ClaimPolicyChoice extends Component {
                 );
               })}
             </View>
-          </View>
+          </View>*/}
           <Text style={widgetStyles.policyDetailText}>
             Premium: ${policy.premium}
           </Text>

@@ -66,6 +66,10 @@ const BuyStackNavigator = StackNavigator({
   Confirmation: {
     screen: ConfirmationScreen,
     navigationOptions: backButtonNavOptions
+  },
+  Status: {
+    screen: StatusScreen,
+    navigationOptions: backButtonNavOptions
   }
 });
 
