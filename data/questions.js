@@ -324,7 +324,7 @@ export const QUESTION_SETS = {
     // },
     {
       question:
-        "Nice to meet you <%= lastName %> <%= firstName %>! What's your NRIC/FIN/Passport?",
+        "Nice to meet you <%= firstName %> <%= lastName %>! What's your NRIC/FIN/Passport?",
       responseType: ["string", "nric"],
       id: "NRIC"
     },

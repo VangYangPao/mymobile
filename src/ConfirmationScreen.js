@@ -22,6 +22,8 @@ import PolicyPrice from "./PolicyPrice";
 import CheckoutModal from "./CheckoutModal";
 import { getTravelQuote } from "./hlas";
 
+const PAGE_LOAD_TIME = 1500;
+
 export default class ConfirmationScreen extends Component {
   static navigationOptions = {
     title: "Confirmation"
@@ -35,12 +37,14 @@ export default class ConfirmationScreen extends Component {
     this.policy = form.policy;
     delete form.policy;
     this.state = {
+      loading: true,
       totalPremium: null
     };
-    if (form.totalPremium) {
-      this.state.totalPremium = form.totalPremium;
-      delete form.totalPremium;
-    }
+  }
+
+  componentWillMount() {
+    // load at least 2 seconds
+    setTimeout(() => this.setState({ loading: false }), PAGE_LOAD_TIME);
   }
 
   componentDidMount() {
@@ -123,9 +127,8 @@ export default class ConfirmationScreen extends Component {
       />
     );
     let pageContent;
-    if (!this.state.totalPremium) {
-      pageContent = <ActivityIndicator color="black" size="large" />;
-    } else {
+    console.log("totalPremium", this.state.totalPremium);
+    if (!this.state.loading && !isNaN(this.state.totalPremium)) {
       pageContent = (
         <Page>
           <Text style={styles.pageTitle}>Confirm your details</Text>
@@ -133,6 +136,8 @@ export default class ConfirmationScreen extends Component {
           {formArr.map(f => this.renderField(f.key, f.value))}
         </Page>
       );
+    } else {
+      pageContent = <ActivityIndicator color="black" size="large" />;
     }
     return (
       <View style={styles.container}>
@@ -140,7 +145,7 @@ export default class ConfirmationScreen extends Component {
         <View
           style={[
             styles.pageContainer,
-            this.state.totalPremium ? null : styles.pageContainerLoading
+            this.state.loading ? styles.pageContainerLoading : null
           ]}
         >
           {pageContent}

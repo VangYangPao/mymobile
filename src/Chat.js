@@ -558,7 +558,6 @@ class ChatScreen extends Component {
           // delete form.planIndex;
           delete form.icImage;
           if (policy.id === "travel") {
-            form.totalPremium = new Number(form.price);
             delete form.price;
           } else {
             form.totalPremium =
