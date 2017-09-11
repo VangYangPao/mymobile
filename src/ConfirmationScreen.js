@@ -128,7 +128,8 @@ export default class ConfirmationScreen extends Component {
     );
     let pageContent;
     console.log("totalPremium", this.state.totalPremium);
-    if (!this.state.loading && !isNaN(this.state.totalPremium)) {
+    if (!this.state.loading && typeof this.state.totalPremium === "number") {
+      console.log(this.state.totalPremium);
       pageContent = (
         <Page>
           <Text style={styles.pageTitle}>Confirm your details</Text>

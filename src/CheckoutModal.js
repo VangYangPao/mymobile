@@ -120,7 +120,7 @@ export default class CheckoutModal extends Component {
               style={styles.noBorderRadius}
               onPress={this.handleCheckout}
             >
-              CONFIRM PURCHASE
+              CONFIRM PURCHASE (${this.props.price.toFixed(2)})
             </Button>
           </View>
         </View>
