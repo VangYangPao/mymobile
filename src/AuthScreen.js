@@ -9,7 +9,9 @@ import {
   Picker,
   ScrollView,
   InteractionManager,
-  Switch
+  Switch,
+  Keyboard,
+  TouchableWithoutFeedback
 } from "react-native";
 import { NavigationActions } from "react-navigation";
 import VectorDrawableView from "./VectorDrawableView";
@@ -288,6 +290,10 @@ class ForgotPasswordScreen extends Component {
 }
 
 export default class AuthScreen extends Component {
+  static navigationOptions = {
+    header: null
+  };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -371,10 +377,12 @@ export default class AuthScreen extends Component {
     }
 
     return (
-      <View style={styles.page}>
-        {backgroundImage}
-        {page}
-      </View>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.page}>
+          {backgroundImage}
+          {page}
+        </View>
+      </TouchableWithoutFeedback>
     );
   }
 }
@@ -384,7 +392,8 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     marginTop: 10,
     fontSize: 15,
-    color: "white"
+    color: "white",
+    backgroundColor: "transparent"
   },
   tosSwitch: {
     marginTop: 10,
