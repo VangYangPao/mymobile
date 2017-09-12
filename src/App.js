@@ -141,10 +141,10 @@ const stackNavigatorScreens = {
   Help: { screen: HelpStackNavigator }
 };
 
-if (ENV === "development") {
-  delete stackNavigatorScreens.Intro;
-  delete stackNavigatorScreens.TermsOfUse;
-}
+// if (ENV === "development") {
+//   delete stackNavigatorScreens.Intro;
+//   delete stackNavigatorScreens.TermsOfUse;
+// }
 
 export default (Microsurance = StackNavigator(stackNavigatorScreens, {
   headerMode: "none"
