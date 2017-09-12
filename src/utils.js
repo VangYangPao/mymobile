@@ -1,7 +1,8 @@
+// @flow
 import React, { Component } from "react";
 import { ToastAndroid, Alert, Platform } from "react-native";
 
-export function objectToUrlParams(data) {
+export function objectToUrlParams(data: any): string {
   return Object.keys(data)
     .map(key => `${key}=${encodeURIComponent(data[key])}`)
     .join("&");

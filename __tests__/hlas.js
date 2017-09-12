@@ -1,5 +1,6 @@
 // @flow
 import "react-native";
+import "isomorphic-form-data";
 import "isomorphic-fetch";
 import uuidv4 from "uuid/v4";
 import {
@@ -21,7 +22,7 @@ import { verifyEnrolment, doFull3DSTransaction } from "../src/telemoney";
 
 import moment from "moment";
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
 // it("gets phone protect quote correctly", () => {
 //   return getPhoneProtectQuote().then(res => {
@@ -101,7 +102,7 @@ it("purchases single travel correctly", () => {
   const policyHolder = {
     Surname: "test",
     GivenName: "test",
-    IDNumber: "S4747150H",
+    IDNumber: "S7119153B",
     DateOfBirth: "1988-07-22",
     GenderID: 1,
     MobileTelephone: "91234567",
@@ -115,7 +116,7 @@ it("purchases single travel correctly", () => {
   const paymentDetails = {
     NameOnCard: "Chan",
     CardNumber: "4005550000000001",
-    CardType: 0,
+    CardType: 3,
     CardSecurityCode: "602",
     CardExpiryYear: 2021,
     CardExpiryMonth: 1
@@ -132,7 +133,7 @@ it("purchases single travel correctly", () => {
     policyHolder,
     paymentDetails
   ).then(res => {
-    console.log(res);
+    console.log("purchase successful", res);
   });
 });
 

@@ -1,3 +1,4 @@
+// @flow
 import * as cheerio from "cheerio";
 import { sha512 } from "js-sha512";
 import moment from "moment";
@@ -34,8 +35,19 @@ function generateFormData(payload) {
   return formData;
 }
 
-export function verifyEnrolment(cardDetails, paytype, amt) {
-  const ref = generateRef();
+type CardDetails = {
+  ccnum: string,
+  ccdate: string,
+  cccvv: string,
+  ccname: string
+};
+
+export function verifyEnrolment(
+  ref: string,
+  cardDetails: CardDetails,
+  paytype: number,
+  amt: string
+) {
   const validity = generateValidity();
   const transtype = "vereq";
   const securitySeq = amt + ref + cur + mid + transtype + securityKey;
@@ -55,9 +67,6 @@ export function verifyEnrolment(cardDetails, paytype, amt) {
     validity
   };
   // console.log(payload);
-  // console.log(
-  //   `${PAYMENT_PROCESS_URL}?${objectToUrlParams(payload)}`
-  // );
   const formData = generateFormData(payload);
 
   return fetch(PAYMENT_PROCESS_URL, {
@@ -80,7 +89,12 @@ export function verifyEnrolment(cardDetails, paytype, amt) {
     });
 }
 
-export function acsRedirection(acsUrl, PaReq, TermUrl, MD) {
+export function acsRedirection(
+  acsUrl: string,
+  PaReq: string,
+  TermUrl: string,
+  MD: string
+) {
   const payload = { PaReq, TermUrl, MD };
   const params = objectToUrlParams(payload);
   const formData = generateFormData(payload);
@@ -94,7 +108,11 @@ export function acsRedirection(acsUrl, PaReq, TermUrl, MD) {
     });
 }
 
-export function performPaymentAuthRequest(ref, amt, pares) {
+export function performPaymentAuthRequest(
+  ref: string,
+  amt: string,
+  pares: string
+) {
   const validity = generateValidity();
   const transtype = "pares";
   const securitySeq = amt + ref + cur + mid + transtype + securityKey;
@@ -135,16 +153,16 @@ export function performPaymentAuthRequest(ref, amt, pares) {
 }
 
 export function create3dsAuthorizationRequest(
-  cardDetails,
-  ref,
-  paytype,
-  threeDSStatus,
-  amt,
-  eci,
+  cardDetails: CardDetails,
+  ref: string,
+  paytype: number,
+  threeDSStatus: string,
+  amt: string,
+  eci: string,
   /*  For enrolled cards, the value is based on TM_ECI field in Payment Authentication (Response)
     For non-enrolled cards, the value is based on TM_ECI field in Verify Enrollment (Response) */
-  cavv, // The value is based on TM_CAVV field in Payment Authentication (Response)
-  xid // The value is based on TM_XID field in Payment Authentication (Response)
+  cavv: string, // The value is based on TM_CAVV field in Payment Authentication (Response)
+  xid: string // The value is based on TM_XID field in Payment Authentication (Response)
 ) {
   const validity = generateValidity();
   const transtype = "SALE";
@@ -192,19 +210,36 @@ export function create3dsAuthorizationRequest(
     });
 }
 
-export function doFull3DSTransaction(cardDetails, paytype, amtFloat) {
-  let ref;
+export function doFull3DSTransaction(
+  cardDetails: CardDetails,
+  paytype: number,
+  amtFloat: number,
+  verifyEnrolmentResponse: any
+) {
+  let ref: string;
   const amt = amtFloat.toFixed(2);
-  return verifyEnrolment(cardDetails, paytype, amt)
+
+  let promise;
+  if (verifyEnrolmentResponse) {
+    promise = new Promise(resolve => resolve(verifyEnrolmentResponse));
+  } else {
+    ref = generateRef();
+    promise = verifyEnrolment(ref, cardDetails, paytype, amt);
+  }
+  return promise
     .then(res => {
-      const { Acsurl, PaReq, TM_RefNo } = res;
+      const {
+        Acsurl,
+        PaReq,
+        TM_RefNo
+      }: { Acsurl: string, PaReq: string, TM_RefNo: string } = res;
       ref = TM_RefNo;
       console.log("verified enrolment");
       return acsRedirection(
         Acsurl,
         PaReq,
         "http://microumbrella.com/term",
-        TM_RefNo
+        ref
       );
     })
     .catch(err => {
@@ -240,34 +275,4 @@ export function doFull3DSTransaction(cardDetails, paytype, amtFloat) {
       console.log("3DS sale done");
       return res;
     });
-}
-
-export function createEasyPaySaleURL(amtFloat) {
-  const url = "https://test.wirecard.com.sg/easypay2/paymentpage.do";
-  const amt = amtFloat.toFixed(2);
-  const now = new Date();
-  const validity = moment(fiveMinsLater).format("YYYY-MM-DD-HH:mm:SS");
-  const ref = "WT" + moment(now).format("DDMMYYHHmm");
-  const cur = "SGD";
-  const transtype = "SALE";
-  const securityKey = "ABC123456";
-  const securitySeq = amt + ref + cur + mid + transtype + securityKey;
-  const signature = sha512(securitySeq);
-  const paramString = objectToUrlParams({
-    amt,
-    validity,
-    ref,
-    cur,
-    mid,
-    transtype,
-    signature,
-    version: 2
-  });
-  return url + "?" + paramString;
-}
-
-export function createEasyPayVoidURL(ref) {
-  const url = "https://test.wirecard.com.sg/easypay2/paymentpage.do";
-  const paramString = objectToUrlParams({ mid, ref, ack: "YES" });
-  return url + "?" + paramString;
 }

@@ -436,9 +436,21 @@ export function purchaseTravelPolicy(
   policyHolder: PolicyHolder,
   paymentDetails: PaymentDetails
 ) {
-  const ref: string = generateRef();
-  let PASAppID, args;
+  let PASAppID,
+    args,
+    verifyEnrolmentResponseObj,
+    verifyEnrolmentResponse,
+    paymentSuccessfulResponse;
+  const transactionRef: string = generateRef();
   const WebAppID: string = uuidv4();
+  const year = paymentDetails.CardExpiryYear - 2000;
+  const month = padStart(paymentDetails.CardExpiryMonth + "", "0", 2);
+  const card = {
+    ccnum: paymentDetails.CardNumber,
+    ccdate: `${year}${month}`,
+    cccvv: paymentDetails.CardSecurityCode,
+    ccname: paymentDetails.NameOnCard
+  };
   return verifyApplicationTravelSingle(
     WebAppID,
     premium,
@@ -451,7 +463,19 @@ export function purchaseTravelPolicy(
   )
     .then(res => {
       PASAppID = res.ApplciationNo;
-      args = [
+      return verifyEnrolment(
+        transactionRef,
+        card,
+        paymentDetails.CardType,
+        premium.toFixed(2)
+      );
+    })
+    .then(res => {
+      verifyEnrolmentResponseObj = res;
+      verifyEnrolmentResponse = objectToUrlParams(verifyEnrolmentResponseObj);
+      console.log("verified enrolment " + res);
+      return createPaymentTransactionTravelSingle(
+        transactionRef,
         WebAppID,
         PASAppID,
         premium,
@@ -460,26 +484,51 @@ export function purchaseTravelPolicy(
         endDate,
         planid,
         policyHolder,
-        paymentDetails
-      ];
-      return createPaymentTransactionTravelSingle(...args);
+        paymentDetails,
+        verifyEnrolmentResponse
+      );
     })
     .then(res => {
-      const year = paymentDetails.CardExpiryYear - 2000;
-      const month = padStart(paymentDetails.CardExpiryMonth + "", "0", 2);
-      const card = {
-        ccnum: paymentDetails.CardNumber,
-        ccdate: `${year}${month}`,
-        cccvv: paymentDetails.CardSecurityCode,
-        ccname: paymentDetails.NameOnCard
-      };
-      return doFull3DSTransaction(card, paymentDetails.CardType, premium);
+      return doFull3DSTransaction(
+        card,
+        paymentDetails.CardType,
+        premium,
+        verifyEnrolmentResponseObj
+      );
     })
     .then(res => {
-      return updatePaymentTransactionTravelSingle(...args);
+      paymentSuccessfulResponse = objectToUrlParams(res);
+      console.log("payment successful", res);
+      return updatePaymentTransactionTravelSingle(
+        transactionRef,
+        WebAppID,
+        PASAppID,
+        premium,
+        countryid,
+        startDate,
+        endDate,
+        planid,
+        policyHolder,
+        paymentDetails,
+        verifyEnrolmentResponse,
+        paymentSuccessfulResponse
+      );
     })
     .then(res => {
-      return submitApplicationTravelSingle(...args);
+      return submitApplicationTravelSingle(
+        transactionRef,
+        WebAppID,
+        PASAppID,
+        premium,
+        countryid,
+        startDate,
+        endDate,
+        planid,
+        policyHolder,
+        paymentDetails,
+        verifyEnrolmentResponse,
+        paymentSuccessfulResponse
+      );
     });
 }
 
@@ -579,6 +628,7 @@ export function verifyApplicationTravelSingle(
 }
 
 export function createPaymentTransactionTravelSingle(
+  transactionRef: string,
   WebAppID: string,
   PASAppID: string,
   Premium: number,
@@ -587,7 +637,8 @@ export function createPaymentTransactionTravelSingle(
   TravelEndDate: Date,
   ProductPlanID: ProductPlanID,
   PolicyHolder: PolicyHolder,
-  PaymentDetails: PaymentDetails
+  PaymentDetails: PaymentDetails,
+  TelemoneyTransactionResponse: string
 ) {
   TravelStartDate = moment(TravelStartDate).format("YYYY-MM-DD");
   TravelEndDate = moment(TravelEndDate).format("YYYY-MM-DD");
@@ -617,7 +668,7 @@ export function createPaymentTransactionTravelSingle(
     NetPremium: Premium,
     GrossPremium: Premium,
     PaymentInfo: {
-      PaymentReferenceNumber: `A${PASAppID}-WT1608170248`,
+      PaymentReferenceNumber: `A${PASAppID}-${transactionRef}`,
       // Note A stands for Application 8919 is the ID returned from successful verified, WDF26F6 unique sequence generated
       BankID: 143,
       PayByApplicant: true,
@@ -626,9 +677,7 @@ export function createPaymentTransactionTravelSingle(
       IDNumber: PolicyHolder.IDNumber,
       // Note : Assumed always pay by applicant is true in the backend system
       IDNumberType: PolicyHolder.MobileTelephone,
-
-      TelemoneyTransactionResponse:
-        "TM_MCode=20151111011&TM_RefNo=WT1608170248&TM_TrnType=sale&TM_SubTrnType=&TM_Status=YES&TM_Error=&TM_Currency=SGD&TM_DebitAmt=11.00&TM_PaymentType=3&TM_BankRespCode=00&TM_ApprovalCode=878429&TM_ErrorMsg=&TM_UserField1=&TM_UserField2=&TM_UserField3=&TM_UserField4=&TM_UserField5=&TM_Original_RefNo=&TM_CCLast4Digit=0001&TM_RecurrentId=&TM_CCNum=xxxxxxxxxxxx0001&TM_ExpiryDate=2101&TM_IPP_FirstPayment=&TM_IPP_LastPayment=&TM_IPP_MonthlyPayment=&TM_IPP_TransTenure=&TM_IPP_TotalInterest=&TM_IPP_DownPayment=&TM_IPP_MonthlyInterest=&TM_OriginalPayType=3&TM_Version=2&TM_Signature=E5ADA760E8E251F8DBDDB8ADC8767949E694C6C6DC171558BA01F580D0900F8E12C72698991F86720AC2DC4AC39844FABA56FB3DCC47CD8371288B0D7750F9C9",
+      TelemoneyTransactionResponse,
       //Note: Telemoney Payment response result
       ...PaymentDetails
     },
@@ -644,6 +693,7 @@ export function createPaymentTransactionTravelSingle(
 }
 
 export function updatePaymentTransactionTravelSingle(
+  transactionRef: string,
   WebAppID: string,
   PASAppID: string,
   Premium: number,
@@ -652,7 +702,9 @@ export function updatePaymentTransactionTravelSingle(
   TravelEndDate: Date,
   ProductPlanID: ProductPlanID,
   PolicyHolder: PolicyHolder,
-  PaymentDetails: PaymentDetails
+  PaymentDetails: PaymentDetails,
+  TelemoneyTransactionResponse: string,
+  TelemoneyPaymentResultRow: string
 ) {
   TravelStartDate = moment(TravelStartDate).format("YYYY-MM-DD");
   TravelEndDate = moment(TravelEndDate).format("YYYY-MM-DD");
@@ -680,7 +732,7 @@ export function updatePaymentTransactionTravelSingle(
     NetPremium: Premium,
     GrossPremium: Premium,
     PaymentInfo: {
-      PaymentReferenceNumber: `A${PASAppID}-WT1608170248`,
+      PaymentReferenceNumber: `A${PASAppID}-${transactionRef}`,
       // Note A stands for Application 8919 is the ID returned from successful verified, WDF26F6 unique sequence generated
       BankID: 143,
       PayByApplicant: true,
@@ -690,12 +742,10 @@ export function updatePaymentTransactionTravelSingle(
       // Note : Assumed always pay by applicant is true in the backend system
       IDNumberType: PolicyHolder.IDNumberType,
       TelephoneNumber: PolicyHolder.MobileTelephone,
-      TelemoneyTransactionResponse:
-        "TM_MCode=20151111011&TM_RefNo=WT1608170248&TM_TrnType=sale&TM_SubTrnType=&TM_Status=YES&TM_Error=&TM_Currency=SGD&TM_DebitAmt=11.00&TM_PaymentType=3&TM_BankRespCode=00&TM_ApprovalCode=878429&TM_ErrorMsg=&TM_UserField1=&TM_UserField2=&TM_UserField3=&TM_UserField4=&TM_UserField5=&TM_Original_RefNo=&TM_CCLast4Digit=0001&TM_RecurrentId=&TM_CCNum=xxxxxxxxxxxx0001&TM_ExpiryDate=2101&TM_IPP_FirstPayment=&TM_IPP_LastPayment=&TM_IPP_MonthlyPayment=&TM_IPP_TransTenure=&TM_IPP_TotalInterest=&TM_IPP_DownPayment=&TM_IPP_MonthlyInterest=&TM_OriginalPayType=3&TM_Version=2&TM_Signature=E5ADA760E8E251F8DBDDB8ADC8767949E694C6C6DC171558BA01F580D0900F8E12C72698991F86720AC2DC4AC39844FABA56FB3DCC47CD8371288B0D7750F9C9",
       //Note: Telemoney Payment response result
-      TelemoneyPaymentResultRow:
-        "TM_MCode=20151111011&TM_RefNo=WT1608170248&TM_TrnType=sale&TM_SubTrnType=&TM_Status=YES&TM_Error=&TM_Currency=SGD&TM_DebitAmt=11.00&TM_PaymentType=3&TM_BankRespCode=00&TM_ApprovalCode=878429&TM_ErrorMsg=&TM_UserField1=&TM_UserField2=&TM_UserField3=&TM_UserField4=&TM_UserField5=&TM_Original_RefNo=&TM_CCLast4Digit=0001&TM_RecurrentId=&TM_CCNum=xxxxxxxxxxxx0001&TM_ExpiryDate=2101&TM_IPP_FirstPayment=&TM_IPP_LastPayment=&TM_IPP_MonthlyPayment=&TM_IPP_TransTenure=&TM_IPP_TotalInterest=&TM_IPP_DownPayment=&TM_IPP_MonthlyInterest=&TM_OriginalPayType=3&TM_Version=2&TM_Signature=E5ADA760E8E251F8DBDDB8ADC8767949E694C6C6DC171558BA01F580D0900F8E12C72698991F86720AC2DC4AC39844FABA56FB3DCC47CD8371288B0D7750F9C9",
+      TelemoneyTransactionResponse,
       // Note : result row from Telemoney
+      TelemoneyPaymentResultRow,
       paymentSuccessful: true,
       ...PaymentDetails
     },
@@ -711,6 +761,7 @@ export function updatePaymentTransactionTravelSingle(
 }
 
 export function submitApplicationTravelSingle(
+  transactionRef: string,
   WebAppID: string,
   PASAppID: string,
   Premium: number,
@@ -719,7 +770,9 @@ export function submitApplicationTravelSingle(
   TravelEndDate: Date,
   ProductPlanID: ProductPlanID,
   PolicyHolder: PolicyHolder,
-  PaymentDetails: PaymentDetails
+  PaymentDetails: PaymentDetails,
+  TelemoneyTransactionResponse: string,
+  TelemoneyPaymentResultRow: string
 ) {
   TravelStartDate = moment(TravelStartDate).format("YYYY-MM-DD");
   TravelEndDate = moment(TravelEndDate).format("YYYY-MM-DD");
@@ -747,7 +800,7 @@ export function submitApplicationTravelSingle(
     NetPremium: Premium,
     GrossPremium: Premium,
     PaymentInfo: {
-      PaymentReferenceNumber: `A${PASAppID}-WT1608170248`,
+      PaymentReferenceNumber: `A${PASAppID}-${transactionRef}`,
       // Note A stands for Application 8919 is the ID returned from successful verified, WDF26F6 unique sequence generated
       BankID: 143,
       PayByApplicant: true,
@@ -757,12 +810,10 @@ export function submitApplicationTravelSingle(
       // Note : Assumed always pay by applicant is true in the backend system
       IDNumberType: PolicyHolder.IDNumberType,
       TelephoneNumber: PolicyHolder.MobileTelephone,
-      TelemoneyTransactionResponse:
-        "TM_MCode=20151111011&TM_RefNo=WT1608170248&TM_TrnType=sale&TM_SubTrnType=&TM_Status=YES&TM_Error=&TM_Currency=SGD&TM_DebitAmt=11.00&TM_PaymentType=3&TM_BankRespCode=00&TM_ApprovalCode=878429&TM_ErrorMsg=&TM_UserField1=&TM_UserField2=&TM_UserField3=&TM_UserField4=&TM_UserField5=&TM_Original_RefNo=&TM_CCLast4Digit=0001&TM_RecurrentId=&TM_CCNum=xxxxxxxxxxxx0001&TM_ExpiryDate=2101&TM_IPP_FirstPayment=&TM_IPP_LastPayment=&TM_IPP_MonthlyPayment=&TM_IPP_TransTenure=&TM_IPP_TotalInterest=&TM_IPP_DownPayment=&TM_IPP_MonthlyInterest=&TM_OriginalPayType=3&TM_Version=2&TM_Signature=E5ADA760E8E251F8DBDDB8ADC8767949E694C6C6DC171558BA01F580D0900F8E12C72698991F86720AC2DC4AC39844FABA56FB3DCC47CD8371288B0D7750F9C9",
       //Note: Telemoney Payment response result
-      TelemoneyPaymentResultRow:
-        "TM_MCode=20151111011&TM_RefNo=WT1608170248&TM_TrnType=sale&TM_SubTrnType=&TM_Status=YES&TM_Error=&TM_Currency=SGD&TM_DebitAmt=11.00&TM_PaymentType=3&TM_BankRespCode=00&TM_ApprovalCode=878429&TM_ErrorMsg=&TM_UserField1=&TM_UserField2=&TM_UserField3=&TM_UserField4=&TM_UserField5=&TM_Original_RefNo=&TM_CCLast4Digit=0001&TM_RecurrentId=&TM_CCNum=xxxxxxxxxxxx0001&TM_ExpiryDate=2101&TM_IPP_FirstPayment=&TM_IPP_LastPayment=&TM_IPP_MonthlyPayment=&TM_IPP_TransTenure=&TM_IPP_TotalInterest=&TM_IPP_DownPayment=&TM_IPP_MonthlyInterest=&TM_OriginalPayType=3&TM_Version=2&TM_Signature=E5ADA760E8E251F8DBDDB8ADC8767949E694C6C6DC171558BA01F580D0900F8E12C72698991F86720AC2DC4AC39844FABA56FB3DCC47CD8371288B0D7750F9C9",
+      TelemoneyTransactionResponse,
       // Note : result row from Telemoney
+      TelemoneyPaymentResultRow,
       paymentSuccessful: true,
       ...PaymentDetails
     },

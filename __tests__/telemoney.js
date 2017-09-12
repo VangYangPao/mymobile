@@ -109,14 +109,28 @@ const CARDS = {
 //   }
 // });
 
+// it("does 3DS authorization correctly", () => {
+//   let paytype = 3;
+
+//   for (let i = 0; i < 1; i++) {
+//     // const amt = Math.floor(Math.random() * 100) + 1;
+//     doFull3DSTransaction(CARDS[paytype], paytype, 11).then(res =>
+//       console.log(res)
+//     );
+//   }
+// });
+
 it("does 3DS authorization correctly", () => {
   let paytype = 3;
+  const ref = generateRef();
 
   for (let i = 0; i < 1; i++) {
     // const amt = Math.floor(Math.random() * 100) + 1;
-    doFull3DSTransaction(CARDS[paytype], paytype, 11).then(res =>
-      console.log(res)
-    );
+    return verifyEnrolment(ref, CARDS[paytype], paytype, "11.00")
+      .then(res => {
+        return doFull3DSTransaction(CARDS[paytype], paytype, 11, res);
+      })
+      .then(res => console.log(res));
   }
 });
 
