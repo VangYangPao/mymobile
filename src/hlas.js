@@ -2,12 +2,18 @@
 import uuidv4 from "uuid/v4";
 import moment from "moment";
 
+import type {
+  ProductPlanID,
+  PaymentDetails,
+  PolicyHolder,
+  Traveller
+} from "./types/hlas";
 import {
   generateRef,
   verifyEnrolment,
   doFull3DSTransaction
 } from "./telemoney";
-import { objectToUrlParams } from "./utils";
+import { objectToUrlParams, retryPromise, retry } from "./utils";
 
 const HLAS_URL = "http://42.61.99.229:8080";
 const AGENT_CODE = "MIC00002"; // just to track microassurce account
@@ -383,43 +389,6 @@ export function submitApplicationAccident(WebAppID, PASAppID) {
   );
 }
 
-type ProductPlanID = 1 | 2 | 84 | 85;
-
-type PaymentDetails = {
-  NameOnCard: string,
-  CardNumber: string,
-  CardType: 2 | 3,
-  CardSecurityCode: string,
-  CardExpiryYear: number,
-  CardExpiryMonth: number
-};
-
-type PolicyHolder = {
-  Surname: string,
-  GivenName: string,
-  IDNumber: string,
-  IDNumberType: number,
-  DateOfBirth: string,
-  GenderID: number,
-  MobileTelephone: string,
-  Email: string,
-  UnitNumber: string,
-  BlockHouseNumber: string,
-  BuildingName: string,
-  StreetName: string,
-  PostalCode: string
-};
-
-type Traveller = {
-  Surname: string,
-  GivenName: string,
-  IDNumber: string,
-  IDNumberType: number,
-  DateOfBirth: string,
-  GenderID: number,
-  RelationshipID: number
-};
-
 function padStart(str, padString, length) {
   while (str.length < length) str = padString + str;
   return str;
@@ -462,18 +431,29 @@ export function purchaseTravelPolicy(
     paymentDetails
   )
     .then(res => {
+      console.log("verified application");
       PASAppID = res.ApplciationNo;
-      return verifyEnrolment(
-        transactionRef,
-        card,
-        paymentDetails.CardType,
-        premium.toFixed(2)
-      );
+      // const args = [
+      //   transactionRef,
+      //   card,
+      //   paymentDetails.CardType,
+      //   premium.toFixed(2)
+      // ];
+      // return retryPromise(verifyEnrolment, args, 5, 2000);
+      let count = 0;
+      return retry(5, () => {
+        console.log("retry", ++count);
+        return verifyEnrolment(
+          transactionRef,
+          card,
+          paymentDetails.CardType,
+          premium.toFixed(2)
+        );
+      });
     })
     .then(res => {
       verifyEnrolmentResponseObj = res;
       verifyEnrolmentResponse = objectToUrlParams(verifyEnrolmentResponseObj);
-      console.log("verified enrolment " + res);
       return createPaymentTransactionTravelSingle(
         transactionRef,
         WebAppID,
@@ -489,14 +469,26 @@ export function purchaseTravelPolicy(
       );
     })
     .then(res => {
-      return doFull3DSTransaction(
-        card,
-        paymentDetails.CardType,
-        premium,
-        verifyEnrolmentResponseObj
-      );
+      // const args = [
+      //   card,
+      //   paymentDetails.CardType,
+      //   premium,
+      //   verifyEnrolmentResponseObj
+      // ];
+      // return retryPromise(doFull3DSTransaction, args, 5, 2000);
+      let count = 0;
+      return retry(5, () => {
+        console.log("retry", ++count);
+        return doFull3DSTransaction(
+          card,
+          paymentDetails.CardType,
+          premium,
+          verifyEnrolmentResponseObj
+        );
+      });
     })
     .then(res => {
+      console.log("payment res", res);
       paymentSuccessfulResponse = objectToUrlParams(res);
       console.log("payment successful", res);
       return updatePaymentTransactionTravelSingle(
@@ -513,23 +505,24 @@ export function purchaseTravelPolicy(
         verifyEnrolmentResponse,
         paymentSuccessfulResponse
       );
-    })
-    .then(res => {
-      return submitApplicationTravelSingle(
-        transactionRef,
-        WebAppID,
-        PASAppID,
-        premium,
-        countryid,
-        startDate,
-        endDate,
-        planid,
-        policyHolder,
-        paymentDetails,
-        verifyEnrolmentResponse,
-        paymentSuccessfulResponse
-      );
     });
+  // .then(res => {
+  //   console.log("update payment transaction", res);
+  //   return submitApplicationTravelSingle(
+  //     transactionRef,
+  //     WebAppID,
+  //     PASAppID,
+  //     premium,
+  //     countryid,
+  //     startDate,
+  //     endDate,
+  //     planid,
+  //     policyHolder,
+  //     paymentDetails,
+  //     verifyEnrolmentResponse,
+  //     paymentSuccessfulResponse
+  //   );
+  // });
 }
 
 export function getTravelQuote(

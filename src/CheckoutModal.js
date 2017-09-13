@@ -9,7 +9,8 @@ import {
   Dimensions,
   Alert,
   ToastAndroid,
-  Platform
+  Platform,
+  ActivityIndicator
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { CreditCardInput } from "react-native-credit-card-input";
@@ -25,8 +26,13 @@ export default class CheckoutModal extends Component {
     super(props);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleCheckout = this.handleCheckout.bind(this);
-    this.entries = ["number", "expiry", "cvc"];
-    this.state = { form: null, firstSubmit: false, afterSubmit: false };
+    this.entries = ["number", "expiry", "cvc", "name"];
+    this.state = {
+      form: null,
+      firstSubmit: false,
+      afterSubmit: false,
+      loadingText: "GETTING YOU COVERED..."
+    };
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -39,12 +45,23 @@ export default class CheckoutModal extends Component {
         const invalidEntry = this.entries.find(
           entry => this.state.form.status[entry] !== "valid"
         );
-        this.creditCardInput.focus(invalidEntry);
+        if (invalidEntry) {
+          this.creditCardInput.focus(invalidEntry);
+        }
       }
       if (!this.state.form) {
         // not filled yet, just focus first one
         this.creditCardInput.focus("number");
       }
+    }
+
+    if (
+      this.props.purchasing &&
+      this.props.purchasing !== prevProps.purchasing
+    ) {
+      setTimeout(() => {
+        this.setState({ loadingText: "ONE SECOND..." });
+      }, 3000);
     }
   }
 
@@ -70,8 +87,8 @@ export default class CheckoutModal extends Component {
       }, 300);
       return;
     }
-    if (typeof this.props.onCheckout === "function") {
-      this.props.onCheckout();
+    if (this.state.form.valid && typeof this.props.onCheckout === "function") {
+      this.props.onCheckout(this.state.form.values);
     }
   }
 
@@ -90,6 +107,13 @@ export default class CheckoutModal extends Component {
         additionalInputStyles[entry] = { borderBottomColor };
       });
     }
+
+    const purchaseLoadingView = (
+      <View style={styles.purchaseLoading}>
+        <ActivityIndicator color="white" size="large" />
+        <Text style={styles.purchaseLoadingText}>{this.state.loadingText}</Text>
+      </View>
+    );
 
     return (
       <Modal
@@ -112,6 +136,8 @@ export default class CheckoutModal extends Component {
                 invalidColor={colors.errorRed}
                 additionalInputStyles={additionalInputStyles}
                 onChange={this.handleInputChange}
+                requiresName={true}
+                requiresCVC={true}
               />
             </View>
             <Button
@@ -121,6 +147,7 @@ export default class CheckoutModal extends Component {
             >
               CONFIRM PURCHASE (${this.props.price.toFixed(2)})
             </Button>
+            {this.props.purchasing ? purchaseLoadingView : null}
           </View>
         </View>
       </Modal>
@@ -129,6 +156,22 @@ export default class CheckoutModal extends Component {
 }
 
 const styles = StyleSheet.create({
+  purchaseLoadingText: {
+    marginTop: 20,
+    color: "white",
+    fontSize: 18,
+    fontWeight: "600"
+  },
+  purchaseLoading: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(52, 52, 52, 0.8)"
+  },
   inputContainerStyle: {
     borderBottomWidth: 2,
     borderBottomColor: colors.borderLine

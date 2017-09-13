@@ -123,10 +123,10 @@ const MyDrawerNavigator = DrawerNavigator(
     MyPolicies: {
       screen: StatusStackNavigator,
       navigationOptions: createDrawerNavOptions("My Polices & Status", "book")
-    },
-    Notification: {
-      screen: NotificationsStackNavigator
     }
+    // Notification: {
+    //   screen: NotificationsStackNavigator
+    // }
     // Profile: {
     //   screen: StatusStackNavigator,
     //   navigationOptions: createDrawerNavOptions("My Profile", "account-circle")

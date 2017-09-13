@@ -69,24 +69,23 @@ export function verifyEnrolment(
   // console.log(payload);
   const formData = generateFormData(payload);
 
-  return fetch(PAYMENT_PROCESS_URL, {
-    method: "POST",
-    body: formData
-  })
-    .then(res => res.text())
-    .catch(err => {
-      throw err;
+  return (
+    fetch(PAYMENT_PROCESS_URL, {
+      method: "POST",
+      body: formData
     })
-    .then(resStr => {
-      const res = getObjectFromUrlParams(resStr);
-      if (res.TM_Status === "NO") {
-        throw new Error(JSON.stringify(res));
-      }
-      return res;
-    })
-    .catch(err => {
-      throw err;
-    });
+      .then(res => res.text())
+      // .catch(err => {
+      //   throw err;
+      // })
+      .then(resStr => {
+        const res = getObjectFromUrlParams(resStr);
+        if (res.TM_Status === "NO") {
+          throw new Error(JSON.stringify(res));
+        }
+        return res;
+      })
+  );
 }
 
 export function acsRedirection(
@@ -101,11 +100,10 @@ export function acsRedirection(
   return fetch(acsUrl, {
     method: "POST",
     body: formData
-  })
-    .then(res => res.text())
-    .catch(err => {
-      throw err;
-    });
+  }).then(res => res.text());
+  // .catch(err => {
+  //   throw err;
+  // });
 }
 
 export function performPaymentAuthRequest(
@@ -132,24 +130,27 @@ export function performPaymentAuthRequest(
     version: API_VERSION
   };
   const formData = generateFormData(payload);
-  return fetch(PAYMENT_PROCESS_URL, {
-    method: "POST",
-    body: formData
-  })
-    .then(res => res.text())
-    .catch(err => {
-      throw err;
+  return (
+    fetch(PAYMENT_PROCESS_URL, {
+      method: "POST",
+      body: formData
     })
-    .then(resStr => {
-      const res = getObjectFromUrlParams(resStr);
-      if (res.TM_Status === "NO") {
-        throw new Error(JSON.stringify(res));
-      }
-      return res;
-    })
-    .catch(err => {
-      throw err;
-    });
+      .then(res => res.text())
+      // .catch(err => {
+      //   throw err;
+      // })
+      .then(resStr => {
+        const res = getObjectFromUrlParams(resStr);
+        if (res.TM_Status === "NO") {
+          console.log("pass");
+          throw new Error(JSON.stringify(res));
+        }
+        return res;
+      })
+  );
+  // .catch(err => {
+  //   throw err;
+  // });
 }
 
 export function create3dsAuthorizationRequest(
@@ -204,10 +205,10 @@ export function create3dsAuthorizationRequest(
         throw new Error(JSON.stringify(res));
       }
       return res;
-    })
-    .catch(err => {
-      throw err;
     });
+  // .catch(err => {
+  //   throw err;
+  // });
 }
 
 export function doFull3DSTransaction(
@@ -226,53 +227,55 @@ export function doFull3DSTransaction(
     ref = generateRef();
     promise = verifyEnrolment(ref, cardDetails, paytype, amt);
   }
-  return promise
-    .then(res => {
-      const {
-        Acsurl,
-        PaReq,
-        TM_RefNo
-      }: { Acsurl: string, PaReq: string, TM_RefNo: string } = res;
-      ref = TM_RefNo;
-      console.log("verified enrolment");
-      return acsRedirection(
-        Acsurl,
-        PaReq,
-        "http://microumbrella.com/term",
-        ref
-      );
-    })
-    .catch(err => {
-      console.error("verify enrolment", err);
-    })
-    .then(html => {
-      console.log("acs redirected");
-      const $ = cheerio.load(html);
-      const PaRes = $('input[name="PaRes"]').val();
-      return performPaymentAuthRequest(ref, amt, PaRes);
-    })
-    .catch(err => {
-      console.error("payment authentication", err);
-    })
-    .then(res => {
-      const { TM_3DSStatus, TM_ECI, TM_CAVV, TM_XID } = res;
-      console.log("payment authenticated");
-      return create3dsAuthorizationRequest(
-        cardDetails,
-        ref,
-        paytype,
-        TM_3DSStatus,
-        amt,
-        TM_ECI,
-        TM_CAVV,
-        TM_XID
-      );
-    })
-    .catch(err => {
-      console.error("3DS", err);
-    })
-    .then(res => {
-      console.log("3DS sale done");
-      return res;
-    });
+  return (
+    promise
+      .then(res => {
+        const {
+          Acsurl,
+          PaReq,
+          TM_RefNo
+        }: { Acsurl: string, PaReq: string, TM_RefNo: string } = res;
+        ref = TM_RefNo;
+        console.log("verified enrolment");
+        return acsRedirection(
+          Acsurl,
+          PaReq,
+          "http://microumbrella.com/term",
+          ref
+        );
+      })
+      // .catch(err => {
+      //   console.error("verify enrolment", err);
+      // })
+      .then(html => {
+        console.log("acs redirected");
+        const $ = cheerio.load(html);
+        const PaRes = $('input[name="PaRes"]').val();
+        return performPaymentAuthRequest(ref, amt, PaRes);
+      })
+      // .catch(err => {
+      //   console.error("payment authentication", err);
+      // })
+      .then(res => {
+        const { TM_3DSStatus, TM_ECI, TM_CAVV, TM_XID } = res;
+        console.log("payment authenticated");
+        return create3dsAuthorizationRequest(
+          cardDetails,
+          ref,
+          paytype,
+          TM_3DSStatus,
+          amt,
+          TM_ECI,
+          TM_CAVV,
+          TM_XID
+        );
+      })
+      // .catch(err => {
+      //   console.error("3DS", err);
+      // })
+      .then(res => {
+        console.log("3DS sale done");
+        return res;
+      })
+  );
 }

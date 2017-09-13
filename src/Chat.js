@@ -448,7 +448,6 @@ class ChatScreen extends Component {
     } else if (policy.policyType.indexOf("travel") !== -1) {
       this.questions.push.apply(this.questions, travelClaimQuestions);
     } else if (policy.policyType.indexOf("mobile") !== -1) {
-      console.log(mobileClaimQuestions);
       this.questions.push.apply(this.questions, mobileClaimQuestions);
     }
 
@@ -751,7 +750,6 @@ class ChatScreen extends Component {
           answer = parseFloat(answer);
         }
         let result = validateAnswer(lastQuestion, answer, this.state.answers);
-        console.log("result", result);
 
         if (Array.isArray(result)) {
           const isValid = result.every(r => r.isValid);
@@ -996,6 +994,7 @@ class ChatScreen extends Component {
   }
 
   render() {
+    // return <CheckoutModal purchasing={true} price={13.599} purchasing={true} />;
     const additionalProps = {};
     let minInputToolbarHeight = 44;
     if (

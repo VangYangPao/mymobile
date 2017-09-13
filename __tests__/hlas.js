@@ -102,7 +102,7 @@ it("purchases single travel correctly", () => {
   const policyHolder = {
     Surname: "test",
     GivenName: "test",
-    IDNumber: "S6785091B",
+    IDNumber: "S8986305H",
     DateOfBirth: "1988-07-22",
     GenderID: 1,
     MobileTelephone: "91234567",
@@ -132,9 +132,13 @@ it("purchases single travel correctly", () => {
     hasChildren,
     policyHolder,
     paymentDetails
-  ).then(res => {
-    console.log("purchase successful", res);
-  });
+  )
+    .then(res => {
+      console.log("purchase successful", res);
+    })
+    .catch(err => {
+      console.error(err);
+    });
 });
 
 // it("submits application for single travel correctly", () => {
