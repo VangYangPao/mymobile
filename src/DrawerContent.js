@@ -3,6 +3,7 @@ import { View, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { DrawerItems } from "react-navigation";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
+import colors from "./colors";
 import { Text } from "./defaultComponents";
 
 export default class DrawerContent extends Component {
@@ -16,6 +17,18 @@ export default class DrawerContent extends Component {
               style={styles.image}
             />
             <Text style={styles.name}>Denzel Tan</Text>
+            <TouchableOpacity onPress={() => {}}>
+              <View style={styles.viewEditProfile}>
+                <Text style={styles.viewEditProfileText}>
+                  View / Edit profile
+                </Text>
+                <Icon
+                  style={styles.viewEditProfileIcon}
+                  name="mode-edit"
+                  size={18}
+                />
+              </View>
+            </TouchableOpacity>
           </View>
           <DrawerItems labelStyle={styles.drawerItemLabel} {...this.props} />
         </View>
@@ -42,8 +55,22 @@ export default class DrawerContent extends Component {
 }
 
 const imageDim = 100;
+const subtitleColor = "#757575";
 
 const styles = StyleSheet.create({
+  viewEditProfileIcon: {
+    color: subtitleColor
+  },
+  viewEditProfileText: {
+    marginRight: 7,
+    color: subtitleColor
+  },
+  viewEditProfile: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 5
+  },
   drawerItemLabel: {
     marginLeft: -5
   },

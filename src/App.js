@@ -22,6 +22,7 @@ import StatusScreen from "./StatusScreen";
 import AuthScreen from "./AuthScreen";
 import HomeScreen from "./HomeScreen";
 import TermsOfUse from "./TermsOfUse";
+import NotificationsScreen from "./NotificationsScreen";
 import { TermsOfUseStack, PrivacyPolicyStack } from "./TermsAndPrivacyPolicy";
 import HelpScreen from "./HelpScreen";
 import colors from "./colors";
@@ -104,6 +105,13 @@ const HelpStackNavigator = StackNavigator({
   }
 });
 
+const NotificationsStackNavigator = StackNavigator({
+  Notifications: {
+    screen: NotificationsScreen,
+    navigationOptions: backButtonNavOptions
+  }
+});
+
 const MyDrawerNavigator = DrawerNavigator(
   {
     BuyStack: {
@@ -115,8 +123,10 @@ const MyDrawerNavigator = DrawerNavigator(
     MyPolicies: {
       screen: StatusStackNavigator,
       navigationOptions: createDrawerNavOptions("My Polices & Status", "book")
+    },
+    Notification: {
+      screen: NotificationsStackNavigator
     }
-
     // Profile: {
     //   screen: StatusStackNavigator,
     //   navigationOptions: createDrawerNavOptions("My Profile", "account-circle")
@@ -141,10 +151,10 @@ const stackNavigatorScreens = {
   Help: { screen: HelpStackNavigator }
 };
 
-// if (ENV === "development") {
-//   delete stackNavigatorScreens.Intro;
-//   delete stackNavigatorScreens.TermsOfUse;
-// }
+if (ENV === "development") {
+  delete stackNavigatorScreens.Intro;
+  delete stackNavigatorScreens.TermsOfUse;
+}
 
 export default (Microsurance = StackNavigator(stackNavigatorScreens, {
   headerMode: "none"

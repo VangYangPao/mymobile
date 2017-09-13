@@ -2,6 +2,14 @@
 export default (database = {
   policies: [
     {
+      id: 10,
+      status: "active",
+      policyType: "mobile",
+      purchaseDate: new Date(2017, 5, 26, 16, 43),
+      coverageSummary: [],
+      premium: 19.88
+    },
+    {
       id: 11,
       status: "active",
       policyType: "travel",

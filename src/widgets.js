@@ -368,25 +368,27 @@ export class ClaimPolicyChoice extends Component {
           <Text style={widgetStyles.policyDetailText}>
             Purchase date: {getDateStr(policy.purchaseDate)}
           </Text>
-          {/*<View style={{ flexDirection: "row", marginVertical: 10 }}>
-            <Text style={{ flex: 0.3 }}>Coverage:</Text>
-            <View style={{ flex: 1 }}>
-              {policy.coverageSummary.map((coverage, idx) => {
-                return (
-                  <View
-                    key={idx}
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "space-between"
-                    }}
-                  >
-                    <Text>{coverage.label}</Text>
-                    <Text>{coverage.value}</Text>
-                  </View>
-                );
-              })}
+          {policy.coverageSummary.length ? (
+            <View style={{ flexDirection: "row", marginVertical: 10 }}>
+              <Text style={{ flex: 0.3 }}>Coverage:</Text>
+              <View style={{ flex: 1 }}>
+                {policy.coverageSummary.map((coverage, idx) => {
+                  return (
+                    <View
+                      key={idx}
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between"
+                      }}
+                    >
+                      <Text>{coverage.label}</Text>
+                      <Text>{coverage.value}</Text>
+                    </View>
+                  );
+                })}
+              </View>
             </View>
-          </View>*/}
+          ) : null}
           <Text style={widgetStyles.policyDetailText}>
             Premium: ${policy.premium}
           </Text>
