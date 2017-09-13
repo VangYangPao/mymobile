@@ -1,5 +1,5 @@
 // @flow
-import * as cheerio from "cheerio";
+import * as cheerio from "cheerio-without-node-native";
 import { sha512 } from "js-sha512";
 import moment from "moment";
 

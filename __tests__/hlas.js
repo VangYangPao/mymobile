@@ -102,7 +102,7 @@ it("purchases single travel correctly", () => {
   const policyHolder = {
     Surname: "test",
     GivenName: "test",
-    IDNumber: "S7119153B",
+    IDNumber: "S6785091B",
     DateOfBirth: "1988-07-22",
     GenderID: 1,
     MobileTelephone: "91234567",
