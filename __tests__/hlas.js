@@ -62,32 +62,32 @@ jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 //   });
 // });
 
-// it("submits application for accident correctly", () => {
-//   expect.assertions = 7;
-//   let PASAppID;
-//   const WebAppID = uuidv4();
-//   return verifyApplicationAccident(WebAppID)
-//     .then(res => {
-//       expect(typeof res.ApplciationNo).toBe("number");
-//       expect(res.Success).toBe(true);
-//       PASAppID = res.ApplciationNo;
-//       return createPaymentTransactionAccident(WebAppID, PASAppID);
-//     })
-//     .then(res => {
-//       expect(res.Success).toBe(true);
-//       return updatePaymentTransactionAccident(WebAppID, PASAppID);
-//     })
-//     .then(res => {
-//       expect(res.Success).toBe(true);
-//       return submitApplicationAccident(WebAppID, PASAppID);
-//     })
-//     .then(res => {
-//       console.log(res);
-//       expect(res.Success).toBe(true);
-//       expect(typeof res.PolicyNo).toBe("string");
-//       expect(res.PolicyNo).toMatch(/^AM/);
-//     });
-// });
+it("submits application for accident correctly", () => {
+  expect.assertions = 7;
+  let PASAppID;
+  const WebAppID = uuidv4();
+  return verifyApplicationAccident(WebAppID)
+    .then(res => {
+      expect(typeof res.applciationNo).toBe("number");
+      expect(res.success).toBe(true);
+      PASAppID = res.applciationNo;
+      return createPaymentTransactionAccident(WebAppID, PASAppID);
+    })
+    .then(res => {
+      expect(res.success).toBe(true);
+      return updatePaymentTransactionAccident(WebAppID, PASAppID);
+    })
+    .then(res => {
+      expect(res.success).toBe(true);
+      return submitApplicationAccident(WebAppID, PASAppID);
+    })
+    .then(res => {
+      console.log(res);
+      expect(res.success).toBe(true);
+      expect(typeof res.policyNo).toBe("string");
+      expect(res.policyNo).toMatch(/^AM/);
+    });
+});
 
 it("purchases single travel correctly", () => {
   const premium = 15;
@@ -102,7 +102,7 @@ it("purchases single travel correctly", () => {
   const policyHolder = {
     Surname: "test",
     GivenName: "test",
-    IDNumber: "S8986305H",
+    IDNumber: generateNRIC(),
     DateOfBirth: "1988-07-22",
     GenderID: 1,
     MobileTelephone: "91234567",

@@ -1,4 +1,8 @@
-export type ProductPlanID = 1 | 2 | 84 | 85;
+export type TravelProductPlanID = 1 | 2 | 84 | 85;
+
+export type AccidentProductPlanID = 100 | 101 | 102 | 103 | 104;
+export type AccidentPolicyTermID = 1 | 2 | 3 | 4;
+export type AccidentOptionID = 1 | 2;
 
 export type PaymentDetails = {
   NameOnCard: string,

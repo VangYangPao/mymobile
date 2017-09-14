@@ -24,7 +24,7 @@ import Page from "./Page";
 import Footer from "./Footer";
 import PolicyPrice from "./PolicyPrice";
 import CheckoutModal from "./CheckoutModal";
-import { getTravelQuote } from "./hlas";
+import { getTravelQuote, getAccidentQuote } from "./hlas";
 import { CONFIRMATION_PAGE_LOAD_TIME } from "react-native-dotenv";
 const PAGE_LOAD_TIME = parseInt(CONFIRMATION_PAGE_LOAD_TIME, 10);
 
@@ -49,6 +49,10 @@ export default class ConfirmationScreen extends Component {
   };
 
   state: State;
+  travelPlans: Array<number>;
+  paPlans: Array<number>;
+  paOptions: { pa: number, pa_mr: number, pa_wi: number };
+  paTerms: { "1": number, "2": 2, "3": 3, "6": 4, "12": 5 };
   policy: any;
   handleCheckout: Function;
   handlePurchaseTravelPolicy: Function;
@@ -68,6 +72,20 @@ export default class ConfirmationScreen extends Component {
       purchasing: false,
       totalPremium: null
     };
+    this.travelPlans = [1, 2, 84, 85];
+    this.paPlans = [100, 101, 102, 103, 104];
+    this.paTerms = {
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "6": 4,
+      "12": 5
+    };
+    this.paOptions = {
+      pa: 0,
+      pa_mr: 1,
+      pa_wi: 2
+    };
   }
 
   componentWillMount() {
@@ -77,13 +95,14 @@ export default class ConfirmationScreen extends Component {
 
   componentDidMount() {
     const { form } = this.props.navigation.state.params;
+    let promise;
     if (this.policy && this.policy.id === "travel") {
       const countryid = form.travelDestination;
       const tripDurationInDays = moment(form.returnDate).diff(
         form.departureDate,
         "days"
       );
-      const planid = form.planIndex;
+      const planid = this.travelPlans[form.planIndex];
       const [hasSpouse, hasChildren] = this.getHasSpouseAndChildren(
         form.recipient
       );
@@ -94,15 +113,36 @@ export default class ConfirmationScreen extends Component {
         hasSpouse,
         hasChildren
       );
-      getTravelQuote(
+      promise = getTravelQuote(
         countryid,
         tripDurationInDays,
         planid,
         hasSpouse,
         hasChildren
-      ).then(res => {
-        this.setState({ totalPremium: parseFloat(res.data) });
-      });
+      );
+    } else if (
+      this.policy &&
+      (this.policy.id === "pa" ||
+        this.policy.id === "pa_mr" ||
+        this.policy.id === "pa_wi")
+    ) {
+      console.log(form);
+      const planid = this.paPlans[form.planIndex];
+      const termid = this.paTerms[form.coverageDuration];
+      const optionid = this.paOptions[this.policy.id];
+      const commencementDate = new Date();
+      console.log(planid, termid, optionid, commencementDate);
+      promise = getAccidentQuote(planid, termid, optionid, commencementDate);
+    }
+    if (promise) {
+      promise
+        .then(res => {
+          this.setState({ totalPremium: parseFloat(res.data) });
+        })
+        .catch(err => {
+          console.error(err);
+          showAlert("Sorry, error getting policy quote");
+        });
     }
   }
 
@@ -134,7 +174,7 @@ export default class ConfirmationScreen extends Component {
     const countryid = form.travelDestination;
     const startDate = form.departureDate;
     const endDate = form.returnDate;
-    const planid = form.planIndex;
+    const planid = this.travelPlans[form.planIndex];
     const [hasSpouse, hasChildren] = this.getHasSpouseAndChildren(
       form.recipient
     );
@@ -242,7 +282,6 @@ export default class ConfirmationScreen extends Component {
         paymentDetails
       );
     }
-    console.log(promise);
     if (promise) {
       promise.then(res => {
         const resetAction = NavigationActions.reset({

@@ -559,10 +559,6 @@ class ChatScreen extends Component {
           delete form.icImage;
           if (policy.id === "travel") {
             delete form.price;
-          } else {
-            form.totalPremium =
-              this.props.policy.plans[planIndex].premium *
-              form.coverageDuration;
           }
           this.props.navigation.navigate("Confirmation", { form });
         } else if (questionSet === "claim") {

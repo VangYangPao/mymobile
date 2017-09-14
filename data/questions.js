@@ -295,12 +295,12 @@ export const QUESTION_SETS = {
       id: "coverageDuration",
       exclude: ["mobile", "travel"]
     },
-    {
-      question:
-        "<%= ['Awesome', 'Nice', 'Great'][Math.floor(Math.random()*3)] %>. That would be $<%= (policy.plans[planIndex].premium * coverageDuration).toFixed(2) %>.",
-      responseType: null,
-      exclude: ["travel"]
-    },
+    // {
+    //   question:
+    //     "<%= ['Awesome', 'Nice', 'Great'][Math.floor(Math.random()*3)] %>.%>.",
+    //   responseType: null,
+    //   exclude: ["travel"]
+    // },
     {
       question:
         "For the next steps, I will be asking you some questions to get you covered instantly. Please be patient with my questions. 😬",
@@ -346,7 +346,7 @@ export const QUESTION_SETS = {
     // },
     {
       question:
-        "Thank you <%= lastName %> <%= firstName %> for the information. I will now bring you to the confirmation page.",
+        "Thank you <%= firstName %> <%= lastName %> for the information. I will now bring you to the confirmation page.",
       responseType: null
     }
   ],

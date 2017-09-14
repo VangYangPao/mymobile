@@ -3,7 +3,10 @@ import uuidv4 from "uuid/v4";
 import moment from "moment";
 
 import type {
-  ProductPlanID,
+  TravelProductPlanID,
+  AccidentProductPlanID,
+  AccidentOptionID,
+  AccidentPolicyTermID,
   PaymentDetails,
   PolicyHolder,
   Traveller
@@ -63,11 +66,12 @@ export function getPhoneProtectQuote() {
 }
 
 export function getAccidentQuote(
-  planid,
-  policytermid,
-  optionid,
-  commencementDate
+  planid: AccidentProductPlanID,
+  policytermid: AccidentPolicyTermID,
+  optionid: AccidentOptionID,
+  commencementDate: Date
 ) {
+  commencementDate = moment(commencementDate).format("YYYY-MM-DD");
   const source = AGENT_CODE;
   const paramStr = objectToUrlParams({
     planid,
@@ -505,24 +509,24 @@ export function purchaseTravelPolicy(
         verifyEnrolmentResponse,
         paymentSuccessfulResponse
       );
+    })
+    .then(res => {
+      console.log("update payment transaction", res);
+      return submitApplicationTravelSingle(
+        transactionRef,
+        WebAppID,
+        PASAppID,
+        premium,
+        countryid,
+        startDate,
+        endDate,
+        planid,
+        policyHolder,
+        paymentDetails,
+        verifyEnrolmentResponse,
+        paymentSuccessfulResponse
+      );
     });
-  // .then(res => {
-  //   console.log("update payment transaction", res);
-  //   return submitApplicationTravelSingle(
-  //     transactionRef,
-  //     WebAppID,
-  //     PASAppID,
-  //     premium,
-  //     countryid,
-  //     startDate,
-  //     endDate,
-  //     planid,
-  //     policyHolder,
-  //     paymentDetails,
-  //     verifyEnrolmentResponse,
-  //     paymentSuccessfulResponse
-  //   );
-  // });
 }
 
 export function getTravelQuote(
