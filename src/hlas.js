@@ -564,24 +564,24 @@ export function purchaseTravelPolicy(
         verifyEnrolmentResponse,
         paymentSuccessfulResponse
       );
-    })
-    .then(res => {
-      console.log("update payment transaction", res);
-      return submitApplicationTravelSingle(
-        transactionRef,
-        WebAppID,
-        PASAppID,
-        premium,
-        countryid,
-        startDate,
-        endDate,
-        planid,
-        policyHolder,
-        paymentDetails,
-        verifyEnrolmentResponse,
-        paymentSuccessfulResponse
-      );
     });
+  // .then(res => {
+  //   console.log("update payment transaction", res);
+  //   return submitApplicationTravelSingle(
+  //     transactionRef,
+  //     WebAppID,
+  //     PASAppID,
+  //     premium,
+  //     countryid,
+  //     startDate,
+  //     endDate,
+  //     planid,
+  //     policyHolder,
+  //     paymentDetails,
+  //     verifyEnrolmentResponse,
+  //     paymentSuccessfulResponse
+  //   );
+  // });
 }
 
 export function getTravelQuote(

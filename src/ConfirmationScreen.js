@@ -16,7 +16,6 @@ import moment from "moment";
 import { NavigationActions } from "react-navigation";
 
 import type { PolicyHolder, PaymentDetails } from "./types/hlas";
-import { purchaseTravelPolicy } from "./hlas";
 import database from "./HackStorage";
 import { Text } from "./defaultComponents";
 import { showAlert, prettifyCamelCase } from "./utils";
@@ -24,7 +23,12 @@ import Page from "./Page";
 import Footer from "./Footer";
 import PolicyPrice from "./PolicyPrice";
 import CheckoutModal from "./CheckoutModal";
-import { getTravelQuote, getAccidentQuote } from "./hlas";
+import {
+  getTravelQuote,
+  getAccidentQuote,
+  purchaseTravelPolicy,
+  purchaseAccidentPolicy
+} from "./hlas";
 import { CONFIRMATION_PAGE_LOAD_TIME } from "react-native-dotenv";
 const PAGE_LOAD_TIME = parseInt(CONFIRMATION_PAGE_LOAD_TIME, 10);
 
@@ -55,14 +59,12 @@ export default class ConfirmationScreen extends Component {
   paTerms: { "1": number, "2": 2, "3": 3, "6": 4, "12": 5 };
   policy: any;
   handleCheckout: Function;
-  handlePurchaseTravelPolicy: Function;
+  handlePurchaseResult: Function;
 
   constructor(props: { navigation: any, totalPremium: ?number }) {
     super(props);
     this.handleCheckout = this.handleCheckout.bind(this);
-    this.handlePurchaseTravelPolicy = this.handlePurchaseTravelPolicy.bind(
-      this
-    );
+    this.handlePurchaseResult = this.handlePurchaseResult.bind(this);
     const { form } = this.props.navigation.state.params;
     this.policy = form.policy;
     delete form.policy;
@@ -106,13 +108,6 @@ export default class ConfirmationScreen extends Component {
       const [hasSpouse, hasChildren] = this.getHasSpouseAndChildren(
         form.recipient
       );
-      console.log(
-        countryid,
-        tripDurationInDays,
-        planid,
-        hasSpouse,
-        hasChildren
-      );
       promise = getTravelQuote(
         countryid,
         tripDurationInDays,
@@ -126,12 +121,10 @@ export default class ConfirmationScreen extends Component {
         this.policy.id === "pa_mr" ||
         this.policy.id === "pa_wi")
     ) {
-      console.log(form);
       const planid = this.paPlans[form.planIndex];
       const termid = this.paTerms[form.coverageDuration];
       const optionid = this.paOptions[this.policy.id];
       const commencementDate = new Date();
-      console.log(planid, termid, optionid, commencementDate);
       promise = getAccidentQuote(planid, termid, optionid, commencementDate);
     }
     if (promise) {
@@ -160,36 +153,8 @@ export default class ConfirmationScreen extends Component {
     return [hasSpouse, hasChildren];
   }
 
-  handleFinishPurchase(telemoneyResponse: {
-    TM_Status: string,
-    TM_ApprovalCode: string
-  }) {}
-
-  handlePurchaseTravelPolicy(
-    premium: number,
-    policyHolder: PolicyHolder,
-    paymentDetails: PaymentDetails
-  ): Promise<any> {
-    const { form } = this.props.navigation.state.params;
-    const countryid = form.travelDestination;
-    const startDate = form.departureDate;
-    const endDate = form.returnDate;
-    const planid = this.travelPlans[form.planIndex];
-    const [hasSpouse, hasChildren] = this.getHasSpouseAndChildren(
-      form.recipient
-    );
-    console.log("started purchase", premium, paymentDetails);
-    return purchaseTravelPolicy(
-      premium,
-      countryid,
-      startDate,
-      endDate,
-      planid,
-      hasSpouse,
-      hasChildren,
-      policyHolder,
-      paymentDetails
-    )
+  handlePurchaseResult(promise: Promise<any>) {
+    promise
       .then(res => {
         console.log("purchase complete", JSON.stringify(res));
         const newId = database.policies[database.policies.length - 1].id + 1;
@@ -275,25 +240,51 @@ export default class ConfirmationScreen extends Component {
       CardExpiryMonth
     };
     let promise;
-    if (this.policy && this.policy.id === "travel" && this.state.totalPremium) {
-      promise = this.handlePurchaseTravelPolicy(
-        this.state.totalPremium,
-        policyHolder,
-        paymentDetails
+    if (this.policy && this.policy.id === "travel") {
+      const countryid = form.travelDestination;
+      const startDate = form.departureDate;
+      const endDate = form.returnDate;
+      const planid = this.travelPlans[form.planIndex];
+      const [hasSpouse, hasChildren] = this.getHasSpouseAndChildren(
+        form.recipient
       );
+      if (this.state.totalPremium) {
+        promise = purchaseTravelPolicy(
+          this.state.totalPremium,
+          countryid,
+          startDate,
+          endDate,
+          planid,
+          hasSpouse,
+          hasChildren,
+          policyHolder,
+          paymentDetails
+        );
+      }
+    } else if (
+      this.policy &&
+      (this.policy.id === "pa" ||
+        this.policy.id === "pa_mr" ||
+        this.policy.id === "pa_wi")
+    ) {
+      if (this.state.totalPremium) {
+        const planid = this.paPlans[form.planIndex];
+        const policytermid = this.paTerms[form.coverageDuration];
+        const occupationid = 2; // FIX THIS: Add occupation field
+        const optionid = this.paOptions[this.policy.id];
+        promise = purchaseAccidentPolicy(
+          this.state.totalPremium,
+          planid,
+          policytermid,
+          optionid,
+          occupationid,
+          policyHolder,
+          paymentDetails
+        );
+      }
     }
     if (promise) {
-      promise.then(res => {
-        const resetAction = NavigationActions.reset({
-          index: 1,
-          actions: [
-            NavigationActions.navigate({ routeName: "Chat" }),
-            NavigationActions.navigate({ routeName: "Status" })
-          ]
-        });
-        const resetToStatusScreen = () =>
-          this.props.navigation.dispatch(resetAction);
-      });
+      this.handlePurchaseResult(promise);
     }
   }
 
