@@ -16,9 +16,11 @@ import {
   updatePaymentTransactionTravelSingle,
   submitApplicationTravelSingle,
   purchaseTravelPolicy,
-  generateNRIC
+  generateNRIC,
+  purchaseAccidentPolicy
 } from "../src/hlas";
 import { verifyEnrolment, doFull3DSTransaction } from "../src/telemoney";
+import type { PolicyHolder, PaymentDetails } from "../src/types/hlas";
 
 import moment from "moment";
 
@@ -62,44 +64,41 @@ jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 //   });
 // });
 
-it("submits application for accident correctly", () => {
-  expect.assertions = 7;
-  let PASAppID;
-  const WebAppID = uuidv4();
-  return verifyApplicationAccident(WebAppID)
-    .then(res => {
-      expect(typeof res.applciationNo).toBe("number");
-      expect(res.success).toBe(true);
-      PASAppID = res.applciationNo;
-      return createPaymentTransactionAccident(WebAppID, PASAppID);
-    })
-    .then(res => {
-      expect(res.success).toBe(true);
-      return updatePaymentTransactionAccident(WebAppID, PASAppID);
-    })
-    .then(res => {
-      expect(res.success).toBe(true);
-      return submitApplicationAccident(WebAppID, PASAppID);
-    })
-    .then(res => {
-      console.log(res);
-      expect(res.success).toBe(true);
-      expect(typeof res.policyNo).toBe("string");
-      expect(res.policyNo).toMatch(/^AM/);
-    });
-});
+// it("submits application for accident correctly", () => {
+//   expect.assertions = 7;
+//   let PASAppID;
+//   const WebAppID = uuidv4();
+//   return verifyApplicationAccident(WebAppID)
+//     .then(res => {
+//       expect(typeof res.applciationNo).toBe("number");
+//       expect(res.success).toBe(true);
+//       PASAppID = res.applciationNo;
+//       return createPaymentTransactionAccident(WebAppID, PASAppID);
+//     })
+//     .then(res => {
+//       expect(res.success).toBe(true);
+//       return updatePaymentTransactionAccident(WebAppID, PASAppID);
+//     })
+//     .then(res => {
+//       expect(res.success).toBe(true);
+//       return submitApplicationAccident(WebAppID, PASAppID);
+//     })
+//     .then(res => {
+//       console.log(res);
+//       expect(res.success).toBe(true);
+//       expect(typeof res.policyNo).toBe("string");
+//       expect(res.policyNo).toMatch(/^AM/);
+//     });
+// });
 
-it("purchases single travel correctly", () => {
-  const premium = 15;
-  const countryid = 8;
-  const startDate = new Date();
-  const endDate = moment(new Date())
-    .add(2, "days")
-    .toDate();
-  const planid = 1;
-  const hasSpouse = true;
-  const hasChildren = true;
-  const policyHolder = {
+it("purchases pa with mr correctly", () => {
+  const premium = 17;
+  const planid = 100;
+  const policytermid = 1;
+  const optionid = 1;
+  const occupationid = 2;
+
+  const policyHolder: PolicyHolder = {
     Surname: "test",
     GivenName: "test",
     IDNumber: generateNRIC(),
@@ -113,7 +112,7 @@ it("purchases single travel correctly", () => {
     StreetName: "sample string 13",
     PostalCode: "089057"
   };
-  const paymentDetails = {
+  const paymentDetails: PaymentDetails = {
     NameOnCard: "Chan",
     CardNumber: "4005550000000001",
     CardType: 3,
@@ -121,15 +120,12 @@ it("purchases single travel correctly", () => {
     CardExpiryYear: 2021,
     CardExpiryMonth: 1
   };
-
-  return purchaseTravelPolicy(
+  return purchaseAccidentPolicy(
     premium,
-    countryid,
-    startDate,
-    endDate,
     planid,
-    hasSpouse,
-    hasChildren,
+    policytermid,
+    optionid,
+    occupationid,
     policyHolder,
     paymentDetails
   )
@@ -140,6 +136,58 @@ it("purchases single travel correctly", () => {
       console.error(err);
     });
 });
+
+// it("purchases single travel correctly", () => {
+//   const premium = 15;
+//   const countryid = 8;
+//   const startDate = new Date();
+//   const endDate = moment(new Date())
+//     .add(2, "days")
+//     .toDate();
+//   const planid = 1;
+//   const hasSpouse = true;
+//   const hasChildren = true;
+//   const policyHolder = {
+//     Surname: "test",
+//     GivenName: "test",
+//     IDNumber: generateNRIC(),
+//     DateOfBirth: "1988-07-22",
+//     GenderID: 1,
+//     MobileTelephone: "91234567",
+//     Email: "guanhao3797@gmail.com",
+//     UnitNumber: "11",
+//     BlockHouseNumber: "11",
+//     BuildingName: "sample string 12",
+//     StreetName: "sample string 13",
+//     PostalCode: "089057"
+//   };
+//   const paymentDetails = {
+//     NameOnCard: "Chan",
+//     CardNumber: "4005550000000001",
+//     CardType: 3,
+//     CardSecurityCode: "602",
+//     CardExpiryYear: 2021,
+//     CardExpiryMonth: 1
+//   };
+
+//   return purchaseTravelPolicy(
+//     premium,
+//     countryid,
+//     startDate,
+//     endDate,
+//     planid,
+//     hasSpouse,
+//     hasChildren,
+//     policyHolder,
+//     paymentDetails
+//   )
+//     .then(res => {
+//       console.log("purchase successful", res);
+//     })
+//     .catch(err => {
+//       console.error(err);
+//     });
+// });
 
 // it("submits application for single travel correctly", () => {
 //   expect.assertions = 6;
