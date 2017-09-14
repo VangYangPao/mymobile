@@ -53,6 +53,7 @@ function sendPOSTRequest(url, payload, errorResponse) {
       return response.json();
     })
     .then(response => {
+      console.log("sent POST", JSON.stringify(response));
       if (!response.success) {
         throw new Error(errorResponse + ": " + JSON.stringify(response));
       }
@@ -65,6 +66,172 @@ export function getPhoneProtectQuote() {
   return fetch(url)
     .then(res => res.json())
     .catch(err => console.error(err));
+}
+
+export function purchasePhonePolicy(
+  premium: number,
+  policyCommencementDate: Date,
+  policyHolder: string
+) {
+  const webAppID: string = uuidv4();
+  policyCommencementDate = moment(policyCommencementDate).format("YYYY-MM-DD");
+  return verifyApplicationPhone(
+    premium,
+    webAppID,
+    policyCommencementDate,
+    policyHolder
+  );
+}
+
+export function verifyApplicationPhone(
+  premium: number,
+  webAppID: string,
+  policyCommencementDate: string,
+  policyHolder: PolicyHolder
+) {
+  const payload = {
+    webAppID,
+    premium,
+    autoRenew: false,
+    meetsRequirements: "sample string 4",
+    referralSouceID: REFERRAL_SOURCE_ID,
+    referralSource: "sample string 6",
+    productPlanID: 7,
+    productPlanName: "sample string 8",
+    personalCoverage: true,
+    policyCommencementDate,
+    coverageID: 9,
+    coverageName: "sample string 10",
+    // policyHolder,
+    policyHolder: {
+      surname: "sample string 1",
+      givenName: "sample string 2",
+      idNumber: policyHolder.IDNumber,
+      idNumberType: 0,
+      dateOfBirth: "2017-09-14T18:50:36.0933673+08:00",
+      genderID: 4,
+      genderName: "sample string 5",
+      homeTelephone: "sample string 6",
+      officeTelephone: "sample string 7",
+      mobileTelephone: "sample string 8",
+      email: "sample string 9",
+      unitNumber: "sample string 10",
+      blockHouseNumber: "sample string 11",
+      buildingName: "sample string 12",
+      streetName: "sample string 13",
+      postalCode: "sample string 14"
+    },
+    mobileDetails: {
+      brand: {
+        as400Code: "sample string 1",
+        enDesc: "sample string 2",
+        lang1: "sample string 3",
+        lang2: "sample string 4",
+        effectiveDate: "2017-09-14T18:50:36.1089454+08:00",
+        expiryDate: "2017-09-14T18:50:36.1089454+08:00",
+        deleted: true,
+        isReady: true,
+        id: 5,
+        digest: {},
+        createDate: "2017-09-14T18:50:36.1089454+08:00",
+        updateDate: "2017-09-14T18:50:36.1089454+08:00",
+        creator_Id: 1,
+        updater_Id: 1,
+        version: "QEBA"
+      },
+      brandID: 1,
+      model: {
+        mobileBrand: {
+          as400Code: "sample string 1",
+          enDesc: "sample string 2",
+          lang1: "sample string 3",
+          lang2: "sample string 4",
+          effectiveDate: "2017-09-14T18:50:36.1089454+08:00",
+          expiryDate: "2017-09-14T18:50:36.1089454+08:00",
+          deleted: true,
+          isReady: true,
+          id: 5,
+          digest: {},
+          createDate: "2017-09-14T18:50:36.1089454+08:00",
+          updateDate: "2017-09-14T18:50:36.1089454+08:00",
+          creator_Id: 1,
+          updater_Id: 1,
+          version: "QEBA"
+        },
+        as400Code: "sample string 1",
+        enDesc: "sample string 2",
+        lang1: "sample string 3",
+        lang2: "sample string 4",
+        effectiveDate: "2017-09-14T18:50:36.1089454+08:00",
+        expiryDate: "2017-09-14T18:50:36.1089454+08:00",
+        deleted: true,
+        isReady: true,
+        id: 5,
+        digest: {},
+        createDate: "2017-09-14T18:50:36.1089454+08:00",
+        updateDate: "2017-09-14T18:50:36.1089454+08:00",
+        creator_Id: 1,
+        updater_Id: 1,
+        version: "QEBA"
+      },
+      modelID: 2,
+      purchaseDate: "2017-09-14T18:50:36.1089454+08:00",
+      serialNo: "sample string 3",
+      purchasePlace: {
+        as400Code: "sample string 1",
+        enDesc: "sample string 2",
+        lang1: "sample string 3",
+        lang2: "sample string 4",
+        effectiveDate: "2017-09-14T18:50:36.1089454+08:00",
+        expiryDate: "2017-09-14T18:50:36.1089454+08:00",
+        deleted: true,
+        isReady: true,
+        id: 5,
+        digest: {},
+        createDate: "2017-09-14T18:50:36.1089454+08:00",
+        updateDate: "2017-09-14T18:50:36.1089454+08:00",
+        creator_Id: 1,
+        updater_Id: 1,
+        version: "QEBA"
+      },
+      purchasePlaceID: 4,
+      otherPurchasePlace: "sample string 5",
+      memberCardNo: "sample string 6"
+    },
+    planPremium: premium,
+    personalCoveragePremium: premium,
+    totalPremium: premium,
+    firstPremium: premium,
+    paymentInfo: {
+      paymentReferenceNumber: "sample string 1",
+      nameOnCard: "sample string 2",
+      cardNumber: "sample string 3",
+      cardType: 0,
+      cardSecurityCode: "sample string 4",
+      cardExpiryYear: 5,
+      cardExpiryMonth: 6,
+      bankID: 7,
+      bankName: "sample string 8",
+      payByApplicant: true,
+      surname: "sample string 9",
+      givenName: "sample string 10",
+      idNumber: policyHolder.IDNumber,
+      idNumberType: 0,
+      telephoneNumber: "sample string 12",
+      telemoneyTransactionResponse: "sample string 13",
+      telemoneyPaymentResultRow: "sample string 14",
+      paymentSuccessful: true
+    },
+    optIn: false,
+    ipAddress: "sample string 15"
+  };
+  console.log(payload);
+  const url = `${HLAS_URL}/api/Phone/VerifyNewApplication`;
+  return sendPOSTRequest(
+    url,
+    payload,
+    "Error verifying phone protect application"
+  );
 }
 
 export function getAccidentQuote(
@@ -80,16 +247,14 @@ export function getAccidentQuote(
     policytermid: AccidentPolicyTermID,
     commencementDate: string,
     source: string,
-    optionid?: AccidentOptionID
+    optionid: AccidentOptionID
   } = {
     planid,
     policytermid,
     commencementDate,
-    source
+    source,
+    optionid
   };
-  if (optionid !== 0) {
-    payload.optionid = optionid;
-  }
   const paramStr = objectToUrlParams(payload);
   const path = "api/Accident/GetQuoteAccident";
   const url = `${HLAS_URL}/${path}?${paramStr}`;
@@ -269,6 +434,7 @@ export function verifyApplicationAccident(
     IPAddress: "sample string 18"
   };
   const url = `${HLAS_URL}/api/Accident/VerifyNewApplication`;
+  console.log(payload);
   return sendPOSTRequest(url, payload, "Error verifying accident application");
 }
 

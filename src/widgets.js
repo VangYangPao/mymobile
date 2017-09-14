@@ -97,7 +97,7 @@ const SLIDER_RADIUS_PERCENT = 0.15;
 export class CoverageDurationWidget extends Component {
   constructor(props) {
     super(props);
-    this.coverageDurations = [1, 2, 3, 6, 12];
+    this.coverageDurations = [1, 3, 6, 12];
     this.state = {
       months: this.coverageDurations[0]
     };

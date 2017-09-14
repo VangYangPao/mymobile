@@ -17,7 +17,8 @@ import {
   submitApplicationTravelSingle,
   purchaseTravelPolicy,
   generateNRIC,
-  purchaseAccidentPolicy
+  purchaseAccidentPolicy,
+  purchasePhonePolicy
 } from "../src/hlas";
 import { verifyEnrolment, doFull3DSTransaction } from "../src/telemoney";
 import type { PolicyHolder, PaymentDetails } from "../src/types/hlas";
@@ -32,20 +33,20 @@ jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 //   });
 // });
 
-// it("gets accident quote correctly", () => {
-//   const planid = 100;
-//   const policytermid = 1;
-//   const optionid = 1;
-//   const commencementDate = new Date().toISOString();
-//   return getAccidentQuote(
-//     planid,
-//     policytermid,
-//     optionid,
-//     commencementDate
-//   ).then(res => {
-//     console.log(res);
-//   });
-// });
+it("gets accident quote correctly", () => {
+  const planid = 100;
+  const policytermid = 1;
+  const optionid = 1;
+  const commencementDate = new Date().toISOString();
+  return getAccidentQuote(
+    planid,
+    policytermid,
+    optionid,
+    commencementDate
+  ).then(res => {
+    console.log(res);
+  });
+});
 
 // it("gets travel quote correctly", () => {
 //   const countryid = 8;
@@ -62,6 +63,39 @@ jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 //   ).then(res => {
 //     console.log(res);
 //   });
+// });
+
+// it("purchases phone protect correctly", () => {
+//   const premium = 5;
+//   const policyHolder: PolicyHolder = {
+//     Surname: "test",
+//     GivenName: "test",
+//     IDNumber: generateNRIC(),
+//     DateOfBirth: "1988-07-22",
+//     GenderID: 1,
+//     MobileTelephone: "91234567",
+//     Email: "guanhao3797@gmail.com",
+//     UnitNumber: "11",
+//     BlockHouseNumber: "11",
+//     BuildingName: "sample string 12",
+//     StreetName: "sample string 13",
+//     PostalCode: "089057"
+//   };
+//   const paymentDetails: PaymentDetails = {
+//     NameOnCard: "Chan",
+//     CardNumber: "4005550000000001",
+//     CardType: 3,
+//     CardSecurityCode: "602",
+//     CardExpiryYear: 2021,
+//     CardExpiryMonth: 1
+//   };
+//   const policyCommencementDate = new Date();
+//   return purchasePhonePolicy(
+//     premium,
+//     policyCommencementDate,
+//     policyHolder,
+//     paymentDetails
+//   );
 // });
 
 // it("submits application for accident correctly", () => {
@@ -95,7 +129,7 @@ it("purchases pa with mr correctly", () => {
   const premium = 17;
   const planid = 100;
   const policytermid = 1;
-  const optionid = 1;
+  const optionid = 2;
   const occupationid = 2;
 
   const policyHolder: PolicyHolder = {
@@ -120,6 +154,7 @@ it("purchases pa with mr correctly", () => {
     CardExpiryYear: 2021,
     CardExpiryMonth: 1
   };
+
   return purchaseAccidentPolicy(
     premium,
     planid,

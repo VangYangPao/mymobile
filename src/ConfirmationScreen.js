@@ -26,6 +26,7 @@ import CheckoutModal from "./CheckoutModal";
 import {
   getTravelQuote,
   getAccidentQuote,
+  getPhoneProtectQuote,
   purchaseTravelPolicy,
   purchaseAccidentPolicy
 } from "./hlas";
@@ -56,7 +57,7 @@ export default class ConfirmationScreen extends Component {
   travelPlans: Array<number>;
   paPlans: Array<number>;
   paOptions: { pa: number, pa_mr: number, pa_wi: number };
-  paTerms: { "1": number, "2": 2, "3": 3, "6": 4, "12": 5 };
+  paTerms: { "1": number, "3": 2, "6": 3, "12": 4 };
   policy: any;
   handleCheckout: Function;
   handlePurchaseResult: Function;
@@ -78,10 +79,9 @@ export default class ConfirmationScreen extends Component {
     this.paPlans = [100, 101, 102, 103, 104];
     this.paTerms = {
       "1": 1,
-      "2": 2,
-      "3": 3,
-      "6": 4,
-      "12": 5
+      "3": 2,
+      "6": 3,
+      "12": 4
     };
     this.paOptions = {
       pa: 0,
@@ -126,6 +126,8 @@ export default class ConfirmationScreen extends Component {
       const optionid = this.paOptions[this.policy.id];
       const commencementDate = new Date();
       promise = getAccidentQuote(planid, termid, optionid, commencementDate);
+    } else if (this.policy && this.policy.id === "mobile") {
+      promise = getPhoneProtectQuote();
     }
     if (promise) {
       promise
