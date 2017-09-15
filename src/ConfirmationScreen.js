@@ -57,7 +57,7 @@ export default class ConfirmationScreen extends Component {
   travelPlans: Array<number>;
   paPlans: Array<number>;
   paOptions: { pa: number, pa_mr: number, pa_wi: number };
-  paTerms: { "1": number, "3": 2, "6": 3, "12": 4 };
+  paTerms: { "1": 1, "3": 2, "6": 3, "12": 4 };
   policy: any;
   handleCheckout: Function;
   handlePurchaseResult: Function;

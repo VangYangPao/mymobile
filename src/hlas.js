@@ -25,6 +25,8 @@ const AGENT_CODE = "MIC00002"; // just to track microassurce account
 const AGENT_WCC = "MIC"; // // just to track the sale from microassurance . please use “MIC” – should be the same in the production.
 const REFERRAL_SOURCE_ID = 75;
 const OPT_IN_HLAS_MKTG = false; //To indicate customer has opt in/opt out the marketing or promotional info from  HL Assurance.
+const PHONE_PRODUCT_PLAN_ID = 99;
+const PHONE_COVERAGE_ID = 3;
 
 const postHeaders = {
   Accept: "application/json",
@@ -53,7 +55,6 @@ function sendPOSTRequest(url, payload, errorResponse) {
       return response.json();
     })
     .then(response => {
-      console.log("sent POST", JSON.stringify(response));
       if (!response.success) {
         throw new Error(errorResponse + ": " + JSON.stringify(response));
       }
@@ -91,16 +92,17 @@ export function verifyApplicationPhone(
 ) {
   const payload = {
     webAppID,
+    pasAppID: 2,
     premium,
     autoRenew: false,
     meetsRequirements: "sample string 4",
     referralSouceID: REFERRAL_SOURCE_ID,
     referralSource: "sample string 6",
-    productPlanID: 7,
+    productPlanID: PHONE_PRODUCT_PLAN_ID,
     productPlanName: "sample string 8",
     personalCoverage: true,
     policyCommencementDate,
-    coverageID: 9,
+    coverageID: PHONE_COVERAGE_ID,
     coverageName: "sample string 10",
     // policyHolder,
     policyHolder: {
@@ -109,7 +111,7 @@ export function verifyApplicationPhone(
       idNumber: policyHolder.IDNumber,
       idNumberType: 0,
       dateOfBirth: "2017-09-14T18:50:36.0933673+08:00",
-      genderID: 4,
+      genderID: 1,
       genderName: "sample string 5",
       homeTelephone: "sample string 6",
       officeTelephone: "sample string 7",
@@ -222,7 +224,7 @@ export function verifyApplicationPhone(
       telemoneyPaymentResultRow: "sample string 14",
       paymentSuccessful: true
     },
-    optIn: false,
+    optIn: OPT_IN_HLAS_MKTG,
     ipAddress: "sample string 15"
   };
   console.log(payload);
@@ -324,8 +326,8 @@ export function purchaseAccidentPolicy(
     paymentDetails
   )
     .then(res => {
-      console.log("verified application");
       PASAppID = res.applciationNo;
+      console.log("verified application", PASAppID);
       let count = 0;
       return retry(5, () => {
         console.log("retry", ++count);
@@ -430,7 +432,7 @@ export function verifyApplicationAccident(
       TelemoneyTransactionResponse: "sample string 13",
       ...PaymentDetails
     },
-    OptIn: false,
+    optIn: OPT_IN_HLAS_MKTG,
     IPAddress: "sample string 18"
   };
   const url = `${HLAS_URL}/api/Accident/VerifyNewApplication`;
@@ -486,7 +488,7 @@ export function createPaymentTransactionAccident(
       TelemoneyTransactionResponse,
       ...PaymentDetails
     },
-    OptIn: false,
+    optIn: OPT_IN_HLAS_MKTG,
     IPAddress: "sample string 18"
   };
   const url = `${HLAS_URL}/api/Accident/CreatePaymentTransaction`;
@@ -548,7 +550,7 @@ export function updatePaymentTransactionAccident(
       paymentSuccessful: true,
       ...PaymentDetails
     },
-    OptIn: false,
+    optIn: OPT_IN_HLAS_MKTG,
     IPAddress: "sample string 18"
   };
   const url = `${HLAS_URL}/api/Accident/UpdatePaymentTransactionStatus`;
@@ -610,7 +612,7 @@ export function submitApplicationAccident(
       paymentSuccessful: true,
       ...PaymentDetails
     },
-    OptIn: false,
+    optIn: OPT_IN_HLAS_MKTG,
     IPAddress: "sample string 18"
   };
   const url = `${HLAS_URL}/api/Accident/SubmitApplication`;
@@ -663,8 +665,8 @@ export function purchaseTravelPolicy(
     paymentDetails
   )
     .then(res => {
-      console.log("verified application");
       PASAppID = res.ApplciationNo;
+      console.log("verified application", PASAppID);
       let count = 0;
       return retry(5, () => {
         console.log("retry", ++count);
@@ -838,7 +840,7 @@ export function verifyApplicationTravelSingle(
       TelemoneyTransactionResponse: "sample string 13",
       ...PaymentDetails
     },
-    OptIn: false,
+    optIn: OPT_IN_HLAS_MKTG,
     IPAddress: "sample string 18"
   };
   const url = `${HLAS_URL}/api/Travel/VerifyApp_TravelSingle`;
@@ -899,7 +901,7 @@ export function createPaymentTransactionTravelSingle(
       //Note: Telemoney Payment response result
       ...PaymentDetails
     },
-    OptIn: false,
+    optIn: OPT_IN_HLAS_MKTG,
     IPAddress: "sample string 18"
   };
   const url = `${HLAS_URL}/api/Travel/CreatePaymentTransaction`;
@@ -967,7 +969,7 @@ export function updatePaymentTransactionTravelSingle(
       paymentSuccessful: true,
       ...PaymentDetails
     },
-    OptIn: false,
+    optIn: OPT_IN_HLAS_MKTG,
     IPAddress: "sample string 18"
   };
   const url = `${HLAS_URL}/api/Travel/UpdatePaymentTransactionStatus`;
@@ -1035,7 +1037,7 @@ export function submitApplicationTravelSingle(
       paymentSuccessful: true,
       ...PaymentDetails
     },
-    OptIn: false,
+    optIn: OPT_IN_HLAS_MKTG,
     IPAddress: "sample string 18"
   };
   const url = `${HLAS_URL}/api/Travel/SubmitApplication_SingleTravel`;
