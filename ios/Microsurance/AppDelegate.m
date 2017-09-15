@@ -15,10 +15,12 @@
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 
+@import Firebase;
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  [FIRApp configure];
   [Fabric with:@[[Crashlytics class]]];
   
   [ZDCChat initializeWithAccountKey:@"54COnYxIyuuyQhBGnus5hkJkNUvs4zpi"];

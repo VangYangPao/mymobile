@@ -1,0 +1,7 @@
+target 'Microsurance' do
+  pod 'Analytics'
+  pod 'React', :path => '../node_modules/react-native'
+  pod 'SegmentAnalytics', :path => '../node_modules/react-native-segment-analytics/ios'
+  pod 'Firebase/Core'
+  pod 'Yoga', :path => '../node_modules/react-native/ReactCommon/yoga'
+end

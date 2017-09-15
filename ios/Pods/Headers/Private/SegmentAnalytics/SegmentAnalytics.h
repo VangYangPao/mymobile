@@ -1,0 +1,1 @@
+../../../../../node_modules/react-native-segment-analytics/ios/SegmentAnalytics/Classes/SegmentAnalytics.h

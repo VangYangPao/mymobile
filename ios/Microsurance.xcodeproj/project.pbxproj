@@ -13,6 +13,7 @@
 		00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302DC1ABCB9D200DB3ED1 /* libRCTNetwork.a */; };
 		00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302E41ABCB9EE00DB3ED1 /* libRCTVibration.a */; };
 		00E356F31AD99517003FC87E /* MicrosuranceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* MicrosuranceTests.m */; };
+		0CF6062B7FE8B147C42F2BE3 /* libPods-Microsurance.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 511FE2E7D5829598C206C619 /* libPods-Microsurance.a */; };
 		133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
 		139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
 		139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139FDEF41B06529B00C62182 /* libRCTWebSocket.a */; };
@@ -41,6 +42,7 @@
 		3F06AD371EFF449F0028DA38 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F06AD351EFF449F0028DA38 /* Crashlytics.framework */; };
 		3F06AD391EFF5F3B0028DA38 /* Bitter.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3F06AD381EFF5F3B0028DA38 /* Bitter.ttf */; };
 		3F06AD3B1EFF5F500028DA38 /* Comfortaa-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3F06AD3A1EFF5F500028DA38 /* Comfortaa-Bold.ttf */; };
+		3F25D6011F6C7CA50075C425 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3F25D6001F6C7CA50075C425 /* GoogleService-Info.plist */; };
 		3F41020E1EFF26FC001B4303 /* Lato.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3F41020D1EFF26FC001B4303 /* Lato.ttf */; };
 		3FA2DF3B1F61D88300A34E49 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3FA2DF3A1F61D88300A34E49 /* Images.xcassets */; };
 		3FA2DF6A1F61DCBF00A34E49 /* RNZendeskChatModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FA2DF691F61DCBF00A34E49 /* RNZendeskChatModule.m */; };
@@ -314,6 +316,7 @@
 		00E356EE1AD99517003FC87E /* MicrosuranceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MicrosuranceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* MicrosuranceTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MicrosuranceTests.m; sourceTree = "<group>"; };
+		0D5764A098E2C4BC9395267C /* Pods-Microsurance.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Microsurance.release.xcconfig"; path = "Pods/Target Support Files/Pods-Microsurance/Pods-Microsurance.release.xcconfig"; sourceTree = "<group>"; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
 		139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebSocket.xcodeproj; path = "../node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* Microsurance.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Microsurance.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -331,6 +334,7 @@
 		3F06AD351EFF449F0028DA38 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		3F06AD381EFF5F3B0028DA38 /* Bitter.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Bitter.ttf; path = ../android/app/src/main/assets/fonts/Bitter.ttf; sourceTree = "<group>"; };
 		3F06AD3A1EFF5F500028DA38 /* Comfortaa-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Comfortaa-Bold.ttf"; path = "../android/app/src/main/assets/fonts/Comfortaa-Bold.ttf"; sourceTree = "<group>"; };
+		3F25D6001F6C7CA50075C425 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		3F41020D1EFF26FC001B4303 /* Lato.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Lato.ttf; path = ../android/app/src/main/assets/fonts/Lato.ttf; sourceTree = "<group>"; };
 		3FA2DF3A1F61D88300A34E49 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Microsurance/Images.xcassets; sourceTree = "<group>"; };
 		3FA2DF681F61DCBF00A34E49 /* RNZendeskChatModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNZendeskChatModule.h; sourceTree = "<group>"; };
@@ -341,6 +345,7 @@
 		3FA60A141F61D3DD0052AF23 /* ZDCChatStrings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = ZDCChatStrings.bundle; path = "../../../Downloads/zendesk_sdk_chat_ios-master/ZDCChatStrings.bundle"; sourceTree = "<group>"; };
 		45DEFEFB1BC14CA7B6E42C2A /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		4B31F264E29847AC9260120A /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
+		511FE2E7D5829598C206C619 /* libPods-Microsurance.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Microsurance.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		540133F9A6C04693A58504EB /* RNSpinkit.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNSpinkit.xcodeproj; path = "../node_modules/react-native-spinkit/ios/RNSpinkit.xcodeproj"; sourceTree = "<group>"; };
 		5A05141396E742339933A7DE /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		5D78ED3977AD4FCABA1EB9D3 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
@@ -349,6 +354,7 @@
 		6B132F460A6A4B988555A60E /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNVectorIcons.xcodeproj; path = "../node_modules/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; };
 		6BF0522AC56E4C6398B0BD58 /* libRNFetchBlob.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFetchBlob.a; sourceTree = "<group>"; };
 		6D9E0CAC64F64BE9A82AAD4F /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
+		739770B6EEAFEAA19C9776B3 /* Pods-Microsurance.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Microsurance.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Microsurance/Pods-Microsurance.debug.xcconfig"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		7E79C0B0F8F9489099F9651E /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
@@ -398,6 +404,7 @@
 				A480BA14CF3F4674B9369CC7 /* libRNFetchBlob.a in Frameworks */,
 				CEDA61824C0B4CC49356BCD3 /* libRNFileOpener.a in Frameworks */,
 				3FA60A171F61D3DD0052AF23 /* ZDCChatAPI.framework in Frameworks */,
+				0CF6062B7FE8B147C42F2BE3 /* libPods-Microsurance.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -506,6 +513,7 @@
 		13B07FAE1A68108700A75B9A /* Microsurance */ = {
 			isa = PBXGroup;
 			children = (
+				3F25D6001F6C7CA50075C425 /* GoogleService-Info.plist */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -530,6 +538,15 @@
 				3DAD3EAF1DF850E9000B6D8A /* libjschelpers.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		179B9BB8E27A793B54323151 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				739770B6EEAFEAA19C9776B3 /* Pods-Microsurance.debug.xcconfig */,
+				0D5764A098E2C4BC9395267C /* Pods-Microsurance.release.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 		3F4101E01EFF268D001B4303 /* Products */ = {
@@ -590,6 +607,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		675A5EC9793FD0C05D731AAB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				511FE2E7D5829598C206C619 /* libPods-Microsurance.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		78C398B11ACF4ADC00677621 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -648,6 +673,8 @@
 				00E356EF1AD99517003FC87E /* MicrosuranceTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				A0F852F93A8C4A0185A33EEE /* Resources */,
+				179B9BB8E27A793B54323151 /* Pods */,
+				675A5EC9793FD0C05D731AAB /* Frameworks */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -709,11 +736,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Microsurance" */;
 			buildPhases = (
+				A178740745D7D8B11E32033D /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				3F06AD331EFF42D60028DA38 /* Crashlytics */,
+				E6EC2C1DD9AEA1E1FD6CE7E7 /* [CP] Embed Pods Frameworks */,
+				32E4AC7771FAF01E0C478CE9 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1129,6 +1159,7 @@
 				18E439D1B3E444F9926C8E0D /* Foundation.ttf in Resources */,
 				5C455B84CB9F4D31900CAF43 /* Ionicons.ttf in Resources */,
 				EAF77E8861684225831708B9 /* MaterialCommunityIcons.ttf in Resources */,
+				3F25D6011F6C7CA50075C425 /* GoogleService-Info.plist in Resources */,
 				3FA2DF3B1F61D88300A34E49 /* Images.xcassets in Resources */,
 				2D2B7BEB81D847E4ACB9EBB7 /* MaterialIcons.ttf in Resources */,
 				3FA60A181F61D3DD0052AF23 /* ZDCChatStrings.bundle in Resources */,
@@ -1183,6 +1214,21 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/packager/react-native-xcode.sh";
 		};
+		32E4AC7771FAF01E0C478CE9 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Microsurance/Pods-Microsurance-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		3F06AD331EFF42D60028DA38 /* Crashlytics */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1196,6 +1242,39 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "./Fabric.framework/run c3cd8e7b8eaef764bdb92f2e31de0cb74bbebb78 41efdeeec913651e508a704f24d6615ee7c943a01400711103d2df6487132187";
+		};
+		A178740745D7D8B11E32033D /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Microsurance-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E6EC2C1DD9AEA1E1FD6CE7E7 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Microsurance/Pods-Microsurance-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1326,6 +1405,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 739770B6EEAFEAA19C9776B3 /* Pods-Microsurance.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Wecare Tech LLP (LBMCMHK6QN)";
@@ -1366,6 +1446,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0D5764A098E2C4BC9395267C /* Pods-Microsurance.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Wecare Tech LLP (LBMCMHK6QN)";
