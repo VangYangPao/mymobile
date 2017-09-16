@@ -11,17 +11,39 @@
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
 #import <ZDCChat/ZDCChat.h>
+//#import <Google/Analytics.h>
+//#import <Analytics/SEGAnalytics.h>
+//#import "Mixpanel/Mixpanel.h"
+@import Firebase;
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 
-@import Firebase;
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   [FIRApp configure];
+  
   [Fabric with:@[[Crashlytics class]]];
+  
+//  [Mixpanel sharedInstanceWithToken:@"453d7c637ef74b357bc856da82999f5c"];
+//  
+//  GAI *gai = [GAI sharedInstance];
+//  [gai trackerWithTrackingId:@"UA-53448691-13"];
+//  
+//  // Optional: automatically report uncaught exceptions.
+//  gai.trackUncaughtExceptions = YES;
+//  
+//  SEGAnalyticsConfiguration *configuration = [SEGAnalyticsConfiguration configurationWithWriteKey:@"r4ONfzIR3Njwbq6D1lTIl08cP4yOQRGj"];
+//  
+//  // Enable this to record certain application events automatically!
+//  configuration.trackApplicationLifecycleEvents = YES;
+//  
+//  // Enable this to record screen views automatically!
+//  configuration.recordScreenViews = YES;
+//  
+//  [SEGAnalytics setupWithConfiguration:configuration];
   
   [ZDCChat initializeWithAccountKey:@"54COnYxIyuuyQhBGnus5hkJkNUvs4zpi"];
 
