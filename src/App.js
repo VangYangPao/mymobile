@@ -36,6 +36,10 @@ import {
 } from "./navigations";
 import { ENV } from "react-native-dotenv";
 
+import Parse from "parse/react-native";
+Parse.initialize("microumbrella");
+Parse.serverURL = "https://api-dev.microumbrella.com/parse";
+
 // global.___DEV___ = false
 
 const WINDOW_WIDTH = Dimensions.get("window").width;
