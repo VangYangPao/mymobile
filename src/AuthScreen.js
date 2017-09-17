@@ -15,6 +15,7 @@ import {
 } from "react-native";
 import { NavigationActions } from "react-navigation";
 import VectorDrawableView from "./VectorDrawableView";
+import Parse from "parse/react-native";
 import t from "tcomb-form-native";
 const Form = t.form.Form;
 
@@ -47,12 +48,82 @@ const createResetAction = policy => {
   });
 };
 
+function mysubtype(type, getValidationErrorMessage, name) {
+  var Subtype = t.refinement(
+    type,
+    function(x) {
+      if (!x.length) {
+        return;
+      }
+      return !t.String.is(getValidationErrorMessage(x));
+    },
+    name
+  );
+  Subtype.getValidationErrorMessage = getValidationErrorMessage;
+  return Subtype;
+}
+
+var EmailType = mysubtype(t.String, function(s) {
+  if (!s) return "Email must not be empty";
+  const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  const isValid = re.test(s);
+  if (!isValid) {
+    return "Email is not in valid format, e.g. hello@microumbrella.com";
+  }
+});
+
+const PasswordType = mysubtype(t.String, p => {
+  if (!p) return "Password must not be empty";
+  if (p.length < 8) {
+    return "Password must be at least 8 characters long";
+  }
+
+  let hasNumeric = false;
+  let hasAlpha = false;
+
+  for (i = 0, len = p.length; i < len; i++) {
+    code = p.charCodeAt(i);
+    if (code > 47 && code < 58) {
+      hasNumeric = true;
+    } else if (code > 64 && code < 91) {
+      hasAlpha = true;
+    } else if (code > 96 && code < 123) {
+      hasAlpha = true;
+    }
+  }
+
+  if (!hasAlpha || !hasNumeric) {
+    return "Password must have numbers (0-9) and alphabets (A-Z)";
+  }
+});
+
+let userTypedPassword = "";
+
+const ConfirmPasswordType = mysubtype(t.String, p => {
+  if (!p) return "Password must not be empty";
+  if (p !== userTypedPassword) {
+    return "Passwords must match";
+  }
+});
+
+const PhoneType = mysubtype(t.String, p => {
+  if (!p) return "Phone number must not be empty";
+  const hasEightOrNine = p[0] === "8" || p[0] === "9";
+  if (!hasEightOrNine) {
+    return "Phone number must begin with 8 or 9";
+  }
+});
+
+const NonEmptyStr = mysubtype(t.String, p => {
+  if (!p) return "Full name must not be empty";
+});
+
 const UserSignUp = t.struct({
-  email: t.String,
-  fullName: t.String,
-  telephone: t.String,
-  password: t.String,
-  confirmPassword: t.String
+  email: EmailType,
+  fullName: NonEmptyStr,
+  telephone: PhoneType,
+  password: PasswordType,
+  confirmPassword: ConfirmPasswordType
 });
 const userSignUpOptions = {
   auto: "placeholders",
@@ -60,21 +131,19 @@ const userSignUpOptions = {
     email: {
       placeholderTextColor: "white",
       keyboardType: "email-address",
-      error: "Insert a valid email"
+      autoCapitalize: "none"
     },
     fullName: {
       placeholderTextColor: "white",
-      error: "Name must not be empty"
+      error: "Name cannot be empty"
     },
     telephone: {
       placeholderTextColor: "white",
-      keyboardType: "phone-pad",
-      error: "Phone number must not be empty"
+      keyboardType: "phone-pad"
     },
     password: {
       secureTextEntry: true,
-      placeholderTextColor: "white",
-      error: "Password must not be empty"
+      placeholderTextColor: "white"
     },
     confirmPassword: {
       secureTextEntry: true,
@@ -99,7 +168,13 @@ class SignUpScreen extends Component {
       //   );
       //   return;
       // }
-      this.props.onSignUp();
+      this.props.onSignUp(formValues);
+    }
+  }
+
+  handleFormChange(form) {
+    if (form.password) {
+      userTypedPassword = form.password;
     }
   }
 
@@ -116,6 +191,7 @@ class SignUpScreen extends Component {
                 ref={form => (this.form = form)}
                 type={UserSignUp}
                 options={userSignUpOptions}
+                onChange={this.handleFormChange}
               />
             </View>
             {/*<View style={styles.textContainer}>
@@ -173,12 +249,13 @@ class SignUpScreen extends Component {
 }
 
 const UserLogin = t.struct({
-  email: t.String,
+  email: EmailType,
   password: t.String
 });
 const userLoginOptions = {
   fields: {
     email: {
+      autoCapitalize: "none",
       keyboardType: "email-address",
       error: "Enter a valid email"
     },
@@ -308,6 +385,26 @@ export default class AuthScreen extends Component {
     this.handleRedirectToPurchase = this.handleRedirectToPurchase.bind(this);
   }
 
+  handleSignup(form) {
+    console.log(form);
+    // const user = Parse.User();
+    // this.handleRedirectToPurchase();
+  }
+
+  handleLogin(form) {
+    Parse.User
+      .logIn("myname", "mypass")
+      .then(user => {
+        console.log(user);
+        this.handleRedirectToPurchase(form);
+      })
+      .catch(err => {
+        if (err.code === 101) {
+          showAlert("Invalid email or password!");
+        }
+      });
+  }
+
   handleRedirectToPurchase() {
     const policy = this.props.navigation.state.params.policy;
     this.props.navigation.dispatch(createResetAction(policy));
@@ -337,7 +434,7 @@ export default class AuthScreen extends Component {
       case "Login":
         page = (
           <LoginScreen
-            onLogin={this.handleRedirectToPurchase}
+            onLogin={this.handleLogin}
             onNavigateToSignUp={this.handleNavigateToSignUp}
             onNavigateToForgotPassword={this.handleNavigateToForgotPassword}
           />
@@ -346,7 +443,7 @@ export default class AuthScreen extends Component {
       case "SignUp":
         page = (
           <SignUpScreen
-            onSignUp={this.handleRedirectToPurchase}
+            onSignUp={this.handleSignup}
             navigation={this.props.navigation}
             onNavigateToLogin={this.handleNavigateToLogin}
           />
