@@ -81,11 +81,11 @@ export function showAlert(text, cb) {
   }
 }
 
-export function generateID() {
+export function generateID(len: number) {
   var text = "";
   var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
-  for (var i = 0; i < 6; i++)
+  for (var i = 0; i < len; i++)
     text += possible.charAt(Math.floor(Math.random() * possible.length));
 
   return text;

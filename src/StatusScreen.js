@@ -24,7 +24,7 @@ export default class StatusScreen extends Component {
 
   handleSharePolicies() {
     const title = "Share my policies - microUmbrella";
-    const code = generateID();
+    const code = generateID(6);
     const url = `https://microumbrella.com/share/${code}`;
     Share.share(
       {

@@ -1,3 +1,4 @@
+// @flow
 import uuid from "uuid";
 import React, { Component } from "react";
 import {
@@ -16,12 +17,13 @@ import {
 import { NavigationActions } from "react-navigation";
 import VectorDrawableView from "./VectorDrawableView";
 import Parse from "parse/react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import t from "tcomb-form-native";
 const Form = t.form.Form;
 
 import colors from "./colors";
 import Button from "./Button";
-import { showAlert } from "./utils";
+import { generateID, showAlert } from "./utils";
 import { Text } from "./defaultComponents";
 
 let formStyles = Object.assign({}, t.form.Form.stylesheet);
@@ -120,7 +122,8 @@ const NonEmptyStr = mysubtype(t.String, p => {
 
 const UserSignUp = t.struct({
   email: EmailType,
-  fullName: NonEmptyStr,
+  firstName: NonEmptyStr,
+  lastName: NonEmptyStr,
   telephone: PhoneType,
   password: PasswordType,
   confirmPassword: ConfirmPasswordType
@@ -133,7 +136,11 @@ const userSignUpOptions = {
       keyboardType: "email-address",
       autoCapitalize: "none"
     },
-    fullName: {
+    firstName: {
+      placeholderTextColor: "white",
+      error: "Name cannot be empty"
+    },
+    lastName: {
       placeholderTextColor: "white",
       error: "Name cannot be empty"
     },
@@ -181,10 +188,10 @@ class SignUpScreen extends Component {
   render() {
     return (
       <View>
-        <ScrollView>
+        <KeyboardAwareScrollView extraScrollHeight={75}>
           <View style={styles.container}>
             <View style={{ marginTop: 30, justifyContent: "center" }}>
-              <Text style={styles.signUpHeader}>Sign up for microAssure</Text>
+              <Text style={styles.signUpHeader}>Sign up for microUmbrella</Text>
             </View>
             <View style={{ flex: 0.1, justifyContent: "center" }}>
               <Form
@@ -242,7 +249,7 @@ class SignUpScreen extends Component {
               </TouchableOpacity>
             </View>
           </View>
-        </ScrollView>
+        </KeyboardAwareScrollView>
       </View>
     );
   }
@@ -275,37 +282,41 @@ class LoginScreen extends Component {
   handleLogin() {
     const formValues = this.refs.form.getValue();
     if (formValues) {
-      this.props.onLogin();
+      this.props.onLogin(formValues);
     }
   }
 
   render() {
     return (
-      <View style={[styles.container, { justifyContent: "center" }]}>
-        <VectorDrawableView
-          resourceName="ic_microumbrella_word_white"
-          style={styles.logo}
-        />
-        <Text style={styles.mustLogin}>
-          You must login to purchase a protection plan.
-        </Text>
-        <Form ref="form" type={UserLogin} options={userLoginOptions} />
-        <Button onPress={this.handleLogin} style={styles.signinButton}>
-          LOGIN
-        </Button>
-        <TouchableOpacity
-          onPress={this.props.onNavigateToSignUp}
-          style={{ marginVertical: 20 }}
-          activeOpacity={0.5}
-        >
-          <Text style={styles.bottomBtn}>New member? Sign Up.</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={this.props.onNavigateToForgotPassword}
-          activeOpacity={0.5}
-        >
-          <Text style={styles.bottomBtn}>Forgot your password?</Text>
-        </TouchableOpacity>
+      <View>
+        <KeyboardAwareScrollView>
+          <View style={[styles.container, { justifyContent: "center" }]}>
+            <VectorDrawableView
+              resourceName="ic_microumbrella_word_white"
+              style={styles.logo}
+            />
+            <Text style={styles.mustLogin}>
+              You must login to purchase a protection plan.
+            </Text>
+            <Form ref="form" type={UserLogin} options={userLoginOptions} />
+            <Button onPress={this.handleLogin} style={styles.signinButton}>
+              LOGIN
+            </Button>
+            <TouchableOpacity
+              onPress={this.props.onNavigateToSignUp}
+              style={{ marginVertical: 20 }}
+              activeOpacity={0.5}
+            >
+              <Text style={styles.bottomBtn}>New member? Sign Up.</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={this.props.onNavigateToForgotPassword}
+              activeOpacity={0.5}
+            >
+              <Text style={styles.bottomBtn}>Forgot your password?</Text>
+            </TouchableOpacity>
+          </View>
+        </KeyboardAwareScrollView>
       </View>
     );
   }
@@ -377,6 +388,8 @@ export default class AuthScreen extends Component {
       screen: "Login",
       renderBackgroundImage: false
     };
+    this.handleLogin = this.handleLogin.bind(this);
+    this.handleSignup = this.handleSignup.bind(this);
     this.handleNavigateToLogin = this.handleNavigateToLogin.bind(this);
     this.handleNavigateToSignUp = this.handleNavigateToSignUp.bind(this);
     this.handleNavigateToForgotPassword = this.handleNavigateToForgotPassword.bind(
@@ -386,21 +399,42 @@ export default class AuthScreen extends Component {
   }
 
   handleSignup(form) {
-    console.log(form);
-    // const user = Parse.User();
-    // this.handleRedirectToPurchase();
+    let user = new Parse.User();
+    user.set("username", form.email);
+    user.set("password", form.password);
+    user.set("email", form.email);
+    user.set("firstName", form.firstName);
+    user.set("lastName", form.lastName);
+    user.set("telephone", form.telephone);
+
+    const referralCode = generateID(6);
+    user.set("referralCode", referralCode);
+
+    const beneficiaryCode = generateID(6);
+    user.set("beneficiaryCode", beneficiaryCode);
+
+    user
+      .signUp(null)
+      .then(user => {
+        console.log(user);
+      })
+      .catch(err => {
+        if (err.code) {
+          showAlert(err.message);
+        }
+      });
   }
 
   handleLogin(form) {
+    const { email, password } = form;
     Parse.User
-      .logIn("myname", "mypass")
+      .logIn(email, password)
       .then(user => {
-        console.log(user);
-        this.handleRedirectToPurchase(form);
+        this.handleRedirectToPurchase();
       })
       .catch(err => {
-        if (err.code === 101) {
-          showAlert("Invalid email or password!");
+        if (err.code) {
+          showAlert(err.message);
         }
       });
   }
