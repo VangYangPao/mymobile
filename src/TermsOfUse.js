@@ -6,7 +6,8 @@ import {
   Image,
   WebView,
   Platform,
-  Alert
+  Alert,
+  ToastAndroid
 } from "react-native";
 import documentStyle from "../documents/documentStyle";
 import termsOfUseHTML from "../documents/termsOfUse";

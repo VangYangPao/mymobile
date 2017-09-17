@@ -99,13 +99,6 @@ export default class IntroScreen extends Component {
     );
     return (
       <View style={styles.page}>
-        {page.type !== "benefits" ? (
-          <Image
-            source={page.imageSource}
-            resizeMode="contain"
-            style={styles.image}
-          />
-        ) : null}
         <View style={styles.appNameContainer}>
           <VectorDrawableView
             resourceName="ic_microumbrella_word"
@@ -120,6 +113,13 @@ export default class IntroScreen extends Component {
           {page.type === "cta" ? signInButton : null}
         </View>
         {page.type === "benefits" ? benefitsView : null}
+        {page.type !== "benefits" ? (
+          <Image
+            source={page.imageSource}
+            resizeMode="contain"
+            style={styles.image}
+          />
+        ) : null}
       </View>
     );
   }
@@ -138,11 +138,16 @@ export default class IntroScreen extends Component {
   }
 }
 
-const windowWidth = Dimensions.get("window").width;
+const windowDim = Dimensions.get("window");
+const windowWidth = windowDim.width;
 const backgroundImagePercent = 0.95;
 const backgroundImageWidth = windowWidth * backgroundImagePercent;
 const backgroundImageHoriPadding =
   windowWidth * ((1 - backgroundImagePercent) / 2);
+
+const appNamePercentage = 0.2;
+const contentPercentage = 0.2;
+const bottomContainerPercentage = 0.6;
 
 const styles = StyleSheet.create({
   buttonContainer: {
@@ -172,18 +177,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 5
   },
+  image: {
+    flex: 1
+  },
   benefitsView: {
-    position: "absolute",
-    bottom: 0,
-    left: backgroundImageHoriPadding,
-    right: backgroundImageHoriPadding,
-    height: 300,
-    width: backgroundImageWidth,
-    justifyContent: "center",
-    paddingTop: 20
+    flex: bottomContainerPercentage,
+    alignItems: "center",
+    justifyContent: "center"
+    // position: "absolute",
+    // bottom: 0,
+    // left: backgroundImageHoriPadding,
+    // right: backgroundImageHoriPadding
   },
   contentContaier: {
-    flex: 1,
+    flex: contentPercentage,
     zIndex: 2
   },
   signin: {
@@ -194,13 +201,14 @@ const styles = StyleSheet.create({
     color: colors.primaryOrange
   },
   appNameContainer: {
-    flex: 0.23,
+    flex: appNamePercentage,
     justifyContent: "flex-end"
   },
   appName: {
-    // width: windowWidth * 0.6,
-    height: 40,
-    marginBottom: 25
+    flex: appNamePercentage,
+    alignItems: "center",
+    justifyContent: "center",
+    marginHorizontal: windowWidth * 0.2
   },
   title: {
     alignSelf: "center",
@@ -212,15 +220,14 @@ const styles = StyleSheet.create({
   subtitle: {
     alignSelf: "center",
     fontSize: 18,
-    textAlign: "center"
+    textAlign: "center",
+    color: colors.primaryText
   },
   image: {
-    position: "absolute",
-    bottom: 0,
-    left: backgroundImageHoriPadding,
-    right: backgroundImageHoriPadding,
-    height: 300,
-    width: backgroundImageWidth
+    flex: bottomContainerPercentage,
+    width: backgroundImageWidth,
+    marginLeft: backgroundImageHoriPadding,
+    marginRight: backgroundImageHoriPadding
   },
   page: {
     flex: 1,

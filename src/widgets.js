@@ -645,7 +645,7 @@ export class MultiInput extends Component {
   render() {
     let { fadeAnim, topAnim } = this.state;
     return (
-      <View style={{ marginBottom: 100 }}>
+      <View style={{ marginBottom: 200 }}>
         <View style={[widgetStyles.choicesList]}>
           {this.props.inputs.map(this.renderInput)}
           <Button
