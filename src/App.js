@@ -48,14 +48,17 @@ const BuyStackNavigator = StackNavigator({
   Chat: {
     screen: ChatScreenWrapper(null),
     navigationOptions: ({ navigation }) => {
-      const isQuestions = navigation.state.params;
-      var button;
+      const params = navigation.state.params;
+      let button;
 
-      if (!isQuestions) {
+      if (!params) {
+        button = null;
+      } else if (params && params.isLoggedIn && !params.policy) {
         button = renderMenuButton(navigation);
       } else {
         button = renderBackButton(navigation);
       }
+
       return {
         headerStyle: styles.header,
         headerTitleStyle: styles.headerTitle,

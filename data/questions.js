@@ -174,7 +174,6 @@ const TypeValidators = {
 
 function validateOneAnswer(responseTypes, answer, answers) {
   var validateFunc;
-  console.log(responseTypes);
   for (var i = 0; i < responseTypes.length; i++) {
     validateFunc = TypeValidators[responseTypes[i]];
     const response = validateFunc(answer, answers);
