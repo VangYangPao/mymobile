@@ -30,6 +30,7 @@ import Spinner from "react-native-spinkit";
 import Sound from "react-native-sound";
 import Fuse from "fuse.js";
 import { template } from "lodash";
+import Parse from "parse/react-native";
 
 import CheckoutModal from "./CheckoutModal";
 import {
@@ -94,12 +95,13 @@ export default function ChatScreenWrapper(questionSet) {
     // when going back in the stack
     let _questionSet = questionSet;
     const routeParams = props.navigation.state.params;
-    const isStartScreen = !routeParams && !_questionSet;
+    const isStartScreen = !_questionSet;
     let policy;
     if (routeParams) {
       _questionSet = _questionSet || routeParams.questionSet;
       policy = routeParams.policy;
     }
+    console.log(routeParams, isStartScreen, _questionSet, policy);
     return (
       <ChatScreen
         isStartScreen={isStartScreen}
@@ -200,7 +202,7 @@ class ChatScreen extends Component {
       Sound.MAIN_BUNDLE,
       error => {
         if (error) {
-          console.log("failed to load the sound", error);
+          // console.log("failed to load the sound", error);
           return;
         }
         this.newMessageSound.setVolume(0.75);
@@ -493,11 +495,25 @@ class ChatScreen extends Component {
   }
 
   componentDidMount() {
+    Parse.User
+      .currentAsync()
+      .then(currentUser => {
+        if (currentUser) {
+          let patchedUser = Object.assign({}, currentUser);
+          patchedUser.fullName =
+            currentUser.get("firstName") + " " + currentUser.get("lastName");
+          const profilePictureUri = currentUser.get("profilePicture");
+          patchedUser.profilePictureUri = profilePictureUri
+            ? profilePictureUri.url()
+            : null;
+          this.props.navigation.setParams({ currentUser: patchedUser });
+        }
+      })
+      .catch(err => console.error(err));
     if (this.props.isStartScreen) {
       this.renderStartScreenMessages();
     } else {
       // trigger the initial componentDidUpdate
-      loggedIn = true;
       this.setState({ answering: false });
     }
     this.keyboardDidShowListener = Keyboard.addListener(

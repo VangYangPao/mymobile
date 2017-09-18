@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { TabNavigator, TabBarTop } from "react-navigation";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import Parse from "parse/react-native";
 
 import { Text } from "./defaultComponents";
 import Footer from "./Footer";
@@ -72,23 +73,35 @@ export default class PolicyScreen extends Component {
     const pricePerMonth = this.policy.plans[0].premium;
     this.handlePricePerMonthChange = this.handlePricePerMonthChange.bind(this);
     this.handlePurchase = this.handlePurchase.bind(this);
-    this.state = { pricePerMonth };
+    this.state = { pricePerMonth, currentUser: null };
+  }
+
+  componentDidMount() {
+    Parse.User.currentAsync().then(currentUser => {
+      this.setState({ currentUser });
+    });
   }
 
   handlePurchase() {
-    if (this.page === "info" && !this.loggedIn) {
-      if (ENV === "development") {
-        this.props.navigation.navigate("Chat", {
-          policy: this.policy,
-          questionSet: "buy"
-        });
-      } else {
-        this.props.navigation.navigate("Auth", { policy: this.policy });
-      }
+    const { currentUser } = this.state;
+    console.log(currentUser);
+    if (this.page === "info" && !currentUser) {
+      // if (ENV === "development") {
+      //   this.props.navigation.navigate("Chat", {
+      //     policy: this.policy,
+      //     currentUser,
+      //     questionSet: "buy"
+      //   });
+      // } else {
+      this.props.navigation.navigate("Auth", {
+        policy: this.policy
+      });
+      // }
     } else {
       this.props.navigation.navigate("Chat", {
         policy: this.policy,
-        questionSet: "buy"
+        questionSet: "buy",
+        currentUser
       });
     }
   }

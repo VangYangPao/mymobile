@@ -16,24 +16,21 @@ export default class DrawerContent extends Component {
     };
   }
 
-  componentDidMount() {
-    Parse.User.currentAsync().then(user => {
-      if (user) {
-        const fullName =
-          currentUser.get("firstName") + " " + currentUser.get("lastName");
-        this.setState({
-          profilePictureUri: currentUser.get("profilePicture").url(),
-          fullName
-        });
-      }
-    });
-  }
-
   render() {
+    const chatRoute = this.props.navigation.state.routes[0].routes.find(
+      r => r.routeName === "Chat"
+    );
+    let currentUser = {};
+    if (chatRoute.params) {
+      currentUser = chatRoute.params.currentUser;
+    }
     let image;
-    if (this.profilePictureUri) {
+    if (currentUser.profilePictureUri) {
       image = (
-        <Image source={{ uri: this.profilePictureUri }} style={styles.image} />
+        <Image
+          source={{ uri: currentUser.profilePictureUri }}
+          style={styles.image}
+        />
       );
     } else {
       image = (
@@ -47,9 +44,9 @@ export default class DrawerContent extends Component {
           <View style={styles.header}>
             {image}
             <Text style={styles.name}>
-              {this.state.fullName || "Not logged in yet!"}
+              {currentUser.fullName || "Not logged in yet!"}
             </Text>
-            {this.state.fullName ? (
+            {currentUser.fullName ? (
               <TouchableOpacity onPress={() => {}}>
                 <View style={styles.viewEditProfile}>
                   <Text style={styles.viewEditProfileText}>
@@ -66,7 +63,7 @@ export default class DrawerContent extends Component {
           </View>
           <DrawerItems labelStyle={styles.drawerItemLabel} {...this.props} />
         </View>
-        {this.state.fullName ? (
+        {currentUser.fullName ? (
           <View style={styles.footer}>
             <TouchableOpacity
               onPress={() => this.props.navigation.navigate("Help")}
@@ -76,13 +73,11 @@ export default class DrawerContent extends Component {
                 <Text style={styles.footerBtnText}>HELP</Text>
               </View>
             </TouchableOpacity>
-            {/*<TouchableOpacity
-            onPress={() => this.props.navigation.navigate("Legal")}
-          >
-            <View style={styles.footerBtn}>
-              <Text style={styles.footerBtnText}>LEGAL</Text>
-            </View>
-          </TouchableOpacity>*/}
+            <TouchableOpacity onPress={() => Parse.User.logOut()}>
+              <View style={styles.footerBtn}>
+                <Text style={styles.footerBtnText}>LOG OUT</Text>
+              </View>
+            </TouchableOpacity>
           </View>
         ) : null}
       </View>

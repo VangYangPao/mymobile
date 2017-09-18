@@ -53,7 +53,7 @@ const BuyStackNavigator = StackNavigator({
 
       if (!params) {
         button = null;
-      } else if (params && params.isLoggedIn && !params.policy) {
+      } else if (params && params.currentUser && !params.policy) {
         button = renderMenuButton(navigation);
       } else {
         button = renderBackButton(navigation);

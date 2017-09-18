@@ -34,15 +34,19 @@ formStyles.textbox.normal.color = "white";
 formStyles.fieldset.marginTop = 20;
 formStyles.fieldset.marginBottom = 10;
 
-const createResetAction = policy => {
+const createResetAction = (policy, currentUser) => {
   return NavigationActions.reset({
     index: 1,
     actions: [
-      NavigationActions.navigate({ routeName: "Chat" }),
+      NavigationActions.navigate({
+        routeName: "Chat",
+        params: { currentUser }
+      }),
       NavigationActions.navigate({
         routeName: "Chat",
         params: {
           policy,
+          currentUser,
           questionSet: "buy"
         }
       })
@@ -433,15 +437,21 @@ export default class AuthScreen extends Component {
         this.handleRedirectToPurchase();
       })
       .catch(err => {
-        if (err.code) {
+        console.log(err.message);
+        if (err.code === 101) {
           showAlert(err.message);
+        } else {
+          showAlert("There seems to be a problem logging in");
         }
       });
   }
 
   handleRedirectToPurchase() {
     const policy = this.props.navigation.state.params.policy;
-    this.props.navigation.dispatch(createResetAction(policy));
+    Parse.User.currentAsync().then(currentUser => {
+      const resetAction = createResetAction(policy, currentUser);
+      this.props.navigation.dispatch(resetAction);
+    });
   }
 
   handleNavigateToLogin() {

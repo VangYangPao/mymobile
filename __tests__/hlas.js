@@ -95,7 +95,7 @@ it("purchases phone protect correctly", () => {
     policyCommencementDate,
     policyHolder,
     paymentDetails
-  );
+  ).then(res => console.log(res));
 });
 
 // it("submits application for accident correctly", () => {
