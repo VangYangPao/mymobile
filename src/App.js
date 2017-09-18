@@ -46,7 +46,7 @@ const WINDOW_WIDTH = Dimensions.get("window").width;
 
 const BuyStackNavigator = StackNavigator({
   Chat: {
-    screen: ChatScreenWrapper(null),
+    screen: ChatScreenWrapper("buy"),
     navigationOptions: ({ navigation }) => {
       const params = navigation.state.params;
       let button;

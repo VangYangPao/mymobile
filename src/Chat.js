@@ -90,18 +90,29 @@ let loggedIn = false;
 
 export default function ChatScreenWrapper(questionSet) {
   const wrapper = props => {
-    // have to reassign to _questionSet here
-    // solves weird scoping issue where questionSet will remain to be 'buy'
-    // when going back in the stack
     let _questionSet = questionSet;
     const routeParams = props.navigation.state.params;
-    const isStartScreen = !_questionSet;
+    let isStartScreen = false;
     let policy;
+
     if (routeParams) {
       _questionSet = _questionSet || routeParams.questionSet;
       policy = routeParams.policy;
     }
-    console.log(routeParams, isStartScreen, _questionSet, policy);
+    if (!routeParams && _questionSet === "buy") {
+      isStartScreen = true;
+    } else if (routeParams && _questionSet === "buy" && !routeParams.policy) {
+      isStartScreen = true;
+    } else if (
+      routeParams &&
+      routeParams.startScreen &&
+      _questionSet === "buy"
+    ) {
+      isStartScreen = true;
+    } else {
+      isStartScreen = false;
+    }
+    console.log(routeParams, _questionSet, isStartScreen, policy);
     return (
       <ChatScreen
         isStartScreen={isStartScreen}
@@ -112,9 +123,32 @@ export default function ChatScreenWrapper(questionSet) {
     );
   };
 
+  // const wrapper = props => {
+  //   // have to reassign to _questionSet here
+  //   // solves weird scoping issue where questionSet will remain to be 'buy'
+  //   // when going back in the stack
+  //   let _questionSet = questionSet;
+  //   const routeParams = props.navigation.state.params;
+  //   let isStartScreen = !routeParams || routeParams.startScreen;
+  //   let policy;
+  //   if (routeParams) {
+  //     _questionSet = _questionSet || routeParams.questionSet;
+  //     policy = routeParams.policy;
+  //   }
+  //   console.log(routeParams, isStartScreen, _questionSet, policy);
+  //   return (
+  //     <ChatScreen
+  //       isStartScreen={isStartScreen}
+  //       questionSet={_questionSet}
+  //       policy={policy}
+  //       {...props}
+  //     />
+  //   );
+  // };
+
   let drawerLabel;
   let drawerIcon;
-  if (!questionSet) {
+  if (questionSet === "buy") {
     drawerLabel = "Buy Policies";
     drawerIcon = "message";
   } else if (questionSet === "claim") {
@@ -314,7 +348,7 @@ class ChatScreen extends Component {
 
   handleSelectPolicy(policyTitle) {
     const policy = transposePolicyChoiceByTitle()[policyTitle];
-    const params = { policy, page: "info", loggedIn };
+    const params = { policy, page: "info" };
     this.props.navigation.navigate("Policy", params);
   }
 
@@ -510,6 +544,7 @@ class ChatScreen extends Component {
         }
       })
       .catch(err => console.error(err));
+    console.log("isStartScreen", this.props.isStartScreen);
     if (this.props.isStartScreen) {
       this.renderStartScreenMessages();
     } else {

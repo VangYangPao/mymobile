@@ -40,7 +40,7 @@ const createResetAction = (policy, currentUser) => {
     actions: [
       NavigationActions.navigate({
         routeName: "Chat",
-        params: { currentUser }
+        params: { startScreen: true, currentUser }
       }),
       NavigationActions.navigate({
         routeName: "Chat",
