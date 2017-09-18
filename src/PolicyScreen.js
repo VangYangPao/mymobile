@@ -85,17 +85,17 @@ export default class PolicyScreen extends Component {
   handlePurchase() {
     const { currentUser } = this.state;
     if (this.page === "info" && !currentUser) {
-      if (ENV === "development") {
-        this.props.navigation.navigate("Chat", {
-          policy: this.policy,
-          currentUser,
-          questionSet: "buy"
-        });
-      } else {
-        this.props.navigation.navigate("Auth", {
-          policy: this.policy
-        });
-      }
+      // if (ENV === "development") {
+      //   this.props.navigation.navigate("Chat", {
+      //     policy: this.policy,
+      //     currentUser,
+      //     questionSet: "buy"
+      //   });
+      // } else {
+      this.props.navigation.navigate("Auth", {
+        policy: this.policy
+      });
+      // }
     } else {
       this.props.navigation.navigate("Chat", {
         questionSet: "buy",

@@ -40,14 +40,18 @@ const createResetAction = (policy, currentUser) => {
     actions: [
       NavigationActions.navigate({
         routeName: "Chat",
-        params: { startScreen: true, currentUser }
+        params: {
+          startScreen: true,
+          questionSet: "buy",
+          currentUser
+        }
       }),
       NavigationActions.navigate({
         routeName: "Chat",
         params: {
+          questionSet: "buy",
           policy,
-          currentUser,
-          questionSet: "buy"
+          currentUser
         }
       })
     ]
@@ -450,6 +454,7 @@ export default class AuthScreen extends Component {
     const policy = this.props.navigation.state.params.policy;
     Parse.User.currentAsync().then(currentUser => {
       const resetAction = createResetAction(policy, currentUser);
+      console.log(resetAction);
       this.props.navigation.dispatch(resetAction);
     });
   }
