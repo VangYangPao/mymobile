@@ -89,13 +89,21 @@ it("purchases phone protect correctly", () => {
     CardExpiryYear: 2021,
     CardExpiryMonth: 1
   };
+  const mobileDetails = {
+    brandID: 1,
+    modelID: 5,
+    purchaseDate: "2017-09-16",
+    serialNo: "989753317723690",
+    purchasePlaceID: 4
+  };
   const policyCommencementDate = new Date();
   return purchasePhonePolicy(
     premium,
     policyCommencementDate,
+    mobileDetails,
     policyHolder,
     paymentDetails
-  );
+  ).then(res => console.log(res));
 });
 
 // it("submits application for accident correctly", () => {
