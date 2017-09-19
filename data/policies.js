@@ -1,12 +1,12 @@
 const notCovered = [
-  "Disability Income",
-  "Cashless Medical Coverage",
-  "Natural Disaster",
-  "War or Terrorism",
-  "Pregnancy or Miscarriage",
-  "Suicide or Self-inflicted Injury",
-  "Dangerous Sports",
-  "Pre-existing Conditions"
+  "cashlessMedicalBenefit",
+  "naturalDisaster",
+  "warOrTerrorism",
+  "mentalDisorder",
+  "unlawfulAction",
+  "influenceOfDrugOrAlcohol",
+  "suicide",
+  "preExistingConditions"
 ];
 
 export default (policies = [
@@ -42,7 +42,7 @@ export default (policies = [
         premium: 40.98
       }
     ],
-    covered: ["Accidental Death", "Accidental Permanent Disability"],
+    covered: ["accidentalDeath", "permanentDisablement"],
     notCovered
   },
   {
@@ -84,10 +84,11 @@ export default (policies = [
       }
     ],
     covered: [
-      "Accidental Death",
-      "Accidental Permanent Disability",
-      "Medical Reimbursement (Medical Benefit)",
-      "Food Poisoning"
+      "accidentalDeath",
+      "permanentDisablement",
+      "medicalReimbursement",
+      "mrFoodPoisoning",
+      "mrMosquitoBite"
     ],
     notCovered
   },
@@ -129,34 +130,37 @@ export default (policies = [
         premium: 36.42
       }
     ],
-    covered: [
-      "Accidental Death",
-      "Accidental Permanent Disability",
-      "Weekly Indemnity (Accident Benefit)"
-    ],
+    covered: ["accidentalDeath", "permanentDisablement", "weeklyIndemnity"],
     notCovered
   },
   {
     id: "travel",
     title: "Travel Protect360",
     imageSource: "ic_travel_protection",
-    description: "At a super-low price, this is a super-big comprehensive plan that covers most of your financial loss and unforeseen expenses when you travel overseas. It covers you and your family's medical expenses, loss of baggage, loss of cash, and loss of home contents. You and your family enjoy unlimited emergency medical evacuation, cash compensation for flight delay, diversion or cancellation. In the event accidental death or permanent disability, your loved ones will receive a lump sum cash within days. These are just some highlights, and we are constantly adding more benefits and coverage to make you travel happily and peacefully!",
+    description:
+      "At a super-low price, this is a super-big comprehensive plan that covers most of your financial loss and unforeseen expenses when you travel overseas. It covers you and your family's medical expenses, loss of baggage, loss of cash, and loss of home contents. You and your family enjoy unlimited emergency medical evacuation, cash compensation for flight delay, diversion or cancellation. In the event accidental death or permanent disability, your loved ones will receive a lump sum cash within days. These are just some highlights, and we are constantly adding more benefits and coverage to make you travel happily and peacefully!",
     plans: [{ 0: 50000, premium: 35 }], // hardcoded for display purposes only
     isTravelInsurance: true,
     from: "1 day",
     covered: [
-      "Overseas medical expenses",
-      "Medical expenses",
-      "Emergency medical evacuation",
-      "Loss of benefit, personal effect, cash",
-      "Delayed baggage and flight",
-      "Loss or cancellation of trip",
-      "Personal liability",
-      "Loss of home contents due to burglary",
-      "Credit card outstanding settlement",
-      "Overseas Accidental Death",
-      "Free Overseas Wi-Fi voucher",
-      "Free Airport VIP Lounge Access"
+      "overseasMedicalExpenses",
+      "medicalExpensesInSG",
+      "repatriationOfMortalRemains",
+      "emergencyMedicalEvacuation",
+      "overseasCashBenefit",
+      "hospitalCashBenefitInSG",
+      "overseasAccidentalDeath",
+      "overseasPermanentDisablement",
+      "lossOfBaggage",
+      "lossOfMoney",
+      "delayedBaggage",
+      "travelCancellation",
+      "tripCurtailment",
+      "travelDelay",
+      "flightDiversion",
+      "insolvencyOfTravelAgency",
+      "personalLiability",
+      "lossOfHomeContents"
     ],
     notCovered
   },
@@ -172,7 +176,7 @@ export default (policies = [
         premium: 12.84 * 0.9
       }
     ],
-    covered: ["Phone Cracked / Dropped", "Phone On Wet Surface / Blank Screen"],
-    notCovered: ["Wear & Tear / Upgrade", "Phone stolen / lost"]
+    covered: ["phoneDamage", "phoneWet"],
+    notCovered: ["phoneCosmetic", "phoneWearTear", "selfInflicted"]
   }
 ]);
