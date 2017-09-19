@@ -46,6 +46,14 @@ export type AccidentDetails = {
   OptionsID: AccidentOptionID
 };
 
+export type MobileDetails = {
+  brandID: number,
+  modelID: number,
+  purchaseDate: string,
+  serialNo: string,
+  purchasePlaceID: number
+};
+
 export type OccupationID =
   | 2
   | 18

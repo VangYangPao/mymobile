@@ -11,7 +11,8 @@ import type {
   PolicyHolder,
   Traveller,
   AccidentDetails,
-  OccupationID
+  OccupationID,
+  MobileDetails
 } from "./types/hlas";
 import {
   generateRef,
@@ -72,138 +73,168 @@ export function getPhoneProtectQuote() {
 export function purchasePhonePolicy(
   premium: number,
   policyCommencementDate: Date,
-  policyHolder: string
+  mobileDetails: MobileDetails,
+  policyHolder: string,
+  paymentDetails: PaymentDetails
 ) {
+  let PASAppID,
+    verifyEnrolmentResponseObj,
+    verifyEnrolmentResponse,
+    paymentSuccessfulResponse;
+  const transactionRef: string = generateRef();
+  const telemoneyCard = paymentDetailsToTelemoneyCard(paymentDetails);
   const webAppID: string = uuidv4();
-  policyCommencementDate = moment(policyCommencementDate).format("YYYY-MM-DD");
-  return verifyApplicationPhone(
-    premium,
-    webAppID,
-    policyCommencementDate,
-    policyHolder
+  let commencementDate: string = moment(policyCommencementDate).format(
+    "YYYY-MM-DD"
   );
+  return verifyApplicationPhone(
+    webAppID,
+    premium,
+    commencementDate,
+    mobileDetails,
+    policyHolder,
+    paymentDetails
+  )
+    .then(res => {
+      PASAppID = res.applciationNo;
+      console.log("verified application", PASAppID);
+      let count = 0;
+      return retry(5, () => {
+        console.log("retry", ++count);
+        return verifyEnrolment(
+          transactionRef,
+          telemoneyCard,
+          paymentDetails.CardType,
+          premium.toFixed(2)
+        );
+      });
+    })
+    .then(res => {
+      verifyEnrolmentResponseObj = res;
+      verifyEnrolmentResponse = objectToUrlParams(verifyEnrolmentResponseObj);
+      return createPaymentTransactionPhone(
+        transactionRef,
+        webAppID,
+        PASAppID,
+        premium,
+        commencementDate,
+        mobileDetails,
+        policyHolder,
+        paymentDetails,
+        verifyEnrolmentResponse
+      );
+    })
+    .then(res => {
+      // const args = [
+      //   card,
+      //   paymentDetails.CardType,
+      //   premium,
+      //   verifyEnrolmentResponseObj
+      // ];
+      // return retryPromise(doFull3DSTransaction, args, 5, 2000);
+      let count = 0;
+      return retry(5, () => {
+        console.log("retry", ++count);
+        return doFull3DSTransaction(
+          telemoneyCard,
+          paymentDetails.CardType,
+          premium,
+          verifyEnrolmentResponseObj
+        );
+      });
+    });
+  // .then(res => {
+  //   console.log("payment res", res);
+  //   paymentSuccessfulResponse = objectToUrlParams(res);
+  //   return updatePaymentTransactionPhone(
+  //     transactionRef,
+  //     webAppID,
+  //     PASAppID,
+  //     premium,
+  //     commencementDate,
+  //     mobileDetails,
+  //     policyHolder,
+  //     paymentDetails,
+  //     verifyEnrolmentResponse,
+  //     paymentSuccessfulResponse
+  //   );
+  // })
+  // .then(res => {
+  //   return submitApplicationPhone(
+  //     transactionRef,
+  //     webAppID,
+  //     PASAppID,
+  //     premium,
+  //     commencementDate,
+  //     mobileDetails,
+  //     policyHolder,
+  //     paymentDetails,
+  //     verifyEnrolmentResponse,
+  //     paymentSuccessfulResponse
+  //   );
+  // });
 }
 
 export function verifyApplicationPhone(
-  premium: number,
   webAppID: string,
+  premium: number,
   policyCommencementDate: string,
-  policyHolder: PolicyHolder
+  mobileDetails: MobileDetails,
+  policyHolder: PolicyHolder,
+  paymentInfo: PaymentDetails
+) {
+  const payload = {
+    webAppID: uuidv4(),
+    premium,
+    productPlanID: PHONE_PRODUCT_PLAN_ID,
+    policyCommencementDate,
+    policyHolder,
+    mobileDetails,
+    paymentInfo,
+    optIn: OPT_IN_HLAS_MKTG,
+    ipAddress: "sample string 15"
+  };
+  const url = `${HLAS_URL}/api/Phone/VerifyNewApplication`;
+  return sendPOSTRequest(
+    url,
+    payload,
+    "Error verifying phone protect application"
+  );
+}
+
+export function createPaymentTransactionPhone(
+  transactionRef: string,
+  webAppID: string,
+  pasAppID: string,
+  premium: number,
+  policyCommencementDate: string,
+  mobileDetails: MobileDetails,
+  policyHolder: PolicyHolder,
+  paymentInfo: PaymentDetails,
+  telemoneyTransactionResponse: string
 ) {
   const payload = {
     webAppID,
-    pasAppID: 2,
+    pasAppID,
     premium,
-    autoRenew: false,
-    meetsRequirements: "sample string 4",
-    referralSouceID: REFERRAL_SOURCE_ID,
-    referralSource: "sample string 6",
-    productPlanID: PHONE_PRODUCT_PLAN_ID,
-    productPlanName: "sample string 8",
-    personalCoverage: true,
-    policyCommencementDate,
-    coverageID: PHONE_COVERAGE_ID,
-    coverageName: "sample string 10",
-    // policyHolder,
+    productPlanID: 99,
+    policyCommencementDate: "2017-09-18T11:19:08.617064+08:00",
     policyHolder: {
-      surname: "sample string 1",
-      givenName: "sample string 2",
+      surname: "test phone",
+      givenName: "test phone",
       idNumber: policyHolder.IDNumber,
-      idNumberType: 0,
-      dateOfBirth: "2017-09-14T18:50:36.0933673+08:00",
+      dateOfBirth: "1988-09-18",
       genderID: 1,
-      genderName: "sample string 5",
-      homeTelephone: "sample string 6",
-      officeTelephone: "sample string 7",
-      mobileTelephone: "sample string 8",
-      email: "sample string 9",
-      unitNumber: "sample string 10",
-      blockHouseNumber: "sample string 11",
-      buildingName: "sample string 12",
-      streetName: "sample string 13",
-      postalCode: "sample string 14"
+      mobileTelephone: "98888888",
+      email: "ayethet.san@hlas.com.sg"
     },
     mobileDetails: {
-      brand: {
-        as400Code: "sample string 1",
-        enDesc: "sample string 2",
-        lang1: "sample string 3",
-        lang2: "sample string 4",
-        effectiveDate: "2017-09-14T18:50:36.1089454+08:00",
-        expiryDate: "2017-09-14T18:50:36.1089454+08:00",
-        deleted: true,
-        isReady: true,
-        id: 5,
-        digest: {},
-        createDate: "2017-09-14T18:50:36.1089454+08:00",
-        updateDate: "2017-09-14T18:50:36.1089454+08:00",
-        creator_Id: 1,
-        updater_Id: 1,
-        version: "QEBA"
-      },
       brandID: 1,
-      model: {
-        mobileBrand: {
-          as400Code: "sample string 1",
-          enDesc: "sample string 2",
-          lang1: "sample string 3",
-          lang2: "sample string 4",
-          effectiveDate: "2017-09-14T18:50:36.1089454+08:00",
-          expiryDate: "2017-09-14T18:50:36.1089454+08:00",
-          deleted: true,
-          isReady: true,
-          id: 5,
-          digest: {},
-          createDate: "2017-09-14T18:50:36.1089454+08:00",
-          updateDate: "2017-09-14T18:50:36.1089454+08:00",
-          creator_Id: 1,
-          updater_Id: 1,
-          version: "QEBA"
-        },
-        as400Code: "sample string 1",
-        enDesc: "sample string 2",
-        lang1: "sample string 3",
-        lang2: "sample string 4",
-        effectiveDate: "2017-09-14T18:50:36.1089454+08:00",
-        expiryDate: "2017-09-14T18:50:36.1089454+08:00",
-        deleted: true,
-        isReady: true,
-        id: 5,
-        digest: {},
-        createDate: "2017-09-14T18:50:36.1089454+08:00",
-        updateDate: "2017-09-14T18:50:36.1089454+08:00",
-        creator_Id: 1,
-        updater_Id: 1,
-        version: "QEBA"
-      },
-      modelID: 2,
-      purchaseDate: "2017-09-14T18:50:36.1089454+08:00",
-      serialNo: "sample string 3",
-      purchasePlace: {
-        as400Code: "sample string 1",
-        enDesc: "sample string 2",
-        lang1: "sample string 3",
-        lang2: "sample string 4",
-        effectiveDate: "2017-09-14T18:50:36.1089454+08:00",
-        expiryDate: "2017-09-14T18:50:36.1089454+08:00",
-        deleted: true,
-        isReady: true,
-        id: 5,
-        digest: {},
-        createDate: "2017-09-14T18:50:36.1089454+08:00",
-        updateDate: "2017-09-14T18:50:36.1089454+08:00",
-        creator_Id: 1,
-        updater_Id: 1,
-        version: "QEBA"
-      },
-      purchasePlaceID: 4,
-      otherPurchasePlace: "sample string 5",
-      memberCardNo: "sample string 6"
+      modelID: 5,
+      purchaseDate: "2017-09-16",
+      serialNo: "989753317723699",
+      purchasePlaceID: 4
     },
-    planPremium: premium,
-    personalCoveragePremium: premium,
-    totalPremium: premium,
-    firstPremium: premium,
     paymentInfo: {
       paymentReferenceNumber: "sample string 1",
       nameOnCard: "sample string 2",
@@ -217,22 +248,93 @@ export function verifyApplicationPhone(
       payByApplicant: true,
       surname: "sample string 9",
       givenName: "sample string 10",
-      idNumber: policyHolder.IDNumber,
+      idNumber: "sample string 11",
       idNumberType: 0,
       telephoneNumber: "sample string 12",
-      telemoneyTransactionResponse: "sample string 13",
+      telemoneyTransactionResponse,
       telemoneyPaymentResultRow: "sample string 14",
       paymentSuccessful: true
+    },
+    optIn: true,
+    ipAddress: "sample string 15"
+  };
+  // const payload = {
+  //   webAppID: uuidv4(),
+  //   pasAppID,
+  //   premium,
+  //   autoRenew: false,
+  //   productPlanID: PHONE_PRODUCT_PLAN_ID,
+  //   policyCommencementDate,
+  //   policyHolder,
+  //   mobileDetails,
+  //   paymentInfo: {
+  //     paymentReferenceNumber: "sample string 1",
+  //     bankID: 7,
+  //     bankName: "sample string 8",
+  //     payByApplicant: true,
+  //     surname: policyHolder.Surname,
+  //     givenName: policyHolder.GivenName,
+  //     idNumber: policyHolder.IDNumber,
+  //     idNumberType: 0,
+  //     telephoneNumber: policyHolder.MobileTelephone,
+  //     telemoneyTransactionResponse,
+  //     paymentSuccessful: true,
+  //     ...paymentInfo
+  //   },
+  //   optIn: OPT_IN_HLAS_MKTG,
+  //   ipAddress: "sample string 15"
+  // };
+  console.log(JSON.stringify(payload));
+  const url = `${HLAS_URL}/api/Phone/CreatePaymentTransaction`;
+  return sendPOSTRequest(
+    url,
+    payload,
+    "Error creating payment transaction phone protect"
+  );
+}
+
+export function updatePaymentTransactionPhone(
+  transactionRef: string,
+  webAppID: string,
+  pasAppID: string,
+  premium: number,
+  policyCommencementDate: string,
+  mobileDetails: MobileDetails,
+  policyHolder: PolicyHolder,
+  paymentInfo: PaymentDetails,
+  telemoneyTransactionResponse: string,
+  telemoneyPaymentResultRow: string
+) {
+  const payload = {
+    webAppID: uuidv4(),
+    pasAppID,
+    premium,
+    productPlanID: PHONE_PRODUCT_PLAN_ID,
+    policyCommencementDate,
+    policyHolder,
+    mobileDetails,
+    paymentInfo: {
+      paymentReferenceNumber: "sample string 1",
+      bankID: 7,
+      bankName: "sample string 8",
+      payByApplicant: true,
+      surname: policyHolder.Surname,
+      givenName: policyHolder.GivenName,
+      idNumber: policyHolder.IDNumber,
+      idNumberType: 0,
+      telephoneNumber: policyHolder.MobileTelephone,
+      telemoneyTransactionResponse,
+      paymentSuccessful: true,
+      ...paymentInfo
     },
     optIn: OPT_IN_HLAS_MKTG,
     ipAddress: "sample string 15"
   };
-  console.log(payload);
   const url = `${HLAS_URL}/api/Phone/VerifyNewApplication`;
   return sendPOSTRequest(
     url,
     payload,
-    "Error verifying phone protect application"
+    "Error updating payment transaction phone protect"
   );
 }
 
