@@ -339,7 +339,27 @@ export class ImageTable extends Component {
 export class ClaimPolicyChoice extends Component {
   constructor(props) {
     super(props);
-    this.state = { disabled: false };
+    this.state = {
+      disabled: false,
+      topAnim: new Animated.Value(40),
+      fadeAnim: new Animated.Value(0)
+    };
+  }
+
+  componentDidMount() {
+    Animated.parallel(
+      [
+        Animated.timing(this.state.fadeAnim, {
+          toValue: 1 // Animate to opacity: 1, or fully opaque
+        }),
+        Animated.timing(this.state.topAnim, {
+          toValue: 0
+        })
+      ],
+      {
+        duration: 500
+      }
+    ).start();
   }
 
   handleSelectPolicy(policy) {
@@ -399,11 +419,16 @@ export class ClaimPolicyChoice extends Component {
 
   render() {
     return (
-      <View style={widgetStyles.choicesContainer}>
+      <Animated.View
+        style={[
+          widgetStyles.choicesContainer,
+          { opacity: this.state.fadeAnim, top: this.state.topAnim }
+        ]}
+      >
         {database.policies
           .filter(p => p.status === "active")
           .map(this.renderPolicy.bind(this))}
-      </View>
+      </Animated.View>
     );
   }
 }
@@ -784,10 +809,14 @@ const widgetStyles = StyleSheet.create({
   },
   policyContainer: {
     backgroundColor: "white",
-    marginHorizontal: 20,
-    marginVertical: 10,
+    marginHorizontal: 10,
+    marginVertical: 6,
     padding: 15,
-    borderRadius: 3
+    borderRadius: 3,
+    shadowColor: colors.borderLine,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2
   },
   skipUploadContainer: {
     marginTop: 15

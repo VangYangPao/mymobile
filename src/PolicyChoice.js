@@ -41,10 +41,9 @@ class Policy extends Component {
           <View style={styles.detailContainer}>
             <Text style={styles.title}>
               {titleSplit[0]}
-              {titleSplit[1]
-                ? <Text style={styles.boldedText}> with {titleSplit[1]}</Text>
-                : null}
-
+              {titleSplit[1] ? (
+                <Text style={styles.boldedText}> with {titleSplit[1]}</Text>
+              ) : null}
             </Text>
           </View>
         </View>
@@ -119,7 +118,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     marginVertical: 6,
     padding: 6,
-    borderRadius: 3
+    borderRadius: 3,
+    shadowColor: colors.borderLine,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2
   },
   iconContainer: {
     justifyContent: "center",
