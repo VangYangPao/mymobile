@@ -107,7 +107,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1
   },
   description: {
-    fontSize: 16
+    fontSize: 16,
+    color: colors.primaryText
   },
   title: {
     marginTop: 10,

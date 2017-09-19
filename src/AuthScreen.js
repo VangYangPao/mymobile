@@ -142,7 +142,8 @@ const userSignUpOptions = {
     email: {
       placeholderTextColor: "white",
       keyboardType: "email-address",
-      autoCapitalize: "none"
+      autoCapitalize: "none",
+      autoCorrect: false
     },
     firstName: {
       placeholderTextColor: "white",
@@ -271,6 +272,7 @@ const userLoginOptions = {
   fields: {
     email: {
       autoCapitalize: "none",
+      autoCorrect: false,
       keyboardType: "email-address",
       error: "Enter a valid email"
     },

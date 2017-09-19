@@ -57,7 +57,7 @@ export default class PolicyChoice extends Component {
     super(props);
     this.handleSelectPlan = this.handleSelectPlan.bind(this);
     this.state = {
-      topAnim: new Animated.Value(20),
+      topAnim: new Animated.Value(40),
       fadeAnim: new Animated.Value(0) // Initial value for opacity: 0
     };
   }
