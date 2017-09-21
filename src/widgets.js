@@ -19,15 +19,19 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import ImagePicker from "react-native-image-picker";
 import DatePicker from "react-native-datepicker";
 import moment from "moment";
+import { TabNavigator, TabBarTop } from "react-navigation";
+import VectorDrawableView from "./VectorDrawableView";
 
 import database from "./HackStorage";
 import POLICIES from "../data/policies";
 import RangeSlider from "./RangeSlider";
 import { Text } from "./defaultComponents";
 import colors from "./colors";
-import { getDateStr } from "./utils";
+import { getDateStr, addCommas } from "./utils";
 import Button from "./Button";
 import { validateAnswer, ValidationResult } from "../data/questions";
+import tabStyles from "./TabBar.styles";
+import COVERAGES from "../data/coverage";
 
 const imageHeight = 150;
 const imageWidth = 100;
@@ -726,7 +730,144 @@ export class SuggestionList extends Component {
   }
 }
 
+class PlanTab extends Component {
+  static navigationOptions = {
+    tabBarOnPress: this.handleTabBarPress
+  };
+
+  constructor(props) {
+    super(props);
+    this.handleTabBarPress = this.handleTabBarPress.bind(this);
+    this.renderCoverage = this.renderCoverage.bind(this);
+    this.state = {
+      fadeAnim: new Animated.Value(0)
+    };
+  }
+
+  componentDidMount() {
+    Animated.timing(this.state.fadeAnim, {
+      toValue: 1
+    }).start();
+  }
+
+  handleTabBarPress() {
+    this.setState({ fadeAnim: new Animated.Value(0) }, () => {
+      Animated.timing(this.state.fadeAnim, {
+        toValue: 1
+      }).start();
+    });
+  }
+
+  renderCoverage(planIdx, coverageKey) {
+    const coverage = COVERAGES[coverageKey];
+    const coverageAmount = addCommas(
+      this.props.plans[planIdx].coverage[coverageKey]
+    );
+    return (
+      <View key={coverageKey} style={widgetStyles.coverageRow}>
+        <VectorDrawableView
+          resourceName={coverage.icon}
+          style={widgetStyles.coverageIcon}
+        />
+        <View style={widgetStyles.coverageDetailsContainer}>
+          <Text style={widgetStyles.coverageTitleText}>{coverage.title}</Text>
+          <Text style={widgetStyles.coverageAmountText}>${coverageAmount}</Text>
+        </View>
+      </View>
+    );
+  }
+
+  render() {
+    const { plan, planIndex } = this.props;
+    return (
+      <Animated.View
+        style={[widgetStyles.planContainer, { opacity: this.state.fadeAnim }]}
+      >
+        <View style={widgetStyles.planContentContainer}>
+          {Object.keys(plan.coverage).map(coverageKey =>
+            this.renderCoverage(planIndex, coverageKey)
+          )}
+        </View>
+        <Button style={widgetStyles.selectPlanButton}>SELECT PLAN</Button>
+      </Animated.View>
+    );
+  }
+}
+
+export class PlansTabView extends Component {
+  render() {
+    const { plans } = this.props;
+    let tabRoutes = {};
+    Object.keys(plans).forEach((key, idx) => {
+      const plan = plans[key];
+      tabRoutes[plan.title] = {
+        screen: () => <PlanTab plans={plans} plan={plan} planIndex={idx} />
+      };
+    });
+    const PlansTabNavigator = TabNavigator(tabRoutes, {
+      tabBarComponent: TabBarTop,
+      tabBarPosition: "top",
+      tabBarOptions: {
+        upperCaseLabel: true,
+        activeTintColor: colors.primaryOrange,
+        inactiveTintColor: colors.primaryText,
+        style: tabStyles.tabContainer,
+        labelStyle: tabStyles.tabLabel,
+        indicatorStyle: tabStyles.tabIndicator
+      }
+    });
+    return (
+      <View style={widgetStyles.plansTabContainer}>
+        <PlansTabNavigator />
+      </View>
+    );
+  }
+}
+
+const iconSize = 50;
+
 const widgetStyles = StyleSheet.create({
+  coverageAmountText: {
+    color: colors.primaryText,
+    fontSize: 15
+  },
+  coverageTitleText: {
+    marginBottom: 5,
+    color: colors.primaryText,
+    fontSize: 15,
+    fontWeight: "600"
+  },
+  coverageDetailsContainer: {
+    marginVertical: 5,
+    marginHorizontal: 15
+  },
+  coverageRow: {
+    flexDirection: "row",
+    marginVertical: 10
+  },
+  coverageIcon: {
+    height: iconSize,
+    width: iconSize
+  },
+  selectPlanButton: {
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0
+  },
+  planTitle: {
+    color: colors.primaryText
+  },
+  planContentContainer: {
+    padding: 15,
+    paddingVertical: 20
+  },
+  planContainer: {},
+  plansTabContainer: {
+    marginTop: 20,
+    marginBottom: 10,
+    marginHorizontal: 20,
+    borderRadius: 5,
+    backgroundColor: "white"
+  },
   noBorderRadius: {
     borderRadius: 0
   },
