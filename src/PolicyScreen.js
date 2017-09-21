@@ -17,20 +17,7 @@ import POLICIES from "../data/policies";
 import CoveragePage from "./Coverage";
 import colors from "./colors";
 import { ENV } from "react-native-dotenv";
-
-const tabStyles = {
-  tabIndicator: {
-    backgroundColor: colors.primaryOrange,
-    height: 3
-  },
-  tabLabel: {
-    fontWeight: "600"
-  },
-  tabContainer: {
-    backgroundColor: "white",
-    elevation: 5
-  }
-};
+import tabStyles from "./TabBar.styles";
 
 const PlanTabNavigator = TabNavigator(
   {

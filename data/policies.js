@@ -17,29 +17,44 @@ export default (policies = [
     from: "1 month",
     plans: [
       {
-        accidentalDeath: 5000,
-        permanentDisablement: 5000,
-        premium: 2.68
+        title: "Plan A",
+        premium: 2.68,
+        coverage: {
+          accidentalDeath: 5000,
+          permanentDisablement: 5000
+        }
       },
       {
-        accidentalDeath: 10000,
-        permanentDisablement: 10000,
-        premium: 5.35
+        title: "Plan B",
+        premium: 5.35,
+        coverage: {
+          accidentalDeath: 10000,
+          permanentDisablement: 10000
+        }
       },
       {
-        accidentalDeath: 20000,
-        permanentDisablement: 20000,
-        premium: 9.84
+        title: "Plan C",
+        premium: 9.84,
+        coverage: {
+          accidentalDeath: 20000,
+          permanentDisablement: 20000
+        }
       },
       {
-        accidentalDeath: 40000,
-        permanentDisablement: 40000,
-        premium: 17.87
+        title: "Plan D",
+        premium: 17.87,
+        coverage: {
+          accidentalDeath: 40000,
+          permanentDisablement: 40000
+        }
       },
       {
-        accidentalDeath: 100000,
-        permanentDisablement: 100000,
-        premium: 40.98
+        title: "Plan E",
+        premium: 17.87,
+        coverage: {
+          accidentalDeath: 40000,
+          permanentDisablement: 40000
+        }
       }
     ],
     covered: ["Accidental Death", "Accidental Permanent Disability"],
@@ -53,33 +68,48 @@ export default (policies = [
     from: "1 month",
     plans: [
       {
-        accidentalDeath: 5000,
-        permanentDisablement: 5000,
-        medicalReimbursement: 500,
+        title: "Plan A",
+        coverage: {
+          accidentalDeath: 5000,
+          permanentDisablement: 5000,
+          medicalReimbursement: 500
+        },
         premium: 2.68
       },
       {
-        accidentalDeath: 10000,
-        permanentDisablement: 10000,
-        medicalReimbursement: 1000,
+        title: "Plan B",
+        coverage: {
+          accidentalDeath: 10000,
+          permanentDisablement: 10000,
+          medicalReimbursement: 1000
+        },
         premium: 5.35
       },
       {
-        accidentalDeath: 20000,
-        permanentDisablement: 20000,
-        medicalReimbursement: 1500,
+        title: "Plan C",
+        coverage: {
+          accidentalDeath: 20000,
+          permanentDisablement: 20000,
+          medicalReimbursement: 1500
+        },
         premium: 9.84
       },
       {
-        accidentalDeath: 40000,
-        permanentDisablement: 40000,
-        medicalReimbursement: 2000,
+        title: "Plan D",
+        coverage: {
+          accidentalDeath: 40000,
+          permanentDisablement: 40000,
+          medicalReimbursement: 2000
+        },
         premium: 17.87
       },
       {
-        accidentalDeath: 100000,
-        permanentDisablement: 100000,
-        medicalReimbursement: 3000,
+        title: "Plan E",
+        coverage: {
+          accidentalDeath: 100000,
+          permanentDisablement: 100000,
+          medicalReimbursement: 3000
+        },
         premium: 40.98
       }
     ],
@@ -99,33 +129,48 @@ export default (policies = [
     from: "1 month",
     plans: [
       {
-        accidentalDeath: 5000,
-        permanentDisablement: 5000,
-        weeklyIndemnity: 200,
+        title: "Plan A",
+        coverage: {
+          accidentalDeath: 5000,
+          permanentDisablement: 5000,
+          weeklyIndemnity: 200
+        },
         premium: 2.2
       },
       {
-        accidentalDeath: 10000,
-        permanentDisablement: 10000,
-        weeklyIndemnity: 250,
+        title: "Plan B",
+        coverage: {
+          accidentalDeath: 10000,
+          permanentDisablement: 10000,
+          weeklyIndemnity: 250
+        },
         premium: 4.09
       },
       {
-        accidentalDeath: 20000,
-        permanentDisablement: 20000,
-        weeklyIndemnity: 300,
+        title: "Plan C",
+        coverage: {
+          accidentalDeath: 20000,
+          permanentDisablement: 20000,
+          weeklyIndemnity: 300
+        },
         premium: 7.75
       },
       {
-        accidentalDeath: 40000,
-        permanentDisablement: 40000,
-        weeklyIndemnity: 350,
+        title: "Plan D",
+        coverage: {
+          accidentalDeath: 40000,
+          permanentDisablement: 40000,
+          weeklyIndemnity: 350
+        },
         premium: 14.97
       },
       {
-        accidentalDeath: 100000,
-        permanentDisablement: 100000,
-        weeklyIndemnity: 400,
+        title: "Plan E",
+        coverage: {
+          accidentalDeath: 100000,
+          permanentDisablement: 100000,
+          weeklyIndemnity: 400
+        },
         premium: 36.42
       }
     ],
@@ -167,8 +212,11 @@ export default (policies = [
     from: "1 year",
     plans: [
       {
-        accidentalDamage: 1000,
-        waterDamage: 1000,
+        title: "Annual Plan",
+        coverage: {
+          accidentalDamage: 1000,
+          waterDamage: 1000
+        },
         premium: 12.84 * 0.9
       }
     ],
