@@ -767,7 +767,7 @@ export function purchaseTravelPolicy(
     paymentDetails
   )
     .then(res => {
-      PASAppID = res.ApplciationNo;
+      PASAppID = res.applciationNo;
       console.log("verified application", PASAppID);
       let count = 0;
       return retry(5, () => {
@@ -834,24 +834,24 @@ export function purchaseTravelPolicy(
         verifyEnrolmentResponse,
         paymentSuccessfulResponse
       );
+    })
+    .then(res => {
+      console.log("update payment transaction", res);
+      return submitApplicationTravelSingle(
+        transactionRef,
+        WebAppID,
+        PASAppID,
+        premium,
+        countryid,
+        startDate,
+        endDate,
+        planid,
+        policyHolder,
+        paymentDetails,
+        verifyEnrolmentResponse,
+        paymentSuccessfulResponse
+      );
     });
-  // .then(res => {
-  //   console.log("update payment transaction", res);
-  //   return submitApplicationTravelSingle(
-  //     transactionRef,
-  //     WebAppID,
-  //     PASAppID,
-  //     premium,
-  //     countryid,
-  //     startDate,
-  //     endDate,
-  //     planid,
-  //     policyHolder,
-  //     paymentDetails,
-  //     verifyEnrolmentResponse,
-  //     paymentSuccessfulResponse
-  //   );
-  // });
 }
 
 export function getTravelQuote(
@@ -1110,6 +1110,7 @@ export function submitApplicationTravelSingle(
   const InsuredTravellers: Array<Traveller> = [applicantTraveller];
   const payload = {
     WebAppID,
+    PASAppID,
     CurrentStep: 0,
     CountryID,
     TravelStartDate,
@@ -1142,6 +1143,7 @@ export function submitApplicationTravelSingle(
     optIn: OPT_IN_HLAS_MKTG,
     IPAddress: "sample string 18"
   };
+  console.log(JSON.stringify(payload));
   const url = `${HLAS_URL}/api/Travel/SubmitApplication_SingleTravel`;
   return sendPOSTRequest(
     url,
