@@ -41,7 +41,8 @@ import {
   CoverageDurationWidget,
   ImageTable,
   ChoiceList,
-  SuggestionList
+  SuggestionList,
+  PlansTabView
 } from "./widgets";
 import database from "./HackStorage";
 import PlanCarousel from "./PlanCarousel";
@@ -925,7 +926,8 @@ class ChatScreen extends Component {
             />
           );
         }
-        return <PlanCarousel {...carouselProps} />;
+        return <PlansTabView plans={this.props.policy.plans} />;
+      // return <PlanCarousel {...carouselProps} />;
       case "coverageDuration":
         const notCurrentQuestion =
           this.questions[this.state.currentQuestionIndex].id !==

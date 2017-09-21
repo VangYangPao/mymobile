@@ -731,31 +731,9 @@ export class SuggestionList extends Component {
 }
 
 class PlanTab extends Component {
-  static navigationOptions = {
-    tabBarOnPress: this.handleTabBarPress
-  };
-
   constructor(props) {
     super(props);
-    this.handleTabBarPress = this.handleTabBarPress.bind(this);
     this.renderCoverage = this.renderCoverage.bind(this);
-    this.state = {
-      fadeAnim: new Animated.Value(0)
-    };
-  }
-
-  componentDidMount() {
-    Animated.timing(this.state.fadeAnim, {
-      toValue: 1
-    }).start();
-  }
-
-  handleTabBarPress() {
-    this.setState({ fadeAnim: new Animated.Value(0) }, () => {
-      Animated.timing(this.state.fadeAnim, {
-        toValue: 1
-      }).start();
-    });
   }
 
   renderCoverage(planIdx, coverageKey) {
@@ -780,16 +758,14 @@ class PlanTab extends Component {
   render() {
     const { plan, planIndex } = this.props;
     return (
-      <Animated.View
-        style={[widgetStyles.planContainer, { opacity: this.state.fadeAnim }]}
-      >
+      <View style={widgetStyles.planContainer}>
         <View style={widgetStyles.planContentContainer}>
           {Object.keys(plan.coverage).map(coverageKey =>
             this.renderCoverage(planIndex, coverageKey)
           )}
         </View>
         <Button style={widgetStyles.selectPlanButton}>SELECT PLAN</Button>
-      </Animated.View>
+      </View>
     );
   }
 }
