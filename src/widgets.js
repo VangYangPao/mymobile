@@ -788,6 +788,7 @@ export class PlansTabView extends Component {
         activeTintColor: colors.primaryOrange,
         inactiveTintColor: colors.primaryText,
         style: tabStyles.tabContainer,
+        tabStyle: tabStyles.tabItem,
         labelStyle: tabStyles.tabLabel,
         indicatorStyle: tabStyles.tabIndicator
       }

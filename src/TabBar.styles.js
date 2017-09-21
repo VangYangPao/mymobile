@@ -1,5 +1,9 @@
 import colors from "./colors";
 export default (styles = {
+  tabItem: {
+    borderWidth: 1,
+    borderColor: colors.softBorderLine
+  },
   tabIndicator: {
     backgroundColor: colors.primaryOrange,
     height: 3
@@ -8,8 +12,8 @@ export default (styles = {
     fontWeight: "600"
   },
   tabContainer: {
-    borderTopLeftRadius: 4,
-    borderTopRightRadius: 4,
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
     elevation: 5,
     shadowColor: colors.borderLine,
     shadowOffset: { width: 0, height: 1.5 },
