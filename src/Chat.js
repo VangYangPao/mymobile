@@ -371,15 +371,19 @@ class ChatScreen extends Component {
   handleSelectPlan(planIndex) {
     const planAlphabet = ["A", "B", "C", "D", "E"];
     const premium = this.props.policy.plans[planIndex].premium;
-    this.setState(
-      this.concatMessageUpdater({
-        type: "text",
-        _id: uuid.v4(),
-        text: `I choose Plan ${planAlphabet[planIndex]}`,
-        value: planIndex,
-        user: CUSTOMER_USER
-      }),
-      () => this.setState({ answering: false, renderInput: true })
+    const planMessage = {
+      type: "text",
+      _id: uuid.v4(),
+      text: `I choose Plan ${planAlphabet[planIndex]}`,
+      value: planIndex,
+      user: CUSTOMER_USER
+    };
+    const { messages } = this.state;
+    let newMessages = messages.slice();
+    const messagesLen = messages.length;
+    newMessages.splice(messagesLen - 1, 1, planMessage);
+    this.setState({ messages: newMessages }, () =>
+      this.setState({ answering: false, renderInput: true })
     );
   }
 
@@ -926,7 +930,12 @@ class ChatScreen extends Component {
             />
           );
         }
-        return <PlansTabView plans={this.props.policy.plans} />;
+        return (
+          <PlansTabView
+            onSelectPlan={this.handleSelectPlan}
+            plans={this.props.policy.plans}
+          />
+        );
       // return <PlanCarousel {...carouselProps} />;
       case "coverageDuration":
         const notCurrentQuestion =

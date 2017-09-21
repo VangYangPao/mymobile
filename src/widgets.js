@@ -561,10 +561,6 @@ export class MultiInput extends Component {
       fadeAnim: new Animated.Value(0),
       topAnim: new Animated.Value(20)
     };
-    for (var i = 0; i < props.inputs.length; i++) {
-      this.state.values.push("");
-      this.state.responses.push(new ValidationResult(true, true));
-    }
     this.renderInput = this.renderInput.bind(this);
     this.handlePickDate = this.handlePickDate.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -734,6 +730,15 @@ class PlanTab extends Component {
   constructor(props) {
     super(props);
     this.renderCoverage = this.renderCoverage.bind(this);
+    this.handleSelectPlan = this.handleSelectPlan.bind(this);
+  }
+
+  handleSelectPlan(planIndex) {
+    return () => {
+      if (typeof this.props.onSelectPlan === "function") {
+        this.props.onSelectPlan(planIndex);
+      }
+    };
   }
 
   renderCoverage(planIdx, coverageKey) {
@@ -764,7 +769,12 @@ class PlanTab extends Component {
             this.renderCoverage(planIndex, coverageKey)
           )}
         </View>
-        <Button style={widgetStyles.selectPlanButton}>SELECT PLAN</Button>
+        <Button
+          onPress={this.handleSelectPlan(planIndex)}
+          style={widgetStyles.selectPlanButton}
+        >
+          SELECT PLAN
+        </Button>
       </View>
     );
   }
@@ -776,8 +786,16 @@ export class PlansTabView extends Component {
     let tabRoutes = {};
     Object.keys(plans).forEach((key, idx) => {
       const plan = plans[key];
-      tabRoutes[plan.title] = {
-        screen: () => <PlanTab plans={plans} plan={plan} planIndex={idx} />
+      const planTitle = plan.title.split(" ").join("\n");
+      tabRoutes[planTitle] = {
+        screen: () => (
+          <PlanTab
+            onSelectPlan={this.props.onSelectPlan}
+            plans={plans}
+            plan={plan}
+            planIndex={idx}
+          />
+        )
       };
     });
     const PlansTabNavigator = TabNavigator(tabRoutes, {
@@ -837,13 +855,16 @@ const widgetStyles = StyleSheet.create({
     padding: 15,
     paddingVertical: 20
   },
-  planContainer: {},
   plansTabContainer: {
     marginTop: 20,
     marginBottom: 10,
-    marginHorizontal: 20,
+    marginHorizontal: 15,
     borderRadius: 5,
-    backgroundColor: "white"
+    backgroundColor: "white",
+    shadowColor: "#424242",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2
   },
   noBorderRadius: {
     borderRadius: 0

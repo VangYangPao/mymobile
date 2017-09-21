@@ -1,12 +1,13 @@
 import colors from "./colors";
 export default (styles = {
   tabItem: {
-    borderWidth: 1,
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
     borderColor: colors.softBorderLine
   },
   tabIndicator: {
     backgroundColor: colors.primaryOrange,
-    height: 3
+    height: 4
   },
   tabLabel: {
     fontWeight: "600"
