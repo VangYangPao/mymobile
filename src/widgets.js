@@ -561,6 +561,10 @@ export class MultiInput extends Component {
       fadeAnim: new Animated.Value(0),
       topAnim: new Animated.Value(20)
     };
+    for (var i = 0; i < props.inputs.length; i++) {
+      this.state.values.push("");
+      this.state.responses.push(new ValidationResult(true, true));
+    }
     this.renderInput = this.renderInput.bind(this);
     this.handlePickDate = this.handlePickDate.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
