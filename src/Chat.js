@@ -357,15 +357,19 @@ class ChatScreen extends Component {
   handleSelectTravelInsurancePlan(planIndex) {
     const planID = [1, 2, 84, 85];
     const plans = ["Basic", "Enhanced", "Superior", "Premier"];
-    this.setState(
-      this.concatMessageUpdater({
-        type: "text",
-        _id: uuid.v4(),
-        text: `${plans[planIndex]} plan`,
-        value: planID[planIndex],
-        user: CUSTOMER_USER
-      }),
-      () => this.setState({ answering: false, renderInput: true })
+    const { messages } = this.state;
+    let newMessages = messages.slice();
+    const messagesLen = messages.length;
+    const planMessage = {
+      type: "text",
+      _id: uuid.v4(),
+      text: `${plans[planIndex]} plan`,
+      value: planID[planIndex],
+      user: CUSTOMER_USER
+    };
+    newMessages.splice(messagesLen - 1, 1, planMessage);
+    this.setState({ messages: newMessages }, () =>
+      this.setState({ answering: false, renderInput: true })
     );
   }
 
@@ -924,7 +928,9 @@ class ChatScreen extends Component {
             travelDuration: days
           };
           return (
-            <TravelPlansView />
+            <TravelPlansView
+              onSelectPlan={this.handleSelectTravelInsurancePlan}
+            />
             // <TravelInsurancePlanCarousel
             //   {...carouselProps}
             //   {...additionalProps}
