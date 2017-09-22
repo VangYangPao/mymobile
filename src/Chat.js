@@ -44,9 +44,10 @@ import {
   SuggestionList,
   PlansTabView
 } from "./widgets";
+import TravelPlansView from "./TravelPlansView";
 import database from "./HackStorage";
-import PlanCarousel from "./PlanCarousel";
-import TravelInsurancePlanCarousel from "./TravelInsurancePlanCarousel";
+// import PlanCarousel from "./PlanCarousel";
+// import TravelInsurancePlanCarousel from "./TravelInsurancePlanCarousel";
 import { Text } from "./defaultComponents";
 import PolicyChoice from "./PolicyChoice";
 import colors from "./colors";
@@ -923,11 +924,12 @@ class ChatScreen extends Component {
             travelDuration: days
           };
           return (
-            <TravelInsurancePlanCarousel
-              {...carouselProps}
-              {...additionalProps}
-              onSelectPlan={this.handleSelectTravelInsurancePlan}
-            />
+            <TravelPlansView />
+            // <TravelInsurancePlanCarousel
+            //   {...carouselProps}
+            //   {...additionalProps}
+            //   onSelectPlan={this.handleSelectTravelInsurancePlan}
+            // />
           );
         }
         return (

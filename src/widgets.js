@@ -13,7 +13,8 @@ import {
   Alert,
   ToastAndroid,
   TextInput,
-  Animated
+  Animated,
+  InteractionManager
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import ImagePicker from "react-native-image-picker";
@@ -792,6 +793,51 @@ const tabContainerStyle = Object.assign(
   tabStyles.tabContainer
 );
 
+export class PlansTabNavigator extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      fadeAnim: new Animated.Value(0)
+    };
+  }
+
+  componentDidMount() {
+    InteractionManager.runAfterInteractions(() => {
+      Animated.timing(
+        // Animate value over time
+        this.state.fadeAnim, // The value to drive
+        {
+          duration: 1000,
+          toValue: 1 // Animate to final value of 1
+        }
+      ).start();
+    });
+  }
+
+  render() {
+    const { tabRoutes } = this.props;
+    const _PlansTabNavigator = TabNavigator(tabRoutes, {
+      lazy: true,
+      tabBarComponent: TabBarTop,
+      tabBarPosition: "top",
+      tabBarOptions: {
+        upperCaseLabel: true,
+        activeTintColor: colors.primaryOrange,
+        inactiveTintColor: colors.primaryText,
+        style: tabContainerStyle,
+        tabStyle: tabStyles.tabItem,
+        labelStyle: tabStyles.tabLabel,
+        indicatorStyle: tabStyles.tabIndicator
+      }
+    });
+    return (
+      <Animated.View style={[widgetStyles.plansTabContainer]}>
+        <_PlansTabNavigator />
+      </Animated.View>
+    );
+  }
+}
+
 export class PlansTabView extends Component {
   render() {
     const { plans } = this.props;
@@ -810,24 +856,7 @@ export class PlansTabView extends Component {
         )
       };
     });
-    const PlansTabNavigator = TabNavigator(tabRoutes, {
-      tabBarComponent: TabBarTop,
-      tabBarPosition: "top",
-      tabBarOptions: {
-        upperCaseLabel: true,
-        activeTintColor: colors.primaryOrange,
-        inactiveTintColor: colors.primaryText,
-        style: tabContainerStyle,
-        tabStyle: tabStyles.tabItem,
-        labelStyle: tabStyles.tabLabel,
-        indicatorStyle: tabStyles.tabIndicator
-      }
-    });
-    return (
-      <View style={widgetStyles.plansTabContainer}>
-        <PlansTabNavigator />
-      </View>
-    );
+    return <PlansTabNavigator tabRoutes={tabRoutes} />;
   }
 }
 
