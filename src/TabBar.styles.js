@@ -13,8 +13,6 @@ export default (styles = {
     fontWeight: "600"
   },
   tabContainer: {
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
     elevation: 5,
     shadowColor: colors.borderLine,
     shadowOffset: { width: 0, height: 1.5 },

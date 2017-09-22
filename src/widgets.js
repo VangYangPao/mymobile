@@ -780,6 +780,14 @@ class PlanTab extends Component {
   }
 }
 
+const tabContainerStyle = Object.assign(
+  {
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8
+  },
+  tabStyles.tabContainer
+);
+
 export class PlansTabView extends Component {
   render() {
     const { plans } = this.props;
@@ -805,7 +813,7 @@ export class PlansTabView extends Component {
         upperCaseLabel: true,
         activeTintColor: colors.primaryOrange,
         inactiveTintColor: colors.primaryText,
-        style: tabStyles.tabContainer,
+        style: tabContainerStyle,
         tabStyle: tabStyles.tabItem,
         labelStyle: tabStyles.tabLabel,
         indicatorStyle: tabStyles.tabIndicator
