@@ -875,9 +875,9 @@ export function purchaseTravelPolicy(
 }
 
 export function getTravelQuote(
-  countryid: string,
+  countryid: number,
   tripDurationInDays: number,
-  planid: ProductPlanID,
+  planid: TravelProductPlanID,
   hasSpouse: boolean,
   hasChildren: boolean
 ) {

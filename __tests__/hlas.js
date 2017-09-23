@@ -27,113 +27,194 @@ import moment from "moment";
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
-// it("gets phone protect quote correctly", () => {
-//   return getPhoneProtectQuote().then(res => {
-//     console.log(res);
+it("gets phone protect quote correctly", () => {
+  expect.assertions(2);
+  return getPhoneProtectQuote().then(res => {
+    expect(res).toHaveProperty("data");
+    expect(res).toHaveProperty("success", true);
+  });
+});
+
+it("gets accident quote correctly", () => {
+  const planid = 100;
+  const policytermid = 1;
+  const optionid = 1;
+  const commencementDate = new Date();
+  expect.assertions(2);
+  return getAccidentQuote(
+    planid,
+    policytermid,
+    optionid,
+    commencementDate
+  ).then(res => {
+    expect(res).toHaveProperty("data");
+    expect(res).toHaveProperty("success", true);
+  });
+});
+
+it("gets travel quote correctly", () => {
+  const countryid = 8;
+  const tripDurationInDays = 2;
+  const planid = 1;
+  const hasSpouse = true;
+  const hasChildren = false;
+  expect.assertions(2);
+  return getTravelQuote(
+    countryid,
+    tripDurationInDays,
+    planid,
+    hasSpouse,
+    hasChildren
+  ).then(res => {
+    expect(res).toHaveProperty("data");
+    expect(res).toHaveProperty("success", true);
+  });
+});
+
+// it("purchases phone protect correctly", () => {
+//   const premium = 5;
+//   const policyHolder: PolicyHolder = {
+//     Surname: "test",
+//     GivenName: "test",
+//     IDNumber: generateNRIC(),
+//     DateOfBirth: "1988-07-22",
+//     GenderID: 1,
+//     MobileTelephone: "91234567",
+//     Email: "guanhao3797@gmail.com",
+//     UnitNumber: "11",
+//     BlockHouseNumber: "11",
+//     BuildingName: "sample string 12",
+//     StreetName: "sample string 13",
+//     PostalCode: "089057"
+//   };
+//   const paymentDetails: PaymentDetails = {
+//     NameOnCard: "Chan",
+//     CardNumber: "4005550000000001",
+//     CardType: 3,
+//     CardSecurityCode: "602",
+//     CardExpiryYear: 2021,
+//     CardExpiryMonth: 1
+//   };
+//   const mobileDetails = {
+//     brandID: 1,
+//     modelID: 5,
+//     purchaseDate: "2017-09-16",
+//     serialNo: "989753317723690",
+//     purchasePlaceID: 4
+//   };
+//   const policyCommencementDate = new Date();
+//   expect.assertions(2);
+//   return purchasePhonePolicy(
+//     premium,
+//     policyCommencementDate,
+//     mobileDetails,
+//     policyHolder,
+//     paymentDetails
+//   ).then(res => {
+//     expect(res.success).toBe(true);
+//     expect(res.policyNo).toMatch(/^PM/);
 //   });
 // });
 
-// it("gets accident quote correctly", () => {
+// it("purchases pa vanilla correctly", () => {
+//   const premium = 17;
 //   const planid = 100;
 //   const policytermid = 1;
-//   const optionid = 1;
-//   const commencementDate = new Date().toISOString();
-//   return getAccidentQuote(
+//   const optionid = 0;
+//   const occupationid = 2;
+
+//   const policyHolder: PolicyHolder = {
+//     Surname: "test",
+//     GivenName: "test",
+//     IDNumber: generateNRIC(),
+//     DateOfBirth: "1988-07-22",
+//     GenderID: 1,
+//     MobileTelephone: "91234567",
+//     Email: "guanhao3797@gmail.com",
+//     UnitNumber: "11",
+//     BlockHouseNumber: "11",
+//     BuildingName: "sample string 12",
+//     StreetName: "sample string 13",
+//     PostalCode: "089057"
+//   };
+//   const paymentDetails: PaymentDetails = {
+//     NameOnCard: "Chan",
+//     CardNumber: "4005550000000001",
+//     CardType: 3,
+//     CardSecurityCode: "602",
+//     CardExpiryYear: 2021,
+//     CardExpiryMonth: 1
+//   };
+//   expect.assertions(2);
+
+//   return purchaseAccidentPolicy(
+//     premium,
 //     planid,
 //     policytermid,
 //     optionid,
-//     commencementDate
-//   ).then(res => {
-//     console.log(res);
-//   });
-// });
-
-// it("gets travel quote correctly", () => {
-//   const countryid = 8;
-//   const tripDurationInDays = 2;
-//   const planid = 1;
-//   const hasSpouse = true;
-//   const hasChildren = false;
-//   return getTravelQuote(
-//     countryid,
-//     tripDurationInDays,
-//     planid,
-//     hasSpouse,
-//     hasChildren
-//   ).then(res => {
-//     console.log(res);
-//   });
-// });
-
-it("purchases phone protect correctly", () => {
-  const premium = 5;
-  const policyHolder: PolicyHolder = {
-    Surname: "test",
-    GivenName: "test",
-    IDNumber: generateNRIC(),
-    DateOfBirth: "1988-07-22",
-    GenderID: 1,
-    MobileTelephone: "91234567",
-    Email: "guanhao3797@gmail.com",
-    UnitNumber: "11",
-    BlockHouseNumber: "11",
-    BuildingName: "sample string 12",
-    StreetName: "sample string 13",
-    PostalCode: "089057"
-  };
-  const paymentDetails: PaymentDetails = {
-    NameOnCard: "Chan",
-    CardNumber: "4005550000000001",
-    CardType: 3,
-    CardSecurityCode: "602",
-    CardExpiryYear: 2021,
-    CardExpiryMonth: 1
-  };
-  const mobileDetails = {
-    brandID: 1,
-    modelID: 5,
-    purchaseDate: "2017-09-16",
-    serialNo: "989753317723690",
-    purchasePlaceID: 4
-  };
-  const policyCommencementDate = new Date();
-  return purchasePhonePolicy(
-    premium,
-    policyCommencementDate,
-    mobileDetails,
-    policyHolder,
-    paymentDetails
-  ).then(res => console.log(res));
-});
-
-// it("submits application for accident correctly", () => {
-//   expect.assertions = 7;
-//   let PASAppID;
-//   const WebAppID = uuidv4();
-//   return verifyApplicationAccident(WebAppID)
-//     .then(res => {
-//       expect(typeof res.applciationNo).toBe("number");
-//       expect(res.success).toBe(true);
-//       PASAppID = res.applciationNo;
-//       return createPaymentTransactionAccident(WebAppID, PASAppID);
-//     })
+//     occupationid,
+//     policyHolder,
+//     paymentDetails
+//   )
 //     .then(res => {
 //       expect(res.success).toBe(true);
-//       return updatePaymentTransactionAccident(WebAppID, PASAppID);
-//     })
-//     .then(res => {
-//       expect(res.success).toBe(true);
-//       return submitApplicationAccident(WebAppID, PASAppID);
-//     })
-//     .then(res => {
-//       console.log(res);
-//       expect(res.success).toBe(true);
-//       expect(typeof res.policyNo).toBe("string");
 //       expect(res.policyNo).toMatch(/^AM/);
+//     })
+//     .catch(err => {
+//       console.error(err);
 //     });
 // });
 
 // it("purchases pa with mr correctly", () => {
+//   const premium = 17;
+//   const planid = 100;
+//   const policytermid = 1;
+//   const optionid = 1;
+//   const occupationid = 2;
+
+//   const policyHolder: PolicyHolder = {
+//     Surname: "test",
+//     GivenName: "test",
+//     IDNumber: generateNRIC(),
+//     DateOfBirth: "1988-07-22",
+//     GenderID: 1,
+//     MobileTelephone: "91234567",
+//     Email: "guanhao3797@gmail.com",
+//     UnitNumber: "11",
+//     BlockHouseNumber: "11",
+//     BuildingName: "sample string 12",
+//     StreetName: "sample string 13",
+//     PostalCode: "089057"
+//   };
+//   const paymentDetails: PaymentDetails = {
+//     NameOnCard: "Chan",
+//     CardNumber: "4005550000000001",
+//     CardType: 3,
+//     CardSecurityCode: "602",
+//     CardExpiryYear: 2021,
+//     CardExpiryMonth: 1
+//   };
+//   expect.assertions(2);
+
+//   return purchaseAccidentPolicy(
+//     premium,
+//     planid,
+//     policytermid,
+//     optionid,
+//     occupationid,
+//     policyHolder,
+//     paymentDetails
+//   )
+//     .then(res => {
+//       expect(res.success).toBe(true);
+//       expect(res.policyNo).toMatch(/^AM/);
+//     })
+//     .catch(err => {
+//       console.error(err);
+//     });
+// });
+
+// it("purchases pa with wi correctly", () => {
 //   const premium = 17;
 //   const planid = 100;
 //   const policytermid = 1;
@@ -162,7 +243,7 @@ it("purchases phone protect correctly", () => {
 //     CardExpiryYear: 2021,
 //     CardExpiryMonth: 1
 //   };
-
+//   expect.assertions(2);
 //   return purchaseAccidentPolicy(
 //     premium,
 //     planid,
@@ -173,61 +254,63 @@ it("purchases phone protect correctly", () => {
 //     paymentDetails
 //   )
 //     .then(res => {
-//       console.log("purchase successful", res);
+//       expect(res.success).toBe(true);
+//       expect(res.policyNo).toMatch(/^AM/);
 //     })
 //     .catch(err => {
 //       console.error(err);
 //     });
 // });
 
-// it("purchases single travel correctly", () => {
-//   const premium = 15;
-//   const countryid = 8;
-//   const startDate = new Date();
-//   const endDate = moment(new Date())
-//     .add(2, "days")
-//     .toDate();
-//   const planid = 1;
-//   const hasSpouse = true;
-//   const hasChildren = true;
-//   const policyHolder = {
-//     Surname: "test",
-//     GivenName: "test",
-//     IDNumber: generateNRIC(),
-//     DateOfBirth: "1988-07-22",
-//     GenderID: 1,
-//     MobileTelephone: "91234567",
-//     Email: "guanhao3797@gmail.com",
-//     UnitNumber: "11",
-//     BlockHouseNumber: "11",
-//     BuildingName: "sample string 12",
-//     StreetName: "sample string 13",
-//     PostalCode: "089057"
-//   };
-//   const paymentDetails = {
-//     NameOnCard: "Chan",
-//     CardNumber: "4005550000000001",
-//     CardType: 3,
-//     CardSecurityCode: "602",
-//     CardExpiryYear: 2021,
-//     CardExpiryMonth: 1
-//   };
-
-//   return purchaseTravelPolicy(
-//     premium,
-//     countryid,
-//     startDate,
-//     endDate,
-//     planid,
-//     hasSpouse,
-//     hasChildren,
-//     policyHolder,
-//     paymentDetails
-//   )
-//     .then(res => {
-//       console.log("purchase successful", res);
-//     })
-//     .catch(err => {
-//       console.error(err);
-//     });
-// });
+it("purchases single travel correctly", () => {
+  const premium = 15;
+  const countryid = 8;
+  const startDate = new Date();
+  const endDate = moment(new Date())
+    .add(2, "days")
+    .toDate();
+  const planid = 1;
+  const hasSpouse = true;
+  const hasChildren = true;
+  const policyHolder = {
+    Surname: "test",
+    GivenName: "test",
+    IDNumber: generateNRIC(),
+    DateOfBirth: "1988-07-22",
+    GenderID: 1,
+    MobileTelephone: "91234567",
+    Email: "guanhao3797@gmail.com",
+    UnitNumber: "11",
+    BlockHouseNumber: "11",
+    BuildingName: "sample string 12",
+    StreetName: "sample string 13",
+    PostalCode: "089057"
+  };
+  const paymentDetails = {
+    NameOnCard: "Chan",
+    CardNumber: "4005550000000001",
+    CardType: 3,
+    CardSecurityCode: "602",
+    CardExpiryYear: 2021,
+    CardExpiryMonth: 1
+  };
+  expect.assertions(2);
+  return purchaseTravelPolicy(
+    premium,
+    countryid,
+    startDate,
+    endDate,
+    planid,
+    hasSpouse,
+    hasChildren,
+    policyHolder,
+    paymentDetails
+  )
+    .then(res => {
+      expect(res.success).toBe(true);
+      expect(res.policyNo).toMatch(/^TR/);
+    })
+    .catch(err => {
+      console.error(err);
+    });
+});
