@@ -19,7 +19,7 @@ import {
   verifyEnrolment,
   doFull3DSTransaction
 } from "./telemoney";
-import { objectToUrlParams, retryPromise, retry } from "./utils";
+import { objectToUrlParams, retry } from "./utils";
 
 const HLAS_URL = "http://42.61.99.229:8080";
 const AGENT_CODE = "MIC00002"; // just to track microassurce account
@@ -142,37 +142,37 @@ export function purchasePhonePolicy(
           verifyEnrolmentResponseObj
         );
       });
+    })
+    .then(res => {
+      console.log("payment res", res);
+      paymentSuccessfulResponse = objectToUrlParams(res);
+      return updatePaymentTransactionPhone(
+        transactionRef,
+        webAppID,
+        PASAppID,
+        premium,
+        commencementDate,
+        mobileDetails,
+        policyHolder,
+        paymentDetails,
+        verifyEnrolmentResponse,
+        paymentSuccessfulResponse
+      );
+    })
+    .then(res => {
+      return submitApplicationPhone(
+        transactionRef,
+        webAppID,
+        PASAppID,
+        premium,
+        commencementDate,
+        mobileDetails,
+        policyHolder,
+        paymentDetails,
+        verifyEnrolmentResponse,
+        paymentSuccessfulResponse
+      );
     });
-  // .then(res => {
-  //   console.log("payment res", res);
-  //   paymentSuccessfulResponse = objectToUrlParams(res);
-  //   return updatePaymentTransactionPhone(
-  //     transactionRef,
-  //     webAppID,
-  //     PASAppID,
-  //     premium,
-  //     commencementDate,
-  //     mobileDetails,
-  //     policyHolder,
-  //     paymentDetails,
-  //     verifyEnrolmentResponse,
-  //     paymentSuccessfulResponse
-  //   );
-  // })
-  // .then(res => {
-  //   return submitApplicationPhone(
-  //     transactionRef,
-  //     webAppID,
-  //     PASAppID,
-  //     premium,
-  //     commencementDate,
-  //     mobileDetails,
-  //     policyHolder,
-  //     paymentDetails,
-  //     verifyEnrolmentResponse,
-  //     paymentSuccessfulResponse
-  //   );
-  // });
 }
 
 export function verifyApplicationPhone(
@@ -181,19 +181,45 @@ export function verifyApplicationPhone(
   policyCommencementDate: string,
   mobileDetails: MobileDetails,
   policyHolder: PolicyHolder,
-  paymentInfo: PaymentDetails
+  paymentDetails: PaymentDetails
 ) {
+  // const payload = {
+  //   webAppID: uuidv4(),
+  //   premium,
+  //   productPlanID: PHONE_PRODUCT_PLAN_ID,
+  //   policyCommencementDate,
+  //   policyHolder,
+  //   mobileDetails,
+  //   paymentInfo,
+  //   optIn: OPT_IN_HLAS_MKTG,
+  //   ipAddress: "sample string 15"
+  // };
   const payload = {
-    webAppID: uuidv4(),
+    webAppID,
     premium,
     productPlanID: PHONE_PRODUCT_PLAN_ID,
     policyCommencementDate,
     policyHolder,
     mobileDetails,
-    paymentInfo,
+    paymentInfo: {
+      paymentReferenceNumber: "sample string 1",
+      bankID: 7,
+      bankName: "sample string 8",
+      payByApplicant: true,
+      surname: "sample string 9",
+      givenName: "sample string 10",
+      idNumber: "sample string 11",
+      idNumberType: 0,
+      telephoneNumber: "sample string 12",
+      telemoneyTransactionResponse: "sample string 13",
+      telemoneyPaymentResultRow: "sample string 14",
+      paymentSuccessful: true,
+      ...paymentDetails
+    },
     optIn: OPT_IN_HLAS_MKTG,
     ipAddress: "sample string 15"
   };
+  console.log(payload);
   const url = `${HLAS_URL}/api/Phone/VerifyNewApplication`;
   return sendPOSTRequest(
     url,
@@ -210,81 +236,31 @@ export function createPaymentTransactionPhone(
   policyCommencementDate: string,
   mobileDetails: MobileDetails,
   policyHolder: PolicyHolder,
-  paymentInfo: PaymentDetails,
+  paymentDetails: PaymentDetails,
   telemoneyTransactionResponse: string
 ) {
   const payload = {
     webAppID,
     pasAppID,
     premium,
-    productPlanID: 99,
-    policyCommencementDate: "2017-09-18T11:19:08.617064+08:00",
-    policyHolder: {
-      surname: "test phone",
-      givenName: "test phone",
-      idNumber: policyHolder.IDNumber,
-      dateOfBirth: "1988-09-18",
-      genderID: 1,
-      mobileTelephone: "98888888",
-      email: "ayethet.san@hlas.com.sg"
-    },
-    mobileDetails: {
-      brandID: 1,
-      modelID: 5,
-      purchaseDate: "2017-09-16",
-      serialNo: "989753317723699",
-      purchasePlaceID: 4
-    },
-    paymentInfo: {
-      paymentReferenceNumber: "sample string 1",
-      nameOnCard: "sample string 2",
-      cardNumber: "sample string 3",
-      cardType: 0,
-      cardSecurityCode: "sample string 4",
-      cardExpiryYear: 5,
-      cardExpiryMonth: 6,
-      bankID: 7,
-      bankName: "sample string 8",
-      payByApplicant: true,
-      surname: "sample string 9",
-      givenName: "sample string 10",
-      idNumber: "sample string 11",
-      idNumberType: 0,
-      telephoneNumber: "sample string 12",
+    productPlanID: PHONE_PRODUCT_PLAN_ID,
+    policyCommencementDate,
+    policyHolder,
+    mobileDetails,
+    PaymentInfo: {
+      PaymentReferenceNumber: `A${pasAppID}-${transactionRef}`,
+      BankID: 143,
+      PayByApplicant: true,
+      Surname: policyHolder.Surname,
+      GivenName: policyHolder.GivenName,
+      IDNumber: policyHolder.IDNumber,
+      TelephoneNumber: policyHolder.TelephoneNumber,
       telemoneyTransactionResponse,
-      telemoneyPaymentResultRow: "sample string 14",
-      paymentSuccessful: true
+      ...paymentDetails
     },
-    optIn: true,
-    ipAddress: "sample string 15"
+    OptIn: OPT_IN_HLAS_MKTG,
+    IPAddress: "sample string 18"
   };
-  // const payload = {
-  //   webAppID: uuidv4(),
-  //   pasAppID,
-  //   premium,
-  //   autoRenew: false,
-  //   productPlanID: PHONE_PRODUCT_PLAN_ID,
-  //   policyCommencementDate,
-  //   policyHolder,
-  //   mobileDetails,
-  //   paymentInfo: {
-  //     paymentReferenceNumber: "sample string 1",
-  //     bankID: 7,
-  //     bankName: "sample string 8",
-  //     payByApplicant: true,
-  //     surname: policyHolder.Surname,
-  //     givenName: policyHolder.GivenName,
-  //     idNumber: policyHolder.IDNumber,
-  //     idNumberType: 0,
-  //     telephoneNumber: policyHolder.MobileTelephone,
-  //     telemoneyTransactionResponse,
-  //     paymentSuccessful: true,
-  //     ...paymentInfo
-  //   },
-  //   optIn: OPT_IN_HLAS_MKTG,
-  //   ipAddress: "sample string 15"
-  // };
-  console.log(JSON.stringify(payload));
   const url = `${HLAS_URL}/api/Phone/CreatePaymentTransaction`;
   return sendPOSTRequest(
     url,
@@ -301,36 +277,80 @@ export function updatePaymentTransactionPhone(
   policyCommencementDate: string,
   mobileDetails: MobileDetails,
   policyHolder: PolicyHolder,
-  paymentInfo: PaymentDetails,
-  telemoneyTransactionResponse: string,
-  telemoneyPaymentResultRow: string
+  paymentDetails: PaymentDetails,
+  TelemoneyTransactionResponse: string,
+  TelemoneyPaymentResultRow: string
 ) {
   const payload = {
-    webAppID: uuidv4(),
+    webAppID,
     pasAppID,
     premium,
     productPlanID: PHONE_PRODUCT_PLAN_ID,
     policyCommencementDate,
     policyHolder,
     mobileDetails,
-    paymentInfo: {
-      paymentReferenceNumber: "sample string 1",
-      bankID: 7,
-      bankName: "sample string 8",
-      payByApplicant: true,
-      surname: policyHolder.Surname,
-      givenName: policyHolder.GivenName,
-      idNumber: policyHolder.IDNumber,
-      idNumberType: 0,
-      telephoneNumber: policyHolder.MobileTelephone,
-      telemoneyTransactionResponse,
+    PaymentInfo: {
+      PaymentReferenceNumber: `A${pasAppID}-${transactionRef}`,
+      BankID: 143,
+      PayByApplicant: true,
+      Surname: policyHolder.Surname,
+      GivenName: policyHolder.GivenName,
+      IDNumber: policyHolder.IDNumber,
+      TelephoneNumber: policyHolder.TelephoneNumber,
+      TelemoneyTransactionResponse,
+      TelemoneyPaymentResultRow,
       paymentSuccessful: true,
-      ...paymentInfo
+      ...paymentDetails
     },
     optIn: OPT_IN_HLAS_MKTG,
     ipAddress: "sample string 15"
   };
-  const url = `${HLAS_URL}/api/Phone/VerifyNewApplication`;
+  console.log(payload);
+  const url = `${HLAS_URL}/api/Phone/UpdatePaymentTransactionStatus`;
+  return sendPOSTRequest(
+    url,
+    payload,
+    "Error updating payment transaction phone protect"
+  );
+}
+
+export function submitApplicationPhone(
+  transactionRef: string,
+  webAppID: string,
+  pasAppID: string,
+  premium: number,
+  policyCommencementDate: string,
+  mobileDetails: MobileDetails,
+  policyHolder: PolicyHolder,
+  paymentDetails: PaymentDetails,
+  TelemoneyTransactionResponse: string,
+  TelemoneyPaymentResultRow: string
+) {
+  const payload = {
+    webAppID,
+    pasAppID,
+    premium,
+    productPlanID: PHONE_PRODUCT_PLAN_ID,
+    policyCommencementDate,
+    policyHolder,
+    mobileDetails,
+    PaymentInfo: {
+      PaymentReferenceNumber: `A${pasAppID}-${transactionRef}`,
+      BankID: 143,
+      PayByApplicant: true,
+      Surname: policyHolder.Surname,
+      GivenName: policyHolder.GivenName,
+      IDNumber: policyHolder.IDNumber,
+      TelephoneNumber: policyHolder.TelephoneNumber,
+      TelemoneyTransactionResponse,
+      TelemoneyPaymentResultRow,
+      paymentSuccessful: true,
+      ...paymentDetails
+    },
+    optIn: OPT_IN_HLAS_MKTG,
+    ipAddress: "sample string 15"
+  };
+  const url = `${HLAS_URL}/api/Phone/SubmitApplication`;
   return sendPOSTRequest(
     url,
     payload,
