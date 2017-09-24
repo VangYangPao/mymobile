@@ -148,7 +148,8 @@ const styles = StyleSheet.create({
   },
   scrollViewContentContainer: {
     paddingVertical: 17,
-    paddingHorizontal: 13
+    paddingHorizontal: 13,
+    backgroundColor: "white"
   },
   page: {
     position: "absolute",

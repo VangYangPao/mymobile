@@ -875,9 +875,9 @@ export class PlansTabNavigator extends Component {
       }
     });
     return (
-      <Animated.View style={[widgetStyles.plansTabContainer]}>
+      <View style={[widgetStyles.plansTabContainer]}>
         <_PlansTabNavigator />
-      </Animated.View>
+      </View>
     );
   }
 }

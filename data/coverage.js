@@ -192,7 +192,7 @@ export default (coverageItems = {
   },
   lossOfMoney: {
     title: "Loss of Money",
-    icon: "ic_snatch_theft",
+    icon: "ic_baggage_loss",
     description:
       "The amount of benefit will be paid to you, while travelling overseas you suffered loss of money due to thief, burglary or robbery. "
   },
