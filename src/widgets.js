@@ -603,7 +603,27 @@ export class MultiInput extends Component {
       label: this.props.inputs[idx].label,
       id: this.props.inputs[idx].id
     }));
-    const responses = validateAnswer(this.props.question, inputs);
+    const validationResponses = validateAnswer(this.props.question, inputs);
+    const lenResponses = inputs.map((input, idx) => {
+      const responseLength = this.props.question.responseLength[idx];
+      if (input.value.length > responseLength) {
+        return {
+          isValid: false,
+          errMessage: `${input.label} cannot be longer than ${responseLength} characters`
+        };
+      }
+      return { isValid: true, errMessage: true };
+    });
+    const responses = inputs.map((input, idx) => {
+      const validationResponse = validationResponses[idx];
+      const lenResponse = lenResponses[idx];
+      if (!validationResponse.isValid) {
+        return validationResponse;
+      } else if (!lenResponse.isValid) {
+        return lenResponse;
+      }
+      return validationResponse;
+    });
     const allLegit = responses.every(r => r.isValid);
     if (allLegit) {
       this.props.onSubmit(inputs);

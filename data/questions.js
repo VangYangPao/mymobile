@@ -309,6 +309,7 @@ export const QUESTION_SETS = {
       question: "May I know your full name?",
       responseType: ["string", "string"],
       id: ["firstName", "lastName"],
+      responseLength: [60, 60],
       labels: ["First name", "Last name"]
     },
     // {
