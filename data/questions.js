@@ -325,7 +325,7 @@ export const QUESTION_SETS = {
       question:
         "Nice to meet you <%= firstName %> <%= lastName %>! What's your NRIC/FIN/Passport?",
       responseType: ["string", "nric"],
-      id: "NRIC"
+      id: "idNumber"
     },
     {
       question: "What's your email address? ✉️",

@@ -702,6 +702,26 @@ export class SuggestionList extends Component {
   constructor(props) {
     super(props);
     this.renderSuggestion = this.renderSuggestion.bind(this);
+    this.state = {
+      fadeAnim: new Animated.Value(0),
+      topAnim: new Animated.Value(50)
+    };
+  }
+
+  componentDidMount() {
+    Animated.parallel(
+      [
+        Animated.timing(this.state.fadeAnim, {
+          toValue: 1 // Animate to opacity: 1, or fully opaque
+        }),
+        Animated.timing(this.state.topAnim, {
+          toValue: 0
+        })
+      ],
+      {
+        duration: 0
+      }
+    ).start();
   }
 
   renderSuggestion(item) {
@@ -721,12 +741,16 @@ export class SuggestionList extends Component {
 
   render() {
     return (
-      <ScrollView
-        style={widgetStyles.suggestionListScrollView}
-        contentContainerStyle={widgetStyles.suggestionListContainer}
+      <Animated.View
+        style={{ top: this.state.topAnim, opacity: this.state.fadeAnim }}
       >
-        {this.props.items.map(this.renderSuggestion)}
-      </ScrollView>
+        <ScrollView
+          style={widgetStyles.suggestionListScrollView}
+          contentContainerStyle={widgetStyles.suggestionListContainer}
+        >
+          {this.props.items.map(this.renderSuggestion)}
+        </ScrollView>
+      </Animated.View>
     );
   }
 }

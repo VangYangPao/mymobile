@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { StyleSheet, Text as DefaultText } from "react-native";
+import colors from "./colors";
 
 export class Text extends Component {
   render() {
@@ -13,6 +14,7 @@ export class Text extends Component {
 
 const styles = StyleSheet.create({
   text: {
+    color: colors.primaryText,
     fontFamily: "Lato"
   }
 });

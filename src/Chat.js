@@ -21,7 +21,8 @@ import {
   MessageText,
   InputToolbar,
   Composer,
-  Send
+  Send,
+  Actions
 } from "react-native-gifted-chat";
 import moment from "moment";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -62,6 +63,7 @@ import {
 import Button from "./Button";
 import CHAT_STYLES from "./Chat.styles";
 import { MESSAGE_LOAD_TIME as _MESSAGE_LOAD_TIME } from "react-native-dotenv";
+import { showAlert } from "./utils";
 
 // Enable playback in silence mode (iOS only)
 Sound.setCategory("Playback");
@@ -176,6 +178,8 @@ class ChatScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      idNumberType: "nric",
+      renderActionsPicker: false,
       composerText: "",
       keyboardHeight: 0,
       messages: [],
@@ -201,6 +205,7 @@ class ChatScreen extends Component {
     this.renderComposer = this.renderComposer.bind(this);
     this.renderSend = this.renderSend.bind(this);
     this.renderChatFooter = this.renderChatFooter.bind(this);
+    this.renderActions = this.renderActions.bind(this);
 
     this.handleUserSend = this.handleUserSend.bind(this);
     this.handleAgentSend = this.handleAgentSend.bind(this);
@@ -981,6 +986,32 @@ class ChatScreen extends Component {
         />
       );
     }
+    if (currentQuestion.id === "idNumber" && this.state.renderActionsPicker) {
+      const choices = [
+        { label: "NRIC/FIN", value: "nric" },
+        { label: "Passport", value: "passport" }
+      ];
+      const onSelectChoice = ({ label, value }) => {
+        if (value === "nric") {
+          this.questions[currentQuestionIndex].responseType = [
+            "string",
+            "nric"
+          ];
+        } else if (value === "passport") {
+          this.questions[currentQuestionIndex].responseType = ["string"];
+        }
+        let answers = Object.assign(this.state.answers);
+        answers.idNumberType = value;
+        this.setState({
+          idNumberType: value,
+          answers,
+          renderActionsPicker: false
+        });
+      };
+      return (
+        <SuggestionList items={choices} onSelectSuggestion={onSelectChoice} />
+      );
+    }
     return null;
   }
 
@@ -1059,6 +1090,36 @@ class ChatScreen extends Component {
     }
   }
 
+  renderActions(props) {
+    const { currentQuestionIndex } = this.state;
+    if (currentQuestionIndex < 0 || !this.state.renderInput) return null;
+    const currentQuestion = this.questions[currentQuestionIndex];
+
+    if (currentQuestion.id === "idNumber") {
+      const mapping = {
+        nric: "NRIC/FIN",
+        passport: "Passport"
+      };
+      return (
+        <TouchableOpacity
+          onPress={() =>
+            this.setState({
+              renderActionsPicker: !this.state.renderActionsPicker
+            })}
+          style={{
+            alignItems: "center",
+            justifyContent: "center",
+            alignSelf: "center"
+          }}
+        >
+          <Text style={styles.idNumberTypeText}>
+            {mapping[this.state.idNumberType]}
+          </Text>
+        </TouchableOpacity>
+      );
+    }
+  }
+
   render() {
     // return <CheckoutModal purchasing={true} price={13.599} purchasing={true} />;
     const additionalProps = {};
@@ -1099,6 +1160,7 @@ class ChatScreen extends Component {
           onSend={this.handleUserSend}
           user={CUSTOMER_USER}
           onLongPress={() => {}}
+          renderActions={this.renderActions}
           renderTime={() => {}}
           renderDay={() => {}}
           renderBubble={this.renderBubble}
@@ -1125,6 +1187,12 @@ const messageContainerStyle = {
 };
 
 const styles = StyleSheet.create({
+  idNumberTypeText: {
+    marginLeft: 7,
+    marginTop: -5,
+    color: colors.primaryOrange,
+    fontSize: 15
+  },
   datetimeInput: {},
   datetimeContainer: {
     flex: 1
