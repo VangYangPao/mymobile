@@ -1,5 +1,5 @@
 // @flow
-import Parse from "parse/node";
+import Parse from "parse/react-native";
 
 export function saveNewPurchase(
   policyTypeId: string,
@@ -60,6 +60,15 @@ export function saveNewPurchase(
       purchaseTravel.set("spouse", spouse);
       purchaseTravel.set("children", children);
       return purchaseTravel.save();
+    } else if (policyTypeId === "mobile") {
+      const PurchasePhone = Parse.Object.extend("PurchasePhone");
+      const { serialNo, brandId, modelId, purchaseDate } = additionalAttributes;
+      const purchasePhone = new PurchasePhone();
+      purchasePhone.set("serialNo", serialNo);
+      purchasePhone.set("brandId", brandId);
+      purchasePhone.set("modelId", modelId);
+      purchasePhone.set("purchaseDate", purchaseDate);
+      return purchasePhone.save();
     }
   });
 }

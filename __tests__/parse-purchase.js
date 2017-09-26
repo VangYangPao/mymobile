@@ -74,7 +74,7 @@ it("saves new travel purchase", () => {
   const policyId = generateID();
   const webAppId = generateID();
   const premium = 15.0;
-  const planId = 100;
+  const planId = 1;
   const optionId = null;
 
   const countryId = 1;
@@ -96,6 +96,60 @@ it("saves new travel purchase", () => {
     endDate,
     spouse,
     children
+  };
+
+  return Parse.User
+    .logIn("x@aa.com", "1234abcd")
+    .then(user => {
+      console.log("user", user);
+      return saveNewPurchase(
+        policyTypeId,
+        pasAppId,
+        policyId,
+        webAppId,
+        premium,
+        planId,
+        optionId,
+        autoRenew,
+        user,
+        tmTxnRef,
+        tmVerifyEnrolment,
+        tmPaymentSuccessRes,
+        additionalAttributes
+      );
+    })
+    .then(res => {
+      console.log(res);
+    })
+    .catch(err => {
+      console.error(err);
+    });
+});
+
+it("saves new phone purchase", () => {
+  const policyTypeId = "mobile";
+  const pasAppId = generateID();
+  const policyId = generateID();
+  const webAppId = generateID();
+  const premium = 15.0;
+  const planId = 99;
+  const optionId = null;
+
+  const serialNo = generateID();
+  const purchaseDate = new Date();
+  const brandId = 1;
+  const modelId = 1;
+
+  const autoRenew = false;
+  const tmTxnRef = generateID();
+  const tmVerifyEnrolment = generateID();
+  const tmPaymentSuccessRes = generateID();
+
+  const additionalAttributes = {
+    serialNo,
+    purchaseDate,
+    brandId,
+    modelId
   };
 
   return Parse.User
