@@ -28,13 +28,21 @@ export default class StatusScreen extends Component {
     title: "My Policies"
   };
 
-  state: { currentUser: any, policies: Array<any>, claims: Array<any> };
+  state: {
+    policiesLoaded: boolean,
+    claimsLoaded: boolean,
+    currentUser: any,
+    policies: Array<any>,
+    claims: Array<any>
+  };
   renderSectionHeader: Function;
 
   constructor(props: any) {
     super(props);
     this.renderSectionHeader = this.renderSectionHeader.bind(this);
     this.state = {
+      policiesLoaded: false,
+      claimsLoaded: false,
       currentUser: null,
       policies: [],
       claims: []
@@ -60,7 +68,7 @@ export default class StatusScreen extends Component {
           policies[idx].key = policies[idx].get("objectId");
         });
         console.log(policies);
-        this.setState({ policies });
+        this.setState({ policies, policiesLoaded: true });
         const query = new Parse.Query(Claim);
         query.equalTo("user", currentUser);
         query.descending("createdAt");
@@ -71,7 +79,7 @@ export default class StatusScreen extends Component {
         claims.forEach((policy, idx) => {
           claims[idx].key = claims[idx].get("objectId");
         });
-        this.setState({ claims });
+        this.setState({ claims, claimsLoaded: true });
       })
       .catch(err => {
         console.error(err);
@@ -170,42 +178,58 @@ export default class StatusScreen extends Component {
     let emptySection;
     if (!section.data.length) {
       if (section.key === "policies") {
-        const navigateToPurchaseAction = NavigationActions.navigate({
-          routeName: "Chat",
-          params: { questionSet: "buy" }
-        });
-        emptySection = (
-          <View style={styles.emptySection}>
-            <Text style={styles.emptySectionTitle}>
-              You have not purchased any policies.
-            </Text>
-            <Button
-              onPress={() =>
-                this.props.navigation.dispatch(navigateToPurchaseAction)}
-            >
-              PURCHASE NEW POLICY
-            </Button>
-          </View>
-        );
+        if (!this.state.policiesLoaded) {
+          emptySection = (
+            <View style={styles.emptySection}>
+              <Text style={styles.emptySectionTitle}>Loading policies...</Text>
+            </View>
+          );
+        } else {
+          const navigateToPurchaseAction = NavigationActions.navigate({
+            routeName: "Chat",
+            params: { questionSet: "buy" }
+          });
+          emptySection = (
+            <View style={styles.emptySection}>
+              <Text style={styles.emptySectionTitle}>
+                You have not purchased any policies.
+              </Text>
+              <Button
+                onPress={() =>
+                  this.props.navigation.dispatch(navigateToPurchaseAction)}
+              >
+                PURCHASE NEW POLICY
+              </Button>
+            </View>
+          );
+        }
       } else if (section.key === "claims") {
-        const { currentUser } = this.state;
-        const navigateToClaimsAction = NavigationActions.navigate({
-          routeName: "Chat",
-          params: { startScreen: false, questionSet: "claim", currentUser }
-        });
-        emptySection = (
-          <View style={styles.emptySection}>
-            <Text style={styles.emptySectionTitle}>
-              You have not purchased any policies.
-            </Text>
-            <Button
-              onPress={() =>
-                this.props.navigation.dispatch(navigateToClaimsAction)}
-            >
-              MAKE A CLAIM
-            </Button>
-          </View>
-        );
+        if (!this.state.policiesLoaded) {
+          emptySection = (
+            <View style={styles.emptySection}>
+              <Text style={styles.emptySectionTitle}>Loading claims...</Text>
+            </View>
+          );
+        } else {
+          const { currentUser } = this.state;
+          const navigateToClaimsAction = NavigationActions.navigate({
+            routeName: "Chat",
+            params: { startScreen: false, questionSet: "claim", currentUser }
+          });
+          emptySection = (
+            <View style={styles.emptySection}>
+              <Text style={styles.emptySectionTitle}>
+                You have not purchased any policies.
+              </Text>
+              <Button
+                onPress={() =>
+                  this.props.navigation.dispatch(navigateToClaimsAction)}
+              >
+                MAKE A CLAIM
+              </Button>
+            </View>
+          );
+        }
       }
     }
     return (
