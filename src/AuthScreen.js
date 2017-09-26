@@ -426,7 +426,7 @@ export default class AuthScreen extends Component {
     user
       .signUp(null)
       .then(user => {
-        console.log(user);
+        this.handleRedirectToPurchase();
       })
       .catch(err => {
         if (err.code) {
