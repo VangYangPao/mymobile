@@ -52,6 +52,7 @@ export default class StatusScreen extends Component {
         this.setState({ currentUser });
         const query = new Parse.Query(Purchase);
         query.equalTo("user", _currentUser);
+        query.descending("createdAt");
         return query.find();
       })
       .then(policies => {
@@ -62,6 +63,7 @@ export default class StatusScreen extends Component {
         this.setState({ policies });
         const query = new Parse.Query(Claim);
         query.equalTo("user", currentUser);
+        query.descending("createdAt");
         return query.find();
       })
       .then(claims => {
