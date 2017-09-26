@@ -55,6 +55,9 @@ export default class StatusScreen extends Component {
         return query.find();
       })
       .then(policies => {
+        policies.forEach((policy, idx) => {
+          policies[idx].key = policies[idx].get("objectId");
+        });
         console.log(policies);
         this.setState({ policies });
         const query = new Parse.Query(Claim);
@@ -63,6 +66,9 @@ export default class StatusScreen extends Component {
       })
       .then(claims => {
         console.log(claims);
+        claims.forEach((policy, idx) => {
+          claims[idx].key = claims[idx].get("objectId");
+        });
         this.setState({ claims });
       })
       .catch(err => {
@@ -84,17 +90,18 @@ export default class StatusScreen extends Component {
     );
   }
 
-  renderItem({
-    section,
-    item,
-    index
-  }: {
-    section: Section,
-    item: any,
-    index: number
-  }) {
-    const dateStr = getDateStr(item.purchaseDate);
-
+  renderItem(
+    section: string,
+    length: number,
+    {
+      item,
+      index
+    }: {
+      section: Section,
+      item: any,
+      index: number
+    }
+  ) {
     const styleMap = {
       active: styles.policyStatusTextActive,
       expiring: styles.policyStatusTextExpiring,
@@ -103,15 +110,16 @@ export default class StatusScreen extends Component {
       pending: styles.policyStatusTextExpiring,
       rejected: styles.policyStatusTextRejected
     };
-    const length = section.data.length;
 
     const renderSharePolicy = section === "policies" && index === length - 1;
 
+    const purchasedAt = item.get("createdAt");
+    const dateStr = getDateStr(purchasedAt);
     const policyId = item.get("policyId");
     const policyTypeId = item.get("policyTypeId");
-    const purchasedAt = item.get("createdAt");
     const amount = item.get("premium");
-    const policyStatus = item.get("status");
+    let policyStatus = item.get("status");
+    if (policyStatus) policyStatus = policyStatus.toUpperCase();
 
     const policyMetadata = POLICIES.find(p => p.id === policyTypeId);
     const policyTypeTitle = policyMetadata.title;
@@ -122,7 +130,7 @@ export default class StatusScreen extends Component {
           <View style={styles.policyContent}>
             <Text style={styles.policyName}>{policyTypeTitle}</Text>
             <Text style={styles.date}>Policy No: {policyId}</Text>
-            <Text style={styles.date}>Purchased on: {purchasedAt}</Text>
+            <Text style={styles.date}>Purchased on: {dateStr}</Text>
             <Text style={styles.date}>
               {section === "policies" ? "Premium: " : "Claim amount: "}
               $
@@ -131,7 +139,7 @@ export default class StatusScreen extends Component {
           </View>
           <View style={styles.policyStatus}>
             <Text style={[styles.policyStatusText, styleMap[item.status]]}>
-              {policyStatus.toUpperCase()}
+              {policyStatus}
             </Text>
           </View>
         </View>
@@ -210,6 +218,7 @@ export default class StatusScreen extends Component {
 
   render() {
     const itemSeparatorComponent = () => <View style={styles.separator} />;
+    const { policies, claims } = this.state;
     return (
       <View style={styles.container}>
         <SectionList
@@ -217,16 +226,18 @@ export default class StatusScreen extends Component {
           renderSectionHeader={this.renderSectionHeader}
           sections={[
             {
-              data: this.state.policies,
+              data: policies,
               title: "POLICIES",
               key: "policies",
-              renderItem: this.renderItem
+              renderItem: (...params) =>
+                this.renderItem("policies", policies.length, ...params)
             },
             {
-              data: this.state.claims,
+              data: claims,
               title: "CLAIMS",
               key: "claims",
-              renderItem: this.renderItem
+              renderItem: (...params) =>
+                this.renderItem("claims", claims.length, ...params)
             }
           ]}
         />
