@@ -20,22 +20,28 @@ export default class DrawerContent extends Component {
     const chatRoute = this.props.navigation.state.routes[0].routes.find(
       r => r.routeName === "Chat"
     );
-    let currentUser = {};
+    let currentUser = null;
     if (chatRoute.params) {
       currentUser = chatRoute.params.currentUser;
     }
-    let image;
-    if (currentUser.profilePictureUri) {
-      image = (
-        <Image
-          source={{ uri: currentUser.profilePictureUri }}
-          style={styles.image}
-        />
-      );
+    let image, fullName;
+    const defaultImage = (
+      <Image source={require("../images/mom.png")} style={styles.image} />
+    );
+    if (currentUser) {
+      const profilePicture = currentUser.get("profilePicture");
+      if (profilePicture) {
+        image = (
+          <Image source={{ uri: profilePicture.url() }} style={styles.image} />
+        );
+      } else {
+        image = defaultImage;
+      }
+      const firstName = currentUser.get("firstName");
+      const lastName = currentUser.get("lastName");
+      fullName = `${firstName} ${lastName}`;
     } else {
-      image = (
-        <Image source={require("../images/mom.png")} style={styles.image} />
-      );
+      image = defaultImage;
     }
 
     return (
@@ -43,10 +49,8 @@ export default class DrawerContent extends Component {
         <View style={styles.container}>
           <View style={styles.header}>
             {image}
-            <Text style={styles.name}>
-              {currentUser.fullName || "Not logged in yet!"}
-            </Text>
-            {currentUser.fullName ? (
+            <Text style={styles.name}>{fullName || "Not logged in yet!"}</Text>
+            {fullName ? (
               <TouchableOpacity onPress={() => {}}>
                 <View style={styles.viewEditProfile}>
                   <Text style={styles.viewEditProfileText}>
@@ -63,7 +67,7 @@ export default class DrawerContent extends Component {
           </View>
           <DrawerItems labelStyle={styles.drawerItemLabel} {...this.props} />
         </View>
-        {currentUser.fullName ? (
+        {fullName ? (
           <View style={styles.footer}>
             <TouchableOpacity
               onPress={() => this.props.navigation.navigate("Help")}

@@ -60,17 +60,11 @@ export default class PolicyScreen extends Component {
     const pricePerMonth = this.policy.plans[0].premium;
     this.handlePricePerMonthChange = this.handlePricePerMonthChange.bind(this);
     this.handlePurchase = this.handlePurchase.bind(this);
-    this.state = { pricePerMonth, currentUser: null };
-  }
-
-  componentDidMount() {
-    Parse.User.currentAsync().then(currentUser => {
-      this.setState({ currentUser });
-    });
+    this.state = { pricePerMonth };
   }
 
   handlePurchase() {
-    const { currentUser } = this.state;
+    const { currentUser } = this.props.navigation.state.params;
     if (this.page === "info" && !currentUser) {
       // if (ENV === "development") {
       //   this.props.navigation.navigate("Chat", {

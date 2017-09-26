@@ -1,3 +1,4 @@
+// @flow
 import uuid from "uuid";
 import React, { Component } from "react";
 import {
@@ -92,8 +93,8 @@ function transposePolicyChoiceByTitle() {
 
 let loggedIn = false;
 
-export default function ChatScreenWrapper(questionSet) {
-  const wrapper = props => {
+export default function ChatScreenWrapper(questionSet: string) {
+  const wrapper = (props: any) => {
     let _questionSet = questionSet;
     const routeParams = props.navigation.state.params;
     let isStartScreen = false;
@@ -116,7 +117,6 @@ export default function ChatScreenWrapper(questionSet) {
     } else {
       isStartScreen = false;
     }
-    console.log(routeParams, _questionSet, isStartScreen, policy);
     return (
       <ChatScreen
         isStartScreen={isStartScreen}
@@ -178,6 +178,7 @@ class ChatScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      currentUser: null,
       idNumberType: "nric",
       renderActionsPicker: false,
       composerText: "",
@@ -355,7 +356,8 @@ class ChatScreen extends Component {
 
   handleSelectPolicy(policyTitle) {
     const policy = transposePolicyChoiceByTitle()[policyTitle];
-    const params = { policy, page: "info" };
+    const { currentUser } = this.state;
+    const params = { policy, page: "info", currentUser };
     this.props.navigation.navigate("Policy", params);
   }
 
@@ -548,24 +550,24 @@ class ChatScreen extends Component {
       .currentAsync()
       .then(currentUser => {
         if (currentUser) {
-          let patchedUser = Object.assign({}, currentUser);
-          patchedUser.fullName =
-            currentUser.get("firstName") + " " + currentUser.get("lastName");
-          const profilePictureUri = currentUser.get("profilePicture");
-          patchedUser.profilePictureUri = profilePictureUri
-            ? profilePictureUri.url()
-            : null;
-          this.props.navigation.setParams({ currentUser: patchedUser });
+          this.setState({ currentUser });
+          const { policy, isStartScreen } = this.props;
+          this.props.navigation.setParams({
+            questionSet: "buy",
+            policy,
+            isStartScreen,
+            currentUser
+          });
+        }
+        if (this.props.isStartScreen) {
+          this.renderStartScreenMessages();
+        } else {
+          // trigger the initial componentDidUpdate
+          this.setState({ answering: false });
         }
       })
       .catch(err => console.error(err));
-    console.log("isStartScreen", this.props.isStartScreen);
-    if (this.props.isStartScreen) {
-      this.renderStartScreenMessages();
-    } else {
-      // trigger the initial componentDidUpdate
-      this.setState({ answering: false });
-    }
+
     this.keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
       this._keyboardDidShow.bind(this)
