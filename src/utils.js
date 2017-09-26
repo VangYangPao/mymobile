@@ -81,7 +81,7 @@ export function showAlert(text, cb) {
   }
 }
 
-export function generateID(len: number) {
+export function generateID(len: number = 6) {
   var text = "";
   var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
