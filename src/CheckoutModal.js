@@ -59,9 +59,18 @@ export default class CheckoutModal extends Component {
       this.props.purchasing &&
       this.props.purchasing !== prevProps.purchasing
     ) {
-      setTimeout(() => {
-        this.setState({ loadingText: "ONE SECOND..." });
-      }, 3000);
+      const texts = [
+        "ONE SECOND...",
+        "PROCESSING YOUR CARD...",
+        "VERIFYING YOUR IDENTITY...",
+        "AUTHENTICATING PAYMENT...",
+        "PERFORMING PAYMENT..."
+      ];
+      texts.forEach((text, idx) => {
+        setTimeout(() => {
+          this.setState({ loadingText: text });
+        }, 3000 * (idx + 1));
+      });
     }
   }
 

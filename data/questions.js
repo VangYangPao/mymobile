@@ -1,5 +1,8 @@
 import moment from "moment";
 import COUNTRIES from "./countries";
+import PHONE_MAKES from "./phoneMake";
+import PHONE_MODELS from "./phoneModels";
+import OCCUPATIONS from "./occupations";
 import paClaimQuestions from "./paClaimQuestions";
 import travelClaimQuestions from "./travelClaimQuestions";
 import mobileClaimQuestions from "./mobileClaimQuestions";
@@ -156,12 +159,23 @@ function validateChoice(choice) {
   return new ValidationResult(true, true);
 }
 
+function validateImei(s) {
+  if (s.length < 15) {
+    return new ValidationResult(
+      false,
+      "IMEI number must be at least 15-characters long"
+    );
+  }
+  return new ValidationResult(true, true);
+}
+
 const TypeValidators = {
   email: validateEmail,
   string: notEmptyString,
   number: validateNumber,
   phoneNumber: validatePhoneNumber,
   images: validateImages,
+  imei: validateImei,
   imageTable: () => new ValidationResult(true, true),
   date: validateDate,
   datetime: validateDate,
@@ -237,6 +251,7 @@ export const QUESTION_SETS = {
     },
     {
       question: "Which country are you travelling to?",
+      searchChoices: true,
       responseType: ["string"],
       choices: COUNTRIES,
       include: ["travel"],
@@ -333,10 +348,60 @@ export const QUESTION_SETS = {
       responseType: ["string", "email"],
       id: "email"
     },
+    // {
+    //   question: "What's your mailing address?",
+    //   responseType: "string",
+    //   id: "address"
+    // },
     {
-      question: "What's your mailing address?",
-      responseType: "string",
-      id: "address"
+      question:
+        "What's your phone's IMEI number? IMEI number is a unique 15-digit serial number given to every mobile phone. Check this at the back of your phone.",
+      responseType: ["string", "imei"],
+      id: "imeiNumber",
+      include: ["mobile"]
+    },
+    {
+      question: "What brand is your phone?",
+      searchChoices: true,
+      responseType: ["string"],
+      choices: PHONE_MAKES,
+      include: ["mobile"],
+      id: "brandID",
+      searchOptions: {
+        keys: ["label"],
+        threshold: 0.2
+      }
+    },
+    {
+      question: "And which model is that?",
+      searchChoices: true,
+      responseType: ["string"],
+      choices: PHONE_MODELS,
+      include: ["mobile"],
+      id: "modelID",
+      searchOptions: {
+        keys: ["label"],
+        threshold: 0.2
+      }
+    },
+    {
+      question: "When did you buy it?",
+      responseType: ["date"],
+      include: ["mobile"],
+      pastOnly: true,
+      id: "purchaseDate"
+    },
+    {
+      question: "What do you work as?",
+      searchChoices: true,
+      responseType: ["string"],
+      choices: OCCUPATIONS,
+      include: ["pa", "pa_mr", "pa_wi"],
+      id: "occupation",
+      searchOptions: {
+        keys: ["label"],
+        threshold: 0.2
+      }
     },
     // {
     //   question: "As you are aware, I need your bank account for any future claims.",

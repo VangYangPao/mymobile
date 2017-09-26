@@ -973,7 +973,7 @@ class ChatScreen extends Component {
     if (currentQuestionIndex < 0 || !this.state.renderInput) return null;
     const currentQuestion = this.questions[currentQuestionIndex];
 
-    if (currentQuestion.id === "travelDestination") {
+    if (currentQuestion.searchChoices) {
       const fuse = new Fuse(
         currentQuestion.choices,
         currentQuestion.searchOptions
@@ -1085,7 +1085,7 @@ class ChatScreen extends Component {
     if (currentQuestionIndex < 0 || !this.state.renderInput) return null;
     const currentQuestion = this.questions[currentQuestionIndex];
 
-    if (currentQuestion.id !== "travelDestination") {
+    if (!currentQuestion.searchChoices) {
       return <Send {...props} textStyle={styles.sendButton} />;
     }
   }

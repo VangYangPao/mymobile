@@ -28,7 +28,8 @@ import {
   getAccidentQuote,
   getPhoneProtectQuote,
   purchaseTravelPolicy,
-  purchaseAccidentPolicy
+  purchaseAccidentPolicy,
+  purchasePhonePolicy
 } from "./hlas";
 import { CONFIRMATION_PAGE_LOAD_TIME } from "react-native-dotenv";
 const PAGE_LOAD_TIME = parseInt(CONFIRMATION_PAGE_LOAD_TIME, 10);
@@ -192,18 +193,30 @@ export default class ConfirmationScreen extends Component {
         }
       })
       .catch(err => {
+        console.log(err);
+        const resetAction = NavigationActions.reset({
+          index: 0,
+          actions: [
+            NavigationActions.navigate({
+              routeName: "Chat",
+              params: {
+                policy: this.policy,
+                questionSet: "buy",
+                startScreen: false
+              }
+            })
+          ]
+        });
+        const afterAlert = () => {
+          this.props.navigation.dispatch(resetAction);
+        };
         if (err.message.indexOf("NRIC/FIN") !== -1) {
-          const resetAction = NavigationActions.reset({
-            index: 0,
-            actions: [NavigationActions.navigate({ routeName: "Chat" })]
-          });
-          const afterAlert = () => {
-            this.props.navigation.dispatch(resetAction);
-          };
           showAlert(
             "Sorry, the current NRIC/FIN has already purchased a policy for this travel duration",
             afterAlert
           );
+        } else {
+          showAlert("Sorry, something went wrong", afterAlert);
         }
       });
   }
@@ -211,10 +224,12 @@ export default class ConfirmationScreen extends Component {
   handleCheckout(paymentForm: PaymentForm) {
     this.setState({ purchasing: true });
     const { form } = this.props.navigation.state.params;
+    const idNumberTypeMap = { nric: 0, passport: 1 };
     const policyHolder = {
       Surname: form.lastName,
       GivenName: form.firstName,
-      IDNumber: form.NRIC,
+      IDNumber: form.idNumber,
+      IDNumberType: idNumberTypeMap[form.idNumberType],
       DateOfBirth: "1988-07-22",
       GenderID: 1,
       MobileTelephone: "91234567",
@@ -272,7 +287,7 @@ export default class ConfirmationScreen extends Component {
       if (this.state.totalPremium) {
         const planid = this.paPlans[form.planIndex];
         const policytermid = this.paTerms[form.coverageDuration];
-        const occupationid = 2; // FIX THIS: Add occupation field
+        const occupationid = form.occupation;
         const optionid = this.paOptions[this.policy.id];
         promise = purchaseAccidentPolicy(
           this.state.totalPremium,
@@ -280,6 +295,24 @@ export default class ConfirmationScreen extends Component {
           policytermid,
           optionid,
           occupationid,
+          policyHolder,
+          paymentDetails
+        );
+      }
+    } else if (this.policy && this.policy.id === "mobile") {
+      if (this.state.totalPremium) {
+        const policyCommencementDate = new Date();
+        const mobileDetails = {
+          brandID: form.brandID,
+          modelID: form.modelID,
+          purchaseDate: form.purchaseDate,
+          serialNo: form.serialNo,
+          purchasePlaceID: 4
+        };
+        promise = purchasePhonePolicy(
+          this.state.totalPremium,
+          policyCommencementDate,
+          mobileDetails,
           policyHolder,
           paymentDetails
         );

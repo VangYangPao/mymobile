@@ -262,55 +262,55 @@ it("gets travel quote correctly", () => {
 //     });
 // });
 
-it("purchases single travel correctly", () => {
-  const premium = 15;
-  const countryid = 8;
-  const startDate = new Date();
-  const endDate = moment(new Date())
-    .add(2, "days")
-    .toDate();
-  const planid = 1;
-  const hasSpouse = true;
-  const hasChildren = true;
-  const policyHolder = {
-    Surname: "test",
-    GivenName: "test",
-    IDNumber: generateNRIC(),
-    DateOfBirth: "1988-07-22",
-    GenderID: 1,
-    MobileTelephone: "91234567",
-    Email: "guanhao3797@gmail.com",
-    UnitNumber: "11",
-    BlockHouseNumber: "11",
-    BuildingName: "sample string 12",
-    StreetName: "sample string 13",
-    PostalCode: "089057"
-  };
-  const paymentDetails = {
-    NameOnCard: "Chan",
-    CardNumber: "4005550000000001",
-    CardType: 3,
-    CardSecurityCode: "602",
-    CardExpiryYear: 2021,
-    CardExpiryMonth: 1
-  };
-  expect.assertions(2);
-  return purchaseTravelPolicy(
-    premium,
-    countryid,
-    startDate,
-    endDate,
-    planid,
-    hasSpouse,
-    hasChildren,
-    policyHolder,
-    paymentDetails
-  )
-    .then(res => {
-      expect(res.success).toBe(true);
-      expect(res.policyNo).toMatch(/^TR/);
-    })
-    .catch(err => {
-      console.error(err);
-    });
-});
+// it("purchases single travel correctly", () => {
+//   const premium = 15;
+//   const countryid = 8;
+//   const startDate = new Date();
+//   const endDate = moment(new Date())
+//     .add(2, "days")
+//     .toDate();
+//   const planid = 1;
+//   const hasSpouse = true;
+//   const hasChildren = true;
+//   const policyHolder = {
+//     Surname: "test",
+//     GivenName: "test",
+//     IDNumber: generateNRIC(),
+//     DateOfBirth: "1988-07-22",
+//     GenderID: 1,
+//     MobileTelephone: "91234567",
+//     Email: "guanhao3797@gmail.com",
+//     UnitNumber: "11",
+//     BlockHouseNumber: "11",
+//     BuildingName: "sample string 12",
+//     StreetName: "sample string 13",
+//     PostalCode: "089057"
+//   };
+//   const paymentDetails = {
+//     NameOnCard: "Chan",
+//     CardNumber: "4005550000000001",
+//     CardType: 3,
+//     CardSecurityCode: "602",
+//     CardExpiryYear: 2021,
+//     CardExpiryMonth: 1
+//   };
+//   expect.assertions(2);
+//   return purchaseTravelPolicy(
+//     premium,
+//     countryid,
+//     startDate,
+//     endDate,
+//     planid,
+//     hasSpouse,
+//     hasChildren,
+//     policyHolder,
+//     paymentDetails
+//   )
+//     .then(res => {
+//       expect(res.success).toBe(true);
+//       expect(res.policyNo).toMatch(/^TR/);
+//     })
+//     .catch(err => {
+//       console.error(err);
+//     });
+// });

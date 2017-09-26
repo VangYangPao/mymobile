@@ -393,7 +393,7 @@ export class ClaimPolicyChoice extends Component {
           <Text style={widgetStyles.policyDetailText}>
             Purchase date: {getDateStr(policy.purchaseDate)}
           </Text>
-          {policy.coverageSummary.length ? (
+          {/*policy.coverageSummary.length ? (
             <View style={{ flexDirection: "row", marginVertical: 10 }}>
               <Text style={{ flex: 0.3 }}>Coverage:</Text>
               <View style={{ flex: 1 }}>
@@ -413,7 +413,7 @@ export class ClaimPolicyChoice extends Component {
                 })}
               </View>
             </View>
-          ) : null}
+          ) : null*/}
           <Text style={widgetStyles.policyDetailText}>
             Premium: ${policy.premium}
           </Text>
@@ -765,6 +765,7 @@ export class SuggestionList extends Component {
         style={{ top: this.state.topAnim, opacity: this.state.fadeAnim }}
       >
         <ScrollView
+          keyboardShouldPersistTaps="always"
           style={widgetStyles.suggestionListScrollView}
           contentContainerStyle={widgetStyles.suggestionListContainer}
         >
