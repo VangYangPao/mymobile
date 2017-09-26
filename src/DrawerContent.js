@@ -44,6 +44,12 @@ export default class DrawerContent extends Component {
       image = defaultImage;
     }
 
+    const logout = () => {
+      Parse.User.logOut().then(() => {
+        this.props.navigation.navigate("Intro");
+      });
+    };
+
     return (
       <View style={styles.container}>
         <View style={styles.container}>
@@ -77,7 +83,7 @@ export default class DrawerContent extends Component {
                 <Text style={styles.footerBtnText}>HELP</Text>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => Parse.User.logOut()}>
+            <TouchableOpacity onPress={logout}>
               <View style={styles.footerBtn}>
                 <Text style={styles.footerBtnText}>LOG OUT</Text>
               </View>
