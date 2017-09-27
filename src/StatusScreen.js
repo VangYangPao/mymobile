@@ -121,7 +121,7 @@ export default class StatusScreen extends Component {
       rejected: styles.policyStatusTextRejected
     };
 
-    const renderSharePolicy = section === "policies" && index === length - 1;
+    const renderSharePolicy = section === "policies" && index === 0;
 
     const purchasedAt = item.get("createdAt");
     const dateStr = getDateStr(purchasedAt);
@@ -136,23 +136,6 @@ export default class StatusScreen extends Component {
 
     return (
       <View>
-        <View style={styles.policy}>
-          <View style={styles.policyContent}>
-            <Text style={styles.policyName}>{policyTypeTitle}</Text>
-            <Text style={styles.date}>Policy No: {policyId}</Text>
-            <Text style={styles.date}>Purchased on: {dateStr}</Text>
-            <Text style={styles.date}>
-              {section === "policies" ? "Premium: " : "Claim amount: "}
-              $
-              {(section === "policies" ? amount.toFixed(2) : amount) + ""}
-            </Text>
-          </View>
-          <View style={styles.policyStatus}>
-            <Text style={[styles.policyStatusText, styleMap[item.status]]}>
-              {policyStatus}
-            </Text>
-          </View>
-        </View>
         {renderSharePolicy ? (
           <TouchableOpacity
             onPress={this.handleSharePolicies.bind(this)}
@@ -170,6 +153,23 @@ export default class StatusScreen extends Component {
             </View>
           </TouchableOpacity>
         ) : null}
+        <View style={styles.policy}>
+          <View style={styles.policyContent}>
+            <Text style={styles.policyName}>{policyTypeTitle}</Text>
+            <Text style={styles.date}>Policy No: {policyId}</Text>
+            <Text style={styles.date}>Purchased on: {dateStr}</Text>
+            <Text style={styles.date}>
+              {section === "policies" ? "Premium: " : "Claim amount: "}
+              $
+              {(section === "policies" ? amount.toFixed(2) : amount) + ""}
+            </Text>
+          </View>
+          <View style={styles.policyStatus}>
+            <Text style={[styles.policyStatusText, styleMap[item.status]]}>
+              {policyStatus}
+            </Text>
+          </View>
+        </View>
       </View>
     );
   }

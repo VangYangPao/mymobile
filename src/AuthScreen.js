@@ -12,7 +12,8 @@ import {
   InteractionManager,
   Switch,
   Keyboard,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  StatusBar
 } from "react-native";
 import { NavigationActions } from "react-navigation";
 import VectorDrawableView from "./VectorDrawableView";
@@ -527,6 +528,11 @@ export default class AuthScreen extends Component {
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.page}>
+          <StatusBar
+            hidden={true}
+            backgroundColor={colors.primaryOrange}
+            barStyle="light-content"
+          />
           {backgroundImage}
           {page}
         </View>
