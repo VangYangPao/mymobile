@@ -34,6 +34,7 @@ import Fuse from "fuse.js";
 import { template } from "lodash";
 import Parse from "parse/react-native";
 
+import { saveNewClaim } from "./parse/claims";
 import CheckoutModal from "./CheckoutModal";
 import {
   MultiInput,
@@ -178,6 +179,7 @@ class ChatScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      policies: null,
       currentUser: null,
       idNumberType: "nric",
       renderActionsPicker: false,
@@ -189,10 +191,8 @@ class ChatScreen extends Component {
       renderInput: true,
       currentQuestionIndex: -1,
       answers: {
-        fullName: "Denzel Tan",
-        policy: props.policy,
-        planIndex: 0,
-        coverageDuration: 12
+        fullName: null,
+        planIndex: null
       }
     };
 
@@ -490,17 +490,19 @@ class ChatScreen extends Component {
   }
 
   handleSelectPolicyToClaim(policy) {
-    const { title } = POLICIES.find(p => p.id === policy.policyType);
+    const policyId = policy.get("policyId");
+    const policyTypeId = policy.get("policyTypeId");
+    const { title } = POLICIES.find(p => p.id === policyTypeId);
     let answers = Object.assign(this.state.answers, {
       policyName: title
     });
     this.setState({ answers });
 
-    if (policy.policyType.indexOf("pa") !== -1) {
+    if (policyTypeId.indexOf("pa") !== -1) {
       this.questions.push.apply(this.questions, paClaimQuestions);
-    } else if (policy.policyType.indexOf("travel") !== -1) {
+    } else if (policyTypeId.indexOf("travel") !== -1) {
       this.questions.push.apply(this.questions, travelClaimQuestions);
-    } else if (policy.policyType.indexOf("mobile") !== -1) {
+    } else if (policyTypeId.indexOf("mobile") !== -1) {
       this.questions.push.apply(this.questions, mobileClaimQuestions);
     }
 
@@ -508,8 +510,8 @@ class ChatScreen extends Component {
       this.concatMessageUpdater({
         type: "text",
         _id: uuid.v4(),
-        text: `I want to claim policy ${title} (PL${policy.id})`,
-        value: policy.id,
+        text: `I want to claim policy ${title} (${policyId})`,
+        value: policyId,
         user: CUSTOMER_USER
       }),
       () => this.setState({ answering: false, renderInput: true })
@@ -550,20 +552,25 @@ class ChatScreen extends Component {
       .currentAsync()
       .then(currentUser => {
         if (currentUser) {
-          this.setState({ currentUser });
+          const fullName =
+            currentUser.get("firstName") + " " + currentUser.get("lastName");
+          let answers = Object.assign({}, this.state.answers);
+          answers.fullName = fullName;
+          this.setState({ currentUser, answers });
           const { policy, isStartScreen } = this.props;
           this.props.navigation.setParams({
             questionSet: "buy",
             policy,
             isStartScreen,
-            currentUser
+            currentUser,
+            fullName
           });
-        }
-        if (this.props.isStartScreen) {
-          this.renderStartScreenMessages();
-        } else {
-          // trigger the initial componentDidUpdate
-          this.setState({ answering: false });
+          if (this.props.isStartScreen) {
+            this.renderStartScreenMessages();
+          } else {
+            // trigger the initial componentDidUpdate
+            this.setState({ answering: false });
+          }
         }
       })
       .catch(err => console.error(err));
@@ -630,20 +637,27 @@ class ChatScreen extends Component {
           }
           this.props.navigation.navigate("Confirmation", { form });
         } else if (questionSet === "claim") {
-          const policyIndex = database.policies.findIndex(
-            p => p.id === this.state.answers.claimPolicyNo
+          const purchase = this.state.policies.find(
+            p => p.get("policyId") === this.state.answers.claimPolicyNo
           );
-          const policy = database.policies[policyIndex];
-          const { id, paid, policyType, purchaseDate } = policy;
-          database.claims.push({
-            id,
-            policyType,
-            paid,
-            purchaseDate,
-            status: "pending",
-            amount: 1000
-          });
-          database.policies.splice(policyIndex, 1);
+          const policyTypeId = purchase.get("policyTypeId");
+          saveNewClaim(policyTypeId, this.state.answers, purchase);
+          // const policyIndex = database.policies.findIndex(
+          //   p => p.id === this.state.answers.claimPolicyNo
+          // );
+          // const policy = database.policies[policyIndex];
+          // const { id, paid, policyType, purchaseDate } = policy;
+          // database.claims.push({
+          //   id,
+          //   policyType,
+          //   paid,
+          //   purchaseDate,
+          //   status: "pending",
+          //   amount: 1000
+          // });
+          // database.policies.splice(policyIndex, 1);
+          // SAVE THE POLICY CLAIM HERE
+          //
           if (Platform.OS === "ios") {
             Alert.alert("Thank you!", "Your claim has been submitted.", [
               {
@@ -669,10 +683,10 @@ class ChatScreen extends Component {
       checkAgainst = this.props.policy.id;
     } else {
       if (this.state.answers.claimPolicyNo) {
-        const policy = database.policies.find(
-          p => p.id === this.state.answers.claimPolicyNo
+        const policy = this.state.policies.find(
+          p => p.get("policyId") === this.state.answers.claimPolicyNo
         );
-        checkAgainst = policy.policyType;
+        checkAgainst = policy.get("policyTypeId");
         if (nextQuestion.id !== "claimType") {
           checkAgainst = this.state.answers.claimType;
         }
@@ -736,13 +750,28 @@ class ChatScreen extends Component {
       }
       const widgets = [
         "planIndex",
-        "coverageDuration",
-        "claimPolicyNo"
+        "coverageDuration"
         // "travelDetails"
       ];
       const typeWidgets = ["images", "imageTable", "choice"];
       if (widgets.indexOf(currentQuestion.id) !== -1) {
         appendWidget(currentQuestion.id);
+        return;
+      }
+      if (currentQuestion.id === "claimPolicyNo") {
+        //here
+        const Purchase = Parse.Object.extend("Purchase");
+        const query = new Parse.Query(Purchase);
+        query.equalTo("user", this.state.currentUser);
+        query.descending("createdAt");
+        query
+          .find()
+          .then(policies => {
+            this.setState({ policies });
+            appendWidget("claimPolicyNo", { policies });
+          })
+          .catch(err => appendWidget("claimPolicyNo", { err }));
+        return;
       }
       const responseTypes = [].concat(currentQuestion.responseType);
       responseTypes.forEach(type => {
@@ -880,8 +909,12 @@ class ChatScreen extends Component {
     const { currentMessage } = props;
     switch (currentMessage.type) {
       case "claimPolicyNo":
+        const { policies } = currentMessage;
         return (
-          <ClaimPolicyChoice onSelectPolicy={this.handleSelectPolicyToClaim} />
+          <ClaimPolicyChoice
+            policies={policies}
+            onSelectPolicy={this.handleSelectPolicyToClaim}
+          />
         );
       case "multiInput":
         const { currentQuestionIndex } = this.state;
