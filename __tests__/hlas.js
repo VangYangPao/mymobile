@@ -27,94 +27,94 @@ import moment from "moment";
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
-it("gets phone protect quote correctly", () => {
-  expect.assertions(2);
-  return getPhoneProtectQuote().then(res => {
-    expect(res).toHaveProperty("data");
-    expect(res).toHaveProperty("success", true);
-  });
-});
-
-it("gets accident quote correctly", () => {
-  const planid = 100;
-  const policytermid = 1;
-  const optionid = 1;
-  const commencementDate = new Date();
-  expect.assertions(2);
-  return getAccidentQuote(
-    planid,
-    policytermid,
-    optionid,
-    commencementDate
-  ).then(res => {
-    expect(res).toHaveProperty("data");
-    expect(res).toHaveProperty("success", true);
-  });
-});
-
-it("gets travel quote correctly", () => {
-  const countryid = 8;
-  const tripDurationInDays = 2;
-  const planid = 1;
-  const hasSpouse = true;
-  const hasChildren = false;
-  expect.assertions(2);
-  return getTravelQuote(
-    countryid,
-    tripDurationInDays,
-    planid,
-    hasSpouse,
-    hasChildren
-  ).then(res => {
-    expect(res).toHaveProperty("data");
-    expect(res).toHaveProperty("success", true);
-  });
-});
-
-// it("purchases phone protect correctly", () => {
-//   const premium = 5;
-//   const policyHolder: PolicyHolder = {
-//     Surname: "test",
-//     GivenName: "test",
-//     IDNumber: generateNRIC(),
-//     DateOfBirth: "1988-07-22",
-//     GenderID: 1,
-//     MobileTelephone: "91234567",
-//     Email: "guanhao3797@gmail.com",
-//     UnitNumber: "11",
-//     BlockHouseNumber: "11",
-//     BuildingName: "sample string 12",
-//     StreetName: "sample string 13",
-//     PostalCode: "089057"
-//   };
-//   const paymentDetails: PaymentDetails = {
-//     NameOnCard: "Chan",
-//     CardNumber: "4005550000000001",
-//     CardType: 3,
-//     CardSecurityCode: "602",
-//     CardExpiryYear: 2021,
-//     CardExpiryMonth: 1
-//   };
-//   const mobileDetails = {
-//     brandID: 1,
-//     modelID: 5,
-//     purchaseDate: "2017-09-16",
-//     serialNo: "989753317723690",
-//     purchasePlaceID: 4
-//   };
-//   const policyCommencementDate = new Date();
+// it("gets phone protect quote correctly", () => {
 //   expect.assertions(2);
-//   return purchasePhonePolicy(
-//     premium,
-//     policyCommencementDate,
-//     mobileDetails,
-//     policyHolder,
-//     paymentDetails
-//   ).then(res => {
-//     expect(res.success).toBe(true);
-//     expect(res.policyNo).toMatch(/^PM/);
+//   return getPhoneProtectQuote().then(res => {
+//     expect(res).toHaveProperty("data");
+//     expect(res).toHaveProperty("success", true);
 //   });
 // });
+
+// it("gets accident quote correctly", () => {
+//   const planid = 100;
+//   const policytermid = 1;
+//   const optionid = 1;
+//   const commencementDate = new Date();
+//   expect.assertions(2);
+//   return getAccidentQuote(
+//     planid,
+//     policytermid,
+//     optionid,
+//     commencementDate
+//   ).then(res => {
+//     expect(res).toHaveProperty("data");
+//     expect(res).toHaveProperty("success", true);
+//   });
+// });
+
+// it("gets travel quote correctly", () => {
+//   const countryid = 8;
+//   const tripDurationInDays = 2;
+//   const planid = 1;
+//   const hasSpouse = true;
+//   const hasChildren = false;
+//   expect.assertions(2);
+//   return getTravelQuote(
+//     countryid,
+//     tripDurationInDays,
+//     planid,
+//     hasSpouse,
+//     hasChildren
+//   ).then(res => {
+//     expect(res).toHaveProperty("data");
+//     expect(res).toHaveProperty("success", true);
+//   });
+// });
+
+it("purchases phone protect correctly", () => {
+  const premium = 5;
+  const policyHolder: PolicyHolder = {
+    Surname: "test",
+    GivenName: "test",
+    IDNumber: generateNRIC(),
+    DateOfBirth: "1988-07-22",
+    GenderID: 1,
+    MobileTelephone: "91234567",
+    Email: "guanhao3797@gmail.com",
+    UnitNumber: "11",
+    BlockHouseNumber: "11",
+    BuildingName: "sample string 12",
+    StreetName: "sample string 13",
+    PostalCode: "089057"
+  };
+  const paymentDetails: PaymentDetails = {
+    NameOnCard: "Chan",
+    CardNumber: "4005550000000001",
+    CardType: 3,
+    CardSecurityCode: "602",
+    CardExpiryYear: 2021,
+    CardExpiryMonth: 1
+  };
+  const mobileDetails = {
+    brandID: 1,
+    modelID: 5,
+    purchaseDate: "2017-09-16",
+    serialNo: "989753317723690",
+    purchasePlaceID: 4
+  };
+  const policyCommencementDate = new Date();
+  expect.assertions(2);
+  return purchasePhonePolicy(
+    premium,
+    policyCommencementDate,
+    mobileDetails,
+    policyHolder,
+    paymentDetails
+  ).then(res => {
+    expect(res.success).toBe(true);
+    expect(res.policyNo).toMatch(/^PM/);
+  });
+});
 
 // it("purchases pa vanilla correctly", () => {
 //   const premium = 17;
