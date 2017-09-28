@@ -11,24 +11,31 @@ import moment from "moment";
 
 import { generateID } from "../src/utils";
 
-import Parse from "parse/node";
+jest.mock("parse/react-native", () => {
+  var ParseNode = require("parse/node");
+  return ParseNode;
+});
+
+import Parse from "parse/react-native";
 Parse.initialize("microumbrella");
-Parse.serverURL = "http://localhost:1337/parse";
 // Parse.serverURL = "https://api-dev.microumbrella.com/parse";
+Parse.serverURL = "http://localhost:1337/parse";
+
+const Purchase = Parse.Object.extend("Purchase");
 
 import { saveNewPurchase } from "../src/parse/purchase";
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 
-it("saves new accident purchase", () => {
+it("saves new accident purchase vanilla", () => {
   const policyTypeId = "pa";
   const pasAppId = generateID();
   const policyId = generateID();
   const webAppId = generateID();
   const premium = 15.0;
   const planId = 100;
-  const optionId = 100;
-  const policyTermsId = 0;
+  const optionId = 0;
+  const policyTermsId = 1;
   const commencementDate = new Date();
   const autoRenew = false;
   const tmTxnRef = generateID();
@@ -40,10 +47,11 @@ it("saves new accident purchase", () => {
     commencementDate
   };
 
+  expect.assertions(3);
+
   return Parse.User
     .logIn("x@aa.com", "1234abcd")
     .then(user => {
-      console.log("user", user);
       return saveNewPurchase(
         policyTypeId,
         pasAppId,
@@ -61,7 +69,111 @@ it("saves new accident purchase", () => {
       );
     })
     .then(res => {
-      console.log(res);
+      expect(res).toHaveProperty("className", "PurchaseAccident");
+      expect(res).toHaveProperty("_objCount");
+      expect(res).toHaveProperty("id");
+    })
+    .catch(err => {
+      console.error(err);
+    });
+});
+
+it("saves new accident purchase mr", () => {
+  const policyTypeId = "pa";
+  const pasAppId = generateID();
+  const policyId = generateID();
+  const webAppId = generateID();
+  const premium = 15.0;
+  const planId = 100;
+  const optionId = 1;
+  const policyTermsId = 1;
+  const commencementDate = new Date();
+  const autoRenew = false;
+  const tmTxnRef = generateID();
+  const tmVerifyEnrolment = generateID();
+  const tmPaymentSuccessRes = generateID();
+
+  const additionalAttributes = {
+    policyTermsId,
+    commencementDate
+  };
+
+  expect.assertions(3);
+
+  return Parse.User
+    .logIn("x@aa.com", "1234abcd")
+    .then(user => {
+      return saveNewPurchase(
+        policyTypeId,
+        pasAppId,
+        policyId,
+        webAppId,
+        premium,
+        planId,
+        optionId,
+        autoRenew,
+        user,
+        tmTxnRef,
+        tmVerifyEnrolment,
+        tmPaymentSuccessRes,
+        additionalAttributes
+      );
+    })
+    .then(res => {
+      expect(res).toHaveProperty("className", "PurchaseAccident");
+      expect(res).toHaveProperty("_objCount");
+      expect(res).toHaveProperty("id");
+    })
+    .catch(err => {
+      console.error(err);
+    });
+});
+
+it("saves new accident purchase vanilla", () => {
+  const policyTypeId = "pa";
+  const pasAppId = generateID();
+  const policyId = generateID();
+  const webAppId = generateID();
+  const premium = 15.0;
+  const planId = 100;
+  const optionId = 2;
+  const policyTermsId = 1;
+  const commencementDate = new Date();
+  const autoRenew = false;
+  const tmTxnRef = generateID();
+  const tmVerifyEnrolment = generateID();
+  const tmPaymentSuccessRes = generateID();
+
+  const additionalAttributes = {
+    policyTermsId,
+    commencementDate
+  };
+
+  expect.assertions(3);
+
+  return Parse.User
+    .logIn("x@aa.com", "1234abcd")
+    .then(user => {
+      return saveNewPurchase(
+        policyTypeId,
+        pasAppId,
+        policyId,
+        webAppId,
+        premium,
+        planId,
+        optionId,
+        autoRenew,
+        user,
+        tmTxnRef,
+        tmVerifyEnrolment,
+        tmPaymentSuccessRes,
+        additionalAttributes
+      );
+    })
+    .then(res => {
+      expect(res).toHaveProperty("className", "PurchaseAccident");
+      expect(res).toHaveProperty("_objCount");
+      expect(res).toHaveProperty("id");
     })
     .catch(err => {
       console.error(err);
@@ -97,11 +209,11 @@ it("saves new travel purchase", () => {
     spouse,
     children
   };
+  expect.assertions(3);
 
   return Parse.User
     .logIn("x@aa.com", "1234abcd")
     .then(user => {
-      console.log("user", user);
       return saveNewPurchase(
         policyTypeId,
         pasAppId,
@@ -119,7 +231,9 @@ it("saves new travel purchase", () => {
       );
     })
     .then(res => {
-      console.log(res);
+      expect(res).toHaveProperty("className", "PurchaseTravel");
+      expect(res).toHaveProperty("_objCount");
+      expect(res).toHaveProperty("id");
     })
     .catch(err => {
       console.error(err);
@@ -151,11 +265,11 @@ it("saves new phone purchase", () => {
     brandId,
     modelId
   };
+  expect.assertions(3);
 
   return Parse.User
     .logIn("x@aa.com", "1234abcd")
     .then(user => {
-      console.log("user", user);
       return saveNewPurchase(
         policyTypeId,
         pasAppId,
@@ -173,7 +287,9 @@ it("saves new phone purchase", () => {
       );
     })
     .then(res => {
-      console.log(res);
+      expect(res).toHaveProperty("className", "PurchasePhone");
+      expect(res).toHaveProperty("_objCount");
+      expect(res).toHaveProperty("id");
     })
     .catch(err => {
       console.error(err);

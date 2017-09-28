@@ -190,6 +190,7 @@ class ChatScreen extends Component {
       answering: true,
       renderInput: true,
       currentQuestionIndex: -1,
+      imageProps: [],
       answers: {
         fullName: null,
         planIndex: null
@@ -473,6 +474,8 @@ class ChatScreen extends Component {
   }
 
   handleFinishImageTable(images) {
+    const { currentQuestionIndex } = this.state;
+    const currentQuestionId = this.questions[currentQuestionIndex].id;
     const imageLen = Object.keys(images).length;
     const s = imageLen > 1 ? "s" : "";
     this.setState(
@@ -485,7 +488,11 @@ class ChatScreen extends Component {
         value: images,
         user: CUSTOMER_USER
       }),
-      () => this.setState({ answering: false, renderInput: true })
+      () => {
+        const imageProps = Object.assign([], this.state.imageProps);
+        imageProps.push(currentQuestionId);
+        this.setState({ imageProps, answering: false, renderInput: true });
+      }
     );
   }
 
@@ -641,37 +648,24 @@ class ChatScreen extends Component {
             p => p.get("policyId") === this.state.answers.claimPolicyNo
           );
           const policyTypeId = purchase.get("policyTypeId");
-          saveNewClaim(policyTypeId, this.state.answers, purchase);
-          // const policyIndex = database.policies.findIndex(
-          //   p => p.id === this.state.answers.claimPolicyNo
-          // );
-          // const policy = database.policies[policyIndex];
-          // const { id, paid, policyType, purchaseDate } = policy;
-          // database.claims.push({
-          //   id,
-          //   policyType,
-          //   paid,
-          //   purchaseDate,
-          //   status: "pending",
-          //   amount: 1000
-          // });
-          // database.policies.splice(policyIndex, 1);
-          // SAVE THE POLICY CLAIM HERE
-          //
-          if (Platform.OS === "ios") {
-            Alert.alert("Thank you!", "Your claim has been submitted.", [
-              {
-                text: "OK",
-                onPress: () => this.props.navigation.navigate("Status")
-              }
-            ]);
-          } else {
-            ToastAndroid.show(
-              "Thank you! Your claim has been submitted.",
-              ToastAndroid.LONG
-            );
-            this.props.navigation.navigate("Status");
-          }
+          saveNewClaim(
+            policyTypeId,
+            this.state.answers,
+            purchase,
+            this.state.imageProps
+          )
+            .then(res => {
+              console.log(res);
+              showAlert("Thank you! Your claim has been submitted.", () => {
+                this.props.navigation.navigate("Status");
+              });
+            })
+            .catch(err => {
+              console.error(err);
+              showAlert("Sorry, something went wrong with your claim.", () => {
+                this.props.navigation.navigate("Status");
+              });
+            });
         }
       }, 2000);
       return;
