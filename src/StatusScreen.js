@@ -1,4 +1,5 @@
 // @flow
+import moment from "moment";
 import uuid from "uuid";
 import React, { Component } from "react";
 import {
@@ -69,13 +70,14 @@ export default class StatusScreen extends Component {
         });
         console.log(policies);
         this.setState({ policies, policiesLoaded: true });
-        const query = new Parse.Query(Claim);
-        query.equalTo("user", currentUser);
-        query.descending("createdAt");
-        return query.find();
+        const purchaseQuery = new Parse.Query(Purchase);
+        purchaseQuery.equalTo("user", currentUser);
+        const claimQuery = new Parse.Query(Claim);
+        claimQuery.matchesQuery("purchase", purchaseQuery);
+        claimQuery.descending("createdAt");
+        return claimQuery.find();
       })
       .then(claims => {
-        console.log(claims);
         claims.forEach((policy, idx) => {
           claims[idx].key = claims[idx].get("objectId");
         });
@@ -125,17 +127,31 @@ export default class StatusScreen extends Component {
 
     const purchasedAt = item.get("createdAt");
     const dateStr = getDateStr(purchasedAt);
-    const policyId = item.get("policyId");
+
+    let policyId;
     const policyTypeId = item.get("policyTypeId");
-    const amount = item.get("premium");
     let policyStatus = item.get("status");
-    if (policyStatus) policyStatus = policyStatus.toUpperCase();
 
     const policyMetadata = POLICIES.find(p => p.id === policyTypeId);
     const policyTypeTitle = policyMetadata.title;
 
+    let amount;
+    if (section === "policies") {
+      const _amount = item.get("premium");
+      policyId = item.get("policyId");
+      amount = `Premium: ${_amount.toFixed(2)}`;
+    } else if (section === "claims") {
+      const _amount = item.get("claimAmount");
+      policyId = item.get("purchase").get("policyId");
+      if (!_amount) {
+        policyStatus = "pending";
+        amount = "";
+      } else {
+        amount = `Claim amount: ${_amount.toFixed(2)}`;
+      }
+    }
     return (
-      <View>
+      <View key={index}>
         {renderSharePolicy ? (
           <TouchableOpacity
             onPress={this.handleSharePolicies.bind(this)}
@@ -158,15 +174,11 @@ export default class StatusScreen extends Component {
             <Text style={styles.policyName}>{policyTypeTitle}</Text>
             <Text style={styles.date}>Policy No: {policyId}</Text>
             <Text style={styles.date}>Purchased on: {dateStr}</Text>
-            <Text style={styles.date}>
-              {section === "policies" ? "Premium: " : "Claim amount: "}
-              $
-              {(section === "policies" ? amount.toFixed(2) : amount) + ""}
-            </Text>
+            <Text style={styles.date}>{amount}</Text>
           </View>
           <View style={styles.policyStatus}>
-            <Text style={[styles.policyStatusText, styleMap[item.status]]}>
-              {policyStatus}
+            <Text style={[styles.policyStatusText, styleMap[policyStatus]]}>
+              {policyStatus && policyStatus.toUpperCase()}
             </Text>
           </View>
         </View>
