@@ -123,7 +123,7 @@ function validateTravelStartDate(startDate) {
   // 3.  Trip Start date can be 182 days in advance of application Date
   startDate = moment(startDate);
   const applicationDate = moment(new Date());
-  const dayDiff = startDate.diff(applicationDate, "days");
+  const dayDiff = startDate.diff(applicationDate, "days") + 1;
   if (dayDiff < 0) {
     return new ValidationResult(
       false,
@@ -142,7 +142,7 @@ function validateTravelEndDate(endDate, answers) {
   // 1. Trip Period can't exceed for 182 days (Single Trip).
   endDate = moment(endDate);
   const startDate = answers.departureDate;
-  const dayDiff = endDate.diff(startDate, "days");
+  const dayDiff = endDate.diff(startDate, "days") + 1;
   if (dayDiff > 182) {
     return new ValidationResult(false, "Trip period cannot exceed 182 days.");
   }

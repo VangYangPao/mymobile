@@ -1064,9 +1064,7 @@ class ChatScreen extends Component {
       const pickerMode = responseType[index];
       let minDateFrom;
       if (currentQuestion.minDateFrom) {
-        minDateFrom = moment(this.state.answers[currentQuestion.minDateFrom])
-          .add(1, "days")
-          .toDate();
+        minDateFrom = this.state.answers[currentQuestion.minDateFrom];
       }
       if (
         !this.state.answering ||
