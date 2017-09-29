@@ -30,45 +30,19 @@ const coverageSummary = {
   coverage: [
     {
       title: "Overseas Medical Expenses",
-      sections: [
-        {
-          title: "Adult (age 70 years and below)",
-          benefitPayable: {
-            basic: "$150,000",
-            enhanced: "$250,000",
-            superior: "$500,000"
-          }
-        },
-        {
-          title: "Child",
-          benefitPayable: {
-            basic: "$100,000",
-            enhanced: "$100,000",
-            superior: "$100,000"
-          }
-        }
-      ]
+      benefitPayable: {
+        basic: "$150,000",
+        enhanced: "$250,000",
+        superior: "$500,000"
+      }
     },
     {
-      title: "Accidental Death & Permanent Disablement",
-      sections: [
-        {
-          title: "Adult (age 70 years and below)",
-          benefitPayable: {
-            basic: "$200,000",
-            enhanced: "$250,000",
-            superior: "$300,000"
-          }
-        },
-        {
-          title: "Child",
-          benefitPayable: {
-            basic: "$50,0000",
-            enhanced: "$50,000",
-            superior: "$50,000"
-          }
-        }
-      ]
+      title: "Accidental Death &\nPermanent Disablement",
+      benefitPayable: {
+        basic: "$200,000",
+        enhanced: "$250,000",
+        superior: "$300,000"
+      }
     },
     {
       title:
@@ -183,6 +157,12 @@ class TravelPlanTab extends Component {
             <Text style={styles.readMoreText}>Read more...</Text>
           </View>
         </TouchableOpacity>
+        <Button
+          onPress={() => this.props.onSelectPlan(this.props.planIndex)}
+          style={styles.selectPlanButton}
+        >
+          SELECT PLAN
+        </Button>
       </View>
     );
   }
