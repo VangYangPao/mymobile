@@ -16,6 +16,7 @@ import {
   Animated,
   InteractionManager
 } from "react-native";
+import { chunk as chunkArray } from "lodash";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import ImagePicker from "react-native-image-picker";
 import DatePicker from "react-native-datepicker";
@@ -669,6 +670,7 @@ export class MultiInput extends Component {
       if (input.type.indexOf("") !== -1) keyboardType = "email-address";
       inputElement = (
         <TextInput
+          key={input.id}
           style={widgetStyles.textInput}
           placeholder={input.label}
           autoCorrect={false}
@@ -709,10 +711,38 @@ export class MultiInput extends Component {
 
   render() {
     let { fadeAnim, topAnim } = this.state;
+    let inputContainer;
+
+    if (this.props.inputs.length > 5) {
+      inputContainer = chunkArray(
+        this.props.inputs,
+        2
+      ).map((chunk, chunkIdx) => {
+        return (
+          <View
+            key={chunkIdx}
+            style={{
+              flexDirection: "row",
+              alignItems: "stretch"
+            }}
+          >
+            {chunk.map((input, inputIdx) => {
+              const computedIdx = chunkIdx * 2 + inputIdx;
+              return this.renderInput(input, computedIdx, this.props.inputs);
+            })}
+          </View>
+        );
+      });
+    } else {
+      inputContainer = <View>{this.props.inputs.map(this.renderInput)}</View>;
+    }
+
+    const keyboardHeight =
+      this.props.keyboardHeight >= 200 ? this.props.keyboardHeight - 200 : 0;
     return (
-      <View style={{ marginBottom: 200 }}>
+      <View style={{ marginBottom: keyboardHeight }}>
         <View style={[widgetStyles.choicesList]}>
-          {this.props.inputs.map(this.renderInput)}
+          {inputContainer}
           <Button
             onPress={this.handleSubmit}
             style={widgetStyles.sendButtonContainer}
@@ -923,6 +953,7 @@ export class PlansTabView extends Component {
 const iconSize = 50;
 
 const widgetStyles = StyleSheet.create({
+  rightSeparator: { borderRightColor: colors.borderLine, borderRightWidth: 1 },
   coverageAmountText: {
     color: colors.primaryText,
     fontSize: 15
@@ -1007,6 +1038,7 @@ const widgetStyles = StyleSheet.create({
     borderBottomWidth: 0
   },
   textInputContainer: {
+    flex: 1,
     borderBottomWidth: CHOICE_SEPARATOR_WIDTH,
     borderColor: colors.borderLine
   },

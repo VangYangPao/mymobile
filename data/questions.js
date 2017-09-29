@@ -243,6 +243,68 @@ export const QUESTION_SETS = {
       responseType: null
     },
     {
+      question: "What are the details of your spouse or children?",
+      responseType: "table",
+      columns: [
+        {
+          label: "First name",
+          id: "firstName",
+          responseType: "string"
+        },
+        {
+          label: "Last name",
+          id: "lastName",
+          responseType: "string"
+        },
+        {
+          label: "NRIC or Passport",
+          id: "idNumber",
+          responseType: "string"
+        },
+        {
+          label: "Date of birth",
+          id: "DOB",
+          responseType: "date"
+        },
+        {
+          label: "Gender",
+          id: "gender",
+          responseType: "choice",
+          choices: [
+            { label: "Male", value: "M" },
+            { label: "Female", value: "F" }
+          ]
+        },
+        {
+          label: "Relationship",
+          id: "relationship",
+          responseType: "choice",
+          choices: [{ label: "Spouse", value: 1 }, { label: "Child", value: 2 }]
+        }
+      ]
+    },
+    {
+      question: "May I know your full name?",
+      responseType: ["string", "string", "string", "date", "string", "string"],
+      id: [
+        "firstName",
+        "lastName",
+        "idNumber",
+        "DOB",
+        "gender",
+        "relationship"
+      ],
+      responseLength: [60, 60, 60, null, null, null],
+      labels: [
+        "First name",
+        "Last name",
+        "NRIC or Passport",
+        "Date of Birth",
+        "Gender",
+        "Relationship"
+      ]
+    },
+    {
       question:
         "I'll walk you through step-by-step. Let's start with the plan you prefer.",
       responseType: "number",

@@ -915,6 +915,7 @@ class ChatScreen extends Component {
         const currentQuestion = this.questions[currentQuestionIndex];
         return (
           <MultiInput
+            keyboardHeight={this.state.keyboardHeight}
             question={currentQuestion}
             onSubmit={this.handleMultiInputSubmit}
             inputs={currentMessage.inputs}

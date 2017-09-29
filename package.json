@@ -21,6 +21,7 @@
     "react-native-image-picker": "^0.26.3",
     "react-native-keyboard-aware-scroll-view": "^0.3.0",
     "react-native-modal-datetime-picker": "^4.11.0",
+    "react-native-modal-picker": "0.0.16",
     "react-native-slider": "0.8.0",
     "react-native-snap-carousel": "^2.1.4",
     "react-native-sound": "^0.9.1",
