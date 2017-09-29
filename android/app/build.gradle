@@ -158,6 +158,7 @@ repositories {
 }
 
 dependencies {
+    compile project(':react-native-fs')
     compile project(':react-native-file-opener')
     compile project(':react-native-fetch-blob')
     compile project(':react-native-image-picker')

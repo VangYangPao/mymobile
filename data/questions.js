@@ -230,7 +230,7 @@ const claimIntro = [
   {
     question:
       "Welcome back <%= fullName %>, here are your protection plans. Which policy would you like to make a claim?",
-    responseType: "number",
+    responseType: "string",
     id: "claimPolicyNo"
   }
 ];

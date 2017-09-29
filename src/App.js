@@ -34,11 +34,11 @@ import {
   renderMenuButton,
   createDrawerNavOptions
 } from "./navigations";
-import { ENV } from "react-native-dotenv";
+import { ENV, SERVER_URL } from "react-native-dotenv";
 
 import Parse from "parse/react-native";
 Parse.initialize("microumbrella");
-Parse.serverURL = "https://api-dev.microumbrella.com/parse";
+Parse.serverURL = SERVER_URL;
 
 // global.___DEV___ = false
 

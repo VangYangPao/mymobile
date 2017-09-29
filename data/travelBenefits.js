@@ -173,7 +173,7 @@ export default (benefits = [
     coverage: [
       {
         title:
-          "Loss of Baggage and Personal Effects\n($500 for each article or pair or set of article)",
+          "Loss of Baggage and Personal Effects\n($500 for each article or\npair or set of article)",
         benefitPayable: {
           basic: "$3,000",
           enhanced: "$5,000",

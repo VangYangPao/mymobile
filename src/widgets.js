@@ -344,6 +344,7 @@ export class ImageTable extends Component {
 export class ClaimPolicyChoice extends Component {
   constructor(props) {
     super(props);
+    this.renderPolicy = this.renderPolicy.bind(this);
     this.state = {
       disabled: false,
       topAnim: new Animated.Value(40),
@@ -373,10 +374,16 @@ export class ClaimPolicyChoice extends Component {
   }
 
   renderPolicy(policy, idx) {
-    const { title } = POLICIES.find(p => p.id === policy.policyType);
+    const policyTypeId = policy.get("policyTypeId");
+    const { title: policyTypeTitle } = POLICIES.find(
+      p => p.id === policyTypeId
+    );
+    const policyId = policy.get("policyId");
+    const purchaseDate = getDateStr(policy.get("createdAt"));
+    const premium = policy.get("premium");
     return (
       <TouchableOpacity
-        onPress={() => this.handleSelectPolicy.bind(this)(policy)}
+        onPress={() => this.handleSelectPolicy(policy)}
         disabled={this.state.disabled}
         key={idx}
       >
@@ -386,12 +393,12 @@ export class ClaimPolicyChoice extends Component {
             this.state.disabled ? widgetStyles.disabledPolicyChoice : null
           ]}
         >
-          <Text style={widgetStyles.policyChoiceName}>{title}</Text>
+          <Text style={widgetStyles.policyChoiceName}>{policyTypeTitle}</Text>
           <Text style={widgetStyles.policyDetailText}>
-            Policy No.: PL{policy.id}
+            Policy No.: {policyId}
           </Text>
           <Text style={widgetStyles.policyDetailText}>
-            Purchase date: {getDateStr(policy.purchaseDate)}
+            Purchase date: {purchaseDate}
           </Text>
           {/*policy.coverageSummary.length ? (
             <View style={{ flexDirection: "row", marginVertical: 10 }}>
@@ -414,15 +421,23 @@ export class ClaimPolicyChoice extends Component {
               </View>
             </View>
           ) : null*/}
-          <Text style={widgetStyles.policyDetailText}>
-            Premium: ${policy.premium}
-          </Text>
+          <Text style={widgetStyles.policyDetailText}>Premium: ${premium}</Text>
         </View>
       </TouchableOpacity>
     );
   }
 
   render() {
+    let policies;
+    if (!this.props.policies.length) {
+      policies = (
+        <View>
+          <Text />
+        </View>
+      );
+    } else {
+      policies = this.props.policies.map(this.renderPolicy);
+    }
     return (
       <Animated.View
         style={[
@@ -430,9 +445,7 @@ export class ClaimPolicyChoice extends Component {
           { opacity: this.state.fadeAnim, top: this.state.topAnim }
         ]}
       >
-        {database.policies
-          .filter(p => p.status === "active")
-          .map(this.renderPolicy.bind(this))}
+        {policies}
       </Animated.View>
     );
   }
@@ -605,12 +618,14 @@ export class MultiInput extends Component {
     }));
     const validationResponses = validateAnswer(this.props.question, inputs);
     const lenResponses = inputs.map((input, idx) => {
-      const responseLength = this.props.question.responseLength[idx];
-      if (input.value.length > responseLength) {
-        return {
-          isValid: false,
-          errMessage: `${input.label} cannot be longer than ${responseLength} characters`
-        };
+      if (this.props.question.responseLength) {
+        const responseLength = this.props.question.responseLength[idx];
+        if (input.value.length > responseLength) {
+          return {
+            isValid: false,
+            errMessage: `${input.label} cannot be longer than ${responseLength} characters`
+          };
+        }
       }
       return { isValid: true, errMessage: true };
     });

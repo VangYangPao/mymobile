@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from "react";
-import { View, SectionList, StyleSheet } from "react-native";
+import { TouchableOpacity, View, SectionList, StyleSheet } from "react-native";
 import { PlansTabNavigator } from "./widgets";
 
 import _TRAVEL_BENEFITS from "../data/travelBenefits";
@@ -19,16 +19,54 @@ type Coverage = {
 type Benefit = { title: string, coverage: Array<Coverage> };
 type TravelBenefits = Array<Benefit>;
 const TRAVEL_BENEFITS: TravelBenefits = _TRAVEL_BENEFITS;
+const itemSeparatorComponent = () => <View style={styles.separator} />;
+const patchCoverageWithKey = coverage => ({
+  key: coverage.title,
+  ...coverage
+});
+
+const coverageSummary = {
+  title: "Coverage Summary",
+  coverage: [
+    {
+      title: "Overseas Medical Expenses",
+      benefitPayable: {
+        basic: "$150,000",
+        enhanced: "$250,000",
+        superior: "$500,000"
+      }
+    },
+    {
+      title: "Accidental Death &\nPermanent Disablement",
+      benefitPayable: {
+        basic: "$200,000",
+        enhanced: "$250,000",
+        superior: "$300,000"
+      }
+    },
+    {
+      title:
+        "Loss of Baggage and Personal Effects\n($500 for each article or\npair or set of article)",
+      benefitPayable: {
+        basic: "$3,000",
+        enhanced: "$5,000",
+        superior: "$7,000"
+      }
+    }
+  ]
+};
 
 class TravelPlanTab extends Component {
   renderBenefit: Function;
   renderCoverage: Function;
   renderSection: Function;
+  renderUnexpanded: Function;
 
   constructor(props) {
     super(props);
     this.renderCoverage = this.renderCoverage.bind(this);
     this.renderSection = this.renderSection.bind(this);
+    this.renderUnexpanded = this.renderUnexpanded.bind(this);
     this.state = {
       expanded: false
     };
@@ -98,20 +136,52 @@ class TravelPlanTab extends Component {
     );
   }
 
+  renderUnexpanded() {
+    const listSections = [coverageSummary].map(benefit => ({
+      data: benefit.coverage.map(patchCoverageWithKey),
+      title: benefit.title.toUpperCase(),
+      key: benefit.title,
+      renderItem: this.renderCoverage
+    }));
+    return (
+      <View>
+        <SectionList
+          removeClippedSubviews={false}
+          ItemSeparatorComponent={itemSeparatorComponent}
+          renderSectionHeader={this.renderSectionHeader}
+          sections={listSections}
+        />
+        {itemSeparatorComponent()}
+        <TouchableOpacity onPress={this.props.onExpand}>
+          <View>
+            <Text style={styles.readMoreText}>Read more...</Text>
+          </View>
+        </TouchableOpacity>
+        <Button
+          onPress={() => this.props.onSelectPlan(this.props.planIndex)}
+          style={styles.selectPlanButton}
+        >
+          SELECT PLAN
+        </Button>
+      </View>
+    );
+  }
+
   render() {
     // if (!this.state.expanded) {
     //   return (
-    //     <View>
-    //       <Text>Not expanded</Text>
-    //     </View>
+    //     <TouchableOpacity>
+    //       <View>
+    //         <Text>Not expanded</Text>
+    //       </View>
+    //     </TouchableOpacity>
     //   );
     // }
 
-    const itemSeparatorComponent = () => <View style={styles.separator} />;
-    const patchCoverageWithKey = coverage => ({
-      key: coverage.title,
-      ...coverage
-    });
+    if (!this.props.expanded) {
+      return this.renderUnexpanded();
+    }
+
     const listSections = TRAVEL_BENEFITS.map(benefit => ({
       data: benefit.coverage.map(patchCoverageWithKey),
       title: benefit.title.toUpperCase(),
@@ -138,6 +208,19 @@ class TravelPlanTab extends Component {
 }
 
 export default class TravelPlansView extends Component {
+  state: { expanded: boolean };
+  handleExpand: Function;
+
+  constructor(props) {
+    super(props);
+    this.handleExpand = this.handleExpand.bind(this);
+    this.state = { expanded: false };
+  }
+
+  handleExpand() {
+    this.setState({ expanded: true });
+  }
+
   render() {
     const tabRoutes = {
       "Basic\nPlan": {
@@ -145,6 +228,8 @@ export default class TravelPlansView extends Component {
           <TravelPlanTab
             plan="basic"
             onSelectPlan={this.props.onSelectPlan}
+            onExpand={this.handleExpand}
+            expanded={this.state.expanded}
             planIndex={0}
           />
         )
@@ -154,6 +239,8 @@ export default class TravelPlansView extends Component {
           <TravelPlanTab
             plan="enhanced"
             onSelectPlan={this.props.onSelectPlan}
+            onExpand={this.handleExpand}
+            expanded={this.state.expanded}
             planIndex={1}
           />
         )
@@ -163,6 +250,8 @@ export default class TravelPlansView extends Component {
           <TravelPlanTab
             plan="superior"
             onSelectPlan={this.props.onSelectPlan}
+            onExpand={this.handleExpand}
+            expanded={this.state.expanded}
             planIndex={2}
           />
         )
@@ -173,6 +262,11 @@ export default class TravelPlansView extends Component {
 }
 
 const styles = StyleSheet.create({
+  readMoreText: {
+    margin: 15,
+    color: colors.primaryOrange,
+    fontSize: 17
+  },
   selectPlanButton: {
     borderTopLeftRadius: 0,
     borderTopRightRadius: 0

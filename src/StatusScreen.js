@@ -1,3 +1,5 @@
+// @flow
+import moment from "moment";
 import uuid from "uuid";
 import React, { Component } from "react";
 import {
@@ -10,17 +12,81 @@ import {
   Share
 } from "react-native";
 import Ionicon from "react-native-vector-icons/Ionicons";
+import Parse from "parse/react-native";
+import { NavigationActions } from "react-navigation";
 
 import POLICIES from "../data/policies";
 import database from "./HackStorage";
 import { getDateStr, generateID } from "./utils";
 import { Text } from "./defaultComponents";
 import colors from "./colors";
+import Button from "./Button";
+
+type Section = { title: string, key: string };
 
 export default class StatusScreen extends Component {
   static navigationOptions = {
     title: "My Policies"
   };
+
+  state: {
+    policiesLoaded: boolean,
+    claimsLoaded: boolean,
+    currentUser: any,
+    policies: Array<any>,
+    claims: Array<any>
+  };
+  renderSectionHeader: Function;
+
+  constructor(props: any) {
+    super(props);
+    this.renderSectionHeader = this.renderSectionHeader.bind(this);
+    this.state = {
+      policiesLoaded: false,
+      claimsLoaded: false,
+      currentUser: null,
+      policies: [],
+      claims: []
+    };
+  }
+
+  componentDidMount() {
+    const Purchase = Parse.Object.extend("Purchase");
+    const Claim = Parse.Object.extend("Claim");
+    let currentUser;
+    Parse.User
+      .currentAsync()
+      .then(_currentUser => {
+        currentUser = _currentUser;
+        this.setState({ currentUser });
+        const query = new Parse.Query(Purchase);
+        query.equalTo("user", _currentUser);
+        query.descending("createdAt");
+        return query.find();
+      })
+      .then(policies => {
+        policies.forEach((policy, idx) => {
+          policies[idx].key = policies[idx].get("objectId");
+        });
+        console.log(policies);
+        this.setState({ policies, policiesLoaded: true });
+        const purchaseQuery = new Parse.Query(Purchase);
+        purchaseQuery.equalTo("user", currentUser);
+        const claimQuery = new Parse.Query(Claim);
+        claimQuery.matchesQuery("purchase", purchaseQuery);
+        claimQuery.descending("createdAt");
+        return claimQuery.find();
+      })
+      .then(claims => {
+        claims.forEach((policy, idx) => {
+          claims[idx].key = claims[idx].get("objectId");
+        });
+        this.setState({ claims, claimsLoaded: true });
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }
 
   handleSharePolicies() {
     const title = "Share my policies - microUmbrella";
@@ -36,9 +102,18 @@ export default class StatusScreen extends Component {
     );
   }
 
-  renderItem(section, length, { item, index }) {
-    const dateStr = getDateStr(item.purchaseDate);
-
+  renderItem(
+    section: string,
+    length: number,
+    {
+      item,
+      index
+    }: {
+      section: Section,
+      item: any,
+      index: number
+    }
+  ) {
     const styleMap = {
       active: styles.policyStatusTextActive,
       expiring: styles.policyStatusTextExpiring,
@@ -48,30 +123,35 @@ export default class StatusScreen extends Component {
       rejected: styles.policyStatusTextRejected
     };
 
-    const policy = POLICIES.find(p => p.id === item.policyType);
-    const renderSharePolicy = section === "policies" && index === length - 1;
+    const renderSharePolicy = section === "policies" && index === 0;
 
+    const purchasedAt = item.get("createdAt");
+    const dateStr = getDateStr(purchasedAt);
+
+    let policyId;
+    const policyTypeId = item.get("policyTypeId");
+    let policyStatus = item.get("status");
+
+    const policyMetadata = POLICIES.find(p => p.id === policyTypeId);
+    const policyTypeTitle = policyMetadata.title;
+
+    let amount;
+    if (section === "policies") {
+      const _amount = item.get("premium");
+      policyId = item.get("policyId");
+      amount = `Premium: ${_amount.toFixed(2)}`;
+    } else if (section === "claims") {
+      const _amount = item.get("claimAmount");
+      policyId = item.get("purchase").get("policyId");
+      if (!_amount) {
+        policyStatus = "pending";
+        amount = "";
+      } else {
+        amount = `Claim amount: ${_amount.toFixed(2)}`;
+      }
+    }
     return (
-      <View>
-        <View style={styles.policy}>
-          <View style={styles.policyContent}>
-            <Text style={styles.policyName}>{policy.title}</Text>
-            <Text style={styles.date}>Policy No: {item.key}</Text>
-            <Text style={styles.date}>Purchased on: {dateStr}</Text>
-            <Text style={styles.date}>
-              {section === "policies" ? "Premium: " : "Claim amount: "}
-              $
-              {(section === "policies"
-                ? item.premium.toFixed(2)
-                : item.claimAmount) + ""}
-            </Text>
-          </View>
-          <View style={styles.policyStatus}>
-            <Text style={[styles.policyStatusText, styleMap[item.status]]}>
-              {item.status.toUpperCase()}
-            </Text>
-          </View>
-        </View>
+      <View key={index}>
         {renderSharePolicy ? (
           <TouchableOpacity
             onPress={this.handleSharePolicies.bind(this)}
@@ -89,25 +169,94 @@ export default class StatusScreen extends Component {
             </View>
           </TouchableOpacity>
         ) : null}
+        <View style={styles.policy}>
+          <View style={styles.policyContent}>
+            <Text style={styles.policyName}>{policyTypeTitle}</Text>
+            <Text style={styles.date}>Policy No: {policyId}</Text>
+            <Text style={styles.date}>Purchased on: {dateStr}</Text>
+            <Text style={styles.date}>{amount}</Text>
+          </View>
+          <View style={styles.policyStatus}>
+            <Text style={[styles.policyStatusText, styleMap[policyStatus]]}>
+              {policyStatus && policyStatus.toUpperCase()}
+            </Text>
+          </View>
+        </View>
       </View>
     );
   }
 
-  renderSectionHeader({ section }) {
+  renderSectionHeader({ section }: { section: Section }) {
+    let emptySection;
+    if (!section.data.length) {
+      if (section.key === "policies") {
+        if (!this.state.policiesLoaded) {
+          emptySection = (
+            <View style={styles.emptySection}>
+              <Text style={styles.emptySectionTitle}>Loading policies...</Text>
+            </View>
+          );
+        } else {
+          const navigateToPurchaseAction = NavigationActions.navigate({
+            routeName: "Chat",
+            params: { questionSet: "buy" }
+          });
+          emptySection = (
+            <View style={styles.emptySection}>
+              <Text style={styles.emptySectionTitle}>
+                You have not purchased any policies.
+              </Text>
+              <Button
+                onPress={() =>
+                  this.props.navigation.dispatch(navigateToPurchaseAction)}
+              >
+                PURCHASE NEW POLICY
+              </Button>
+            </View>
+          );
+        }
+      } else if (section.key === "claims") {
+        if (!this.state.policiesLoaded) {
+          emptySection = (
+            <View style={styles.emptySection}>
+              <Text style={styles.emptySectionTitle}>Loading claims...</Text>
+            </View>
+          );
+        } else {
+          const { currentUser } = this.state;
+          const navigateToClaimsAction = NavigationActions.navigate({
+            routeName: "Chat",
+            params: { startScreen: false, questionSet: "claim", currentUser }
+          });
+          emptySection = (
+            <View style={styles.emptySection}>
+              <Text style={styles.emptySectionTitle}>
+                You have not purchased any policies.
+              </Text>
+              <Button
+                onPress={() =>
+                  this.props.navigation.dispatch(navigateToClaimsAction)}
+              >
+                MAKE A CLAIM
+              </Button>
+            </View>
+          );
+        }
+      }
+    }
     return (
-      <View style={styles.sectionHeader}>
-        <Text style={styles.sectionHeaderText}>{section.title}</Text>
+      <View style={{ backgroundColor: "white" }}>
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionHeaderText}>{section.title}</Text>
+        </View>
+        {!section.data.length ? emptySection : null}
       </View>
     );
   }
 
   render() {
-    function padItemsWith(arr, prefix) {
-      return arr.map(a => {
-        return { key: prefix + a.id, ...a };
-      });
-    }
     const itemSeparatorComponent = () => <View style={styles.separator} />;
+    const { policies, claims } = this.state;
     return (
       <View style={styles.container}>
         <SectionList
@@ -115,18 +264,18 @@ export default class StatusScreen extends Component {
           renderSectionHeader={this.renderSectionHeader}
           sections={[
             {
-              data: padItemsWith(database.policies, "PL"),
+              data: policies,
               title: "POLICIES",
               key: "policies",
               renderItem: (...params) =>
-                this.renderItem("policies", database.policies.length, ...params)
+                this.renderItem("policies", policies.length, ...params)
             },
             {
-              data: padItemsWith(database.claims, "PL"),
+              data: claims,
               title: "CLAIMS",
               key: "claims",
               renderItem: (...params) =>
-                this.renderItem("claims", database.claims.length, ...params)
+                this.renderItem("claims", claims.length, ...params)
             }
           ]}
         />
@@ -136,6 +285,14 @@ export default class StatusScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+  emptySectionTitle: {
+    marginBottom: 20,
+    fontSize: 17,
+    textAlign: "center"
+  },
+  emptySection: {
+    padding: 17
+  },
   shareIcon: {
     marginRight: 15,
     color: "white"
