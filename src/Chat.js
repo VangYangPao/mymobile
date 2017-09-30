@@ -747,7 +747,6 @@ class ChatScreen extends Component {
         "coverageDuration"
         // "travelDetails"
       ];
-      const typeWidgets = ["images", "imageTable", "choice"];
       if (widgets.indexOf(currentQuestion.id) !== -1) {
         appendWidget(currentQuestion.id);
         return;
@@ -776,6 +775,10 @@ class ChatScreen extends Component {
         if (type === "imageTable") {
           const { columns } = currentQuestion;
           appendWidget("imageTable", { columns });
+        }
+        if (type === "table") {
+          const { columns } = currentQuestion;
+          appendWidget("table", { columns });
         }
         // appendWidget(type, currentQuestion);
       });
@@ -901,6 +904,11 @@ class ChatScreen extends Component {
 
   renderMessage(props) {
     const { currentMessage } = props;
+    const { currentQuestionIndex } = this.state;
+    let currentQuestion;
+    if (currentQuestionIndex >= 0) {
+      currentQuestion = this.questions[currentQuestionIndex];
+    }
     switch (currentMessage.type) {
       case "claimPolicyNo":
         const { policies } = currentMessage;
@@ -910,15 +918,22 @@ class ChatScreen extends Component {
             onSelectPolicy={this.handleSelectPolicyToClaim}
           />
         );
-      case "multiInput":
-        const { currentQuestionIndex } = this.state;
-        const currentQuestion = this.questions[currentQuestionIndex];
+      case "table":
         return (
           <MultiInput
             keyboardHeight={this.state.keyboardHeight}
             question={currentQuestion}
             onSubmit={this.handleMultiInputSubmit}
-            inputs={currentMessage.inputs}
+            columns={currentMessage.columns}
+          />
+        );
+      case "multiInput":
+        return (
+          <MultiInput
+            keyboardHeight={this.state.keyboardHeight}
+            question={currentQuestion}
+            onSubmit={this.handleMultiInputSubmit}
+            columns={currentMessage.columns}
           />
         );
       case "choice":

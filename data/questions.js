@@ -183,10 +183,11 @@ const TypeValidators = {
   travelEndDate: validateTravelEndDate,
   choice: validateChoice,
   nric: validateNRIC,
+  table: () => new ValidationResult(true, true),
   boolean: validateBoolean
 };
 
-function validateOneAnswer(responseTypes, answer, answers) {
+export function validateOneAnswer(responseTypes, answer, answers) {
   var validateFunc;
   for (var i = 0; i < responseTypes.length; i++) {
     validateFunc = TypeValidators[responseTypes[i]];
@@ -199,30 +200,30 @@ function validateOneAnswer(responseTypes, answer, answers) {
 export function validateAnswer(question, answer, answers) {
   const { responseType } = question;
   const responseTypes = [].concat(responseType);
-  if (Array.isArray(question.id)) {
-    const responses = answer.map((subAnswer, idx) => {
-      const responseType = responseTypes[idx];
-      const response = validateOneAnswer(
-        responseTypes,
-        subAnswer.value,
-        answers
-      );
-      // customize abit for string..
-      // rest use written type names
-      if (responseType === "string" && !response.isValid) {
-        response.errMessage = `${subAnswer.label} cannot be empty.`;
-      } else {
-        response.errMessage = `${subAnswer.label} is not a valid ${responseType}.`;
-      }
-      return response;
-    });
-    return responses;
-    // const allLegit = responses.every(r => r.isValid);
-    // if (allLegit) return new ValidationResult(true, true);
-    // // collate the messages together
-    // const collatedErrMessage = responses.map(r => r.errMessage).join(" ");
-    // return new ValidationResult(false, collatedErrMessage);
-  }
+  // if (Array.isArray(question.id)) {
+  //   const responses = answer.map((subAnswer, idx) => {
+  //     const responseType = responseTypes[idx];
+  //     const response = validateOneAnswer(
+  //       responseTypes,
+  //       subAnswer.value,
+  //       answers
+  //     );
+  //     // customize abit for string..
+  //     // rest use written type names
+  //     if (responseType === "string" && !response.isValid) {
+  //       response.errMessage = `${subAnswer.label} cannot be empty.`;
+  //     } else {
+  //       response.errMessage = `${subAnswer.label} is not a valid ${responseType}.`;
+  //     }
+  //     return response;
+  //   });
+  //   return responses;
+  //   // const allLegit = responses.every(r => r.isValid);
+  //   // if (allLegit) return new ValidationResult(true, true);
+  //   // // collate the messages together
+  //   // const collatedErrMessage = responses.map(r => r.errMessage).join(" ");
+  //   // return new ValidationResult(false, collatedErrMessage);
+  // }
   return validateOneAnswer(responseTypes, answer, answers);
 }
 
@@ -249,12 +250,12 @@ export const QUESTION_SETS = {
         {
           label: "First name",
           id: "firstName",
-          responseType: "string"
+          responseType: ["string"]
         },
         {
           label: "Last name",
           id: "lastName",
-          responseType: "string"
+          responseType: ["string"]
         },
         {
           label: "NRIC or Passport",
@@ -281,27 +282,6 @@ export const QUESTION_SETS = {
           responseType: "choice",
           choices: [{ label: "Spouse", value: 1 }, { label: "Child", value: 2 }]
         }
-      ]
-    },
-    {
-      question: "May I know your full name?",
-      responseType: ["string", "string", "string", "date", "string", "string"],
-      id: [
-        "firstName",
-        "lastName",
-        "idNumber",
-        "DOB",
-        "gender",
-        "relationship"
-      ],
-      responseLength: [60, 60, 60, null, null, null],
-      labels: [
-        "First name",
-        "Last name",
-        "NRIC or Passport",
-        "Date of Birth",
-        "Gender",
-        "Relationship"
       ]
     },
     {
@@ -384,21 +364,63 @@ export const QUESTION_SETS = {
     },
     {
       question: "May I know your full name?",
-      responseType: ["string", "string"],
-      id: ["firstName", "lastName"],
-      responseLength: [60, 60],
-      labels: ["First name", "Last name"]
+      responseType: "table",
+      columns: [
+        {
+          label: "First name",
+          id: "firstName",
+          responseType: ["string"],
+          responseLength: 60
+        },
+        {
+          label: "Last name",
+          id: "lastName",
+          responseType: ["string"],
+          responseLength: 60
+        }
+      ]
     },
-    // {
-    //   question: "May I know your first name?",
-    //   responseType: "string",
-    //   id: "firstName"
-    // },
-    // {
-    //   question: "May I know your last name?",
-    //   responseType: "string",
-    //   id: "lastName"
-    // },
+    {
+      question: "What are the details of your spouse or children?",
+      responseType: "table",
+      columns: [
+        {
+          label: "First name",
+          id: "firstName",
+          responseType: ["string"]
+        },
+        {
+          label: "Last name",
+          id: "lastName",
+          responseType: ["string"]
+        },
+        {
+          label: "NRIC or Passport",
+          id: "idNumber",
+          responseType: "string"
+        },
+        {
+          label: "Date of birth",
+          id: "DOB",
+          responseType: "date"
+        },
+        {
+          label: "Gender",
+          id: "gender",
+          responseType: "choice",
+          choices: [
+            { label: "Male", value: "M" },
+            { label: "Female", value: "F" }
+          ]
+        },
+        {
+          label: "Relationship",
+          id: "relationship",
+          responseType: "choice",
+          choices: [{ label: "Spouse", value: 1 }, { label: "Child", value: 2 }]
+        }
+      ]
+    },
     {
       question:
         "Nice to meet you <%= firstName %> <%= lastName %>! What's your NRIC/FIN/Passport?",
