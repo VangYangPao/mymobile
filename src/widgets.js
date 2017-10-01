@@ -31,7 +31,7 @@ import POLICIES from "../data/policies";
 import RangeSlider from "./RangeSlider";
 import { Text } from "./defaultComponents";
 import colors from "./colors";
-import { getDateStr, addCommas } from "./utils";
+import { getDateStr, addCommas, showAlert } from "./utils";
 import Button from "./Button";
 import {
   validateAnswer,
@@ -573,128 +573,77 @@ class ErrorMessages extends Component {
   }
 }
 
+const sideIconSize = 30;
+
 export class TableInput extends Component {
   constructor(props) {
     super(props);
-    this.handleAddItem = this.handleAddItem.bind(this);
+    this.handleSaveNewItem = this.handleSaveNewItem.bind(this);
+    this.renderItem = this.renderItem.bind(this);
     this.multiInputRefs = [];
     this.state = {
-      travellers: [{}]
+      items: []
     };
   }
 
-  handleAddItem() {}
-
-  // _renderItem({ item, index }) {
-  //   const addTravellerButton = values => (
-  //     <View>
-  //       <Button
-  //         style={{ borderRadius: 0, backgroundColor: "white" }}
-  //         onPress={this.handleAddItem}
-  //       >
-  //         <View style={{ alignItems: "center", flexDirection: "row" }}>
-  //           <Icon
-  //             size={20}
-  //             style={{ color: colors.primaryOrange, marginRight: 10 }}
-  //             name="add-circle-outline"
-  //           />
-  //           <Text style={{ color: colors.primaryOrange }}>
-  //             ADD NEW TRAVELLER
-  //           </Text>
-  //         </View>
-  //       </Button>
-  //       <Button
-  //         style={{
-  //           height: 60,
-  //           borderTopLeftRadius: 0,
-  //           borderTopRightRadius: 0
-  //         }}
-  //         onPress={() => this.multiInputRefs[index].handleSubmit()}
-  //       >
-  //         SEND
-  //       </Button>
-  //     </View>
-  //   );
-  //   return (
-  //     <View
-  //       key={index}
-  //       style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
-  //     >
-  //       <MultiInput
-  //         ref={m => (this.multiInputRefs[index] = m)}
-  //         keyboardHeight={this.props.keyboardHeight}
-  //         question={this.props.question}
-  //         onSubmit={this.props.onSubmit}
-  //         columns={this.props.columns}
-  //         submitButtonComponent={addTravellerButton}
-  //       />
-  //     </View>
-  //   );
-  // }
-
-  // render() {
-  //   const dimensions = Dimensions.get("window");
-  //   function wp(percentage) {
-  //     const value = percentage * dimensions.width / 100;
-  //     return Math.round(value);
-  //   }
-
-  //   const slideHeight = dimensions.height * 0.4;
-  //   const slideWidth = wp(75);
-  //   const itemHorizontalMargin = wp(0);
-  //   const sliderWidth = dimensions.width;
-  //   const itemWidth = slideWidth + itemHorizontalMargin * 2;
-  //   return (
-  //     <Carousel
-  //       ref={c => {
-  //         this._carousel = c;
-  //       }}
-  //       data={[{}, {}]}
-  //       renderItem={this._renderItem.bind(this)}
-  //       sliderWidth={sliderWidth}
-  //       itemWidth={itemWidth}
-  //     >
-  //       {this.state.travellers.map(this._renderItem.bind(this))}
-  //     </Carousel>
-  //   );
-  // }
-
   handleSaveNewItem(values) {
-    console.log(values);
+    const { columns } = this.props;
+    const itemData = values.map((value, idx) => {
+      const { label, id } = columns[idx];
+      return { label, id, value };
+    });
+    const item = { key: this.state.items.length, data: itemData };
+    const items = this.state.items.concat(item);
+    this.setState({ items });
   }
 
-  renderItem(item) {
+  renderItem({ item, index }) {
+    const itemData = item.data;
+    const firstName = itemData.find(k => k.id === "firstName");
+    const lastName = itemData.find(k => k.id === "lastName");
     return (
-      <Button
-        style={{ borderRadius: 0, backgroundColor: "white" }}
-        onPress={() => {}}
+      <View
+        style={{
+          alignItems: "center",
+          justifyContent: "flex-start",
+          flexDirection: "row",
+          paddingVertical: 15,
+          paddingHorizontal: 10,
+          borderRadius: 0,
+          backgroundColor: "white"
+        }}
       >
-        <View
-          style={{
-            flexDirection: "row"
+        <TouchableOpacity
+          onPress={() => {
+            const items = this.state.items.slice();
+            items.splice(index, 1);
+            this.setState({ items });
           }}
         >
           <Icon
-            size={20}
-            style={{ color: colors.primaryOrange, marginRight: 10 }}
-            name="add-circle-outline"
+            size={sideIconSize}
+            style={{ color: colors.errorRed, marginRight: 15 }}
+            name="remove-circle-outline"
           />
-          <Text style={{ color: colors.primaryOrange }}>ADD NEW TRAVELLER</Text>
-        </View>
-      </Button>
+        </TouchableOpacity>
+        <Text style={{ fontSize: 16 }}>
+          {firstName.value} {lastName.value}
+        </Text>
+      </View>
     );
   }
 
   render() {
+    const itemSeparatorComponent = () => <View style={styles.separator} />;
     return (
       <View style={{ marginLeft: 50, marginRight: 60 }}>
-        <FlatList data={[]} renderItem={this.renderItem.bind(this)} />
-        <Button
-          style={{
-            alignItems: "flex-start",
-            borderRadius: 0,
-            backgroundColor: "white"
-          }}
+        <FlatList
+          data={this.state.items}
+          renderItem={this.renderItem}
+          ItemSeparatorComponent={itemSeparatorComponent}
+        />
+        <TouchableOpacity />
+        <TouchableOpacity
           onPress={() =>
             this.props.navigation.navigate("Table", {
               itemName: this.props.itemName,
@@ -706,19 +655,21 @@ export class TableInput extends Component {
             style={{
               alignItems: "center",
               justifyContent: "flex-start",
-              flexDirection: "row"
+              flexDirection: "row",
+              paddingVertical: 15,
+              paddingHorizontal: 10,
+              borderRadius: 0,
+              backgroundColor: "white"
             }}
           >
             <Icon
-              size={20}
-              style={{ color: colors.primaryOrange, marginRight: 10 }}
+              size={sideIconSize}
+              style={{ color: colors.primaryOrange, marginRight: 15 }}
               name="add-circle-outline"
             />
-            <Text style={{ color: colors.primaryOrange }}>
-              ADD NEW {this.props.itemName.toUpperCase()}
-            </Text>
+            <Text style={{ fontSize: 16 }}>ADD NEW TRAVELLER</Text>
           </View>
-        </Button>
+        </TouchableOpacity>
         <Button
           style={{
             height: 60,
