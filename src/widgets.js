@@ -659,7 +659,9 @@ export class TableInput extends Component {
   //   );
   // }
 
-  handleSaveNewItem() {}
+  handleSaveNewItem(values) {
+    console.log(values);
+  }
 
   renderItem(item) {
     return (
@@ -696,7 +698,8 @@ export class TableInput extends Component {
           onPress={() =>
             this.props.navigation.navigate("Table", {
               itemName: this.props.itemName,
-              columns: this.props.columns
+              columns: this.props.columns,
+              onSaveTable: this.handleSaveNewItem
             })}
         >
           <View

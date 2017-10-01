@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { View, TextInput, StyleSheet, TouchableOpacity } from "react-native";
+import { NavigationActions } from "react-navigation";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import Ionicon from "react-native-vector-icons/Ionicons";
 import ModalPicker from "react-native-modal-picker";
@@ -9,16 +10,33 @@ import moment from "moment";
 import { backButtonNavOptions } from "./navigations";
 import colors from "./colors";
 import { Text } from "./defaultComponents";
+import { showAlert } from "./utils";
+
+let tableValues = [];
 
 export default class TableScreen extends Component {
   static navigationOptions = ({ navigation, screenProps }) => {
     let options = backButtonNavOptions({ navigation });
+    const { itemName, onSaveTable } = navigation.state.params;
+    const handleSave = () => {
+      const isValid = tableValues.every(v => v !== "");
+      console.log(tableValues);
+      if (!isValid) {
+        showAlert("The form is incomplete");
+        const currentParams = navigation.state.params;
+        navigation.setParams({ renderError: true, ...currentParams });
+        return;
+      }
+      onSaveTable(tableValues);
+      navigation.dispatch(NavigationActions.back());
+    };
+
     options.headerRight = (
-      <TouchableOpacity onPress={() => {}}>
+      <TouchableOpacity onPress={handleSave}>
         <Text style={styles.headerRight}>SAVE</Text>
       </TouchableOpacity>
     );
-    options.title = "ADD NEW " + navigation.state.params.itemName.toUpperCase();
+    options.title = "ADD NEW " + itemName.toUpperCase();
     return options;
   };
 
@@ -33,9 +51,17 @@ export default class TableScreen extends Component {
     for (let i = 0; i < columns.length; i++) {
       this.state.values.push("");
     }
+    tableValues = this.state.values;
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.values !== prevState.values) {
+      tableValues = this.state.values;
+    }
   }
 
   renderField({ id, label, choices, responseType }, index) {
+    const { renderError } = this.props.navigation.state.params;
     responseType = [].concat(responseType);
     let inputElement;
 
@@ -49,7 +75,17 @@ export default class TableScreen extends Component {
           style={styles.selectContainer}
           onPress={() => this.inputRefs[index].onPressDate()}
         >
-          <Text style={styles.selectText}>Select {label.toLowerCase()}</Text>
+          <Text
+            style={
+              renderError && this.state.values[index] === "" ? (
+                styles.inputErr
+              ) : (
+                styles.selectText
+              )
+            }
+          >
+            Select {label.toLowerCase()}
+          </Text>
           <DatePicker
             ref={picker => (this.inputRefs[index] = picker)}
             date={this.state.values[index]}
@@ -61,7 +97,9 @@ export default class TableScreen extends Component {
             cancelBtnText="Cancel"
             showIcon={false}
             customStyles={{
-              placeholderText: styles.selectText,
+              placeholderText: renderError
+                ? styles.inputErr
+                : styles.selectText,
               dateInput: {
                 alignItems: "flex-end",
                 borderWidth: 0
@@ -92,8 +130,18 @@ export default class TableScreen extends Component {
             this.setState({ values });
           }}
         >
-          <View style={styles.selectContainer}>
-            <Text style={styles.selectText}>Select {lowerlabel}</Text>
+          <View key={index} style={styles.selectContainer}>
+            <Text
+              style={
+                renderError && this.state.values[index] === "" ? (
+                  styles.inputErr
+                ) : (
+                  styles.selectText
+                )
+              }
+            >
+              Select {lowerlabel}
+            </Text>
             <Text style={[styles.selectText, styles.selectTextResult]}>
               {this.state.values[index]}
             </Text>
@@ -107,7 +155,15 @@ export default class TableScreen extends Component {
           style={styles.input}
           autoCorrect={false}
           placeholder={label}
-          placeholderTextColor={colors.borderLine}
+          placeholderTextColor={
+            renderError ? colors.errorRed : colors.borderLine
+          }
+          onChangeText={text => {
+            const values = this.state.values.slice();
+            values[index] = text;
+            this.setState({ values });
+          }}
+          value={this.state.values[index]}
           onSubmitEditing={event => {
             const input = this.inputRefs[index + 1];
             if (input && typeof input.focus === "function") input.focus();
@@ -135,6 +191,10 @@ export default class TableScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+  inputErr: {
+    color: colors.errorRed,
+    fontSize: 17.5
+  },
   selectTextResult: {
     color: colors.primaryText
   },
