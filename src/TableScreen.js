@@ -3,6 +3,8 @@ import { View, TextInput, StyleSheet, TouchableOpacity } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import Ionicon from "react-native-vector-icons/Ionicons";
 import ModalPicker from "react-native-modal-picker";
+import DatePicker from "react-native-datepicker";
+import moment from "moment";
 
 import { backButtonNavOptions } from "./navigations";
 import colors from "./colors";
@@ -36,7 +38,48 @@ export default class TableScreen extends Component {
   renderField({ id, label, choices, responseType }, index) {
     responseType = [].concat(responseType);
     let inputElement;
-    if (responseType.indexOf("choice") !== -1) {
+
+    if (
+      responseType.indexOf("date") !== -1 ||
+      responseType.indexOf("datetime") !== -1
+    ) {
+      const maxDate = moment(new Date()).format("YYYY-MM-DD");
+      inputElement = (
+        <TouchableOpacity
+          style={styles.selectContainer}
+          onPress={() => this.inputRefs[index].onPressDate()}
+        >
+          <Text style={styles.selectText}>Select {label.toLowerCase()}</Text>
+          <DatePicker
+            ref={picker => (this.inputRefs[index] = picker)}
+            date={this.state.values[index]}
+            mode="date"
+            placeholder=""
+            format="YYYY-MM-DD"
+            maxDate={maxDate}
+            confirmBtnText="Confirm"
+            cancelBtnText="Cancel"
+            showIcon={false}
+            customStyles={{
+              placeholderText: styles.selectText,
+              dateInput: {
+                alignItems: "flex-end",
+                borderWidth: 0
+              },
+              dateText: [styles.selectText, styles.selectTextResult],
+              btnTextConfirm: {
+                color: colors.primaryOrange
+              }
+            }}
+            onDateChange={date => {
+              const values = Object.assign([], this.state.values);
+              values[index] = date;
+              this.setState({ values });
+            }}
+          />
+        </TouchableOpacity>
+      );
+    } else if (responseType.indexOf("choice") !== -1) {
       const lowerlabel = label.toLowerCase();
       const data = choices.map(c => ({ label: c.label, key: c.id }));
       inputElement = (
@@ -120,6 +163,7 @@ const styles = StyleSheet.create({
   },
   fieldContainer: {
     height: 50,
+    alignItems: "stretch",
     justifyContent: "center",
     borderBottomWidth: 1,
     borderBottomColor: colors.softBorderLine
