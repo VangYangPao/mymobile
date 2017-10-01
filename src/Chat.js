@@ -45,7 +45,8 @@ import {
   ImageTable,
   ChoiceList,
   SuggestionList,
-  PlansTabView
+  PlansTabView,
+  TableInput
 } from "./widgets";
 import TravelPlansView from "./TravelPlansView";
 import database from "./HackStorage";
@@ -727,6 +728,14 @@ class ChatScreen extends Component {
       );
     };
 
+    const transformOldWidgets = inputs => {
+      return inputs.map(input => ({
+        label: input.label,
+        responseType: "string",
+        id: input.id
+      }));
+    };
+
     const handleAppendWidget = () => {
       const currentQuestion = this.questions[this.state.currentQuestionIndex];
       if (currentQuestion.responseType === null) {
@@ -739,7 +748,7 @@ class ChatScreen extends Component {
           type: currentQuestion.responseType[idx],
           label: currentQuestion.labels[idx]
         }));
-        appendWidget("multiInput", { inputs });
+        appendWidget("multiInput", { columns: transformOldWidgets(inputs) });
         return;
       }
       const widgets = [
@@ -775,6 +784,10 @@ class ChatScreen extends Component {
         if (type === "imageTable") {
           const { columns } = currentQuestion;
           appendWidget("imageTable", { columns });
+        }
+        if (type === "multiInput") {
+          const { columns } = currentQuestion;
+          appendWidget("multiInput", { columns });
         }
         if (type === "table") {
           const { columns } = currentQuestion;
@@ -920,7 +933,9 @@ class ChatScreen extends Component {
         );
       case "table":
         return (
-          <MultiInput
+          <TableInput
+            itemName="traveller"
+            navigation={this.props.navigation}
             keyboardHeight={this.state.keyboardHeight}
             question={currentQuestion}
             onSubmit={this.handleMultiInputSubmit}

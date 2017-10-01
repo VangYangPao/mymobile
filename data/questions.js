@@ -183,6 +183,7 @@ const TypeValidators = {
   travelEndDate: validateTravelEndDate,
   choice: validateChoice,
   nric: validateNRIC,
+  multiInput: () => new ValidationResult(true, true),
   table: () => new ValidationResult(true, true),
   boolean: validateBoolean
 };
@@ -250,11 +251,13 @@ export const QUESTION_SETS = {
         {
           label: "First name",
           id: "firstName",
+          responseLength: 60,
           responseType: ["string"]
         },
         {
           label: "Last name",
           id: "lastName",
+          responseLength: 60,
           responseType: ["string"]
         },
         {
@@ -270,7 +273,7 @@ export const QUESTION_SETS = {
         {
           label: "Gender",
           id: "gender",
-          responseType: "choice",
+          responseType: ["choice", "string"],
           choices: [
             { label: "Male", value: "M" },
             { label: "Female", value: "F" }
@@ -279,7 +282,7 @@ export const QUESTION_SETS = {
         {
           label: "Relationship",
           id: "relationship",
-          responseType: "choice",
+          responseType: ["choice", "number"],
           choices: [{ label: "Spouse", value: 1 }, { label: "Child", value: 2 }]
         }
       ]
@@ -364,7 +367,7 @@ export const QUESTION_SETS = {
     },
     {
       question: "May I know your full name?",
-      responseType: "table",
+      responseType: "multiInput",
       columns: [
         {
           label: "First name",
@@ -381,17 +384,30 @@ export const QUESTION_SETS = {
       ]
     },
     {
+      question:
+        "Nice to meet you <%= firstName %> <%= lastName %>! What's your NRIC/FIN/Passport?",
+      responseType: ["string", "nric"],
+      id: "idNumber"
+    },
+    {
+      question: "What's your email address? ✉️",
+      responseType: ["string", "email"],
+      id: "email"
+    },
+    {
       question: "What are the details of your spouse or children?",
       responseType: "table",
       columns: [
         {
           label: "First name",
           id: "firstName",
+          responseLength: 60,
           responseType: ["string"]
         },
         {
           label: "Last name",
           id: "lastName",
+          responseLength: 60,
           responseType: ["string"]
         },
         {
@@ -407,7 +423,7 @@ export const QUESTION_SETS = {
         {
           label: "Gender",
           id: "gender",
-          responseType: "choice",
+          responseType: ["choice", "string"],
           choices: [
             { label: "Male", value: "M" },
             { label: "Female", value: "F" }
@@ -416,21 +432,10 @@ export const QUESTION_SETS = {
         {
           label: "Relationship",
           id: "relationship",
-          responseType: "choice",
+          responseType: ["choice", "number"],
           choices: [{ label: "Spouse", value: 1 }, { label: "Child", value: 2 }]
         }
       ]
-    },
-    {
-      question:
-        "Nice to meet you <%= firstName %> <%= lastName %>! What's your NRIC/FIN/Passport?",
-      responseType: ["string", "nric"],
-      id: "idNumber"
-    },
-    {
-      question: "What's your email address? ✉️",
-      responseType: ["string", "email"],
-      id: "email"
     },
     // {
     //   question: "What's your mailing address?",

@@ -26,6 +26,7 @@ import NotificationsScreen from "./NotificationsScreen";
 import { TermsOfUseStack, PrivacyPolicyStack } from "./TermsAndPrivacyPolicy";
 import HelpScreen from "./HelpScreen";
 import colors from "./colors";
+import TableScreen from "./TableScreen";
 import DrawerContent from "./DrawerContent";
 import {
   styles,
@@ -65,6 +66,9 @@ const BuyStackNavigator = StackNavigator({
         headerLeft: button
       };
     }
+  },
+  Table: {
+    screen: TableScreen
   },
   Auth: { screen: AuthScreen },
   Policy: {

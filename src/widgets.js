@@ -14,7 +14,8 @@ import {
   ToastAndroid,
   TextInput,
   Animated,
-  InteractionManager
+  InteractionManager,
+  FlatList
 } from "react-native";
 import { chunk as chunkArray } from "lodash";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -572,6 +573,164 @@ class ErrorMessages extends Component {
   }
 }
 
+export class TableInput extends Component {
+  constructor(props) {
+    super(props);
+    this.handleAddItem = this.handleAddItem.bind(this);
+    this.multiInputRefs = [];
+    this.state = {
+      travellers: [{}]
+    };
+  }
+
+  handleAddItem() {}
+
+  // _renderItem({ item, index }) {
+  //   const addTravellerButton = values => (
+  //     <View>
+  //       <Button
+  //         style={{ borderRadius: 0, backgroundColor: "white" }}
+  //         onPress={this.handleAddItem}
+  //       >
+  //         <View style={{ alignItems: "center", flexDirection: "row" }}>
+  //           <Icon
+  //             size={20}
+  //             style={{ color: colors.primaryOrange, marginRight: 10 }}
+  //             name="add-circle-outline"
+  //           />
+  //           <Text style={{ color: colors.primaryOrange }}>
+  //             ADD NEW TRAVELLER
+  //           </Text>
+  //         </View>
+  //       </Button>
+  //       <Button
+  //         style={{
+  //           height: 60,
+  //           borderTopLeftRadius: 0,
+  //           borderTopRightRadius: 0
+  //         }}
+  //         onPress={() => this.multiInputRefs[index].handleSubmit()}
+  //       >
+  //         SEND
+  //       </Button>
+  //     </View>
+  //   );
+  //   return (
+  //     <View
+  //       key={index}
+  //       style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+  //     >
+  //       <MultiInput
+  //         ref={m => (this.multiInputRefs[index] = m)}
+  //         keyboardHeight={this.props.keyboardHeight}
+  //         question={this.props.question}
+  //         onSubmit={this.props.onSubmit}
+  //         columns={this.props.columns}
+  //         submitButtonComponent={addTravellerButton}
+  //       />
+  //     </View>
+  //   );
+  // }
+
+  // render() {
+  //   const dimensions = Dimensions.get("window");
+  //   function wp(percentage) {
+  //     const value = percentage * dimensions.width / 100;
+  //     return Math.round(value);
+  //   }
+
+  //   const slideHeight = dimensions.height * 0.4;
+  //   const slideWidth = wp(75);
+  //   const itemHorizontalMargin = wp(0);
+  //   const sliderWidth = dimensions.width;
+  //   const itemWidth = slideWidth + itemHorizontalMargin * 2;
+  //   return (
+  //     <Carousel
+  //       ref={c => {
+  //         this._carousel = c;
+  //       }}
+  //       data={[{}, {}]}
+  //       renderItem={this._renderItem.bind(this)}
+  //       sliderWidth={sliderWidth}
+  //       itemWidth={itemWidth}
+  //     >
+  //       {this.state.travellers.map(this._renderItem.bind(this))}
+  //     </Carousel>
+  //   );
+  // }
+
+  handleSaveNewItem() {}
+
+  renderItem(item) {
+    return (
+      <Button
+        style={{ borderRadius: 0, backgroundColor: "white" }}
+        onPress={() => {}}
+      >
+        <View
+          style={{
+            flexDirection: "row"
+          }}
+        >
+          <Icon
+            size={20}
+            style={{ color: colors.primaryOrange, marginRight: 10 }}
+            name="add-circle-outline"
+          />
+          <Text style={{ color: colors.primaryOrange }}>ADD NEW TRAVELLER</Text>
+        </View>
+      </Button>
+    );
+  }
+
+  render() {
+    return (
+      <View style={{ marginLeft: 50, marginRight: 60 }}>
+        <FlatList data={[]} renderItem={this.renderItem.bind(this)} />
+        <Button
+          style={{
+            alignItems: "flex-start",
+            borderRadius: 0,
+            backgroundColor: "white"
+          }}
+          onPress={() =>
+            this.props.navigation.navigate("Table", {
+              itemName: this.props.itemName,
+              columns: this.props.columns
+            })}
+        >
+          <View
+            style={{
+              alignItems: "center",
+              justifyContent: "flex-start",
+              flexDirection: "row"
+            }}
+          >
+            <Icon
+              size={20}
+              style={{ color: colors.primaryOrange, marginRight: 10 }}
+              name="add-circle-outline"
+            />
+            <Text style={{ color: colors.primaryOrange }}>
+              ADD NEW {this.props.itemName.toUpperCase()}
+            </Text>
+          </View>
+        </Button>
+        <Button
+          style={{
+            height: 60,
+            borderTopLeftRadius: 0,
+            borderTopRightRadius: 0
+          }}
+          onPress={() => {}}
+        >
+          SEND
+        </Button>
+      </View>
+    );
+  }
+}
+
 export class MultiInput extends Component {
   constructor(props) {
     super(props);
@@ -633,7 +792,15 @@ export class MultiInput extends Component {
     const validationResponses = inputs.map((input, idx) => {
       const column = this.props.columns[idx];
       const responseTypes = [].concat(column.responseType);
-      console.log(input.value);
+      if (responseTypes.indexOf("choice") !== -1) {
+        const choiceValues = column.choices.map(c => c.value);
+        if (choiceValues.indexOf(input.value) === -1) {
+          return {
+            isValid: false,
+            errMessage: `${input.label} must be selected.`
+          };
+        }
+      }
       return validateOneAnswer(responseTypes, input.value);
     });
     const lenResponses = inputs.map((input, idx) => {
@@ -689,7 +856,7 @@ export class MultiInput extends Component {
             {input.label}
           </Text>
           <MyDatePicker
-            mode={input.type}
+            mode={input.responseType}
             onPickDate={this.handlePickDate(index)}
           />
         </View>
@@ -795,18 +962,25 @@ export class MultiInput extends Component {
       inputContainer = <View>{this.props.columns.map(this.renderInput)}</View>;
     }
 
+    if (!this.props.submitButtonComponent) {
+      button = (
+        <Button
+          onPress={this.handleSubmit}
+          style={widgetStyles.sendButtonContainer}
+        >
+          SEND
+        </Button>
+      );
+    } else {
+      button = this.props.submitButtonComponent(this.state.values);
+    }
     const keyboardHeight =
       this.props.keyboardHeight >= 200 ? this.props.keyboardHeight - 200 : 0;
     return (
       <View style={{ marginBottom: keyboardHeight }}>
         <View style={[widgetStyles.choicesList]}>
           {inputContainer}
-          <Button
-            onPress={this.handleSubmit}
-            style={widgetStyles.sendButtonContainer}
-          >
-            SEND
-          </Button>
+          {button}
         </View>
         <Animated.View
           style={[
@@ -1013,11 +1187,13 @@ const iconSize = 50;
 
 const widgetStyles = StyleSheet.create({
   select: {
+    alignItems: "flex-start",
     borderWidth: 0
   },
   selectText: {
     color: colors.borderLine,
-    fontSize: multiInputPlaceholderSize
+    fontSize: multiInputPlaceholderSize,
+    textAlign: "left"
   },
   rightSeparator: { borderRightColor: colors.borderLine, borderRightWidth: 1 },
   coverageAmountText: {
@@ -1068,8 +1244,8 @@ const widgetStyles = StyleSheet.create({
     borderRadius: 0
   },
   errContainer: {
-    marginLeft: 50,
-    marginRight: 60
+    // marginLeft: 50,
+    // marginRight: 60
   },
   errMessageText: {
     color: colors.primaryText
@@ -1121,8 +1297,8 @@ const widgetStyles = StyleSheet.create({
   choicesList: {
     borderBottomLeftRadius: 13,
     borderBottomRightRadius: 13,
-    marginLeft: 50,
-    marginRight: 60,
+    // marginLeft: 50,
+    // marginRight: 60,
     backgroundColor: "white"
   },
   textInputError: {
