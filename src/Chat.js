@@ -227,6 +227,7 @@ class ChatScreen extends Component {
     this.handleSelectPolicyToClaim = this.handleSelectPolicyToClaim.bind(this);
     this.handleMultiInputSubmit = this.handleMultiInputSubmit.bind(this);
     this.renderStartScreenMessages = this.renderStartScreenMessages.bind(this);
+    this.handleTableInputSubmit = this.handleTableInputSubmit.bind(this);
     this.askNextQuestion = this.askNextQuestion.bind(this);
     this.reaskQuestion = this.reaskQuestion.bind(this);
     this.sendNewMessage = this.sendNewMessage.bind(this);
@@ -536,6 +537,21 @@ class ChatScreen extends Component {
         user: CUSTOMER_USER
       }),
       () => this.setState({ answering: false, renderInput: true })
+    );
+  }
+
+  handleTableInputSubmit(items) {
+    let { messages } = this.state;
+    messages = messages.slice(0, messages.length - 1);
+    messages = messages.concat({
+      type: "text",
+      _id: uuid.v4(),
+      text: "These are the details of my spouse and children",
+      value: items,
+      user: CUSTOMER_USER
+    });
+    this.setState({ messages }, () =>
+      this.setState({ answering: false, renderInput: true })
     );
   }
 
@@ -938,7 +954,7 @@ class ChatScreen extends Component {
             navigation={this.props.navigation}
             keyboardHeight={this.state.keyboardHeight}
             question={currentQuestion}
-            onSubmit={this.handleMultiInputSubmit}
+            onSubmit={this.handleTableInputSubmit}
             columns={currentMessage.columns}
           />
         );

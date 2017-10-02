@@ -397,6 +397,7 @@ export const QUESTION_SETS = {
     {
       question: "What are the details of your spouse or children?",
       responseType: "table",
+      id: "travellers",
       columns: [
         {
           label: "First name",

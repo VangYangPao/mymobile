@@ -584,14 +584,15 @@ export class TableInput extends Component {
     this.state = {
       items: []
     };
+    this.transformToCompatibleShape = (value, idx) => {
+      console.log(this.props.columns[idx]);
+      const { label, id } = this.props.columns[idx];
+      return { label, id, value };
+    };
   }
 
   handleSaveNewItem(values) {
-    const { columns } = this.props;
-    const itemData = values.map((value, idx) => {
-      const { label, id } = columns[idx];
-      return { label, id, value };
-    });
+    const itemData = values.map(this.transformToCompatibleShape);
     const item = { key: this.state.items.length, data: itemData };
     const items = this.state.items.concat(item);
     this.setState({ items });
@@ -676,7 +677,10 @@ export class TableInput extends Component {
             borderTopLeftRadius: 0,
             borderTopRightRadius: 0
           }}
-          onPress={() => {}}
+          onPress={() =>
+            this.props.onSubmit(
+              this.state.items.map(this.transformToCompatibleShape)
+            )}
         >
           SEND
         </Button>

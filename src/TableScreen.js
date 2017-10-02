@@ -20,7 +20,6 @@ export default class TableScreen extends Component {
     const { itemName, onSaveTable } = navigation.state.params;
     const handleSave = () => {
       const isValid = tableValues.every(v => v !== "");
-      console.log(tableValues);
       if (!isValid) {
         showAlert("The form is incomplete");
         const currentParams = navigation.state.params;
