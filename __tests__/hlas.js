@@ -71,50 +71,50 @@ it("gets travel quote correctly", () => {
   });
 });
 
-// it("purchases phone protect correctly", () => {
-//   const premium = 5;
-//   const policyHolder: PolicyHolder = {
-//     Surname: "test",
-//     GivenName: "test",
-//     IDNumber: generateNRIC(),
-//     DateOfBirth: "1988-07-22",
-//     GenderID: 1,
-//     MobileTelephone: "91234567",
-//     Email: "guanhao3797@gmail.com",
-//     UnitNumber: "11",
-//     BlockHouseNumber: "11",
-//     BuildingName: "sample string 12",
-//     StreetName: "sample string 13",
-//     PostalCode: "089057"
-//   };
-//   const paymentDetails: PaymentDetails = {
-//     NameOnCard: "Chan",
-//     CardNumber: "4005550000000001",
-//     CardType: 3,
-//     CardSecurityCode: "602",
-//     CardExpiryYear: 2021,
-//     CardExpiryMonth: 1
-//   };
-//   const mobileDetails = {
-//     brandID: 1,
-//     modelID: 5,
-//     purchaseDate: "2017-09-16",
-//     serialNo: "989753317723690",
-//     purchasePlaceID: 4
-//   };
-//   const policyCommencementDate = new Date();
-//   expect.assertions(2);
-//   return purchasePhonePolicy(
-//     premium,
-//     policyCommencementDate,
-//     mobileDetails,
-//     policyHolder,
-//     paymentDetails
-//   ).then(res => {
-//     expect(res.success).toBe(true);
-//     expect(res.policyNo).toMatch(/^PM/);
-//   });
-// });
+it("purchases phone protect correctly", () => {
+  const premium = 5;
+  const policyHolder: PolicyHolder = {
+    Surname: "test",
+    GivenName: "test",
+    IDNumber: generateNRIC(),
+    DateOfBirth: "1988-07-22",
+    GenderID: 1,
+    MobileTelephone: "91234567",
+    Email: "guanhao3797@gmail.com",
+    UnitNumber: "11",
+    BlockHouseNumber: "11",
+    BuildingName: "sample string 12",
+    StreetName: "sample string 13",
+    PostalCode: "089057"
+  };
+  const paymentDetails: PaymentDetails = {
+    NameOnCard: "Chan",
+    CardNumber: "4005550000000001",
+    CardType: 3,
+    CardSecurityCode: "602",
+    CardExpiryYear: 2021,
+    CardExpiryMonth: 1
+  };
+  const mobileDetails = {
+    brandID: 1,
+    modelID: 5,
+    purchaseDate: "2017-09-16",
+    serialNo: "989753317723690",
+    purchasePlaceID: 4
+  };
+  const policyCommencementDate = new Date();
+  expect.assertions(2);
+  return purchasePhonePolicy(
+    premium,
+    policyCommencementDate,
+    mobileDetails,
+    policyHolder,
+    paymentDetails
+  ).then(res => {
+    expect(res.success).toBe(true);
+    expect(res.policyNo).toMatch(/^PM/);
+  });
+});
 
 // it("purchases pa vanilla correctly", () => {
 //   const premium = 17;

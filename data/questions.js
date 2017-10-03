@@ -414,7 +414,7 @@ export const QUESTION_SETS = {
       question:
         "What's your phone's IMEI number? IMEI number is a unique 15-digit serial number given to every mobile phone. Check this at the back of your phone.",
       responseType: ["string", "imei"],
-      id: "imeiNumber",
+      id: "serialNo",
       include: ["mobile"]
     },
     {
