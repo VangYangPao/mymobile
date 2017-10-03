@@ -245,49 +245,6 @@ export const QUESTION_SETS = {
       responseType: null
     },
     {
-      question: "What are the details of your spouse or children?",
-      responseType: "table",
-      columns: [
-        {
-          label: "First name",
-          id: "firstName",
-          responseLength: 60,
-          responseType: ["string"]
-        },
-        {
-          label: "Last name",
-          id: "lastName",
-          responseLength: 60,
-          responseType: ["string"]
-        },
-        {
-          label: "NRIC or Passport",
-          id: "idNumber",
-          responseType: "string"
-        },
-        {
-          label: "Date of birth",
-          id: "DOB",
-          responseType: "date"
-        },
-        {
-          label: "Gender",
-          id: "gender",
-          responseType: ["choice", "string"],
-          choices: [
-            { label: "Male", value: "M" },
-            { label: "Female", value: "F" }
-          ]
-        },
-        {
-          label: "Relationship",
-          id: "relationship",
-          responseType: ["choice", "number"],
-          choices: [{ label: "Spouse", value: 1 }, { label: "Child", value: 2 }]
-        }
-      ]
-    },
-    {
       question:
         "I'll walk you through step-by-step. Let's start with the plan you prefer.",
       responseType: "number",
@@ -335,19 +292,18 @@ export const QUESTION_SETS = {
       include: ["travel"],
       defaultValue: "this.state.answers.departureDate"
     },
-    {
-      question: "Nice. Who do you want to insure?",
-      responseType: ["string", "choice"],
-      choices: [
-        { label: "Myself", value: "applicant" },
-        { label: "Me and my spouse", value: "spouse" },
-        { label: "Me and my children", value: "children" },
-        { label: "My family", value: "family" }
-      ],
-      id: "recipient",
-      include: ["travel"]
-    },
-
+    // {
+    //   question: "Nice. Who do you want to insure?",
+    //   responseType: ["string", "choice"],
+    //   choices: [
+    //     { label: "Myself", value: "applicant" },
+    //     { label: "Me and my spouse", value: "spouse" },
+    //     { label: "Me and my children", value: "children" },
+    //     { label: "My family", value: "family" }
+    //   ],
+    //   id: "recipient",
+    //   include: ["travel"]
+    // },
     {
       question: "How long do you want to be covered for?",
       responseType: "number",
@@ -395,9 +351,11 @@ export const QUESTION_SETS = {
       id: "email"
     },
     {
-      question: "What are the details of your spouse or children?",
+      question:
+        "What are the details of your spouse or children travelling with you?",
       responseType: "table",
       id: "travellers",
+      include: ["travel"],
       columns: [
         {
           label: "First name",
@@ -424,11 +382,8 @@ export const QUESTION_SETS = {
         {
           label: "Gender",
           id: "gender",
-          responseType: ["choice", "string"],
-          choices: [
-            { label: "Male", value: "M" },
-            { label: "Female", value: "F" }
-          ]
+          responseType: ["choice", "number"],
+          choices: [{ label: "Male", value: 1 }, { label: "Female", value: 2 }]
         },
         {
           label: "Relationship",

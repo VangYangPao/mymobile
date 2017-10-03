@@ -584,24 +584,21 @@ export class TableInput extends Component {
     this.state = {
       items: []
     };
-    this.transformToCompatibleShape = (value, idx) => {
-      console.log(this.props.columns[idx]);
-      const { label, id } = this.props.columns[idx];
-      return { label, id, value };
-    };
   }
 
   handleSaveNewItem(values) {
-    const itemData = values.map(this.transformToCompatibleShape);
-    const item = { key: this.state.items.length, data: itemData };
+    let item = {};
+    const columns = this.props.columns;
+    values.forEach((value, idx) => {
+      item[columns[idx].id] = value;
+    });
+    item.key = this.state.items.length;
     const items = this.state.items.concat(item);
     this.setState({ items });
   }
 
   renderItem({ item, index }) {
-    const itemData = item.data;
-    const firstName = itemData.find(k => k.id === "firstName");
-    const lastName = itemData.find(k => k.id === "lastName");
+    const { firstName, lastName } = item;
     return (
       <View
         style={{
@@ -627,8 +624,8 @@ export class TableInput extends Component {
             name="remove-circle-outline"
           />
         </TouchableOpacity>
-        <Text style={{ fontSize: 16 }}>
-          {firstName.value} {lastName.value}
+        <Text style={{ fontSize: 17.5 }}>
+          {firstName} {lastName}
         </Text>
       </View>
     );
@@ -677,10 +674,7 @@ export class TableInput extends Component {
             borderTopLeftRadius: 0,
             borderTopRightRadius: 0
           }}
-          onPress={() =>
-            this.props.onSubmit(
-              this.state.items.map(this.transformToCompatibleShape)
-            )}
+          onPress={() => this.props.onSubmit(this.state.items)}
         >
           SEND
         </Button>
@@ -1255,8 +1249,8 @@ const widgetStyles = StyleSheet.create({
   choicesList: {
     borderBottomLeftRadius: 13,
     borderBottomRightRadius: 13,
-    // marginLeft: 50,
-    // marginRight: 60,
+    marginLeft: 50,
+    marginRight: 60,
     backgroundColor: "white"
   },
   textInputError: {

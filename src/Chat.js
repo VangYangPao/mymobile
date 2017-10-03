@@ -652,6 +652,7 @@ class ChatScreen extends Component {
           const params = { policy, page: "checkout" };
           // this.props.navigation.navigate("Policy", params);
           let form = Object.assign({}, this.state.answers);
+          form.policy = this.props.policy;
           const { planIndex } = form;
           // delete form.policy;
           // delete form.planIndex;

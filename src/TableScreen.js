@@ -60,7 +60,7 @@ export default class TableScreen extends Component {
   }
 
   renderField({ id, label, choices, responseType }, index) {
-    const { renderError } = this.props.navigation.state.params;
+    const { renderError, columns } = this.props.navigation.state.params;
     responseType = [].concat(responseType);
     let inputElement;
 
@@ -118,14 +118,17 @@ export default class TableScreen extends Component {
       );
     } else if (responseType.indexOf("choice") !== -1) {
       const lowerlabel = label.toLowerCase();
-      const data = choices.map(c => ({ label: c.label, key: c.id }));
+      const data = choices.map(c => ({ label: c.label, key: c.value }));
+      const selectedChoice = columns[index].choices.find(
+        c => c.value === this.state.values[index]
+      );
       inputElement = (
         <ModalPicker
           data={data}
           initValue={"Select " + lowerlabel}
           onChange={option => {
             const values = Object.assign([], this.state.values);
-            values[index] = option.label;
+            values[index] = option.key;
             this.setState({ values });
           }}
         >
@@ -142,7 +145,7 @@ export default class TableScreen extends Component {
               Select {lowerlabel}
             </Text>
             <Text style={[styles.selectText, styles.selectTextResult]}>
-              {this.state.values[index]}
+              {selectedChoice ? selectedChoice.label : null}
             </Text>
           </View>
         </ModalPicker>

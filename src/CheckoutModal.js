@@ -124,6 +124,8 @@ export default class CheckoutModal extends Component {
       </View>
     );
 
+    const btnText = `CONFIRM PURCHASE ($${this.props.price.toFixed(2)})`;
+
     return (
       <Modal
         animationType={"slide"}
@@ -154,7 +156,7 @@ export default class CheckoutModal extends Component {
               style={styles.noBorderRadius}
               onPress={this.handleCheckout}
             >
-              CONFIRM PURCHASE (${this.props.price.toFixed(2)})
+              {btnText}
             </Button>
             {this.props.purchasing ? purchaseLoadingView : null}
           </View>
