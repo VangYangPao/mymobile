@@ -15,7 +15,7 @@ import {
 import moment from "moment";
 import { NavigationActions } from "react-navigation";
 
-import type { PolicyHolder, PaymentDetails } from "./types/hlas";
+import type { PolicyHolder, PaymentDetails, MUTraveller } from "./types/hlas";
 import database from "./HackStorage";
 import { Text } from "./defaultComponents";
 import { showAlert, prettifyCamelCase } from "./utils";
@@ -47,15 +47,6 @@ type State = {
   loading: boolean,
   purchasing: boolean,
   totalPremium: ?number
-};
-
-type MUTraveller = {
-  firstName: string,
-  lastName: string,
-  relationship: 1 | 2,
-  gender: 1 | 2,
-  idNumber: string,
-  DOB: string
 };
 
 export default class ConfirmationScreen extends Component {
@@ -145,6 +136,20 @@ export default class ConfirmationScreen extends Component {
         .catch(err => {
           console.error(err);
           showAlert("Sorry, error getting policy quote");
+          const resetAction = NavigationActions.reset({
+            index: 0,
+            actions: [
+              NavigationActions.navigate({
+                routeName: "Chat",
+                params: {
+                  policy: this.policy,
+                  questionSet: "buy",
+                  startScreen: false
+                }
+              })
+            ]
+          });
+          this.props.navigation.dispatch(resetAction);
         });
     }
   }
@@ -272,6 +277,7 @@ export default class ConfirmationScreen extends Component {
       const startDate = form.departureDate;
       const endDate = form.returnDate;
       const planid = this.travelPlans[form.planIndex];
+      const travellers = form.travellers;
       const [hasSpouse, hasChildren] = this.getHasSpouseAndChildren(
         form.travellers
       );
@@ -282,8 +288,7 @@ export default class ConfirmationScreen extends Component {
           startDate,
           endDate,
           planid,
-          hasSpouse,
-          hasChildren,
+          travellers,
           policyHolder,
           paymentDetails
         );

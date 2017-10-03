@@ -10,7 +10,8 @@ import {
   Alert,
   ToastAndroid,
   Platform,
-  ActivityIndicator
+  ActivityIndicator,
+  Keyboard
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { CreditCardInput } from "react-native-credit-card-input";
@@ -59,6 +60,7 @@ export default class CheckoutModal extends Component {
       this.props.purchasing &&
       this.props.purchasing !== prevProps.purchasing
     ) {
+      Keyboard.dismiss();
       const texts = [
         "ONE SECOND...",
         "PROCESSING YOUR CARD...",

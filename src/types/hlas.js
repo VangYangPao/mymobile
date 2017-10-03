@@ -39,6 +39,15 @@ export type Traveller = {
   RelationshipID: number
 };
 
+export type MUTraveller = {
+  firstName: string,
+  lastName: string,
+  relationship: 1 | 2,
+  gender: 1 | 2,
+  idNumber: string,
+  DOB: string
+};
+
 export type AccidentDetails = {
   ProductPlanID: AccidentProductPlanID,
   OccupationID: OccupationID,

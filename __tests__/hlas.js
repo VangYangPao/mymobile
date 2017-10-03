@@ -27,33 +27,33 @@ import moment from "moment";
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
-// it("gets phone protect quote correctly", () => {
-//   expect.assertions(2);
-//   return getPhoneProtectQuote().then(res => {
-//     expect(res).toHaveProperty("data");
-//     expect(res).toHaveProperty("success", true);
-//   });
-// });
+it("gets phone protect quote correctly", () => {
+  expect.assertions(2);
+  return getPhoneProtectQuote().then(res => {
+    expect(res).toHaveProperty("data");
+    expect(res).toHaveProperty("success", true);
+  });
+});
 
-// it("gets accident quote correctly", () => {
-//   const planid = 100;
-//   const policytermid = 1;
-//   const optionid = 1;
-//   const commencementDate = new Date();
-//   expect.assertions(2);
-//   return getAccidentQuote(
-//     planid,
-//     policytermid,
-//     optionid,
-//     commencementDate
-//   ).then(res => {
-//     expect(res).toHaveProperty("data");
-//     expect(res).toHaveProperty("success", true);
-//   });
-// });
+it("gets accident quote correctly", () => {
+  const planid = 100;
+  const policytermid = 1;
+  const optionid = 1;
+  const commencementDate = new Date();
+  expect.assertions(2);
+  return getAccidentQuote(
+    planid,
+    policytermid,
+    optionid,
+    commencementDate
+  ).then(res => {
+    expect(res).toHaveProperty("data");
+    expect(res).toHaveProperty("success", true);
+  });
+});
 
 it("gets travel quote correctly", () => {
-  const countryid = 8;
+  const countryid = 1;
   const tripDurationInDays = 2;
   const planid = 1;
   const hasSpouse = true;
@@ -294,6 +294,24 @@ it("gets travel quote correctly", () => {
 //     CardExpiryYear: 2021,
 //     CardExpiryMonth: 1
 //   };
+//   const travellers = [
+//     {
+//       lastName: "Chan",
+//       firstName: "Hao",
+//       idNumber: "123",
+//       DOB: "2007-08-09",
+//       gender: 1,
+//       relationship: 1
+//     },
+//     {
+//       lastName: "Chan",
+//       firstName: "Hao",
+//       idNumber: "124",
+//       DOB: "2007-08-01",
+//       gender: 2,
+//       relationship: 2
+//     }
+//   ];
 //   expect.assertions(2);
 //   return purchaseTravelPolicy(
 //     premium,
@@ -301,8 +319,7 @@ it("gets travel quote correctly", () => {
 //     startDate,
 //     endDate,
 //     planid,
-//     hasSpouse,
-//     hasChildren,
+//     travellers,
 //     policyHolder,
 //     paymentDetails
 //   )

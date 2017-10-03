@@ -14,17 +14,60 @@ import { showAlert } from "./utils";
 
 let tableValues = [];
 
+const CHILD_ID = 2;
+
 export default class TableScreen extends Component {
   static navigationOptions = ({ navigation, screenProps }) => {
     let options = backButtonNavOptions({ navigation });
-    const { itemName, onSaveTable } = navigation.state.params;
+    const { itemName, onSaveTable, columns } = navigation.state.params;
+
     const handleSave = () => {
       const isValid = tableValues.every(v => v !== "");
+      const currentParams = navigation.state.params;
       if (!isValid) {
         showAlert("The form is incomplete");
-        const currentParams = navigation.state.params;
         navigation.setParams({ renderError: true, ...currentParams });
         return;
+      }
+      if (itemName === "traveller") {
+        const dobIndex = columns.findIndex(c => c.id === "DOB");
+        const relationshipIndex = columns.findIndex(
+          c => c.id === "relationship"
+        );
+        const dob = tableValues[dobIndex];
+        const relationshipId = tableValues[relationshipIndex];
+        const ageInMonths = moment(new Date()).diff(dob, "months");
+        if (relationshipId === CHILD_ID && ageInMonths < 3) {
+          showAlert("Child cannot be less than 3 months old");
+          navigation.setParams({ renderError: true, ...currentParams });
+          return;
+        }
+        if (relationshipId === CHILD_ID && ageInMonths > 12 * 18) {
+          showAlert("Child cannot be older than 18 years old");
+          navigation.setParams({ renderError: true, ...currentParams });
+          return;
+        }
+        const firstNameIndex = columns.findIndex(c => c.id === "firstName");
+        const lastNameIndex = columns.findIndex(c => c.id === "lastName");
+        const firstName = tableValues[firstNameIndex];
+        const lastName = tableValues[lastNameIndex];
+        const namePattern = /^([A-Za-z ,\.@/\(\)])+$/;
+        const firstNameMatch = firstName.match(namePattern);
+        const lastNameMatch = lastName.match(namePattern);
+        if (!firstNameMatch) {
+          showAlert(
+            "First name must only contain alphabets and these symbols: @, / and ()"
+          );
+          navigation.setParams({ renderError: true, ...currentParams });
+          return;
+        }
+        if (!lastNameMatch) {
+          showAlert(
+            "Last name must only contain alphabets and these symbols: @, / and ()"
+          );
+          navigation.setParams({ renderError: true, ...currentParams });
+          return;
+        }
       }
       onSaveTable(tableValues);
       navigation.dispatch(NavigationActions.back());

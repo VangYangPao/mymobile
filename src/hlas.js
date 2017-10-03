@@ -12,7 +12,8 @@ import type {
   Traveller,
   AccidentDetails,
   OccupationID,
-  MobileDetails
+  MobileDetails,
+  MUTraveller
 } from "./types/hlas";
 import {
   generateRef,
@@ -750,17 +751,37 @@ function padStart(str, padString, length) {
   return str;
 }
 
+function transformToHLASTravellers(traveller: MUTraveller): Traveller {
+  return {
+    Surname: traveller.lastName,
+    GivenName: traveller.firstName,
+    IDNumber: traveller.idNumber,
+    DateOfBirth: traveller.DOB,
+    GenderID: traveller.gender,
+    RelationshipID: traveller.relationship
+  };
+}
+
 export function purchaseTravelPolicy(
   premium: number,
   countryid: number,
   startDate: Date,
   endDate: Date,
   planid: TravelProductPlanID,
-  hasSpouse: boolean,
-  hasChildren: boolean,
+  travellers: Array<MUTraveller>,
   policyHolder: PolicyHolder,
   paymentDetails: PaymentDetails
 ) {
+  console.log(
+    premium,
+    countryid,
+    startDate,
+    endDate,
+    planid,
+    travellers,
+    policyHolder,
+    paymentDetails
+  );
   let PASAppID,
     args,
     verifyEnrolmentResponseObj,
@@ -776,6 +797,7 @@ export function purchaseTravelPolicy(
     cccvv: paymentDetails.CardSecurityCode,
     ccname: paymentDetails.NameOnCard
   };
+  travellers = travellers.map(transformToHLASTravellers);
   return verifyApplicationTravelSingle(
     WebAppID,
     premium,
@@ -783,6 +805,7 @@ export function purchaseTravelPolicy(
     startDate,
     endDate,
     planid,
+    travellers,
     policyHolder,
     paymentDetails
   )
@@ -812,6 +835,7 @@ export function purchaseTravelPolicy(
         startDate,
         endDate,
         planid,
+        travellers,
         policyHolder,
         paymentDetails,
         verifyEnrolmentResponse
@@ -849,6 +873,7 @@ export function purchaseTravelPolicy(
         startDate,
         endDate,
         planid,
+        travellers,
         policyHolder,
         paymentDetails,
         verifyEnrolmentResponse,
@@ -866,6 +891,7 @@ export function purchaseTravelPolicy(
         startDate,
         endDate,
         planid,
+        travellers,
         policyHolder,
         paymentDetails,
         verifyEnrolmentResponse,
@@ -916,7 +942,8 @@ export function verifyApplicationTravelSingle(
   CountryID: number,
   TravelStartDate: Date,
   TravelEndDate: Date,
-  ProductPlanID: ProductPlanID,
+  ProductPlanID: TravelProductPlanID,
+  InsuredTravellers: Array<Traveller>,
   PolicyHolder: PolicyHolder,
   PaymentDetails: PaymentDetails
 ) {
@@ -931,7 +958,6 @@ export function verifyApplicationTravelSingle(
     GenderID: PolicyHolder.GenderID,
     RelationshipID: 4
   };
-  const InsuredTravellers: Array<Traveller> = [applicantTraveller];
   const payload = {
     Premium,
     WebAppID,
@@ -944,7 +970,7 @@ export function verifyApplicationTravelSingle(
     CoverageID: 13,
     NumberOfChildren: 0,
     PolicyHolder,
-    InsuredTravellers: InsuredTravellers,
+    InsuredTravellers,
     PlanPremium: Premium,
     PersonalCoveragePremium: Premium,
     TotalPremium: Premium,
@@ -977,14 +1003,15 @@ export function createPaymentTransactionTravelSingle(
   CountryID: number,
   TravelStartDate: Date,
   TravelEndDate: Date,
-  ProductPlanID: ProductPlanID,
+  ProductPlanID: TravelProductPlanID,
+  InsuredTravellers: Array<Traveller>,
   PolicyHolder: PolicyHolder,
   PaymentDetails: PaymentDetails,
   TelemoneyTransactionResponse: string
 ) {
   TravelStartDate = moment(TravelStartDate).format("YYYY-MM-DD");
   TravelEndDate = moment(TravelEndDate).format("YYYY-MM-DD");
-  const applicantTraveller = {
+  const applicantTraveller: Traveller = {
     Surname: PolicyHolder.Surname,
     GivenName: PolicyHolder.GivenName,
     IDNumber: PolicyHolder.IDNumber,
@@ -993,7 +1020,6 @@ export function createPaymentTransactionTravelSingle(
     GenderID: PolicyHolder.GenderID,
     RelationshipID: 4
   };
-  const InsuredTravellers: Array<Traveller> = [applicantTraveller];
   const payload = {
     Premium,
     WebAppID,
@@ -1042,7 +1068,8 @@ export function updatePaymentTransactionTravelSingle(
   CountryID: number,
   TravelStartDate: Date,
   TravelEndDate: Date,
-  ProductPlanID: ProductPlanID,
+  ProductPlanID: TravelProductPlanID,
+  InsuredTravellers: Array<Traveller>,
   PolicyHolder: PolicyHolder,
   PaymentDetails: PaymentDetails,
   TelemoneyTransactionResponse: string,
@@ -1059,7 +1086,6 @@ export function updatePaymentTransactionTravelSingle(
     GenderID: PolicyHolder.GenderID,
     RelationshipID: 4
   };
-  const InsuredTravellers: Array<Traveller> = [applicantTraveller];
   const payload = {
     WebAppID,
     CurrentStep: 0,
@@ -1094,6 +1120,7 @@ export function updatePaymentTransactionTravelSingle(
     optIn: OPT_IN_HLAS_MKTG,
     IPAddress: "sample string 18"
   };
+  console.log(payload);
   const url = `${HLAS_URL}/api/Travel/UpdatePaymentTransactionStatus`;
   return sendPOSTRequest(
     url,
@@ -1110,7 +1137,8 @@ export function submitApplicationTravelSingle(
   CountryID: number,
   TravelStartDate: Date,
   TravelEndDate: Date,
-  ProductPlanID: ProductPlanID,
+  ProductPlanID: TravelProductPlanID,
+  InsuredTravellers: Array<Traveller>,
   PolicyHolder: PolicyHolder,
   PaymentDetails: PaymentDetails,
   TelemoneyTransactionResponse: string,
@@ -1127,7 +1155,6 @@ export function submitApplicationTravelSingle(
     GenderID: PolicyHolder.GenderID,
     RelationshipID: 4
   };
-  const InsuredTravellers: Array<Traveller> = [applicantTraveller];
   const payload = {
     WebAppID,
     PASAppID,
@@ -1163,7 +1190,6 @@ export function submitApplicationTravelSingle(
     optIn: OPT_IN_HLAS_MKTG,
     IPAddress: "sample string 18"
   };
-  console.log(JSON.stringify(payload));
   const url = `${HLAS_URL}/api/Travel/SubmitApplication_SingleTravel`;
   return sendPOSTRequest(
     url,
@@ -1171,67 +1197,3 @@ export function submitApplicationTravelSingle(
     "Error in submitting application - Travel"
   );
 }
-
-const payload = {
-  WebAppID: "abcd123",
-  //Note : Application ID that stored in the backend system in order to issue the policies
-  PASAppID: 8920,
-  CurrentStep: 0,
-  CountryID: 86,
-  TravelStartDate: "2017-07-30",
-  TravelEndDate: "2017-08-04",
-  ProductPlanID: 1,
-  CoverageID: 13,
-  NumberOfChildren: 0,
-  PolicyHolder: {
-    Surname: "test",
-    GivenName: "test",
-    IDNumber: "S0086294J",
-    DateOfBirth: "1988-07-22",
-    GenderID: 1,
-    MobileTelephone: "91234567",
-    Email: "ayethet.san@hlas.com.sg",
-    UnitNumber: "11",
-    BlockHouseNumber: "11",
-    BuildingName: "sample string 12",
-    StreetName: "sample string 13",
-    PostalCode: "089057"
-  },
-  InsuredTravellers: [
-    {
-      Surname: "test",
-      GivenName: "test",
-      IDNumber: "S0086294J",
-      IDNumberType: 0,
-      DateOfBirth: "1988-07-22T16:06:27.4082335+08:00",
-      GenderID: 1,
-      RelationshipID: 4
-    }
-  ],
-  NetPremium: 16.0,
-  GrossPremium: 17.0,
-  PaymentInfo: {
-    PaymentReferenceNumber: "A8919-WDF26F6",
-    NameOnCard: "Test test",
-    CardNumber: "4005550000000001",
-    CardType: 0,
-    CardSecurityCode: "602",
-    CardExpiryYear: 2018,
-    CardExpiryMonth: 8,
-    BankID: 143,
-
-    PayByApplicant: true,
-    Surname: "test",
-    GivenName: "test",
-    IDNumber: "S0086294J",
-    IDNumberType: 0,
-    TelephoneNumber: "91234567",
-    TelemoneyTransactionResponse:
-      "TM_MCode=102201435770&TM_RefNo=A211417-WDF26F6&TM_TrnType=sale&TM_SubTrnType=&TM_Status=RDR&TM_Error=&TM_Currency=SGD&TM_DebitAmt=43.50&TM_PaymentType=2&TM_BankRespCode=&TM_ApprovalCode=&TM_ErrorMsg=&TM_TermUrl=https://securepayments.telemoneyworld.com/easypay2/telemoneyMpiStatus.do?TMInfo=b75e9e02db0450d7574a2aa41d6675c4e0524b5450990750f841335cb40ef53708245a819fee2092258374012e908700bfb83503caf4841f110ba7ca5f2ab443f36fce31e1d929cdfd10f12457db4281c235a0dc7cedc06e7102c55f5142e146&MD=12442896&VerStatus=Y&Acsurl=https://3dsecure.maybank.com.sg/PAReq.do?issuer_id=MBBSG_MasterCard&PaReq=eJxVUtluwjAQ/JWID8BHbrRYSgEJpCbiaD/AdSySKBdxgoCvrw2k0Led2bVnd3bhK+ukXB6kGDrJIJZK8aO08nQ+2UZ7ecKE2NQnhFCKqTdhcGcZnGWn8qZmZIqnFNAI9QedyHjdM+Di9LFJmOtQHISAnhAq2W2WjHiBjzEmFLs+oAcHNa8kW39a0eHwvY+SxQrQnQLRDHXfXZmPtdQIYOhKlvV9O0OobAQvs0b1swAHGJ1zxe20anOkBiH0SNNCtYDMA0CvDreDiZQWuOQpi5fRJblFdlyIS3xbOXFxvCbFzolvuzkgUwEp7yWjmPjYp75F7BkJZjQAdOeBV6Yz5tgu1uM+ALRGI3rPvDOgXe9kLcbRRgTy0ja11BWa/YshlUqwpOmt6Mzzkv+UUmsbDtBrlsXaeC967SgN3TD0qRc4xHO0MZ5Zwz1jBHJtIsWGfAJA5i16bhg9b0FH/27kF0iltuo=&TM_UserField1=Nita bte shaari&TM_UserField2=&TM_UserField3=&TM_UserField4=&TM_UserField5=49f32793-ce44-4838-8798-a78555687031&TM_Original_RefNo=&TM_CCLast4Digit=9101&TM_RecurrentId=&TM_CCNum=xxxxxxxxxxxx9101&TM_ExpiryDate=2006&TM_IPP_FirstPayment=&TM_IPP_LastPayment=&TM_IPP_MonthlyPayment=&TM_IPP_TransTenure=&TM_IPP_TotalInterest=&TM_IPP_DownPayment=&TM_IPP_MonthlyInterest=&TM_OriginalPayType=&TM_Signature=",
-    TelemoneyPaymentResultRow:
-      "TM_MCode=102201435770&TM_RefNo=A211417-WDF26F6&TM_TrnType=sale&TM_SubTrnType=&TM_Status=YES&TM_Error=&TM_Currency=SGD&TM_DebitAmt=43.50&TM_PaymentType=2&TM_BankRespCode=&TM_ApprovalCode=&TM_ErrorMsg=&TM_TermUrl=https://securepayments.telemoneyworld.com/easypay2/telemoneyMpiStatus.do?TMInfo=b75e9e02db0450d7574a2aa41d6675c4e0524b5450990750f841335cb40ef53708245a819fee2092258374012e908700bfb83503caf4841f110ba7ca5f2ab443f36fce31e1d929cdfd10f12457db4281c235a0dc7cedc06e7102c55f5142e146&MD=12442896&VerStatus=Y&Acsurl=https://3dsecure.maybank.com.sg/PAReq.do?issuer_id=MBBSG_MasterCard&PaReq=eJxVUtluwjAQ/JWID8BHbrRYSgEJpCbiaD/AdSySKBdxgoCvrw2k0Led2bVnd3bhK+ukXB6kGDrJIJZK8aO08nQ+2UZ7ecKE2NQnhFCKqTdhcGcZnGWn8qZmZIqnFNAI9QedyHjdM+Di9LFJmOtQHISAnhAq2W2WjHiBjzEmFLs+oAcHNa8kW39a0eHwvY+SxQrQnQLRDHXfXZmPtdQIYOhKlvV9O0OobAQvs0b1swAHGJ1zxe20anOkBiH0SNNCtYDMA0CvDreDiZQWuOQpi5fRJblFdlyIS3xbOXFxvCbFzolvuzkgUwEp7yWjmPjYp75F7BkJZjQAdOeBV6Yz5tgu1uM+ALRGI3rPvDOgXe9kLcbRRgTy0ja11BWa/YshlUqwpOmt6Mzzkv+UUmsbDtBrlsXaeC967SgN3TD0qRc4xHO0MZ5Zwz1jBHJtIsWGfAJA5i16bhg9b0FH/27kF0iltuo=&TM_UserField1=Nita bte shaari&TM_UserField2=&TM_UserField3=&TM_UserField4=&TM_UserField5=49f32793-ce44-4838-8798-a78555687031&TM_Original_RefNo=&TM_CCLast4Digit=9101&TM_RecurrentId=&TM_CCNum=xxxxxxxxxxxx9101&TM_ExpiryDate=2006&TM_IPP_FirstPayment=&TM_IPP_LastPayment=&TM_IPP_MonthlyPayment=&TM_IPP_TransTenure=&TM_IPP_TotalInterest=&TM_IPP_DownPayment=&TM_IPP_MonthlyInterest=&TM_OriginalPayType=&TM_Signature=",
-    paymentSuccessful: true
-  },
-  OptIn: true,
-  IPAddress: "sample string 18"
-};

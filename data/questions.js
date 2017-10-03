@@ -169,7 +169,19 @@ function validateImei(s) {
   return new ValidationResult(true, true);
 }
 
+function validateName(s) {
+  const namePattern = /^([A-Za-z ,\.@/\(\)])+$/;
+  if (!s.match(namePattern)) {
+    return new ValidationResult(
+      false,
+      "Name must only contain alphabets and these symbols: @, / and ()"
+    );
+  }
+  return new ValidationResult(true, true);
+}
+
 const TypeValidators = {
+  name: validateName,
   email: validateEmail,
   string: notEmptyString,
   number: validateNumber,
@@ -328,13 +340,13 @@ export const QUESTION_SETS = {
         {
           label: "First name",
           id: "firstName",
-          responseType: ["string"],
+          responseType: ["string", "name"],
           responseLength: 60
         },
         {
           label: "Last name",
           id: "lastName",
-          responseType: ["string"],
+          responseType: ["string", "name"],
           responseLength: 60
         }
       ]
