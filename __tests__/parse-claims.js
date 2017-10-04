@@ -26,9 +26,10 @@ jest.mock("react-native-fs", () => {
 
 import Parse from "parse/react-native";
 Parse.initialize("microumbrella");
-// Parse.serverURL = "https://api-dev.microumbrella.com/parse";
-Parse.serverURL = "http://localhost:1337/parse";
-
+Parse.serverURL =
+  process.env.NODE_ENV === "dev"
+    ? "https://api-dev.microumbrella.com/parse"
+    : "http://localhost:1337/parse";
 import { saveNewClaim } from "../src/parse/claims";
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;

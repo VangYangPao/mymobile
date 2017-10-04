@@ -18,8 +18,10 @@ jest.mock("parse/react-native", () => {
 
 import Parse from "parse/react-native";
 Parse.initialize("microumbrella");
-// Parse.serverURL = "https://api-dev.microumbrella.com/parse";
-Parse.serverURL = "http://localhost:1337/parse";
+Parse.serverURL =
+  process.env.NODE_ENV === "dev"
+    ? "https://api-dev.microumbrella.com/parse"
+    : "http://localhost:1337/parse";
 
 const Purchase = Parse.Object.extend("Purchase");
 

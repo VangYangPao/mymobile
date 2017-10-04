@@ -32,6 +32,7 @@ import Spinner from "react-native-spinkit";
 import Sound from "react-native-sound";
 import Fuse from "fuse.js";
 import { template } from "lodash";
+import { NavigationActions } from "react-navigation";
 import Parse from "parse/react-native";
 
 import { saveNewClaim } from "./parse/claims";
@@ -45,7 +46,8 @@ import {
   ImageTable,
   ChoiceList,
   SuggestionList,
-  PlansTabView
+  PlansTabView,
+  TableInput
 } from "./widgets";
 import TravelPlansView from "./TravelPlansView";
 import database from "./HackStorage";
@@ -94,82 +96,57 @@ function transposePolicyChoiceByTitle() {
 
 let loggedIn = false;
 
-export default function ChatScreenWrapper(questionSet: string) {
-  const wrapper = (props: any) => {
-    let _questionSet = questionSet;
+export default function ChatScreenWrapper() {
+  function wrapper(props: any) {
     const routeParams = props.navigation.state.params;
-    let isStartScreen = false;
-    let policy;
+    const { questionSet, policy, isStartScreen } = routeParams;
 
-    if (routeParams) {
-      _questionSet = _questionSet || routeParams.questionSet;
-      policy = routeParams.policy;
-    }
-    if (!routeParams && _questionSet === "buy") {
-      isStartScreen = true;
-    } else if (routeParams && _questionSet === "buy" && !routeParams.policy) {
-      isStartScreen = true;
-    } else if (
-      routeParams &&
-      routeParams.startScreen &&
-      _questionSet === "buy"
-    ) {
-      isStartScreen = true;
-    } else {
-      isStartScreen = false;
-    }
+    // if (!routeParams && _questionSet === "buy") {
+    //   isStartScreen = true;
+    // } else if (routeParams && _questionSet === "buy" && !routeParams.policy) {
+    //   isStartScreen = true;
+    // } else if (
+    //   routeParams &&
+    //   routeParams.isStartScreen &&
+    //   _questionSet === "buy"
+    // ) {
+    //   isStartScreen = true;
+    // } else {
+    //   isStartScreen = false;
+    // }
     return (
       <ChatScreen
         isStartScreen={isStartScreen}
-        questionSet={_questionSet}
+        questionSet={questionSet}
         policy={policy}
         {...props}
       />
     );
+  }
+
+  wrapper.navigationOptions = ({ navigation }) => {
+    const { questionSet } = navigation.state.params;
+    let drawerLabel;
+    let drawerIcon;
+    if (questionSet === "buy") {
+      drawerLabel = "Buy Policies";
+      drawerIcon = "message";
+    } else if (questionSet === "claim") {
+      drawerLabel = "Claim Policies";
+      drawerIcon = "attach-money";
+    }
+    return {
+      title: "microUmbrella",
+      headerTitleStyle: {
+        fontWeight: "300"
+      },
+      drawerLabel,
+      drawerIcon: ({ tintColor }) => (
+        <Icon name={drawerIcon} size={22} color={tintColor} />
+      )
+    };
   };
 
-  // const wrapper = props => {
-  //   // have to reassign to _questionSet here
-  //   // solves weird scoping issue where questionSet will remain to be 'buy'
-  //   // when going back in the stack
-  //   let _questionSet = questionSet;
-  //   const routeParams = props.navigation.state.params;
-  //   let isStartScreen = !routeParams || routeParams.startScreen;
-  //   let policy;
-  //   if (routeParams) {
-  //     _questionSet = _questionSet || routeParams.questionSet;
-  //     policy = routeParams.policy;
-  //   }
-  //   console.log(routeParams, isStartScreen, _questionSet, policy);
-  //   return (
-  //     <ChatScreen
-  //       isStartScreen={isStartScreen}
-  //       questionSet={_questionSet}
-  //       policy={policy}
-  //       {...props}
-  //     />
-  //   );
-  // };
-
-  let drawerLabel;
-  let drawerIcon;
-  if (questionSet === "buy") {
-    drawerLabel = "Buy Policies";
-    drawerIcon = "message";
-  } else if (questionSet === "claim") {
-    drawerLabel = "Claim Policies";
-    drawerIcon = "attach-money";
-  }
-  wrapper.navigationOptions = ({ screenProps }) => ({
-    title: "microUmbrella",
-    headerTitleStyle: {
-      fontWeight: "300"
-    },
-    drawerLabel,
-    drawerIcon: ({ tintColor }) => (
-      <Icon name={drawerIcon} size={22} color={tintColor} />
-    )
-  });
   return wrapper;
 }
 
@@ -226,6 +203,7 @@ class ChatScreen extends Component {
     this.handleSelectPolicyToClaim = this.handleSelectPolicyToClaim.bind(this);
     this.handleMultiInputSubmit = this.handleMultiInputSubmit.bind(this);
     this.renderStartScreenMessages = this.renderStartScreenMessages.bind(this);
+    this.handleTableInputSubmit = this.handleTableInputSubmit.bind(this);
     this.askNextQuestion = this.askNextQuestion.bind(this);
     this.reaskQuestion = this.reaskQuestion.bind(this);
     this.sendNewMessage = this.sendNewMessage.bind(this);
@@ -538,6 +516,21 @@ class ChatScreen extends Component {
     );
   }
 
+  handleTableInputSubmit(items) {
+    let { messages } = this.state;
+    messages = messages.slice(0, messages.length - 1);
+    messages = messages.concat({
+      type: "text",
+      _id: uuid.v4(),
+      text: "These are the details of my spouse and children",
+      value: items,
+      user: CUSTOMER_USER
+    });
+    this.setState({ messages }, () =>
+      this.setState({ answering: false, renderInput: true })
+    );
+  }
+
   handleMultiInputSubmit(inputs) {
     let { messages } = this.state;
     messages = messages.slice(0, messages.length - 1);
@@ -564,20 +557,31 @@ class ChatScreen extends Component {
           let answers = Object.assign({}, this.state.answers);
           answers.fullName = fullName;
           this.setState({ currentUser, answers });
-          const { policy, isStartScreen } = this.props;
+          const { policy, isStartScreen, questionSet } = this.props;
+          const setParamsAction = NavigationActions.setParams({
+            params: {
+              questionSet: "buy",
+              policy,
+              isStartScreen,
+              currentUser,
+              fullName
+            },
+            key: "Chat"
+          });
+          // console.log(this.props.navigation.state);
+          // this.props.navigation.dispatch(setParamsAction);
           this.props.navigation.setParams({
-            questionSet: "buy",
+            questionSet,
             policy,
             isStartScreen,
-            currentUser,
-            fullName
+            currentUser
           });
-          if (this.props.isStartScreen) {
-            this.renderStartScreenMessages();
-          } else {
-            // trigger the initial componentDidUpdate
-            this.setState({ answering: false });
-          }
+        }
+        if (this.props.isStartScreen) {
+          this.renderStartScreenMessages();
+        } else {
+          // trigger the initial componentDidUpdate
+          this.setState({ answering: false });
         }
       })
       .catch(err => console.error(err));
@@ -635,6 +639,7 @@ class ChatScreen extends Component {
           const params = { policy, page: "checkout" };
           // this.props.navigation.navigate("Policy", params);
           let form = Object.assign({}, this.state.answers);
+          form.policy = this.props.policy;
           const { planIndex } = form;
           // delete form.policy;
           // delete form.planIndex;
@@ -727,6 +732,14 @@ class ChatScreen extends Component {
       );
     };
 
+    const transformOldWidgets = inputs => {
+      return inputs.map(input => ({
+        label: input.label,
+        responseType: "string",
+        id: input.id
+      }));
+    };
+
     const handleAppendWidget = () => {
       const currentQuestion = this.questions[this.state.currentQuestionIndex];
       if (currentQuestion.responseType === null) {
@@ -739,7 +752,7 @@ class ChatScreen extends Component {
           type: currentQuestion.responseType[idx],
           label: currentQuestion.labels[idx]
         }));
-        appendWidget("multiInput", { inputs });
+        appendWidget("multiInput", { columns: transformOldWidgets(inputs) });
         return;
       }
       const widgets = [
@@ -747,7 +760,6 @@ class ChatScreen extends Component {
         "coverageDuration"
         // "travelDetails"
       ];
-      const typeWidgets = ["images", "imageTable", "choice"];
       if (widgets.indexOf(currentQuestion.id) !== -1) {
         appendWidget(currentQuestion.id);
         return;
@@ -776,6 +788,14 @@ class ChatScreen extends Component {
         if (type === "imageTable") {
           const { columns } = currentQuestion;
           appendWidget("imageTable", { columns });
+        }
+        if (type === "multiInput") {
+          const { columns } = currentQuestion;
+          appendWidget("multiInput", { columns });
+        }
+        if (type === "table") {
+          const { columns } = currentQuestion;
+          appendWidget("table", { columns });
         }
         // appendWidget(type, currentQuestion);
       });
@@ -901,6 +921,11 @@ class ChatScreen extends Component {
 
   renderMessage(props) {
     const { currentMessage } = props;
+    const { currentQuestionIndex } = this.state;
+    let currentQuestion;
+    if (currentQuestionIndex >= 0) {
+      currentQuestion = this.questions[currentQuestionIndex];
+    }
     switch (currentMessage.type) {
       case "claimPolicyNo":
         const { policies } = currentMessage;
@@ -910,14 +935,24 @@ class ChatScreen extends Component {
             onSelectPolicy={this.handleSelectPolicyToClaim}
           />
         );
+      case "table":
+        return (
+          <TableInput
+            itemName="traveller"
+            navigation={this.props.navigation}
+            keyboardHeight={this.state.keyboardHeight}
+            question={currentQuestion}
+            onSubmit={this.handleTableInputSubmit}
+            columns={currentMessage.columns}
+          />
+        );
       case "multiInput":
-        const { currentQuestionIndex } = this.state;
-        const currentQuestion = this.questions[currentQuestionIndex];
         return (
           <MultiInput
+            keyboardHeight={this.state.keyboardHeight}
             question={currentQuestion}
             onSubmit={this.handleMultiInputSubmit}
-            inputs={currentMessage.inputs}
+            columns={currentMessage.columns}
           />
         );
       case "choice":
@@ -1064,9 +1099,7 @@ class ChatScreen extends Component {
       const pickerMode = responseType[index];
       let minDateFrom;
       if (currentQuestion.minDateFrom) {
-        minDateFrom = moment(this.state.answers[currentQuestion.minDateFrom])
-          .add(1, "days")
-          .toDate();
+        minDateFrom = this.state.answers[currentQuestion.minDateFrom];
       }
       if (
         !this.state.answering ||

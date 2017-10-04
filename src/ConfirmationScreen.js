@@ -15,7 +15,7 @@ import {
 import moment from "moment";
 import { NavigationActions } from "react-navigation";
 
-import type { PolicyHolder, PaymentDetails } from "./types/hlas";
+import type { PolicyHolder, PaymentDetails, MUTraveller } from "./types/hlas";
 import database from "./HackStorage";
 import { Text } from "./defaultComponents";
 import { showAlert, prettifyCamelCase } from "./utils";
@@ -101,13 +101,11 @@ export default class ConfirmationScreen extends Component {
     let promise;
     if (this.policy && this.policy.id === "travel") {
       const countryid = form.travelDestination;
-      const tripDurationInDays = moment(form.returnDate).diff(
-        form.departureDate,
-        "days"
-      );
+      const tripDurationInDays =
+        moment(form.returnDate).diff(form.departureDate, "days") + 1;
       const planid = this.travelPlans[form.planIndex];
       const [hasSpouse, hasChildren] = this.getHasSpouseAndChildren(
-        form.recipient
+        form.travellers
       );
       promise = getTravelQuote(
         countryid,
@@ -138,19 +136,33 @@ export default class ConfirmationScreen extends Component {
         .catch(err => {
           console.error(err);
           showAlert("Sorry, error getting policy quote");
+          const resetAction = NavigationActions.reset({
+            index: 0,
+            actions: [
+              NavigationActions.navigate({
+                routeName: "Chat",
+                params: {
+                  policy: this.policy,
+                  questionSet: "buy",
+                  startScreen: false
+                }
+              })
+            ]
+          });
+          this.props.navigation.dispatch(resetAction);
         });
     }
   }
 
-  getHasSpouseAndChildren(recipient: string): [boolean, boolean] {
+  getHasSpouseAndChildren(travellers: Array<MUTraveller>): [boolean, boolean] {
     let hasSpouse = false;
     let hasChildren = false;
-    if (recipient === "spouse") {
+    const spouse = travellers.find(traveller => traveller.relationship === 1);
+    const child = travellers.find(traveller => traveller.relationship === 2);
+    if (spouse) {
       hasSpouse = true;
-    } else if (recipient === "children") {
-      hasChildren = true;
-    } else if (recipient === "family") {
-      hasSpouse = true;
+    }
+    if (child) {
       hasChildren = true;
     }
     return [hasSpouse, hasChildren];
@@ -210,9 +222,12 @@ export default class ConfirmationScreen extends Component {
         const afterAlert = () => {
           this.props.navigation.dispatch(resetAction);
         };
-        if (err.message.indexOf("NRIC/FIN") !== -1) {
+        if (
+          err.message.indexOf("NRIC/FIN") !== -1 ||
+          err.message.indexOf("exists") !== -1
+        ) {
           showAlert(
-            "Sorry, the current NRIC/FIN has already purchased a policy for this travel duration",
+            "Sorry, the current NRIC/FIN or Passport has already purchased a policy for this travel duration",
             afterAlert
           );
         } else {
@@ -262,8 +277,9 @@ export default class ConfirmationScreen extends Component {
       const startDate = form.departureDate;
       const endDate = form.returnDate;
       const planid = this.travelPlans[form.planIndex];
+      const travellers = form.travellers;
       const [hasSpouse, hasChildren] = this.getHasSpouseAndChildren(
-        form.recipient
+        form.travellers
       );
       if (this.state.totalPremium) {
         promise = purchaseTravelPolicy(
@@ -272,8 +288,7 @@ export default class ConfirmationScreen extends Component {
           startDate,
           endDate,
           planid,
-          hasSpouse,
-          hasChildren,
+          travellers,
           policyHolder,
           paymentDetails
         );
@@ -326,6 +341,7 @@ export default class ConfirmationScreen extends Component {
   renderField(key, value) {
     const isDate = moment.isDate(value);
     value = isDate ? moment(value).format("DD MMMM YYYY") : value;
+    if (typeof value !== "string") return null;
     return (
       <View style={styles.field} key={key}>
         <Text style={styles.fieldKey}>{prettifyCamelCase(key)}</Text>

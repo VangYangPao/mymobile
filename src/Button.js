@@ -13,6 +13,16 @@ const buttonBorderRadius = 5;
 
 export default class Button extends Component {
   render() {
+    let innerNode;
+    if (typeof this.props.children === "string") {
+      innerNode = (
+        <Text style={[styles.buttonText, this.props.textStyle]}>
+          {this.props.children}
+        </Text>
+      );
+    } else {
+      innerNode = this.props.children;
+    }
     return (
       <TouchableHighlight
         onPress={this.props.onPress}
@@ -20,11 +30,7 @@ export default class Button extends Component {
         style={[styles.container, this.props.containerStyle]}
         underlayColor={colors.borderLine}
       >
-        <View style={[styles.button, this.props.style]}>
-          <Text style={[styles.buttonText, this.props.textStyle]}>
-            {this.props.children}
-          </Text>
-        </View>
+        <View style={[styles.button, this.props.style]}>{innerNode}</View>
       </TouchableHighlight>
     );
   }

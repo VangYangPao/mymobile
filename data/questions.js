@@ -123,7 +123,7 @@ function validateTravelStartDate(startDate) {
   // 3.  Trip Start date can be 182 days in advance of application Date
   startDate = moment(startDate);
   const applicationDate = moment(new Date());
-  const dayDiff = startDate.diff(applicationDate, "days");
+  const dayDiff = startDate.diff(applicationDate, "days") + 1;
   if (dayDiff < 0) {
     return new ValidationResult(
       false,
@@ -142,7 +142,7 @@ function validateTravelEndDate(endDate, answers) {
   // 1. Trip Period can't exceed for 182 days (Single Trip).
   endDate = moment(endDate);
   const startDate = answers.departureDate;
-  const dayDiff = endDate.diff(startDate, "days");
+  const dayDiff = endDate.diff(startDate, "days") + 1;
   if (dayDiff > 182) {
     return new ValidationResult(false, "Trip period cannot exceed 182 days.");
   }
@@ -169,7 +169,19 @@ function validateImei(s) {
   return new ValidationResult(true, true);
 }
 
+function validateName(s) {
+  const namePattern = /^([A-Za-z ,\.@/\(\)])+$/;
+  if (!s.match(namePattern)) {
+    return new ValidationResult(
+      false,
+      "Name must only contain alphabets and these symbols: @, / and ()"
+    );
+  }
+  return new ValidationResult(true, true);
+}
+
 const TypeValidators = {
+  name: validateName,
   email: validateEmail,
   string: notEmptyString,
   number: validateNumber,
@@ -183,10 +195,12 @@ const TypeValidators = {
   travelEndDate: validateTravelEndDate,
   choice: validateChoice,
   nric: validateNRIC,
+  multiInput: () => new ValidationResult(true, true),
+  table: () => new ValidationResult(true, true),
   boolean: validateBoolean
 };
 
-function validateOneAnswer(responseTypes, answer, answers) {
+export function validateOneAnswer(responseTypes, answer, answers) {
   var validateFunc;
   for (var i = 0; i < responseTypes.length; i++) {
     validateFunc = TypeValidators[responseTypes[i]];
@@ -199,30 +213,30 @@ function validateOneAnswer(responseTypes, answer, answers) {
 export function validateAnswer(question, answer, answers) {
   const { responseType } = question;
   const responseTypes = [].concat(responseType);
-  if (Array.isArray(question.id)) {
-    const responses = answer.map((subAnswer, idx) => {
-      const responseType = responseTypes[idx];
-      const response = validateOneAnswer(
-        responseTypes,
-        subAnswer.value,
-        answers
-      );
-      // customize abit for string..
-      // rest use written type names
-      if (responseType === "string" && !response.isValid) {
-        response.errMessage = `${subAnswer.label} cannot be empty.`;
-      } else {
-        response.errMessage = `${subAnswer.label} is not a valid ${responseType}.`;
-      }
-      return response;
-    });
-    return responses;
-    // const allLegit = responses.every(r => r.isValid);
-    // if (allLegit) return new ValidationResult(true, true);
-    // // collate the messages together
-    // const collatedErrMessage = responses.map(r => r.errMessage).join(" ");
-    // return new ValidationResult(false, collatedErrMessage);
-  }
+  // if (Array.isArray(question.id)) {
+  //   const responses = answer.map((subAnswer, idx) => {
+  //     const responseType = responseTypes[idx];
+  //     const response = validateOneAnswer(
+  //       responseTypes,
+  //       subAnswer.value,
+  //       answers
+  //     );
+  //     // customize abit for string..
+  //     // rest use written type names
+  //     if (responseType === "string" && !response.isValid) {
+  //       response.errMessage = `${subAnswer.label} cannot be empty.`;
+  //     } else {
+  //       response.errMessage = `${subAnswer.label} is not a valid ${responseType}.`;
+  //     }
+  //     return response;
+  //   });
+  //   return responses;
+  //   // const allLegit = responses.every(r => r.isValid);
+  //   // if (allLegit) return new ValidationResult(true, true);
+  //   // // collate the messages together
+  //   // const collatedErrMessage = responses.map(r => r.errMessage).join(" ");
+  //   // return new ValidationResult(false, collatedErrMessage);
+  // }
   return validateOneAnswer(responseTypes, answer, answers);
 }
 
@@ -290,19 +304,18 @@ export const QUESTION_SETS = {
       include: ["travel"],
       defaultValue: "this.state.answers.departureDate"
     },
-    {
-      question: "Nice. Who do you want to insure?",
-      responseType: ["string", "choice"],
-      choices: [
-        { label: "Myself", value: "applicant" },
-        { label: "Me and my spouse", value: "spouse" },
-        { label: "Me and my children", value: "children" },
-        { label: "My family", value: "family" }
-      ],
-      id: "recipient",
-      include: ["travel"]
-    },
-
+    // {
+    //   question: "Nice. Who do you want to insure?",
+    //   responseType: ["string", "choice"],
+    //   choices: [
+    //     { label: "Myself", value: "applicant" },
+    //     { label: "Me and my spouse", value: "spouse" },
+    //     { label: "Me and my children", value: "children" },
+    //     { label: "My family", value: "family" }
+    //   ],
+    //   id: "recipient",
+    //   include: ["travel"]
+    // },
     {
       question: "How long do you want to be covered for?",
       responseType: "number",
@@ -322,21 +335,22 @@ export const QUESTION_SETS = {
     },
     {
       question: "May I know your full name?",
-      responseType: ["string", "string"],
-      id: ["firstName", "lastName"],
-      responseLength: [60, 60],
-      labels: ["First name", "Last name"]
+      responseType: "multiInput",
+      columns: [
+        {
+          label: "First name",
+          id: "firstName",
+          responseType: ["string", "name"],
+          responseLength: 60
+        },
+        {
+          label: "Last name",
+          id: "lastName",
+          responseType: ["string", "name"],
+          responseLength: 60
+        }
+      ]
     },
-    // {
-    //   question: "May I know your first name?",
-    //   responseType: "string",
-    //   id: "firstName"
-    // },
-    // {
-    //   question: "May I know your last name?",
-    //   responseType: "string",
-    //   id: "lastName"
-    // },
     {
       question:
         "Nice to meet you <%= firstName %> <%= lastName %>! What's your NRIC/FIN/Passport?",
@@ -348,6 +362,49 @@ export const QUESTION_SETS = {
       responseType: ["string", "email"],
       id: "email"
     },
+    {
+      question:
+        "What are the details of your spouse or children travelling with you?",
+      responseType: "table",
+      id: "travellers",
+      include: ["travel"],
+      columns: [
+        {
+          label: "First name",
+          id: "firstName",
+          responseLength: 60,
+          responseType: ["string"]
+        },
+        {
+          label: "Last name",
+          id: "lastName",
+          responseLength: 60,
+          responseType: ["string"]
+        },
+        {
+          label: "NRIC or Passport",
+          id: "idNumber",
+          responseType: "string"
+        },
+        {
+          label: "Date of birth",
+          id: "DOB",
+          responseType: "date"
+        },
+        {
+          label: "Gender",
+          id: "gender",
+          responseType: ["choice", "number"],
+          choices: [{ label: "Male", value: 1 }, { label: "Female", value: 2 }]
+        },
+        {
+          label: "Relationship",
+          id: "relationship",
+          responseType: ["choice", "number"],
+          choices: [{ label: "Spouse", value: 1 }, { label: "Child", value: 2 }]
+        }
+      ]
+    },
     // {
     //   question: "What's your mailing address?",
     //   responseType: "string",
@@ -357,7 +414,7 @@ export const QUESTION_SETS = {
       question:
         "What's your phone's IMEI number? IMEI number is a unique 15-digit serial number given to every mobile phone. Check this at the back of your phone.",
       responseType: ["string", "imei"],
-      id: "imeiNumber",
+      id: "serialNo",
       include: ["mobile"]
     },
     {

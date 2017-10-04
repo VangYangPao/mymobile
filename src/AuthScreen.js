@@ -38,19 +38,22 @@ formStyles.fieldset.marginBottom = 10;
 const createResetAction = (policy, currentUser) => {
   return NavigationActions.reset({
     index: 1,
+    key: "Chat",
     actions: [
       NavigationActions.navigate({
         routeName: "Chat",
         params: {
-          startScreen: true,
+          isStartScreen: true,
           questionSet: "buy",
+          policy: null,
           currentUser
         }
       }),
       NavigationActions.navigate({
         routeName: "Chat",
         params: {
-          questionSet: "buy",
+          isStartScreen: false,
+          questionSet: "claim",
           policy,
           currentUser
         }
@@ -455,10 +458,31 @@ export default class AuthScreen extends Component {
 
   handleRedirectToPurchase() {
     const policy = this.props.navigation.state.params.policy;
+    console.log(policy);
     Parse.User.currentAsync().then(currentUser => {
-      const resetAction = createResetAction(policy, currentUser);
-      console.log(resetAction);
-      this.props.navigation.dispatch(resetAction);
+      // const resetAction = createResetAction(policy, currentUser);
+      const resetAction = NavigationActions.reset({
+        index: 0,
+        actions: [
+          NavigationActions.navigate({
+            routeName: "Drawer",
+            action: NavigationActions.navigate({
+              routeName: "BuyStack",
+              action: NavigationActions.navigate({
+                routeName: "Chat",
+                params: {
+                  isStartScreen: false,
+                  questionSet: "buy",
+                  policy,
+                  currentUser
+                }
+              })
+            })
+          })
+        ]
+      });
+      this.props.screenProps.rootNavigation.dispatch(resetAction);
+      // this.props.navigation.dispatch(resetAction);
     });
   }
 

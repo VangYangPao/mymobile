@@ -14,23 +14,30 @@ import {
   ToastAndroid,
   TextInput,
   Animated,
-  InteractionManager
+  InteractionManager,
+  FlatList
 } from "react-native";
+import { chunk as chunkArray } from "lodash";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import ImagePicker from "react-native-image-picker";
 import DatePicker from "react-native-datepicker";
 import moment from "moment";
 import { TabNavigator, TabBarTop } from "react-navigation";
 import VectorDrawableView from "./VectorDrawableView";
+import ModalPicker from "react-native-modal-picker";
 
 import database from "./HackStorage";
 import POLICIES from "../data/policies";
 import RangeSlider from "./RangeSlider";
 import { Text } from "./defaultComponents";
 import colors from "./colors";
-import { getDateStr, addCommas } from "./utils";
+import { getDateStr, addCommas, showAlert } from "./utils";
 import Button from "./Button";
-import { validateAnswer, ValidationResult } from "../data/questions";
+import {
+  validateAnswer,
+  validateOneAnswer,
+  ValidationResult
+} from "../data/questions";
 import tabStyles from "./TabBar.styles";
 import COVERAGES from "../data/coverage";
 
@@ -566,6 +573,116 @@ class ErrorMessages extends Component {
   }
 }
 
+const sideIconSize = 30;
+
+export class TableInput extends Component {
+  constructor(props) {
+    super(props);
+    this.handleSaveNewItem = this.handleSaveNewItem.bind(this);
+    this.renderItem = this.renderItem.bind(this);
+    this.multiInputRefs = [];
+    this.state = {
+      items: []
+    };
+  }
+
+  handleSaveNewItem(values) {
+    let item = {};
+    const columns = this.props.columns;
+    values.forEach((value, idx) => {
+      item[columns[idx].id] = value;
+    });
+    item.key = this.state.items.length;
+    const items = this.state.items.concat(item);
+    this.setState({ items });
+  }
+
+  renderItem({ item, index }) {
+    const { firstName, lastName } = item;
+    return (
+      <View
+        style={{
+          alignItems: "center",
+          justifyContent: "flex-start",
+          flexDirection: "row",
+          paddingVertical: 15,
+          paddingHorizontal: 10,
+          borderRadius: 0,
+          backgroundColor: "white"
+        }}
+      >
+        <TouchableOpacity
+          onPress={() => {
+            const items = this.state.items.slice();
+            items.splice(index, 1);
+            this.setState({ items });
+          }}
+        >
+          <Icon
+            size={sideIconSize}
+            style={{ color: colors.errorRed, marginRight: 15 }}
+            name="remove-circle-outline"
+          />
+        </TouchableOpacity>
+        <Text style={{ fontSize: 17.5 }}>
+          {firstName} {lastName}
+        </Text>
+      </View>
+    );
+  }
+
+  render() {
+    const itemSeparatorComponent = () => <View style={styles.separator} />;
+    return (
+      <View style={{ marginLeft: 50, marginRight: 60 }}>
+        <FlatList
+          data={this.state.items}
+          renderItem={this.renderItem}
+          ItemSeparatorComponent={itemSeparatorComponent}
+        />
+        <TouchableOpacity />
+        <TouchableOpacity
+          onPress={() =>
+            this.props.navigation.navigate("Table", {
+              itemName: this.props.itemName,
+              columns: this.props.columns,
+              onSaveTable: this.handleSaveNewItem
+            })}
+        >
+          <View
+            style={{
+              alignItems: "center",
+              justifyContent: "flex-start",
+              flexDirection: "row",
+              paddingVertical: 15,
+              paddingHorizontal: 10,
+              borderRadius: 0,
+              backgroundColor: "white"
+            }}
+          >
+            <Icon
+              size={sideIconSize}
+              style={{ color: colors.primaryOrange, marginRight: 15 }}
+              name="add-circle-outline"
+            />
+            <Text style={{ fontSize: 16 }}>ADD NEW TRAVELLER</Text>
+          </View>
+        </TouchableOpacity>
+        <Button
+          style={{
+            height: 60,
+            borderTopLeftRadius: 0,
+            borderTopRightRadius: 0
+          }}
+          onPress={() => this.props.onSubmit(this.state.items)}
+        >
+          SEND
+        </Button>
+      </View>
+    );
+  }
+}
+
 export class MultiInput extends Component {
   constructor(props) {
     super(props);
@@ -575,8 +692,16 @@ export class MultiInput extends Component {
       fadeAnim: new Animated.Value(0),
       topAnim: new Animated.Value(20)
     };
-    for (var i = 0; i < props.inputs.length; i++) {
-      this.state.values.push("");
+    for (var i = 0; i < props.columns.length; i++) {
+      const column = props.columns[i];
+      if (
+        column.responseType.indexOf("date") !== -1 ||
+        column.responseType.indexOf("datetime") !== -1
+      ) {
+        this.state.values.push(new Date());
+      } else {
+        this.state.values.push("");
+      }
       this.state.responses.push(new ValidationResult(true, true));
     }
     this.renderInput = this.renderInput.bind(this);
@@ -613,19 +738,31 @@ export class MultiInput extends Component {
   handleSubmit() {
     const inputs = this.state.values.map((value, idx) => ({
       value,
-      label: this.props.inputs[idx].label,
-      id: this.props.inputs[idx].id
+      label: this.props.columns[idx].label,
+      id: this.props.columns[idx].id
     }));
-    const validationResponses = validateAnswer(this.props.question, inputs);
-    const lenResponses = inputs.map((input, idx) => {
-      if (this.props.question.responseLength) {
-        const responseLength = this.props.question.responseLength[idx];
-        if (input.value.length > responseLength) {
+    const validationResponses = inputs.map((input, idx) => {
+      const column = this.props.columns[idx];
+      const responseTypes = [].concat(column.responseType);
+      if (responseTypes.indexOf("choice") !== -1) {
+        const choiceValues = column.choices.map(c => c.value);
+        if (choiceValues.indexOf(input.value) === -1) {
           return {
             isValid: false,
-            errMessage: `${input.label} cannot be longer than ${responseLength} characters`
+            errMessage: `${input.label} must be selected.`
           };
         }
+      }
+      return validateOneAnswer(responseTypes, input.value);
+    });
+    const lenResponses = inputs.map((input, idx) => {
+      const column = this.props.columns[idx];
+      const responseLength = column.responseLength;
+      if (responseLength && input.value.length > responseLength) {
+        return {
+          isValid: false,
+          errMessage: `${input.label} cannot be longer than ${responseLength} characters`
+        };
       }
       return { isValid: true, errMessage: true };
     });
@@ -653,22 +790,64 @@ export class MultiInput extends Component {
     const endStylesOrNull = index === len - 1 ? widgetStyles.choicesEnd : null;
 
     const response = this.state.responses[index];
+    const responseTypes = [].concat(input.responseType);
 
     let inputElement;
     if (
-      input.type.indexOf("date") !== -1 ||
-      input.type.indexOf("datetime") !== -1
+      responseTypes.indexOf("date") !== -1 ||
+      responseTypes.indexOf("datetime") !== -1
     ) {
       inputElement = (
-        <MyDatePicker mode={input.type} onPickDate={this.handlePickDate} />
+        <View
+          style={{
+            alignItems: "center",
+            padding: 5
+          }}
+        >
+          <Text style={{ marginBottom: 5, color: colors.borderLine }}>
+            {input.label}
+          </Text>
+          <MyDatePicker
+            mode={input.responseType}
+            onPickDate={this.handlePickDate(index)}
+          />
+        </View>
+      );
+    } else if (responseTypes.indexOf("choice") !== -1) {
+      const data = input.choices.map(choice => ({
+        key: choice.value,
+        label: choice.label
+      }));
+      const currentVal = this.state.values[index];
+      let pickerValue;
+      if (currentVal === "") {
+        pickerValue = "Select " + input.label.toLowerCase();
+      } else {
+        const choice = data.find(choice => choice.key === currentVal);
+        pickerValue = choice.label;
+      }
+
+      inputElement = (
+        <ModalPicker
+          data={data}
+          initValue={pickerValue}
+          onChange={option => {
+            const values = [].concat(this.state.values);
+            values[index] = option.key;
+            this.setState({ values });
+          }}
+          selectStyle={widgetStyles.select}
+          selectTextStyle={widgetStyles.selectText}
+        />
       );
     } else {
       let keyboardType = "default";
-      if (input.type.indexOf("number") !== -1) keyboardType = "numeric";
-      if (input.type.indexOf("email") !== -1) keyboardType = "email-address";
-      if (input.type.indexOf("") !== -1) keyboardType = "email-address";
+      if (responseTypes.indexOf("number") !== -1) keyboardType = "numeric";
+      if (responseTypes.indexOf("email") !== -1) keyboardType = "email-address";
+      if (responseTypes.indexOf("") !== -1) keyboardType = "email-address";
       inputElement = (
         <TextInput
+          key={input.id}
           style={widgetStyles.textInput}
           placeholder={input.label}
           autoCorrect={false}
@@ -709,16 +888,51 @@ export class MultiInput extends Component {
 
   render() {
     let { fadeAnim, topAnim } = this.state;
-    return (
-      <View style={{ marginBottom: 200 }}>
-        <View style={[widgetStyles.choicesList]}>
-          {this.props.inputs.map(this.renderInput)}
-          <Button
-            onPress={this.handleSubmit}
-            style={widgetStyles.sendButtonContainer}
+    let inputContainer;
+
+    if (this.props.columns.length > 5) {
+      inputContainer = chunkArray(
+        this.props.columns,
+        2
+      ).map((chunk, chunkIdx) => {
+        return (
+          <View
+            key={chunkIdx}
+            style={{
+              flexDirection: "row",
+              alignItems: "stretch"
+            }}
           >
-            SEND
-          </Button>
+            {chunk.map((input, inputIdx) => {
+              const computedIdx = chunkIdx * 2 + inputIdx;
+              return this.renderInput(input, computedIdx, this.props.columns);
+            })}
+          </View>
+        );
+      });
+    } else {
+      inputContainer = <View>{this.props.columns.map(this.renderInput)}</View>;
+    }
+
+    if (!this.props.submitButtonComponent) {
+      button = (
+        <Button
+          onPress={this.handleSubmit}
+          style={widgetStyles.sendButtonContainer}
+        >
+          SEND
+        </Button>
+      );
+    } else {
+      button = this.props.submitButtonComponent(this.state.values);
+    }
+    const keyboardHeight =
+      this.props.keyboardHeight >= 200 ? this.props.keyboardHeight - 200 : 0;
+    return (
+      <View style={{ marginBottom: keyboardHeight }}>
+        <View style={[widgetStyles.choicesList]}>
+          {inputContainer}
+          {button}
         </View>
         <Animated.View
           style={[
@@ -920,9 +1134,20 @@ export class PlansTabView extends Component {
   }
 }
 
+const multiInputPlaceholderSize = 16;
 const iconSize = 50;
 
 const widgetStyles = StyleSheet.create({
+  select: {
+    alignItems: "flex-start",
+    borderWidth: 0
+  },
+  selectText: {
+    color: colors.borderLine,
+    fontSize: multiInputPlaceholderSize,
+    textAlign: "left"
+  },
+  rightSeparator: { borderRightColor: colors.borderLine, borderRightWidth: 1 },
   coverageAmountText: {
     color: colors.primaryText,
     fontSize: 15
@@ -971,8 +1196,8 @@ const widgetStyles = StyleSheet.create({
     borderRadius: 0
   },
   errContainer: {
-    marginLeft: 50,
-    marginRight: 60
+    // marginLeft: 50,
+    // marginRight: 60
   },
   errMessageText: {
     color: colors.primaryText
@@ -1007,13 +1232,16 @@ const widgetStyles = StyleSheet.create({
     borderBottomWidth: 0
   },
   textInputContainer: {
+    flex: 1,
+    justifyContent: "center",
     borderBottomWidth: CHOICE_SEPARATOR_WIDTH,
     borderColor: colors.borderLine
   },
   textInput: {
     height: 40,
     paddingHorizontal: 10,
-    marginVertical: 5
+    marginVertical: 5,
+    fontSize: multiInputPlaceholderSize
   },
   disabledChoiceList: {
     backgroundColor: colors.softBorderLine
