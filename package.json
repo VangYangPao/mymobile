@@ -12,12 +12,14 @@
     "parse": "^1.10.0",
     "react": "16.0.0-alpha.6",
     "react-native": "0.44.0",
-    "react-native-credit-card-input": "git+ssh://git@github.com/mavenave/react-native-credit-card-input.git",
+    "react-native-credit-card-input":
+      "git+ssh://git@github.com/mavenave/react-native-credit-card-input.git",
     "react-native-datepicker": "^1.6.0",
     "react-native-fetch-blob": "^0.10.6",
     "react-native-file-opener": "^0.2.0",
     "react-native-fs": "^2.5.2",
-    "react-native-gifted-chat": "https://github.com/mavenave/react-native-gifted-chat/tarball/master",
+    "react-native-gifted-chat":
+      "https://github.com/mavenave/react-native-gifted-chat/tarball/master",
     "react-native-image-picker": "^0.26.3",
     "react-native-keyboard-aware-scroll-view": "^0.3.0",
     "react-native-modal-datetime-picker": "^4.11.0",
@@ -27,14 +29,17 @@
     "react-native-sound": "^0.9.1",
     "react-native-spinkit": "^1.0.2",
     "react-native-vector-icons": "^4.0.1",
-    "react-native-vectordrawable-android": "https://github.com/mavenave/react-native-vectordrawable-android/tarball/master",
+    "react-native-vectordrawable-android":
+      "https://github.com/mavenave/react-native-vectordrawable-android/tarball/master",
     "react-native-viewpager": "^0.2.13",
     "react-native-zendesk-chat": "^0.2.1",
-    "react-navigation": "git+https://github.com/react-community/react-navigation.git#b8dbbe964eb534f1870cb000c592d730ac0eabfd",
+    "react-navigation":
+      "git+https://github.com/react-community/react-navigation.git#b8dbbe964eb534f1870cb000c592d730ac0eabfd",
     "tcomb-form-native": "^0.6.8",
     "uuid": "^3.1.0"
   },
   "devDependencies": {
+    "wd": "^1.4.1",
     "babel-jest": "19.0.0",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-flow-react-proptypes": "^1.2.0",
