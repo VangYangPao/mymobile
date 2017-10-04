@@ -41,7 +41,6 @@ import Parse from "parse/react-native";
 Parse.initialize("microumbrella");
 Parse.serverURL = SERVER_URL;
 
-// global.___DEV___ = false
 
 const WINDOW_WIDTH = Dimensions.get("window").width;
 

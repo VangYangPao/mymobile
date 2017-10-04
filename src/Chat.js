@@ -32,6 +32,7 @@ import Spinner from "react-native-spinkit";
 import Sound from "react-native-sound";
 import Fuse from "fuse.js";
 import { template } from "lodash";
+import { NavigationActions } from "react-navigation";
 import Parse from "parse/react-native";
 
 import { saveNewClaim } from "./parse/claims";
@@ -95,82 +96,57 @@ function transposePolicyChoiceByTitle() {
 
 let loggedIn = false;
 
-export default function ChatScreenWrapper(questionSet: string) {
-  const wrapper = (props: any) => {
-    let _questionSet = questionSet;
+export default function ChatScreenWrapper() {
+  function wrapper(props: any) {
     const routeParams = props.navigation.state.params;
-    let isStartScreen = false;
-    let policy;
+    const { questionSet, policy, isStartScreen } = routeParams;
 
-    if (routeParams) {
-      _questionSet = _questionSet || routeParams.questionSet;
-      policy = routeParams.policy;
-    }
-    if (!routeParams && _questionSet === "buy") {
-      isStartScreen = true;
-    } else if (routeParams && _questionSet === "buy" && !routeParams.policy) {
-      isStartScreen = true;
-    } else if (
-      routeParams &&
-      routeParams.startScreen &&
-      _questionSet === "buy"
-    ) {
-      isStartScreen = true;
-    } else {
-      isStartScreen = false;
-    }
+    // if (!routeParams && _questionSet === "buy") {
+    //   isStartScreen = true;
+    // } else if (routeParams && _questionSet === "buy" && !routeParams.policy) {
+    //   isStartScreen = true;
+    // } else if (
+    //   routeParams &&
+    //   routeParams.isStartScreen &&
+    //   _questionSet === "buy"
+    // ) {
+    //   isStartScreen = true;
+    // } else {
+    //   isStartScreen = false;
+    // }
     return (
       <ChatScreen
         isStartScreen={isStartScreen}
-        questionSet={_questionSet}
+        questionSet={questionSet}
         policy={policy}
         {...props}
       />
     );
+  }
+
+  wrapper.navigationOptions = ({ navigation }) => {
+    const { questionSet } = navigation.state.params;
+    let drawerLabel;
+    let drawerIcon;
+    if (questionSet === "buy") {
+      drawerLabel = "Buy Policies";
+      drawerIcon = "message";
+    } else if (questionSet === "claim") {
+      drawerLabel = "Claim Policies";
+      drawerIcon = "attach-money";
+    }
+    return {
+      title: "microUmbrella",
+      headerTitleStyle: {
+        fontWeight: "300"
+      },
+      drawerLabel,
+      drawerIcon: ({ tintColor }) => (
+        <Icon name={drawerIcon} size={22} color={tintColor} />
+      )
+    };
   };
 
-  // const wrapper = props => {
-  //   // have to reassign to _questionSet here
-  //   // solves weird scoping issue where questionSet will remain to be 'buy'
-  //   // when going back in the stack
-  //   let _questionSet = questionSet;
-  //   const routeParams = props.navigation.state.params;
-  //   let isStartScreen = !routeParams || routeParams.startScreen;
-  //   let policy;
-  //   if (routeParams) {
-  //     _questionSet = _questionSet || routeParams.questionSet;
-  //     policy = routeParams.policy;
-  //   }
-  //   console.log(routeParams, isStartScreen, _questionSet, policy);
-  //   return (
-  //     <ChatScreen
-  //       isStartScreen={isStartScreen}
-  //       questionSet={_questionSet}
-  //       policy={policy}
-  //       {...props}
-  //     />
-  //   );
-  // };
-
-  let drawerLabel;
-  let drawerIcon;
-  if (questionSet === "buy") {
-    drawerLabel = "Buy Policies";
-    drawerIcon = "message";
-  } else if (questionSet === "claim") {
-    drawerLabel = "Claim Policies";
-    drawerIcon = "attach-money";
-  }
-  wrapper.navigationOptions = ({ screenProps }) => ({
-    title: "microUmbrella",
-    headerTitleStyle: {
-      fontWeight: "300"
-    },
-    drawerLabel,
-    drawerIcon: ({ tintColor }) => (
-      <Icon name={drawerIcon} size={22} color={tintColor} />
-    )
-  });
   return wrapper;
 }
 
@@ -581,20 +557,31 @@ class ChatScreen extends Component {
           let answers = Object.assign({}, this.state.answers);
           answers.fullName = fullName;
           this.setState({ currentUser, answers });
-          const { policy, isStartScreen } = this.props;
+          const { policy, isStartScreen, questionSet } = this.props;
+          const setParamsAction = NavigationActions.setParams({
+            params: {
+              questionSet: "buy",
+              policy,
+              isStartScreen,
+              currentUser,
+              fullName
+            },
+            key: "Chat"
+          });
+          // console.log(this.props.navigation.state);
+          // this.props.navigation.dispatch(setParamsAction);
           this.props.navigation.setParams({
-            questionSet: "buy",
+            questionSet,
             policy,
             isStartScreen,
-            currentUser,
-            fullName
+            currentUser
           });
-          if (this.props.isStartScreen) {
-            this.renderStartScreenMessages();
-          } else {
-            // trigger the initial componentDidUpdate
-            this.setState({ answering: false });
-          }
+        }
+        if (this.props.isStartScreen) {
+          this.renderStartScreenMessages();
+        } else {
+          // trigger the initial componentDidUpdate
+          this.setState({ answering: false });
         }
       })
       .catch(err => console.error(err));
