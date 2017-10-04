@@ -41,59 +41,80 @@ import Parse from "parse/react-native";
 Parse.initialize("microumbrella");
 Parse.serverURL = SERVER_URL;
 
+console.disableYellowBox = true;
 
 const WINDOW_WIDTH = Dimensions.get("window").width;
 
-const BuyStackNavigator = StackNavigator({
-  Chat: {
-    screen: ChatScreenWrapper("buy"),
-    navigationOptions: ({ navigation }) => {
-      const params = navigation.state.params;
-      let button;
+const BuyStackNavigator = StackNavigator(
+  {
+    Chat: {
+      screen: new ChatScreenWrapper(),
+      navigationOptions: ({ navigation, screenProps }) => {
+        const params = navigation.state.params;
+        let button;
 
-      if (!params) {
-        button = null;
-      } else if (params && params.currentUser && !params.policy) {
-        button = renderMenuButton(navigation);
-      } else {
-        button = renderBackButton(navigation);
+        if (
+          params &&
+          params.currentUser &&
+          params.questionSet === "buy" &&
+          params.isStartScreen
+        ) {
+          button = renderMenuButton(navigation);
+        } else if (params && params.currentUser) {
+          button = renderBackButton(navigation);
+        } else {
+          button = null;
+        }
+        return {
+          headerStyle: styles.header,
+          headerTitleStyle: styles.headerTitle,
+          headerLeft: button
+        };
       }
-
-      return {
-        headerStyle: styles.header,
-        headerTitleStyle: styles.headerTitle,
-        headerLeft: button
-      };
+    },
+    Table: {
+      screen: TableScreen
+    },
+    Auth: { screen: AuthScreen },
+    Policy: {
+      screen: PolicyScreen,
+      navigationOptions: backButtonNavOptions
+    },
+    Confirmation: {
+      screen: ConfirmationScreen,
+      navigationOptions: backButtonNavOptions
+    },
+    Status: {
+      screen: StatusScreen,
+      navigationOptions: backButtonNavOptions
     }
   },
-  Table: {
-    screen: TableScreen
-  },
-  Auth: { screen: AuthScreen },
-  Policy: {
-    screen: PolicyScreen,
-    navigationOptions: backButtonNavOptions
-  },
-  Confirmation: {
-    screen: ConfirmationScreen,
-    navigationOptions: backButtonNavOptions
-  },
-  Status: {
-    screen: StatusScreen,
-    navigationOptions: backButtonNavOptions
+  {
+    initialRouteParams: {
+      questionSet: "buy",
+      isStartScreen: true
+    }
   }
-});
+);
 
-const ClaimStackNavigator = StackNavigator({
-  Claim: {
-    screen: ChatScreenWrapper("claim"),
-    navigationOptions: ({ navigation }) => ({
-      headerStyle: styles.header,
-      headerTitleStyle: styles.headerTitle,
-      headerLeft: renderMenuButton(navigation)
-    })
+const ClaimStackNavigator = StackNavigator(
+  {
+    Claim: {
+      screen: new ChatScreenWrapper(),
+      navigationOptions: ({ navigation }) => ({
+        headerStyle: styles.header,
+        headerTitleStyle: styles.headerTitle,
+        headerLeft: renderMenuButton(navigation)
+      })
+    }
+  },
+  {
+    initialRouteParams: {
+      questionSet: "claim",
+      isStartScreen: false
+    }
   }
-});
+);
 
 const StatusStackNavigator = StackNavigator({
   Status: {
@@ -157,17 +178,26 @@ const MyDrawerNavigator = DrawerNavigator(
 const stackNavigatorScreens = {
   Intro: { screen: IntroScreen },
   TermsOfUse: { screen: TermsOfUse },
-  Drawer: { screen: MyDrawerNavigator },
+  Drawer: {
+    screen: ({ navigation }) => (
+      <MyDrawerNavigator screenProps={{ rootNavigation: navigation }} />
+    )
+  },
   Help: { screen: HelpStackNavigator }
 };
 
+let stackNavConfig = {
+  headerMode: "none"
+};
 if (ENV === "development") {
-  delete stackNavigatorScreens.Intro;
-  delete stackNavigatorScreens.TermsOfUse;
+  stackNavConfig["initialRouteName"] = "Drawer";
+} else {
+  stackNavConfig["initialRouteName"] = "Intro";
 }
 
-export default (Microsurance = StackNavigator(stackNavigatorScreens, {
-  headerMode: "none"
-}));
+export default (Microsurance = StackNavigator(
+  stackNavigatorScreens,
+  stackNavConfig
+));
 
 AppRegistry.registerComponent("Microsurance", () => Microsurance);
