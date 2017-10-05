@@ -13,9 +13,9 @@ import Ionicon from "react-native-vector-icons/Ionicons";
 
 import colors from "./colors";
 
-const MENU_ICON_SIZE = 35;
-const MENU_ICON_PADDING_LEFT = 15;
-const MENU_ICON_PADDING_RIGHT = 10;
+export const MENU_ICON_SIZE = 35;
+export const MENU_ICON_PADDING_LEFT = 15;
+export const MENU_ICON_PADDING_RIGHT = 10;
 const WINDOW_WIDTH = Dimensions.get("window").width;
 
 export function renderBackButton(navigation) {
@@ -100,9 +100,8 @@ export const styles = StyleSheet.create({
         paddingRight: 0
       },
       android: {
-        paddingRight: MENU_ICON_PADDING_LEFT +
-          MENU_ICON_SIZE +
-          MENU_ICON_PADDING_RIGHT
+        paddingRight:
+          MENU_ICON_SIZE + MENU_ICON_PADDING_LEFT + MENU_ICON_PADDING_RIGHT
       }
     }),
     color: colors.primaryText,
@@ -115,6 +114,7 @@ export const styles = StyleSheet.create({
     color: "white"
   },
   headerMenuIcon: {
+    alignSelf: "flex-start",
     paddingLeft: MENU_ICON_PADDING_LEFT,
     paddingRight: MENU_ICON_PADDING_RIGHT,
     color: colors.primaryText
