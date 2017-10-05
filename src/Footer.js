@@ -10,6 +10,7 @@ export default class Footer extends Component {
       <View style={styles.footer}>
         <View style={styles.footerBtnContainer}>
           <TouchableOpacity
+            accessibilityLabel="policy-purchase-button"
             style={[styles.footerBtn, styles.footerPurchase]}
             activeOpacity={0.6}
             onPress={() => {

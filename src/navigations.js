@@ -41,6 +41,7 @@ export function renderMenuButton(
 ) {
   return (
     <TouchableOpacity
+      accessibilityLabel="menu-button"
       onPress={() => {
         navigation.navigate("DrawerOpen");
       }}
