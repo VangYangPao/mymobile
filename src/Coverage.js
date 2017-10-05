@@ -149,13 +149,14 @@ const styles = StyleSheet.create({
   scrollViewContentContainer: {
     paddingVertical: 17,
     paddingHorizontal: 13,
-    backgroundColor: "white"
+    backgroundColor: colors.softBorderLine
   },
   page: {
     position: "absolute",
     top: 0,
     left: 0,
     right: 0,
-    bottom: 0
+    bottom: 0,
+    backgroundColor: colors.softBorderLine
   }
 });

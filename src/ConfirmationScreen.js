@@ -110,7 +110,7 @@ export default class ConfirmationScreen extends Component {
       totalPremium: null
     };
     this.travelPlans = [1, 2, 84, 85];
-    this.paPlans = [100, 101, 102, 103, 104];
+    this.paPlans = [101, 102, 103, 104];
     this.paTerms = {
       "1": 1,
       "3": 2,

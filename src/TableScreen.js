@@ -84,7 +84,6 @@ export default class TableScreen extends Component {
         <Text style={styles.headerRight}>SAVE</Text>
       </TouchableOpacity>
     );
-    console.log(options);
     const headerTitleStyle = StyleSheet.flatten(options.headerTitleStyle);
     headerTitleStyle.paddingRight = 0;
     options.headerTitleStyle = headerTitleStyle;
@@ -121,8 +120,8 @@ export default class TableScreen extends Component {
       responseType.indexOf("date") !== -1 ||
       responseType.indexOf("datetime") !== -1
     ) {
-      const eighteenYearsAgo = moment(new Date()).subtract(18, "years");
-      const maxDate = eighteenYearsAgo.format("YYYY-MM-DD");
+      // const eighteenYearsAgo = moment(new Date()).subtract(18, "years");
+      const maxDate = moment(new Date()).format("YYYY-MM-DD");
       inputElement = (
         <TouchableOpacity
           style={styles.selectContainer}
