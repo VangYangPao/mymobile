@@ -382,7 +382,7 @@ export const QUESTION_SETS = {
           responseType: ["string"]
         },
         {
-          label: "NRIC or Passport",
+          label: "NRIC/FIN or Passport",
           id: "idNumber",
           responseType: "string"
         },

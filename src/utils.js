@@ -77,7 +77,7 @@ export function showAlert(text, cb) {
     ]);
   } else {
     ToastAndroid.show(text, ToastAndroid.LONG);
-    cb();
+    if (typeof cb === "function") cb();
   }
 }
 

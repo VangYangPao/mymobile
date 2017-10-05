@@ -719,6 +719,7 @@ class ChatScreen extends Component {
     );
 
     const appendWidget = (key, additionalProps) => {
+      Keyboard.dismiss();
       this.setState(
         {
           messages: this.state.messages.concat({
@@ -1251,7 +1252,7 @@ const messageContainerStyle = {
 const styles = StyleSheet.create({
   idNumberTypeText: {
     marginLeft: 7,
-    marginTop: -5,
+    marginTop: Platform.select({ ios: -5, android: 0 }),
     color: colors.primaryOrange,
     fontSize: 15
   },

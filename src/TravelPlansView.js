@@ -1,6 +1,12 @@
 // @flow
 import React, { Component } from "react";
-import { TouchableOpacity, View, SectionList, StyleSheet } from "react-native";
+import {
+  Animated,
+  TouchableOpacity,
+  View,
+  SectionList,
+  StyleSheet
+} from "react-native";
 import { PlansTabNavigator } from "./widgets";
 
 import _TRAVEL_BENEFITS from "../data/travelBenefits";
@@ -68,8 +74,20 @@ class TravelPlanTab extends Component {
     this.renderSection = this.renderSection.bind(this);
     this.renderUnexpanded = this.renderUnexpanded.bind(this);
     this.state = {
-      expanded: false
+      expanded: false,
+      fadeAnim: new Animated.Value(0)
     };
+  }
+
+  componentDidMount() {
+    Animated.timing(
+      // Animate value over time
+      this.state.fadeAnim, // The value to drive
+      {
+        duration: 1000,
+        toValue: 1 // Animate to final value of 1
+      }
+    ).start();
   }
 
   renderCoverage({ item }) {
@@ -144,7 +162,7 @@ class TravelPlanTab extends Component {
       renderItem: this.renderCoverage
     }));
     return (
-      <View>
+      <Animated.View style={{ opacity: this.state.fadeAnim }}>
         <SectionList
           removeClippedSubviews={false}
           ItemSeparatorComponent={itemSeparatorComponent}
@@ -163,21 +181,11 @@ class TravelPlanTab extends Component {
         >
           SELECT PLAN
         </Button>
-      </View>
+      </Animated.View>
     );
   }
 
   render() {
-    // if (!this.state.expanded) {
-    //   return (
-    //     <TouchableOpacity>
-    //       <View>
-    //         <Text>Not expanded</Text>
-    //       </View>
-    //     </TouchableOpacity>
-    //   );
-    // }
-
     if (!this.props.expanded) {
       return this.renderUnexpanded();
     }

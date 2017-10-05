@@ -84,6 +84,10 @@ export default class TableScreen extends Component {
         <Text style={styles.headerRight}>SAVE</Text>
       </TouchableOpacity>
     );
+    console.log(options);
+    const headerTitleStyle = StyleSheet.flatten(options.headerTitleStyle);
+    headerTitleStyle.paddingRight = 0;
+    options.headerTitleStyle = headerTitleStyle;
     options.title = "ADD NEW " + itemName.toUpperCase();
     return options;
   };
@@ -117,7 +121,8 @@ export default class TableScreen extends Component {
       responseType.indexOf("date") !== -1 ||
       responseType.indexOf("datetime") !== -1
     ) {
-      const maxDate = moment(new Date()).format("YYYY-MM-DD");
+      const eighteenYearsAgo = moment(new Date()).subtract(18, "years");
+      const maxDate = eighteenYearsAgo.format("YYYY-MM-DD");
       inputElement = (
         <TouchableOpacity
           style={styles.selectContainer}
@@ -136,7 +141,7 @@ export default class TableScreen extends Component {
           </Text>
           <DatePicker
             ref={picker => (this.inputRefs[index] = picker)}
-            date={this.state.values[index]}
+            date={this.state.values[index] ? this.state.values[index] : maxDate}
             mode="date"
             placeholder=""
             format="YYYY-MM-DD"
@@ -209,6 +214,7 @@ export default class TableScreen extends Component {
           placeholderTextColor={
             renderError ? colors.errorRed : colors.borderLine
           }
+          underlineColorAndroid="transparent"
           onChangeText={text => {
             const values = this.state.values.slice();
             values[index] = text;
@@ -241,22 +247,25 @@ export default class TableScreen extends Component {
   }
 }
 
+const fieldInputFontSize = 17.5;
+
 const styles = StyleSheet.create({
   inputErr: {
     color: colors.errorRed,
-    fontSize: 17.5
+    fontSize: fieldInputFontSize
   },
   selectTextResult: {
     color: colors.primaryText
   },
   selectText: {
     color: colors.borderLine,
-    fontSize: 17.5
+    fontSize: fieldInputFontSize
   },
   headerRight: {
-    fontSize: 16,
     marginRight: 15,
-    color: colors.primaryOrange
+    color: colors.primaryOrange,
+    fontWeight: "500",
+    fontSize: 16
   },
   container: {
     backgroundColor: "white"
@@ -264,7 +273,8 @@ const styles = StyleSheet.create({
   input: {
     padding: 15,
     flex: 1,
-    color: colors.primaryText
+    color: colors.primaryText,
+    fontSize: fieldInputFontSize
   },
   selectContainer: {
     flexDirection: "row",

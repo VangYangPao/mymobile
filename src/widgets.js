@@ -994,19 +994,28 @@ export class SuggestionList extends Component {
   }
 
   render() {
-    return (
-      <Animated.View
-        style={{ top: this.state.topAnim, opacity: this.state.fadeAnim }}
+    const scrollView = (
+      <ScrollView
+        keyboardShouldPersistTaps="always"
+        style={widgetStyles.suggestionListScrollView}
+        contentContainerStyle={widgetStyles.suggestionListContainer}
       >
-        <ScrollView
-          keyboardShouldPersistTaps="always"
-          style={widgetStyles.suggestionListScrollView}
-          contentContainerStyle={widgetStyles.suggestionListContainer}
-        >
-          {this.props.items.map(this.renderSuggestion)}
-        </ScrollView>
-      </Animated.View>
+        {this.props.items.map(this.renderSuggestion)}
+      </ScrollView>
     );
+    return Platform.select({
+      ios: (
+        <Animated.View
+          style={{
+            top: this.state.topAnim,
+            opacity: this.state.fadeAnim
+          }}
+        >
+          {scrollView}
+        </Animated.View>
+      ),
+      android: scrollView
+    });
   }
 }
 
