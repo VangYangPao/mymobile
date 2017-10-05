@@ -94,7 +94,6 @@ export const styles = StyleSheet.create({
   },
   headerTitle: {
     alignSelf: "center",
-    paddingRight: 0,
     ...Platform.select({
       ios: {
         paddingRight: 0

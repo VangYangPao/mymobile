@@ -61,13 +61,16 @@ const BuyStackNavigator = StackNavigator(
           {},
           StyleSheet.flatten(styles.headerTitle)
         );
-        if (params.isStartScreen) {
-          // weird limitation
-          headerTitleStyle.paddingRight = 0;
-        }
-        if (params.currentUser) {
-          headerTitleStyle.paddingRight =
-            MENU_ICON_SIZE + MENU_ICON_PADDING_RIGHT;
+
+        if (Platform.OS === "android") {
+          if (params.isStartScreen) {
+            // weird limitation
+            headerTitleStyle.paddingRight = 0;
+          }
+          if (params.currentUser) {
+            headerTitleStyle.paddingRight =
+              MENU_ICON_SIZE + MENU_ICON_PADDING_RIGHT;
+          }
         }
 
         if (
