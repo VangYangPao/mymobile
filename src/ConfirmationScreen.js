@@ -16,7 +16,6 @@ import moment from "moment";
 import { NavigationActions } from "react-navigation";
 
 import type { PolicyHolder, PaymentDetails, MUTraveller } from "./types/hlas";
-import database from "./HackStorage";
 import { Text } from "./defaultComponents";
 import { showAlert, prettifyCamelCase } from "./utils";
 import Page from "./Page";
@@ -48,6 +47,40 @@ type State = {
   purchasing: boolean,
   totalPremium: ?number
 };
+
+const redirectToStatus = () =>
+  NavigationActions.reset({
+    index: 0,
+    actions: [
+      NavigationActions.navigate({
+        routeName: "Drawer",
+        action: NavigationActions.navigate({
+          routeName: "MyPolicies"
+        })
+      })
+    ]
+  });
+
+const redirectToPolicyPurchase = policy =>
+  NavigationActions.reset({
+    index: 0,
+    actions: [
+      NavigationActions.navigate({
+        routeName: "Drawer",
+        action: NavigationActions.navigate({
+          routeName: "BuyStack",
+          action: NavigationActions.navigate({
+            routeName: "Chat",
+            params: {
+              policy,
+              questionSet: "buy",
+              isStartScreen: false
+            }
+          })
+        })
+      })
+    ]
+  });
 
 export default class ConfirmationScreen extends Component {
   static navigationOptions = {
@@ -136,20 +169,10 @@ export default class ConfirmationScreen extends Component {
         .catch(err => {
           console.error(err);
           showAlert("Sorry, error getting policy quote");
-          const resetAction = NavigationActions.reset({
-            index: 0,
-            actions: [
-              NavigationActions.navigate({
-                routeName: "Chat",
-                params: {
-                  policy: this.policy,
-                  questionSet: "buy",
-                  startScreen: false
-                }
-              })
-            ]
-          });
-          this.props.navigation.dispatch(resetAction);
+
+          this.props.screenProps.rootNavigation.dispatch(
+            redirectToPolicyPurchase(this.policy)
+          );
         });
     }
   }
@@ -172,7 +195,6 @@ export default class ConfirmationScreen extends Component {
     promise
       .then(res => {
         console.log("purchase complete", JSON.stringify(res));
-        const newId = database.policies[database.policies.length - 1].id + 1;
         const resetAction = NavigationActions.reset({
           index: 1,
           actions: [
@@ -181,14 +203,9 @@ export default class ConfirmationScreen extends Component {
           ]
         });
         const resetToStatusScreen = () =>
-          this.props.navigation.dispatch(resetAction);
-        database.policies.push({
-          id: newId,
-          policyType: this.policy.id,
-          premium: this.state.totalPremium,
-          purchaseDate: new Date(),
-          status: "active"
-        });
+          this.props.screenProps.rootNavigation.dispatch(
+            redirectToStatus(this.policy)
+          );
         if (Platform.OS === "ios") {
           Alert.alert("Thank you!", "Your order is complete.", [
             {
@@ -220,7 +237,9 @@ export default class ConfirmationScreen extends Component {
           ]
         });
         const afterAlert = () => {
-          this.props.navigation.dispatch(resetAction);
+          this.props.screenProps.rootNavigation.dispatch(
+            redirectToPolicyPurchase(this.policy)
+          );
         };
         if (
           err.message.indexOf("NRIC/FIN") !== -1 ||
