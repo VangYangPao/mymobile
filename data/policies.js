@@ -47,16 +47,16 @@ export default (policies = [
     imageSource: "ic_ad_pd",
     from: "1 month",
     plans: [
+      // {
+      //   title: "Plan A",
+      //   premium: 2.68,
+      //   coverage: {
+      //     accidentalDeath: 5000,
+      //     permanentDisablement: 5000
+      //   }
+      // },
       {
         title: "Plan A",
-        premium: 2.68,
-        coverage: {
-          accidentalDeath: 5000,
-          permanentDisablement: 5000
-        }
-      },
-      {
-        title: "Plan B",
         premium: 5.35,
         coverage: {
           accidentalDeath: 10000,
@@ -64,7 +64,7 @@ export default (policies = [
         }
       },
       {
-        title: "Plan C",
+        title: "Plan B",
         premium: 9.84,
         coverage: {
           accidentalDeath: 20000,
@@ -72,7 +72,7 @@ export default (policies = [
         }
       },
       {
-        title: "Plan D",
+        title: "Plan C",
         premium: 17.87,
         coverage: {
           accidentalDeath: 40000,
@@ -80,7 +80,7 @@ export default (policies = [
         }
       },
       {
-        title: "Plan E",
+        title: "Plan D",
         premium: 17.87,
         coverage: {
           accidentalDeath: 40000,
@@ -98,17 +98,17 @@ export default (policies = [
     imageSource: "ic_ad_pd_medical_reimbursement",
     from: "1 month",
     plans: [
+      // {
+      //   title: "Plan A",
+      //   coverage: {
+      //     accidentalDeath: 5000,
+      //     permanentDisablement: 5000,
+      //     medicalReimbursement: 500
+      //   },
+      //   premium: 2.68
+      // },
       {
         title: "Plan A",
-        coverage: {
-          accidentalDeath: 5000,
-          permanentDisablement: 5000,
-          medicalReimbursement: 500
-        },
-        premium: 2.68
-      },
-      {
-        title: "Plan B",
         coverage: {
           accidentalDeath: 10000,
           permanentDisablement: 10000,
@@ -117,7 +117,7 @@ export default (policies = [
         premium: 5.35
       },
       {
-        title: "Plan C",
+        title: "Plan B",
         coverage: {
           accidentalDeath: 20000,
           permanentDisablement: 20000,
@@ -126,7 +126,7 @@ export default (policies = [
         premium: 9.84
       },
       {
-        title: "Plan D",
+        title: "Plan C",
         coverage: {
           accidentalDeath: 40000,
           permanentDisablement: 40000,
@@ -135,7 +135,7 @@ export default (policies = [
         premium: 17.87
       },
       {
-        title: "Plan E",
+        title: "Plan D",
         coverage: {
           accidentalDeath: 100000,
           permanentDisablement: 100000,
@@ -160,17 +160,17 @@ export default (policies = [
     imageSource: "ic_ad_pd_weekly_indemnity",
     from: "1 month",
     plans: [
+      // {
+      //   title: "Plan A",
+      //   coverage: {
+      //     accidentalDeath: 5000,
+      //     permanentDisablement: 5000,
+      //     weeklyIndemnity: 200
+      //   },
+      //   premium: 2.2
+      // },
       {
         title: "Plan A",
-        coverage: {
-          accidentalDeath: 5000,
-          permanentDisablement: 5000,
-          weeklyIndemnity: 200
-        },
-        premium: 2.2
-      },
-      {
-        title: "Plan B",
         coverage: {
           accidentalDeath: 10000,
           permanentDisablement: 10000,
@@ -179,7 +179,7 @@ export default (policies = [
         premium: 4.09
       },
       {
-        title: "Plan C",
+        title: "Plan B",
         coverage: {
           accidentalDeath: 20000,
           permanentDisablement: 20000,
@@ -188,7 +188,7 @@ export default (policies = [
         premium: 7.75
       },
       {
-        title: "Plan D",
+        title: "Plan C",
         coverage: {
           accidentalDeath: 40000,
           permanentDisablement: 40000,
@@ -197,7 +197,7 @@ export default (policies = [
         premium: 14.97
       },
       {
-        title: "Plan E",
+        title: "Plan D",
         coverage: {
           accidentalDeath: 100000,
           permanentDisablement: 100000,
