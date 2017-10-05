@@ -33,13 +33,17 @@ import {
   backButtonNavOptions,
   renderBackButton,
   renderMenuButton,
-  createDrawerNavOptions
+  createDrawerNavOptions,
+  MENU_ICON_SIZE,
+  MENU_ICON_PADDING_LEFT,
+  MENU_ICON_PADDING_RIGHT
 } from "./navigations";
 import { ENV, SERVER_URL } from "react-native-dotenv";
 
 import Parse from "parse/react-native";
 Parse.initialize("microumbrella");
-Parse.serverURL = SERVER_URL;
+// Parse.serverURL = SERVER_URL;
+Parse.serverURL = "https://api-dev.microumbrella.com/parse";
 
 console.disableYellowBox = true;
 
@@ -52,6 +56,19 @@ const BuyStackNavigator = StackNavigator(
       navigationOptions: ({ navigation, screenProps }) => {
         const params = navigation.state.params;
         let button;
+
+        const headerTitleStyle = Object.assign(
+          {},
+          StyleSheet.flatten(styles.headerTitle)
+        );
+        if (params.isStartScreen) {
+          // weird limitation
+          headerTitleStyle.paddingRight = 0;
+        }
+        if (params.currentUser) {
+          headerTitleStyle.paddingRight =
+            MENU_ICON_SIZE + MENU_ICON_PADDING_RIGHT;
+        }
 
         if (
           params &&
@@ -66,8 +83,8 @@ const BuyStackNavigator = StackNavigator(
           button = null;
         }
         return {
+          headerTitleStyle,
           headerStyle: styles.header,
-          headerTitleStyle: styles.headerTitle,
           headerLeft: button
         };
       }
