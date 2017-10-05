@@ -14,6 +14,7 @@ import { showAlert } from "./utils";
 
 let tableValues = [];
 
+const SPOUSE_ID = 1;
 const CHILD_ID = 2;
 
 export default class TableScreen extends Component {
@@ -44,6 +45,11 @@ export default class TableScreen extends Component {
         }
         if (relationshipId === CHILD_ID && ageInMonths > 12 * 18) {
           showAlert("Child cannot be older than 18 years old");
+          navigation.setParams({ renderError: true, ...currentParams });
+          return;
+        }
+        if (relationshipId === SPOUSE_ID && ageInMonths < 12 * 18) {
+          showAlert("Adult must be older than 18 years old");
           navigation.setParams({ renderError: true, ...currentParams });
           return;
         }
