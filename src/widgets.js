@@ -15,7 +15,8 @@ import {
   TextInput,
   Animated,
   InteractionManager,
-  FlatList
+  FlatList,
+  ActivityIndicator
 } from "react-native";
 import { chunk as chunkArray } from "lodash";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -436,10 +437,11 @@ export class ClaimPolicyChoice extends Component {
 
   render() {
     let policies;
+
     if (!this.props.policies.length) {
       policies = (
-        <View>
-          <Text />
+        <View style={{ flex: 1, alignItems: "center" }}>
+          <ActivityIndicator size="large" color="black" />
         </View>
       );
     } else {
@@ -926,8 +928,11 @@ export class MultiInput extends Component {
     } else {
       button = this.props.submitButtonComponent(this.state.values);
     }
-    const keyboardHeight =
-      this.props.keyboardHeight >= 200 ? this.props.keyboardHeight - 200 : 0;
+    const keyboardHeight = Platform.select({
+      ios:
+        this.props.keyboardHeight >= 200 ? this.props.keyboardHeight - 200 : 0,
+      android: 300
+    });
     return (
       <View style={{ marginBottom: keyboardHeight }}>
         <View style={[widgetStyles.choicesList]}>
@@ -1091,7 +1096,9 @@ export class PlansTabNavigator extends Component {
   render() {
     const { tabRoutes } = this.props;
     const _PlansTabNavigator = TabNavigator(tabRoutes, {
-      lazy: true,
+      // lazy: true,
+      swipeEnabled: false,
+      animationEnabled: Platform.select({ ios: true, android: false }),
       tabBarComponent: TabBarTop,
       tabBarPosition: "top",
       tabBarOptions: {
@@ -1190,7 +1197,8 @@ const widgetStyles = StyleSheet.create({
     shadowColor: "#424242",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
-    shadowRadius: 2
+    shadowRadius: 2,
+    elevation: 5
   },
   noBorderRadius: {
     borderRadius: 0
