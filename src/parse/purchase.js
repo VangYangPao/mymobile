@@ -59,6 +59,7 @@ export function saveNewPurchase(
       purchaseTravel.set("endDate", endDate);
       purchaseTravel.set("spouse", spouse);
       purchaseTravel.set("children", children);
+      purchaseTravel.set("purchaseId", purchase);
       return purchaseTravel.save();
     } else if (policyTypeId === "mobile") {
       const PurchasePhone = Parse.Object.extend("PurchasePhone");
@@ -68,6 +69,7 @@ export function saveNewPurchase(
       purchasePhone.set("brandId", brandId);
       purchasePhone.set("modelId", modelId);
       purchasePhone.set("purchaseDate", purchaseDate);
+      purchasePhone.set("purchaseId", purchase);
       return purchasePhone.save();
     }
   });

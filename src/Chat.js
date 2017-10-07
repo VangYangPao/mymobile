@@ -686,8 +686,8 @@ class ChatScreen extends Component {
           p => p.get("policyId") === this.state.answers.claimPolicyNo
         );
         checkAgainst = policy.get("policyTypeId");
-        if (nextQuestion.id !== "claimType") {
-          checkAgainst = this.state.answers.claimType;
+        if (nextQuestion.id !== "accidentType") {
+          checkAgainst = this.state.answers.accidentType;
         }
       }
     }
