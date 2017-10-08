@@ -10,18 +10,18 @@ from appium.webdriver.common.touch_action import TouchAction
 test_dir = os.path.dirname(os.path.realpath(__file__))
 root_dir = os.path.abspath(os.path.join(test_dir, os.pardir))
 android_app_path = os.path.join(
-    root_dir, 'android', 'app', 'build', 'outputs', 'apk', 'app-debug.apk')
+    root_dir, 'android', 'app', 'build', 'outputs', 'apk', 'app-release.apk')
 ios_app_path = os.path.join(root_dir, 'ios', 'build', 'Build',
-                            'Products', 'Debug-iphonesimulator',
+                            'Products', 'Release-iphonesimulator',
                             'Microsurance.app')
 
 local_caps = {
-    'android': {
-        'platformName': 'Android',
-        'platformVersion': '6.0',
-        'deviceName': 'Android Emulator',
-        'app': android_app_path
-    },
+    # 'android': {
+    #     'platformName': 'Android',
+    #     'platformVersion': '7.0',
+    #     'deviceName': 'Redmi',
+    #     'app': android_app_path
+    # },
     'iPhone 5s': {
         'platformName': 'iOS',
         'platformVersion': '10.3',
@@ -50,10 +50,19 @@ class AppiumTests(unittest.TestCase):
         self.driver.quit()
 
     @timeout_decorator.timeout(LOCAL_TIMEOUT)
-    def test_no_menu_when_not_logged_in(self):
-        menu_button = self.driver.find_elements_by_accessibility_id(
-            "menu-button")
-        self.assertEquals(menu_button, [])
+    def test_intro_works(self):
+        sleep(2)
+        logo_el = self.find_accessibility('intro__logo')
+        self.assertIsNotNone(logo_el)
+        sign_in_bottom_el = self.find_accessibility('intro__sign-in')
+        for i in range(3):
+            self.driver.swipe((100, 200), (300, 200))
+
+    # @timeout_decorator.timeout(LOCAL_TIMEOUT)
+    # def test_no_menu_when_not_logged_in(self):
+    #     menu_button = self.driver.find_elements_by_accessibility_id(
+    #         "menu-button")
+    #     self.assertEquals(menu_button, [])
 
     @timeout_decorator.timeout(LOCAL_TIMEOUT)
     def test_policies_exist(self):
@@ -65,11 +74,13 @@ class AppiumTests(unittest.TestCase):
 
     @timeout_decorator.timeout(LOCAL_TIMEOUT)
     def test_purchase_travel(self):
-        travel_choice_el = self.find_accessibility('policy-choice-travel')
+        travel_choice_el = self.find_accessibility(
+            'purchase__policy-choice-travel')
         self.assertIsNotNone(travel_choice_el)
         self.tap_on(travel_choice_el)
         sleep(2)
-        purchase_btn_el = self.find_accessibility('policy-purchase-button')
+        purchase_btn_el = self.find_accessibility(
+            'purchase__policy-purchase-button')
         self.assertIsNotNone(purchase_btn_el)
         self.tap_on(purchase_btn_el)
 

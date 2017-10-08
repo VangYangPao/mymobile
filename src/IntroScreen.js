@@ -99,7 +99,11 @@ export default class IntroScreen extends Component {
     );
     return (
       <View style={styles.page}>
-        <View style={styles.appNameContainer}>
+        <View
+          accessible={true}
+          accessibilityLabel="intro-logo"
+          style={styles.appNameContainer}
+        >
           <VectorDrawableView
             resourceName="ic_microumbrella_word"
             style={styles.appName}

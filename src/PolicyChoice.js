@@ -31,7 +31,7 @@ class Policy extends Component {
     const titleSplit = this.props.title.split(" with ");
     return (
       <TouchableOpacity
-        accessibilityLabel={"policy-choice-" + this.props.id}
+        accessibilityLabel={"purchase__policy-choice-" + this.props.id}
         activeOpacity={0.6}
         onPress={this.handleSelectPlan}
       >
