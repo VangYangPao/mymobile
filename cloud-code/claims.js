@@ -2,8 +2,15 @@
 import Client from "ssh2-sftp-client";
 import Parse from "parse/node";
 import path from "path";
+import fs from "fs";
+import xlsx from "node-xlsx";
+import Excel from "exceljs";
 
-export function connectToSFTP(sftp) {
+const BACKUP_DIR = "/ftp-response/Backup";
+const CLAIMS_DIR = "/ftp-response/Claims";
+const TRAVEL_CLAIMS = "TravelProtect360-Claims.xlsx";
+
+export function connectToSFTP(sftp: any) {
   return sftp.connect({
     host: "103.13.129.149",
     port: "22",
@@ -12,9 +19,7 @@ export function connectToSFTP(sftp) {
   });
 }
 
-export function backupExistingFiles() {
-  let sftp = new Client();
-
+export function backupExistingFiles(sftp: any) {
   function recursivelyBackup(backupToPath, directory: string) {
     return sftp.list(directory).then(files => {
       let promises = [];
@@ -44,9 +49,26 @@ export function backupExistingFiles() {
     });
   }
 
-  return connectToSFTP(sftp).then(() => {
-    return recursivelyBackup("/ftp-response/Backup", "/ftp-response/Claims");
+  return recursivelyBackup(BACKUP_DIR, CLAIMS_DIR);
+}
+
+export function appendClaimToExcelFile(sftp: any, claim: any) {
+  const claimRow = transformClaimToExcelRow(claim);
+  const filePath = path.join(
+    __dirname,
+    "..",
+    "__tests__",
+    "fixtures",
+    TRAVEL_CLAIMS
+  );
+  // const workSheetsFromBuffer = xlsx.parse(fs.readFileSync(filePath));
+  // console.log(workSheetsFromBuffer[0].data);
+  // return workSheetsFromBuffer;
+  var workbook = new Excel.Workbook();
+  workbook.xlsx.readFile(filePath).then(function() {
+    console.log(workbook);
   });
+  return;
 }
 
 export function transformClaimToExcelRow(claim) {
@@ -152,10 +174,5 @@ export function transformClaimToExcelRow(claim) {
     ClaimantName,
     DocumentList
   ].map(r => r || "");
-  newClaimRow.forEach((claim, idx) => {
-    if (claim === "") {
-      console.log(claimHeader[idx]);
-    }
-  });
-  return [claimHeader, newClaimRow];
+  return newClaimRow;
 }
