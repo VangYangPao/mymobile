@@ -70,15 +70,24 @@ export function saveNewClaim(
     claim.set("documents", documents);
 
     const { claimFromPolicyholder } = claimAnswers;
-    claim.set("claimFromPolicyholder", claimFromPolicyholder);
 
     if (!claimFromPolicyholder) {
-      claim.set("claimantFirstName", claimAnswers.claimantFirstName);
-      claim.set("claimantLastName", claimAnswers.claimantLastName);
-      claim.set("claimantIdType", claimAnswers.claimantIdType);
-      claim.set("claimantIdNo", claimAnswers.claimantIdNo);
-      claim.set("claimantPhone", claimAnswers.claimantPhone);
-      claim.set("claimantEmail", claimAnswers.claimantEmail);
+      const fields = [
+        "claimFromPolicyholder",
+        "claimantFirstName",
+        "claimantLastName",
+        "claimantIdType",
+        "claimantIdNo",
+        "claimantPhone",
+        "claimantEmail",
+        "claimantAddress"
+      ];
+      fields.forEach(field => {
+        if (claimAnswers[field]) {
+          claim.set(field, claimAnswers[field]);
+          delete claimAnswers[field];
+        }
+      });
     }
     return claim.save();
   });

@@ -7,6 +7,9 @@ import { generateID } from "../src/utils";
 import { saveNewPurchase } from "../src/parse/purchase";
 import { saveNewClaim } from "../src/parse/claims";
 
+const policyholderIdType = 1;
+const policyholderIdNo = "12345";
+
 export function testSaveNewAccidentPurchase() {
   const policyTypeId = "pa";
   const pasAppId = generateID();
@@ -37,6 +40,8 @@ export function testSaveNewAccidentPurchase() {
       planId,
       optionId,
       autoRenew,
+      policyholderIdType,
+      policyholderIdNo,
       user,
       tmTxnRef,
       tmVerifyEnrolment,
@@ -78,6 +83,8 @@ export function testSaveNewAccidentMRPurchase() {
       planId,
       optionId,
       autoRenew,
+      policyholderIdType,
+      policyholderIdNo,
       user,
       tmTxnRef,
       tmVerifyEnrolment,
@@ -119,6 +126,8 @@ export function testSaveNewAccidentWIPurchase() {
       planId,
       optionId,
       autoRenew,
+      policyholderIdType,
+      policyholderIdNo,
       user,
       tmTxnRef,
       tmVerifyEnrolment,
@@ -169,6 +178,8 @@ export function testSaveNewTravelPurchase() {
       planId,
       optionId,
       autoRenew,
+      policyholderIdType,
+      policyholderIdNo,
       user,
       tmTxnRef,
       tmVerifyEnrolment,
@@ -215,6 +226,8 @@ export function testSaveNewMobilePurchase() {
       planId,
       optionId,
       autoRenew,
+      policyholderIdType,
+      policyholderIdNo,
       user,
       tmTxnRef,
       tmVerifyEnrolment,

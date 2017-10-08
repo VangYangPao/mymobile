@@ -1,22 +1,52 @@
 // @flow
 import Client from "ssh2-sftp-client";
-import Parse from "parse/react-native";
+import Parse from "parse/node";
+import path from "path";
 
-export function connectSFTP() {
+export function connectToSFTP(sftp) {
+  return sftp.connect({
+    host: "103.13.129.149",
+    port: "22",
+    username: "sftpuser05",
+    password: "xBFtSp9J:\\Pqs{=m"
+  });
+}
+
+export function backupExistingFiles() {
   let sftp = new Client();
-  return sftp
-    .connect({
-      host: "103.13.129.149",
-      port: "22",
-      username: "sftpuser05",
-      password: "xBFtSp9J:\\Pqs{=m"
-    })
-    .then(() => {
-      return sftp.list("/ftp-request");
-    })
-    .then(data => {
-      console.log(data, "the data info");
+
+  function recursivelyBackup(backupToPath, directory: string) {
+    return sftp.list(directory).then(files => {
+      let promises = [];
+      files.forEach(file => {
+        let promise;
+        if (file.type === "d") {
+          const newBackupPath = path.join(backupToPath, file.name);
+          console.log("retrieve dir", newBackupPath);
+          const recursive = true;
+          promise = sftp.mkdir(newBackupPath, recursive).then(() => {
+            const newFilePath = path.join(directory, file.name);
+            console.log("created new dir", newFilePath);
+            return recursivelyBackup(newBackupPath, newFilePath);
+          });
+        } else {
+          const filePath = path.join(directory, file.name);
+          console.log("retrieve file", filePath);
+          promise = sftp.get(filePath).then(readStream => {
+            const newBackupPath = path.join(backupToPath, file.name);
+            console.log("created new file", newBackupPath);
+            return sftp.put(readStream, newBackupPath);
+          });
+        }
+        promises.push(promise);
+      });
+      return Promise.all(promises);
     });
+  }
+
+  return connectToSFTP(sftp).then(() => {
+    return recursivelyBackup("/ftp-response/Backup", "/ftp-response/Claims");
+  });
 }
 
 export function transformClaimToExcelRow(claim) {
@@ -46,7 +76,6 @@ export function transformClaimToExcelRow(claim) {
     ClaimantEmail = purchase.get("email");
     ClaimantAddress = purchase.get("address");
   } else {
-    let ClaimantName = "";
     const claimantFirstName = claim.get("claimantFirstName");
     const claimantLastName = claim.get("claimantLastName");
     if (claimantFirstName && claimantLastName) {
@@ -61,7 +90,7 @@ export function transformClaimToExcelRow(claim) {
   const AccidentPlace = claim.get("accidentLocation");
   const AccidentDate = claim.get("accidentDate");
   const AccidentType = claim.get("accidentType");
-  const AccidentLongDesc = claim.get("accidentDescription");
+  const AccidentLongDesc = claim.get("details");
   const CurrencyType = claim.get("currencyType");
   const TotalAmount = claim.get("claimAmount");
   const SimilarCondition = claim.get("recurrenceDetail");
@@ -123,5 +152,10 @@ export function transformClaimToExcelRow(claim) {
     ClaimantName,
     DocumentList
   ].map(r => r || "");
+  newClaimRow.forEach((claim, idx) => {
+    if (claim === "") {
+      console.log(claimHeader[idx]);
+    }
+  });
   return [claimHeader, newClaimRow];
 }

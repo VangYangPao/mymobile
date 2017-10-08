@@ -10,6 +10,8 @@ export function saveNewPurchase(
   planId: number,
   optionId: ?number,
   autoRenew: boolean,
+  policyholderIdType: number,
+  policyholderIdNo: string,
   user: any,
   tmTxnRef: string,
   tmVerifyEnrolment: string,
@@ -26,6 +28,8 @@ export function saveNewPurchase(
   purchase.set("planId", planId);
   purchase.set("optionId", optionId);
   purchase.set("autoRenew", autoRenew);
+  purchase.set("policyholderIdNo", policyholderIdNo);
+  purchase.set("policyholderIdType", policyholderIdType);
   purchase.set("user", user);
   purchase.set("tmTxnRef", tmTxnRef);
   purchase.set("tmVerifyEnrolment", tmVerifyEnrolment);
