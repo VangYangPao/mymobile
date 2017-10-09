@@ -160,6 +160,9 @@ it("appends new claim to Excel file", () => {
       const sftp = new Client();
       return connectToSFTP(sftp)
         .then(() => {
+          return backupExistingFiles(sftp);
+        })
+        .then(() => {
           return appendClaimToExcelFile(sftp, claim);
         })
         .then(() => {

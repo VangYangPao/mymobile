@@ -36,20 +36,20 @@ function backupExistingFiles(sftp) {
         var promise = void 0;
         if (file.type === "d") {
           var newBackupPath = path.join(backupToPath, file.name);
-          console.log("retrieve dir", newBackupPath);
+          // console.log("retrieve dir", newBackupPath);
           var recursive = true;
           promise = sftp.mkdir(newBackupPath, recursive).then(function() {
             var newFilePath = path.join(directory, file.name);
-            console.log("created new dir", newFilePath);
+            // console.log("created new dir", newFilePath);
             return recursivelyBackup(newBackupPath, newFilePath);
           });
         } else {
           var filePath = path.join(directory, file.name);
           console.log("retrieve file", filePath);
-          promise = sftp.get(filePath).then(function(readStream) {
+          promise = sftp.get(filePath, true, null).then(function(readStream) {
             var newBackupPath = path.join(backupToPath, file.name);
             console.log("created new file", newBackupPath);
-            return sftp.put(readStream, newBackupPath);
+            return sftp.put(readStream, newBackupPath, true, null);
           });
         }
         promises.push(promise);
@@ -126,7 +126,6 @@ function appendClaimToExcelFile(sftp, claim) {
     })
     .then(function() {
       // create document directory
-      var claimId = claim.id;
       var recursive = true; // for safe guard
       var documents = claim.get("documents");
       return sftp.mkdir(documentDir, recursive);
