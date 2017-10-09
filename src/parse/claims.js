@@ -7,7 +7,8 @@ export function saveNewClaim(
   policyTypeId: string,
   claimAnswers: any,
   purchase: any,
-  answersWithImages: Array<string>
+  answersWithImages: Array<string>,
+  user: any
 ) {
   let answerKeys = [];
 
@@ -64,6 +65,7 @@ export function saveNewClaim(
         delete claimAnswers[field];
       }
     });
+    claim.setACL(new Parse.ACL(user));
     claim.set("policyTypeId", policyTypeId);
     claim.set("claimAnswers", claimAnswers);
     claim.set("purchase", purchase);
