@@ -106,14 +106,32 @@ var DefaultViewPageIndicator = React.createClass({
 
     return (
       <View style={styles.container}>
-        <TouchableOpacity
-          onPress={() => this.props.navigation.navigate("TermsOfUse")}
-          style={styles.button}
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center"
+          }}
         >
-          <Text style={styles.buttonText}>
-            <Text style={styles.signInText}>Sign In</Text>
-          </Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() =>
+              this.props.navigation.navigate("TermsOfUse", { page: "Chat" })}
+            style={[styles.button, { marginRight: 20 }]}
+          >
+            <Text style={styles.buttonText}>
+              <Text style={styles.signInText}>Sign In</Text>
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() =>
+              this.props.navigation.navigate("TermsOfUse", { page: "Auth" })}
+            style={[styles.button, { marginLeft: 20 }]}
+          >
+            <Text style={styles.buttonText}>
+              <Text style={styles.signInText}>Check Prices</Text>
+            </Text>
+          </TouchableOpacity>
+        </View>
         <View style={styles.indicators}>
           <View
             style={styles.tabs}

@@ -209,11 +209,11 @@ const stackNavigatorScreens = {
 let stackNavConfig = {
   headerMode: "none"
 };
-if (ENV === "development") {
-  stackNavConfig["initialRouteName"] = "Drawer";
-} else {
-  stackNavConfig["initialRouteName"] = "Intro";
-}
+// if (ENV === "development") {
+//   stackNavConfig["initialRouteName"] = "Drawer";
+// } else {
+//   stackNavConfig["initialRouteName"] = "Intro";
+// }
 
 export default (Microsurance = StackNavigator(
   stackNavigatorScreens,

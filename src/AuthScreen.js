@@ -458,9 +458,9 @@ export default class AuthScreen extends Component {
 
   handleRedirectToPurchase() {
     const policy = this.props.navigation.state.params.policy;
-    console.log(policy);
     Parse.User.currentAsync().then(currentUser => {
       // const resetAction = createResetAction(policy, currentUser);
+      console.log(currentUser);
       const resetAction = NavigationActions.reset({
         index: 0,
         actions: [

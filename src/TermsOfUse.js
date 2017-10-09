@@ -18,7 +18,17 @@ import { NavigationActions } from "react-navigation";
 
 const resetToDrawerAction = NavigationActions.reset({
   index: 0,
-  actions: [NavigationActions.navigate({ routeName: "Drawer" })]
+  actions: [
+    NavigationActions.navigate({
+      routeName: "Drawer",
+      action: NavigationActions.navigate({
+        routeName: "BuyStack",
+        action: NavigationActions.navigate({
+          routeName: "Auth"
+        })
+      })
+    })
+  ]
 });
 
 export default class TermsOfUse extends Component {

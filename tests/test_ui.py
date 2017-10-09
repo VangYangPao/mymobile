@@ -16,18 +16,18 @@ ios_app_path = os.path.join(root_dir, 'ios', 'build', 'Build',
                             'Microsurance.app')
 
 local_caps = {
-    # 'android': {
-    #     'platformName': 'Android',
-    #     'platformVersion': '7.0',
-    #     'deviceName': 'Redmi',
-    #     'app': android_app_path
-    # },
-    'iPhone 5s': {
-        'platformName': 'iOS',
-        'platformVersion': '10.3',
-        'deviceName': 'iPhone 5s',
-        'app': ios_app_path
-    }
+    'android': {
+        'platformName': 'Android',
+        'platformVersion': '7.0',
+        'deviceName': 'Redmi',
+        'app': android_app_path
+    },
+    # 'iPhone 5s': {
+    #     'platformName': 'iOS',
+    #     'platformVersion': '10.3',
+    #     'deviceName': 'iPhone 5s',
+    #     'app': ios_app_path
+    # }
 }
 
 current_cap = {}
@@ -52,9 +52,9 @@ class AppiumTests(unittest.TestCase):
     @timeout_decorator.timeout(LOCAL_TIMEOUT)
     def test_intro_works(self):
         sleep(2)
-        logo_el = self.find_accessibility('intro__logo')
+        logo_el = self.find_accessibility('intro__screen')
         self.assertIsNotNone(logo_el)
-        sign_in_bottom_el = self.find_accessibility('intro__sign-in')
+        # sign_in_bottom_el = self.find_accessibility('intro__sign-in')
         for i in range(3):
             self.driver.swipe((100, 200), (300, 200))
 
@@ -64,25 +64,25 @@ class AppiumTests(unittest.TestCase):
     #         "menu-button")
     #     self.assertEquals(menu_button, [])
 
-    @timeout_decorator.timeout(LOCAL_TIMEOUT)
-    def test_policies_exist(self):
-        policies = ['travel', 'pa', 'pa_mr', 'pa_wi']
-        for policy in policies:
-            choice_el = self.find_accessibility(
-                'policy-choice-'+policy)
-        self.assertIsNotNone(choice_el)
+    # @timeout_decorator.timeout(LOCAL_TIMEOUT)
+    # def test_policies_exist(self):
+    #     policies = ['travel', 'pa', 'pa_mr', 'pa_wi']
+    #     for policy in policies:
+    #         choice_el = self.find_accessibility(
+    #             'purchase__policy-choice-'+policy)
+    #     self.assertIsNotNone(choice_el)
 
-    @timeout_decorator.timeout(LOCAL_TIMEOUT)
-    def test_purchase_travel(self):
-        travel_choice_el = self.find_accessibility(
-            'purchase__policy-choice-travel')
-        self.assertIsNotNone(travel_choice_el)
-        self.tap_on(travel_choice_el)
-        sleep(2)
-        purchase_btn_el = self.find_accessibility(
-            'purchase__policy-purchase-button')
-        self.assertIsNotNone(purchase_btn_el)
-        self.tap_on(purchase_btn_el)
+    # @timeout_decorator.timeout(LOCAL_TIMEOUT)
+    # def test_purchase_travel(self):
+    #     travel_choice_el = self.find_accessibility(
+    #         'purchase__policy-choice-travel')
+    #     self.assertIsNotNone(travel_choice_el)
+    #     self.tap_on(travel_choice_el)
+    #     sleep(2)
+    #     purchase_btn_el = self.find_accessibility(
+    #         'purchase__policy-purchase-button')
+    #     self.assertIsNotNone(purchase_btn_el)
+    #     self.tap_on(purchase_btn_el)
 
 
 if __name__ == "__main__":
