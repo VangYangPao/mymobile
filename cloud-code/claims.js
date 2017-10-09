@@ -13,8 +13,7 @@ var fs = require("fs");
 var stream = require("stream");
 var util = require("util");
 var Excel = require("exceljs");
-var xlsx = require("node-xlsx");
-var toArray = require("stream-to-array");
+var request = require("request");
 
 var BACKUP_DIR = "/ftp-response/Backup";
 var CLAIMS_DIR = "/ftp-response/Claims";
@@ -63,6 +62,31 @@ function backupExistingFiles(sftp) {
 }
 
 function appendClaimToExcelFile(sftp, claim) {
+  var documentDir = path.join(CLAIMS_DIR, "Documents", claim.id);
+  var claimHeader = [
+    "ClaimID",
+    "CreatedOnDate",
+    "PolicyholderName",
+    "PolicyNo",
+    "PolicyholderIDType",
+    "PolicyholderIDNo",
+    "ClaimantName",
+    "ClaimantIDType",
+    "ClaimantIDNo",
+    "ClaimantPhone",
+    "ClaimantEmail",
+    "ClaimantAddress",
+    "AccidentPlace",
+    "AccidentDate",
+    "AccidentType",
+    "AccidentLongDesc",
+    "CurrencyType",
+    "TotalAmount",
+    "Similar Condition & Recurrence",
+    "Name Of Insurance Company(s) Involved",
+    "Respect Of This Claim To",
+    "DocumentList"
+  ];
   var claimRow = transformClaimToExcelRow(claim);
   // var fixturesDir = path.join(__dirname, "..", "__tests__", "fixtures");
   var filePath = path.join(CLAIMS_DIR, TRAVEL_CLAIMS);
@@ -77,6 +101,16 @@ function appendClaimToExcelFile(sftp, claim) {
     .then(function() {
       let worksheet = workbook.getWorksheet(1);
       worksheet.spliceRows(2, 0, claimRow);
+      var row = worksheet.getRow(2);
+      row.eachCell(function(cell, colNumber) {
+        if (cell.value instanceof Date) {
+          cell.alignment = { vertical: "bottom", horizontal: "right" };
+        } else {
+          cell.alignment = { vertical: "bottom", horizontal: "left" };
+        }
+      });
+      row.getCell("V").alignment = { wrapText: true };
+      row.commit();
       var ws = new stream.Transform();
       ws._transform = function(chunk, encoding, done) {
         this.push(chunk);
@@ -87,12 +121,36 @@ function appendClaimToExcelFile(sftp, claim) {
       });
     })
     .then(function(ws) {
+      // append to Excel file
       return sftp.put(ws, filePath, false, null);
+    })
+    .then(function() {
+      // create document directory
+      var claimId = claim.id;
+      var recursive = true; // for safe guard
+      var documents = claim.get("documents");
+      return sftp.mkdir(documentDir, recursive);
+    })
+    .then(function() {
+      var documents = claim.get("documents");
+      var promises = documents.map(function(doc) {
+        var filename = doc.name + "." + doc.ext;
+        var filePath = path.join(documentDir, filename);
+        var ws = new stream.Transform();
+        ws._transform = function(chunk, encoding, done) {
+          this.push(chunk);
+          done();
+        };
+        var url = doc.file.url();
+        console.log(url);
+        request(url).pipe(ws);
+        return sftp.put(ws, filePath);
+      });
+      return Promise.all(promises);
     });
 }
 
 function transformClaimToExcelRow(claim) {
-  console.log("transform");
   var ClaimID = claim.id;
   var CreatedOnDate = claim.get("createdAt");
   var purchase = claim.get("purchase");
@@ -151,31 +209,6 @@ function transformClaimToExcelRow(claim) {
       return d.name + "." + d.ext;
     })
     .join("\n");
-
-  var claimHeader = [
-    "ClaimID",
-    "CreatedOnDate",
-    "PolicyholderName",
-    "PolicyNo",
-    "PolicyholderIDType",
-    "PolicyholderIDNo",
-    "ClaimantName",
-    "ClaimantIDType",
-    "ClaimantIDNo",
-    "ClaimantPhone",
-    "ClaimantEmail",
-    "ClaimantAddress",
-    "AccidentPlace",
-    "AccidentDate",
-    "AccidentType",
-    "AccidentLongDesc",
-    "CurrencyType",
-    "TotalAmount",
-    "Similar Condition & Recurrence",
-    "Name Of Insurance Company(s) Involved",
-    "Respect Of This Claim To",
-    "DocumentList"
-  ];
   var newClaimRow = [
     ClaimID,
     CreatedOnDate,

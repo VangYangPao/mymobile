@@ -1,6 +1,6 @@
 // @flow
 import "./mocks";
-import Parse from "parse/node";
+import Parse from "parse/react-native";
 import Client from "ssh2-sftp-client";
 
 import { generateID } from "../src/utils";
@@ -119,11 +119,12 @@ it("appends new claim to Excel file", () => {
     recurrence: "aaa",
     recurrenceDetail: "aaa"
   };
-  let subPurchase, purchase, _claim;
+  var user, subPurchase, purchase, _claim;
 
   return Parse.User
     .logIn("x@aa.com", "1234abcd")
-    .then(user => {
+    .then(_user => {
+      user = _user;
       return saveNewPurchase(
         policyTypeId,
         pasAppId,
@@ -146,10 +147,13 @@ it("appends new claim to Excel file", () => {
       subPurchase = _subPurchase;
       purchase = subPurchase.get("purchaseId");
       const policyTypeId = purchase.get("policyTypeId");
-      return saveNewClaim(policyTypeId, claimAnswers, purchase, [
-        "images",
-        "travelImages"
-      ]);
+      return saveNewClaim(
+        policyTypeId,
+        claimAnswers,
+        purchase,
+        ["images", "travelImages"],
+        user
+      );
     })
     .then(claim => {
       _claim = claim;
@@ -161,14 +165,16 @@ it("appends new claim to Excel file", () => {
         .then(() => {
           return sftp.end();
         });
-    })
-    .then(() => {
-      return _claim.destroy();
-    })
-    .then(() => {
-      return subPurchase.destroy();
-    })
-    .then(() => {
-      return purchase.destroy();
     });
+  // .then(() => {
+  //   return _claim.destroy();
+  // })
+  // .then(() => {
+  //   console.log(subPurchase);
+  //   return subPurchase.destroy();
+  // })
+  // .then(() => {
+  //   console.log(purchase);
+  //   return purchase.destroy();
+  // });
 });
