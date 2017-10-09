@@ -147,23 +147,25 @@ it("appends new claim to Excel file", () => {
       subPurchase = _subPurchase;
       purchase = subPurchase.get("purchaseId");
       const policyTypeId = purchase.get("policyTypeId");
-      return saveNewClaim(
-        policyTypeId,
-        claimAnswers,
-        purchase,
-        ["images", "travelImages"],
-        user
-      );
+      var promises = [1, 2, 3].map(function() {
+        return saveNewClaim(
+          policyTypeId,
+          claimAnswers,
+          purchase,
+          ["images", "travelImages"],
+          user
+        );
+      });
+      return Promise.all(promises);
     })
-    .then(claim => {
-      _claim = claim;
+    .then(claims => {
       const sftp = new Client();
       return connectToSFTP(sftp)
         .then(() => {
           return backupExistingFiles(sftp);
         })
         .then(() => {
-          return appendClaimToExcelFile(sftp, claim);
+          return appendClaimToExcelFile(sftp, claims);
         })
         .then(() => {
           return sftp.end();

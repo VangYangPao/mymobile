@@ -11,6 +11,7 @@ export function saveNewClaim(
   user: any
 ) {
   let answerKeys = [];
+  claimAnswers = Object.assign({}, claimAnswers);
 
   const answerPromises = answersWithImages.map(answerKey => {
     const claimAnswer = claimAnswers[answerKey];

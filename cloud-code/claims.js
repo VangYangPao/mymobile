@@ -61,8 +61,7 @@ function backupExistingFiles(sftp) {
   return recursivelyBackup(BACKUP_DIR, CLAIMS_DIR);
 }
 
-function appendClaimToExcelFile(sftp, claim) {
-  var documentDir = path.join(CLAIMS_DIR, "Documents", claim.id);
+function appendClaimToExcelFile(sftp, claims) {
   var claimHeader = [
     "ClaimID",
     "CreatedOnDate",
@@ -87,11 +86,7 @@ function appendClaimToExcelFile(sftp, claim) {
     "Respect Of This Claim To",
     "DocumentList"
   ];
-  var claimRow = transformClaimToExcelRow(claim);
-  // var fixturesDir = path.join(__dirname, "..", "__tests__", "fixtures");
   var filePath = path.join(CLAIMS_DIR, TRAVEL_CLAIMS);
-  // /ftp-response/Claims/TravelProtect360-Claims.xlsx
-  // /ftp-response/Claims/TravelProtect360-Claims.xl
   let workbook = new Excel.Workbook();
   return sftp
     .get(filePath, false, null)
@@ -100,17 +95,18 @@ function appendClaimToExcelFile(sftp, claim) {
     })
     .then(function() {
       let worksheet = workbook.getWorksheet(1);
-      worksheet.spliceRows(2, 0, claimRow);
-      var row = worksheet.getRow(2);
-      row.eachCell(function(cell, colNumber) {
-        if (cell.value instanceof Date) {
-          cell.alignment = { vertical: "bottom", horizontal: "right" };
-        } else {
-          cell.alignment = { vertical: "bottom", horizontal: "left" };
-        }
-      });
-      row.getCell("V").alignment = { wrapText: true };
-      row.commit();
+      var claimsRows = claims.map(transformClaimToExcelRow);
+      worksheet.spliceRows.apply(worksheet, [2, 0].concat(claimsRows));
+      // var row = worksheet.getRow(2);
+      // row.eachCell(function(cell, colNumber) {
+      //   if (cell.value instanceof Date) {
+      //     cell.alignment = { vertical: "bottom", horizontal: "right" };
+      //   } else {
+      //     cell.alignment = { vertical: "bottom", horizontal: "left" };
+      //   }
+      // });
+      // row.getCell("V").alignment = { wrapText: true };
+      // row.commit();
       var ws = new stream.Transform();
       ws._transform = function(chunk, encoding, done) {
         this.push(chunk);
@@ -127,25 +123,32 @@ function appendClaimToExcelFile(sftp, claim) {
     .then(function() {
       // create document directory
       var recursive = true; // for safe guard
-      var documents = claim.get("documents");
-      return sftp.mkdir(documentDir, recursive);
-    })
-    .then(function() {
-      var documents = claim.get("documents");
-      var promises = documents.map(function(doc) {
-        var filename = doc.name + "." + doc.ext;
-        var filePath = path.join(documentDir, filename);
-        var ws = new stream.Transform();
-        ws._transform = function(chunk, encoding, done) {
-          this.push(chunk);
-          done();
-        };
-        var url = doc.file.url();
-        console.log(url);
-        request(url).pipe(ws);
-        return sftp.put(ws, filePath);
+      var promises = claims.map(function(claim) {
+        var documentDir = path.join(CLAIMS_DIR, "Documents", claim.id);
+        var documents = claim.get("documents");
+        return sftp.mkdir(documentDir, recursive);
       });
       return Promise.all(promises);
+    })
+    .then(function() {
+      var claimPromises = claims.map(function(claim) {
+        var documents = claim.get("documents");
+        var documentDir = path.join(CLAIMS_DIR, "Documents", claim.id);
+        var documentPromises = documents.map(function(doc) {
+          var filename = doc.name + "." + doc.ext;
+          var filePath = path.join(documentDir, filename);
+          var ws = new stream.Transform();
+          ws._transform = function(chunk, encoding, done) {
+            this.push(chunk);
+            done();
+          };
+          var url = doc.file.url();
+          request(url).pipe(ws);
+          return sftp.put(ws, filePath);
+        });
+        return Promise.all(documentPromises);
+      });
+      return Promise.all(claimPromises);
     });
 }
 
