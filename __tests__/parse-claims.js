@@ -3,7 +3,7 @@ import "./mocks";
 import { generateID } from "../src/utils";
 import Parse from "parse/react-native";
 
-import { testSaveNewClaim } from "./parse-functions";
+import { saveNewClaim } from "../src/parse/claims";
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 

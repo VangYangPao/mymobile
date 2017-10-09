@@ -64,59 +64,35 @@ function backupExistingFiles(sftp) {
 
 function appendClaimToExcelFile(sftp, claim) {
   var claimRow = transformClaimToExcelRow(claim);
-  var fixturesDir = path.join(__dirname, "..", "__tests__", "fixtures");
-  // const filePath = path.join(fixturesDir, TRAVEL_CLAIMS);
-  // const tmpPath = path.join(fixturesDir, "test-" + TRAVEL_CLAIMS);
+  // var fixturesDir = path.join(__dirname, "..", "__tests__", "fixtures");
   var filePath = path.join(CLAIMS_DIR, TRAVEL_CLAIMS);
   // /ftp-response/Claims/TravelProtect360-Claims.xlsx
   // /ftp-response/Claims/TravelProtect360-Claims.xl
   let workbook = new Excel.Workbook();
-  var Readable = stream.Readable;
-  var rs = new Readable();
-  rs._read = function() {};
   return sftp
     .get(filePath, false, null)
     .then(function(rs) {
-      // return toArray(rs)
-      //   .then(function(parts) {
-      //     var buffers = parts.map(function(part) {
-      //       return util.isBuffer(part) ? part : Buffer.from(part);
-      //     });
-      //     return Buffer.concat(buffers);
-      //   })
-      //   .then(function(buf) {
-      //     var workSheetsFromBuffer = xlsx.parse(buf);
-      //     console.log(workSheetsFromBuffer);
-      //   });
       return workbook.xlsx.read(rs);
     })
     .then(function() {
       let worksheet = workbook.getWorksheet(1);
       worksheet.spliceRows(2, 0, claimRow);
-      var ws = stream.Writable();
-      ws._write = function(chunk, enc, next) {
-        next();
+      var ws = new stream.Transform();
+      ws._transform = function(chunk, encoding, done) {
+        this.push(chunk);
+        done();
       };
-      // rs.pipe(ws);
       return workbook.xlsx.write(ws).then(function() {
         return ws;
       });
     })
     .then(function(ws) {
-      // workbook.xlsx.read(rs);
-      return toArray(ws).then(function(parts) {
-        var buffers = parts.map(function(part) {
-          return util.isBuffer(part) ? part : Buffer.from(part);
-        });
-        return Buffer.concat(buffers);
-      });
-    })
-    .then(function(buf) {
-      return sftp.put(buf, filePath);
+      return sftp.put(ws, filePath, false, null);
     });
 }
 
 function transformClaimToExcelRow(claim) {
+  console.log("transform");
   var ClaimID = claim.id;
   var CreatedOnDate = claim.get("createdAt");
   var purchase = claim.get("purchase");
