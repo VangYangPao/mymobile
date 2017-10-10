@@ -48,16 +48,16 @@ const createResetAction = (policy, currentUser) => {
           policy: null,
           currentUser
         }
-      }),
-      NavigationActions.navigate({
-        routeName: "Chat",
-        params: {
-          isStartScreen: false,
-          questionSet: "claim",
-          policy,
-          currentUser
-        }
       })
+      // NavigationActions.navigate({
+      //   routeName: "Chat",
+      //   params: {
+      //     isStartScreen: false,
+      //     questionSet: "claim",
+      //     policy,
+      //     currentUser
+      //   }
+      // })
     ]
   });
 };
@@ -465,19 +465,19 @@ export default class AuthScreen extends Component {
         index: 0,
         actions: [
           NavigationActions.navigate({
-            routeName: "Drawer",
-            action: NavigationActions.navigate({
-              routeName: "BuyStack",
-              action: NavigationActions.navigate({
-                routeName: "Chat",
-                params: {
-                  isStartScreen: false,
-                  questionSet: "buy",
-                  policy,
-                  currentUser
-                }
-              })
-            })
+            routeName: "Drawer"
+            // action: NavigationActions.navigate({
+            //   routeName: "BuyStack",
+            //   action: NavigationActions.navigate({
+            //     routeName: "Chat",
+            //     params: {
+            //       isStartScreen: false,
+            //       questionSet: "buy",
+            //       policy,
+            //       currentUser
+            //     }
+            //   })
+            // })
           })
         ]
       });
