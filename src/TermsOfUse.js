@@ -16,14 +16,28 @@ import { Text } from "./defaultComponents";
 import colors from "./colors";
 import { NavigationActions } from "react-navigation";
 
-const resetToDrawerAction = NavigationActions.reset({
-  index: 0,
-  actions: [NavigationActions.navigate({ routeName: "Drawer" })]
-});
-
 export default class TermsOfUse extends Component {
   handleAccept() {
-    this.props.navigation.dispatch(resetToDrawerAction);
+    this.props.navigation.dispatch(
+      NavigationActions.navigate({
+        routeName: "Drawer",
+        action: NavigationActions.navigate({
+          routeName: "BuyStack",
+          action: NavigationActions.reset({
+            index: 0,
+            actions: [
+              NavigationActions.navigate({
+                routeName: "Chat",
+                params: {
+                  isStartScreen: true,
+                  questionSet: "buy"
+                }
+              })
+            ]
+          })
+        })
+      })
+    );
   }
 
   handleDecline() {

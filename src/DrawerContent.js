@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { View, Image, TouchableOpacity, StyleSheet } from "react-native";
-import { DrawerItems } from "react-navigation";
+import { DrawerItems, NavigationActions } from "react-navigation";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Parse from "parse/react-native";
 
@@ -20,6 +20,9 @@ export default class DrawerContent extends Component {
     const chatRoute = this.props.navigation.state.routes[0].routes.find(
       r => r.routeName === "Chat"
     );
+    if (!chatRoute) {
+      return null;
+    }
     let currentUser = null;
     if (chatRoute.params) {
       currentUser = chatRoute.params.currentUser;
@@ -45,8 +48,19 @@ export default class DrawerContent extends Component {
     }
 
     const logout = () => {
+      // console.log(this.props);
+      const { rootNavigation } = this.props.navigation.state.params;
       Parse.User.logOut().then(() => {
-        this.props.navigation.navigate("Intro");
+        rootNavigation.dispatch(
+          NavigationActions.reset({
+            index: 0,
+            actions: [
+              NavigationActions.navigate({
+                routeName: "Intro"
+              })
+            ]
+          })
+        );
       });
     };
 

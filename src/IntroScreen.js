@@ -59,7 +59,8 @@ export default class IntroScreen extends Component {
     const buttonText = "CHECK OUT OUR SUPER-BIG COVERAGE\nAT SUPER-LOW PRICES";
     const signInButton = (
       <Button
-        onPress={() => this.props.navigation.navigate("TermsOfUse")}
+        onPress={() =>
+          this.props.navigation.navigate("TermsOfUse", { page: "Drawer" })}
         containerStyle={styles.buttonContainer}
         style={styles.signInButton}
       >
