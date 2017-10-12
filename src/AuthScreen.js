@@ -13,7 +13,8 @@ import {
   Switch,
   Keyboard,
   TouchableWithoutFeedback,
-  StatusBar
+  StatusBar,
+  ActivityIndicator
 } from "react-native";
 import { NavigationActions } from "react-navigation";
 import VectorDrawableView from "./VectorDrawableView";
@@ -48,16 +49,16 @@ const createResetAction = (policy, currentUser) => {
           policy: null,
           currentUser
         }
-      }),
-      NavigationActions.navigate({
-        routeName: "Chat",
-        params: {
-          isStartScreen: false,
-          questionSet: "claim",
-          policy,
-          currentUser
-        }
       })
+      // NavigationActions.navigate({
+      //   routeName: "Chat",
+      //   params: {
+      //     isStartScreen: false,
+      //     questionSet: "claim",
+      //     policy,
+      //     currentUser
+      //   }
+      // })
     ]
   });
 };
@@ -175,6 +176,9 @@ const userSignUpOptions = {
 class SignUpScreen extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      loading: false
+    };
     this.acceptTOS = false;
     this.handleSignUp = this.handleSignUp.bind(this);
   }
@@ -188,7 +192,11 @@ class SignUpScreen extends Component {
       //   );
       //   return;
       // }
-      this.props.onSignUp(formValues);
+      this.props.onSignUp(formValues).catch(err => {
+        if (err.code) {
+          showAlert(err.message);
+        }
+      });
     }
   }
 
@@ -249,7 +257,15 @@ class SignUpScreen extends Component {
             />*/}
             <View>
               <Button onPress={this.handleSignUp} style={styles.signinButton}>
-                Sign Up
+                <View style={styles.signinButtonContainer}>
+                  <Text style={styles.signinButtonText}>SIGN UP</Text>
+                  {this.state.loading ? (
+                    <ActivityIndicator
+                      style={{ marginLeft: 10 }}
+                      color="white"
+                    />
+                  ) : null}
+                </View>
               </Button>
               <TouchableOpacity
                 onPress={this.props.onNavigateToLogin}
@@ -290,13 +306,23 @@ const userLoginOptions = {
 class LoginScreen extends Component {
   constructor(props) {
     super(props);
+    this.state = { loading: false };
     this.handleLogin = this.handleLogin.bind(this);
   }
 
   handleLogin() {
     const formValues = this.refs.form.getValue();
     if (formValues) {
-      this.props.onLogin(formValues);
+      this.setState({ loading: true });
+      this.props.onLogin(formValues).catch(err => {
+        this.setState({ loading: false });
+        console.log(err.message);
+        if (err.code === 101) {
+          showAlert(err.message);
+        } else {
+          showAlert("There seems to be a problem logging in");
+        }
+      });
     }
   }
 
@@ -314,7 +340,12 @@ class LoginScreen extends Component {
             </Text>
             <Form ref="form" type={UserLogin} options={userLoginOptions} />
             <Button onPress={this.handleLogin} style={styles.signinButton}>
-              LOGIN
+              <View style={styles.signinButtonContainer}>
+                <Text style={styles.signinButtonText}>LOGIN</Text>
+                {this.state.loading ? (
+                  <ActivityIndicator style={{ marginLeft: 10 }} color="white" />
+                ) : null}
+              </View>
             </Button>
             <TouchableOpacity
               onPress={this.props.onNavigateToSignUp}
@@ -427,63 +458,41 @@ export default class AuthScreen extends Component {
     const beneficiaryCode = generateID(6);
     user.set("beneficiaryCode", beneficiaryCode);
 
-    user
-      .signUp(null)
-      .then(user => {
-        this.handleRedirectToPurchase();
-      })
-      .catch(err => {
-        if (err.code) {
-          showAlert(err.message);
-        }
-      });
+    return user.signUp(null).then(user => {
+      this.handleRedirectToPurchase(user);
+    });
   }
 
   handleLogin(form) {
     const { email, password } = form;
-    Parse.User
-      .logIn(email, password)
-      .then(user => {
-        this.handleRedirectToPurchase();
-      })
-      .catch(err => {
-        console.log(err.message);
-        if (err.code === 101) {
-          showAlert(err.message);
-        } else {
-          showAlert("There seems to be a problem logging in");
-        }
-      });
+    return Parse.User.logIn(email, password).then(user => {
+      this.handleRedirectToPurchase(user);
+    });
   }
 
-  handleRedirectToPurchase() {
-    const policy = this.props.navigation.state.params.policy;
-    Parse.User.currentAsync().then(currentUser => {
-      // const resetAction = createResetAction(policy, currentUser);
-      console.log(currentUser);
-      const resetAction = NavigationActions.reset({
-        index: 0,
-        actions: [
-          NavigationActions.navigate({
-            routeName: "Drawer",
-            action: NavigationActions.navigate({
-              routeName: "BuyStack",
-              action: NavigationActions.navigate({
-                routeName: "Chat",
-                params: {
-                  isStartScreen: false,
-                  questionSet: "buy",
-                  policy,
-                  currentUser
-                }
-              })
-            })
-          })
-        ]
-      });
-      this.props.screenProps.rootNavigation.dispatch(resetAction);
-      // this.props.navigation.dispatch(resetAction);
+  handleRedirectToPurchase(currentUser: any) {
+    let policy;
+    if (this.props.navigation.state.params) {
+      policy = this.props.navigation.state.params.policy;
+    }
+    const resetAction = NavigationActions.reset({
+      index: 0,
+      actions: [
+        NavigationActions.navigate({
+          routeName: "Chat",
+          params: {
+            isStartScreen: true,
+            questionSet: "buy",
+            policy,
+            currentUser
+          }
+        })
+      ]
     });
+    const { rootNavigation } = this.props.screenProps;
+    rootNavigation.dispatch(resetAction);
+    // this.props.screenProps.rootNavigation.dispatch(resetAction);
+    // this.props.navigation.dispatch(resetAction);
   }
 
   handleNavigateToLogin() {
@@ -566,6 +575,15 @@ export default class AuthScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+  signinButtonText: {
+    color: "white",
+    fontSize: 16
+  },
+  signinButtonContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center"
+  },
   mustLogin: {
     alignSelf: "center",
     marginTop: 10,

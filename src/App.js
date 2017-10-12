@@ -10,7 +10,11 @@ import {
   Dimensions,
   Platform
 } from "react-native";
-import { DrawerNavigator, StackNavigator } from "react-navigation";
+import {
+  NavigationActions,
+  DrawerNavigator,
+  StackNavigator
+} from "react-navigation";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Ionicon from "react-native-vector-icons/Ionicons";
 
@@ -110,6 +114,7 @@ const BuyStackNavigator = StackNavigator(
     }
   },
   {
+    initialRouteName: "Chat",
     initialRouteParams: {
       questionSet: "buy",
       isStartScreen: true
@@ -185,9 +190,7 @@ const MyDrawerNavigator = DrawerNavigator(
   },
   {
     drawerWidth: WINDOW_WIDTH * 0.65,
-    contentComponent: props => {
-      return <DrawerContent {...props} />;
-    },
+    contentComponent: props => <DrawerContent {...props} />,
     contentOptions: {
       activeTintColor: colors.primaryOrange,
       inactiveTintColor: colors.primaryText
@@ -195,13 +198,35 @@ const MyDrawerNavigator = DrawerNavigator(
   }
 );
 
+class DrawerNavigatorWrapper extends React.Component {
+  static router = {
+    getStateForAction: MyDrawerNavigator.router.getStateForAction,
+    getActionForPathAndParams:
+      MyDrawerNavigator.router.getActionForPathAndParams,
+    getPathAndParamsForState: MyDrawerNavigator.router.getPathAndParamsForState,
+    getComponentForState: MyDrawerNavigator.router.getComponentForState,
+    getComponentForRouteName: MyDrawerNavigator.router.getComponentForRouteName,
+    getScreenOptions: MyDrawerNavigator.router.getScreenOptions
+  };
+  render() {
+    const { navigation } = this.props;
+    const { state, dispatch } = navigation;
+    const { routes, index } = state;
+
+    return (
+      <MyDrawerNavigator
+        navigation={navigation}
+        screenProps={{ rootNavigation: navigation }}
+      />
+    );
+  }
+}
+
 const stackNavigatorScreens = {
   Intro: { screen: IntroScreen },
   TermsOfUse: { screen: TermsOfUse },
   Drawer: {
-    screen: ({ navigation }) => (
-      <MyDrawerNavigator screenProps={{ rootNavigation: navigation }} />
-    )
+    screen: DrawerNavigatorWrapper
   },
   Help: { screen: HelpStackNavigator }
 };
