@@ -145,28 +145,34 @@ const userSignUpOptions = {
   auto: "placeholders",
   fields: {
     email: {
+      accessibilityLabel: "auth__signup-email",
       placeholderTextColor: "white",
       keyboardType: "email-address",
       autoCapitalize: "none",
       autoCorrect: false
     },
     firstName: {
+      accessibilityLabel: "auth__signup-firstname",
       placeholderTextColor: "white",
       error: "Name cannot be empty"
     },
     lastName: {
+      accessibilityLabel: "auth__signup-lastname",
       placeholderTextColor: "white",
       error: "Name cannot be empty"
     },
     telephone: {
+      accessibilityLabel: "auth__signup-telephone",
       placeholderTextColor: "white",
       keyboardType: "phone-pad"
     },
     password: {
+      accessibilityLabel: "auth__signup-password",
       secureTextEntry: true,
       placeholderTextColor: "white"
     },
     confirmPassword: {
+      accessibilityLabel: "auth__signup-confirm-password",
       secureTextEntry: true,
       placeholderTextColor: "white"
     }
@@ -256,7 +262,11 @@ class SignUpScreen extends Component {
               style={styles.tosSwitch}
             />*/}
             <View>
-              <Button onPress={this.handleSignUp} style={styles.signinButton}>
+              <Button
+                accessibilityLabel="auth__signup-btn"
+                onPress={this.handleSignUp}
+                style={styles.signinButton}
+              >
                 <View style={styles.signinButtonContainer}>
                   <Text style={styles.signinButtonText}>SIGN UP</Text>
                   {this.state.loading ? (
@@ -291,12 +301,14 @@ const UserLogin = t.struct({
 const userLoginOptions = {
   fields: {
     email: {
+      accessibilityLabel: "auth__login-email",
       autoCapitalize: "none",
       autoCorrect: false,
       keyboardType: "email-address",
       error: "Enter a valid email"
     },
     password: {
+      accessibilityLabel: "auth__login-password",
       secureTextEntry: true,
       error: "Password must not be empty"
     }
@@ -328,7 +340,7 @@ class LoginScreen extends Component {
 
   render() {
     return (
-      <View>
+      <View accessibilityLabel="auth__login-screen">
         <KeyboardAwareScrollView>
           <View style={[styles.container, { justifyContent: "center" }]}>
             <VectorDrawableView
@@ -339,7 +351,11 @@ class LoginScreen extends Component {
               You must login to purchase a protection plan.
             </Text>
             <Form ref="form" type={UserLogin} options={userLoginOptions} />
-            <Button onPress={this.handleLogin} style={styles.signinButton}>
+            <Button
+              accessibilityLabel="auth__login-btn"
+              onPress={this.handleLogin}
+              style={styles.signinButton}
+            >
               <View style={styles.signinButtonContainer}>
                 <Text style={styles.signinButtonText}>LOGIN</Text>
                 {this.state.loading ? (
@@ -348,6 +364,7 @@ class LoginScreen extends Component {
               </View>
             </Button>
             <TouchableOpacity
+              accessibilityLabel="auth__go-to-signup"
               onPress={this.props.onNavigateToSignUp}
               style={{ marginVertical: 20 }}
               activeOpacity={0.5}
@@ -528,6 +545,7 @@ export default class AuthScreen extends Component {
       case "SignUp":
         page = (
           <SignUpScreen
+            accessibilityLabel="auth__signup-screen"
             onSignUp={this.handleSignup}
             navigation={this.props.navigation}
             onNavigateToLogin={this.handleNavigateToLogin}

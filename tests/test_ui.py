@@ -12,22 +12,25 @@ root_dir = os.path.abspath(os.path.join(test_dir, os.pardir))
 android_app_path = os.path.join(
     root_dir, 'android', 'app', 'build', 'outputs', 'apk', 'app-release.apk')
 ios_app_path = os.path.join(root_dir, 'ios', 'build', 'Build',
-                            'Products', 'Release-iphonesimulator',
+                            'Products', 'Debug-iphonesimulator',
                             'Microsurance.app')
 
+LOGIN_EMAIL = 'x@aa.com'
+LOGIN_PASSWORD = '1234abcd'
+
 local_caps = {
-    'android': {
-        'platformName': 'Android',
-        'platformVersion': '7.0',
-        'deviceName': 'Redmi',
-        'app': android_app_path
-    },
-    # 'iPhone 5s': {
-    #     'platformName': 'iOS',
-    #     'platformVersion': '10.3',
-    #     'deviceName': 'iPhone 5s',
-    #     'app': ios_app_path
-    # }
+    # 'android': {
+    #     'platformName': 'Android',
+    #     'platformVersion': '7.0',
+    #     'deviceName': 'Redmi',
+    #     'app': android_app_path
+    # },
+    'iPhone 5s': {
+        'platformName': 'iOS',
+        'platformVersion': '10.3',
+        'deviceName': 'iPhone 5s',
+        'app': ios_app_path
+    }
 }
 
 current_cap = {}
@@ -49,14 +52,74 @@ class AppiumTests(unittest.TestCase):
     def tearDown(self):
         self.driver.quit()
 
-    @timeout_decorator.timeout(LOCAL_TIMEOUT)
-    def test_intro_works(self):
-        sleep(2)
-        logo_el = self.find_accessibility('intro__screen')
+    @timeout_decorator.timeout(10)
+    def test_intro_flow(self):
+        sleep(1)
+        logo_el = self.find_accessibility('intro__logo')
+        signin_el = self.find_accessibility('intro__sign-in')
+        browse_el = self.find_accessibility('intro__browse')
         self.assertIsNotNone(logo_el)
+        self.assertIsNotNone(signin_el)
+        self.assertIsNotNone(browse_el)
         # sign_in_bottom_el = self.find_accessibility('intro__sign-in')
         for i in range(3):
-            self.driver.swipe((100, 200), (300, 200))
+            self.driver.swipe(300, 200, 100, 200)
+        self.tap_on(signin_el)
+        sleep(2)
+        login_screen = self.find_accessibility('auth__login-screen')
+        self.assertIsNotNone(login_screen)
+
+    @timeout_decorator.timeout(20)
+    def test_signin_flow(self):
+        sleep(1)
+        signin_el = self.find_accessibility('intro__sign-in')
+        self.assertIsNotNone(signin_el)
+        self.tap_on(signin_el)
+        sleep(2)
+        login_screen = self.find_accessibility('auth__login-screen')
+        self.assertIsNotNone(login_screen)
+        login_btn = self.find_accessibility('auth__login-btn')
+        login_email_input = self.find_accessibility('auth__login-email')
+        login_password_input = self.find_accessibility('auth__login-password')
+        self.assertIsNotNone(login_btn)
+        self.assertIsNotNone(login_email_input)
+        self.assertIsNotNone(login_password_input)
+        self.driver.set_value(login_email_input, LOGIN_EMAIL)
+        self.driver.set_value(login_password_input, LOGIN_PASSWORD)
+        self.tap_on(login_btn)
+        sleep(2)
+
+    @timeout_decorator.timeout(20)
+    def test_signup_flow(self):
+        sleep(1)
+        signin_el = self.find_accessibility('intro__sign-in')
+        self.assertIsNotNone(signin_el)
+        self.tap_on(signin_el)
+        sleep(1)
+        login_screen = self.find_accessibility('auth__login-screen')
+        self.assertIsNotNone(login_screen)
+        go_to_signup = self.find_accessibility('auth__go-to-signup')
+        self.assertIsNotNone(go_to_signup)
+        self.tap_on(go_to_signup)
+        sleep(1)
+        signup_btn = self.find_accessibility('auth__signup-btn')
+        signup_email_input = self.find_accessibility('auth__signup-email')
+        signup_password_input = self.find_accessibility(
+            'auth__signup-password')
+        signup_telephone_input = self.find_accessibility(
+            'auth__signup-telephone')
+        signup_confirm_password_input = self.find_accessibility(
+            'auth__signup-confirm-password')
+        signup_first_name_input = self.find_accessibility(
+            'auth__signup-firstname')
+        signup_last_name_input = self.find_accessibility(
+            'auth__signup-lastname')
+        self.driver.set_value(signup_email_input, 'test@gmail.com')
+        self.driver.set_value(signup_password_input, '1234abcd')
+        self.driver.set_value(signup_confirm_password_input, '1234abcd')
+        self.driver.set_value(signup_telephone_input, '8888888')
+        self.driver.set_value(signup_first_name_input, '1234abcd')
+        self.driver.set_value(signup_last_name_input, '1234abcd')
 
     # @timeout_decorator.timeout(LOCAL_TIMEOUT)
     # def test_no_menu_when_not_logged_in(self):

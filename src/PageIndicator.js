@@ -133,12 +133,14 @@ var DefaultViewPageIndicator = React.createClass({
       <View style={styles.container}>
         <View style={styles.buttonsContainer}>
           <TouchableOpacity
+            accessibilityLabel="intro__sign-in"
             onPress={this.resetToAuth.bind(this)}
             style={styles.button}
           >
             <Text style={styles.buttonText}>Sign In</Text>
           </TouchableOpacity>
           <TouchableOpacity
+            accessibilityLabel="intro__browse"
             onPress={() => this.props.navigation.navigate("TermsOfUse")}
             style={styles.button}
           >
