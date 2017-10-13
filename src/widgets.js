@@ -667,7 +667,7 @@ export class TableInput extends Component {
               style={{ color: colors.primaryOrange, marginRight: 15 }}
               name="add-circle-outline"
             />
-            <Text style={{ fontSize: 16 }}>ADD NEW TRAVELLER</Text>
+            <Text style={{ flex: 1, fontSize: 16 }}>ADD NEW TRAVELLER</Text>
           </View>
         </TouchableOpacity>
         <Button
@@ -930,7 +930,9 @@ export class MultiInput extends Component {
     }
     const keyboardHeight = Platform.select({
       ios:
-        this.props.keyboardHeight >= 200 ? this.props.keyboardHeight - 200 : 0,
+        this.props.keyboardHeight >= 200
+          ? this.props.keyboardHeight - 200
+          : 200,
       android: 300
     });
     return (
@@ -981,6 +983,7 @@ export class SuggestionList extends Component {
   renderSuggestion(item) {
     return (
       <TouchableHighlight
+        accessibilityLabel={"chat__suggestion-" + item.value}
         onPress={() => {
           this.props.onSelectSuggestion(item);
         }}
