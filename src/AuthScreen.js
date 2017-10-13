@@ -145,34 +145,28 @@ const userSignUpOptions = {
   auto: "placeholders",
   fields: {
     email: {
-      accessibilityLabel: "auth__signup-email",
       placeholderTextColor: "white",
       keyboardType: "email-address",
       autoCapitalize: "none",
       autoCorrect: false
     },
     firstName: {
-      accessibilityLabel: "auth__signup-firstname",
       placeholderTextColor: "white",
       error: "Name cannot be empty"
     },
     lastName: {
-      accessibilityLabel: "auth__signup-lastname",
       placeholderTextColor: "white",
       error: "Name cannot be empty"
     },
     telephone: {
-      accessibilityLabel: "auth__signup-telephone",
       placeholderTextColor: "white",
       keyboardType: "phone-pad"
     },
     password: {
-      accessibilityLabel: "auth__signup-password",
       secureTextEntry: true,
       placeholderTextColor: "white"
     },
     confirmPassword: {
-      accessibilityLabel: "auth__signup-confirm-password",
       secureTextEntry: true,
       placeholderTextColor: "white"
     }
@@ -301,14 +295,12 @@ const UserLogin = t.struct({
 const userLoginOptions = {
   fields: {
     email: {
-      accessibilityLabel: "auth__login-email",
       autoCapitalize: "none",
       autoCorrect: false,
       keyboardType: "email-address",
       error: "Enter a valid email"
     },
     password: {
-      accessibilityLabel: "auth__login-password",
       secureTextEntry: true,
       error: "Password must not be empty"
     }
@@ -340,16 +332,15 @@ class LoginScreen extends Component {
 
   render() {
     return (
-      <View accessibilityLabel="auth__login-screen">
+      <View>
         <KeyboardAwareScrollView>
           <View style={[styles.container, { justifyContent: "center" }]}>
             <VectorDrawableView
+              accessibilityLabel="auth__logo"
               resourceName="ic_microumbrella_word_white"
               style={styles.logo}
             />
-            <Text style={styles.mustLogin}>
-              You must login to purchase a protection plan.
-            </Text>
+            <Text style={styles.mustLogin} />
             <Form ref="form" type={UserLogin} options={userLoginOptions} />
             <Button
               accessibilityLabel="auth__login-btn"
@@ -495,6 +486,10 @@ export default class AuthScreen extends Component {
     const resetAction = NavigationActions.reset({
       index: 0,
       actions: [
+        // NavigationActions.navigate({
+        //   routeName: "Drawer",
+        //   action: NavigationActions.navigate({
+        //     routeName: "DrawerClose",
         NavigationActions.navigate({
           routeName: "Chat",
           params: {
@@ -504,10 +499,11 @@ export default class AuthScreen extends Component {
             currentUser
           }
         })
+        //   })
+        // })
       ]
     });
-    const { rootNavigation } = this.props.screenProps;
-    rootNavigation.dispatch(resetAction);
+    this.props.navigation.dispatch(resetAction);
     // this.props.screenProps.rootNavigation.dispatch(resetAction);
     // this.props.navigation.dispatch(resetAction);
   }
@@ -545,7 +541,6 @@ export default class AuthScreen extends Component {
       case "SignUp":
         page = (
           <SignUpScreen
-            accessibilityLabel="auth__signup-screen"
             onSignUp={this.handleSignup}
             navigation={this.props.navigation}
             onNavigateToLogin={this.handleNavigateToLogin}
@@ -577,7 +572,7 @@ export default class AuthScreen extends Component {
     }
 
     return (
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <TouchableWithoutFeedback accessible={false} onPress={Keyboard.dismiss}>
         <View style={styles.page}>
           <StatusBar
             hidden={true}
