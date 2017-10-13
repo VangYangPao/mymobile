@@ -82,9 +82,6 @@ class AppiumTests(unittest.TestCase):
         self.driver.set_value(login_password_input, LOGIN_PASSWORD)
         self.dismiss_keyboard()
         self.tap_on(login_btn)
-        log = logging.getLogger('AppiumTests')
-        log.debug(
-            "this= %r", self.driver.find_elements_by_accessibility_id('LOGIN'))
         sleep(10)
 
     # @timeout_decorator.timeout(10)

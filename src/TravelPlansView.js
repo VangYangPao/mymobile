@@ -164,6 +164,7 @@ class TravelPlanTab extends Component {
     return (
       <Animated.View style={{ opacity: this.state.fadeAnim }}>
         <SectionList
+          scrollEnabled={false}
           removeClippedSubviews={false}
           ItemSeparatorComponent={itemSeparatorComponent}
           renderSectionHeader={this.renderSectionHeader}
@@ -199,6 +200,7 @@ class TravelPlanTab extends Component {
     return (
       <View>
         <SectionList
+          scrollEnabled={false}
           removeClippedSubviews={false}
           ItemSeparatorComponent={itemSeparatorComponent}
           renderSectionHeader={this.renderSectionHeader}
