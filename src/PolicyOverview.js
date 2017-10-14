@@ -24,24 +24,22 @@ class CoverageItem extends Component {
 
   render() {
     return (
-      <TouchableOpacity style={styles.coverageBtn} activeOpacity={0.5}>
-        <View style={styles.coverageItem}>
-          <View
-            style={[
-              styles.coverageIconContainer,
-              !this.props.covered ? styles.notCovered : null
-            ]}
-          >
-            <VectorDrawableView
-              resourceName={this.props.icon}
-              style={styles.coverageIcon}
-            />
-          </View>
-          <Text style={styles.coverageTitle}>
-            {this.props.shortTitle || this.props.title}
-          </Text>
+      <View style={styles.coverageItem}>
+        <View
+          style={[
+            styles.coverageIconContainer,
+            !this.props.covered ? styles.notCovered : null
+          ]}
+        >
+          <VectorDrawableView
+            resourceName={this.props.icon}
+            style={styles.coverageIcon}
+          />
         </View>
-      </TouchableOpacity>
+        <Text style={styles.coverageTitle}>
+          {this.props.shortTitle || this.props.title}
+        </Text>
+      </View>
     );
   }
 }
@@ -54,14 +52,14 @@ class PolicyCoverages extends Component {
         <View style={styles.coverage}>
           {this.props.covered
             .slice(0, 4)
-            .map(item =>
+            .map(item => (
               <CoverageItem
                 key={item}
                 navigation={this.props.navigation}
                 covered={true}
                 {...coveragesData[item]}
               />
-            )}
+            ))}
         </View>
       </View>
     );
@@ -75,9 +73,7 @@ export default class PolicyOverview extends Component {
     const pricePerMonth = policy.plans[0].premium;
     return (
       <Page>
-        <Text style={styles.policyTitle}>
-          {policy.title}
-        </Text>
+        <Text style={styles.policyTitle}>{policy.title}</Text>
         <PolicyPrice
           pricePerMonth={pricePerMonth}
           showFrom={true}
@@ -95,9 +91,6 @@ const COVERAGE_CONTAINER_SIZE = 50;
 const PRICE_DECIMAL_CONTAINER_SIZE = 20;
 
 const styles = StyleSheet.create({
-  coverageBtn: {
-    flex: 0.25
-  },
   notCovered: {
     opacity: 0.3
   },
@@ -119,6 +112,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F5F5F5"
   },
   coverageItem: {
+    flex: 0.25,
     alignItems: "center"
   },
   coverage: {

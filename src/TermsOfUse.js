@@ -16,14 +16,32 @@ import { Text } from "./defaultComponents";
 import colors from "./colors";
 import { NavigationActions } from "react-navigation";
 
-const resetToDrawerAction = NavigationActions.reset({
-  index: 0,
-  actions: [NavigationActions.navigate({ routeName: "Drawer" })]
-});
-
 export default class TermsOfUse extends Component {
   handleAccept() {
-    this.props.navigation.dispatch(resetToDrawerAction);
+    const resetAction = NavigationActions.reset({
+      index: 1,
+      actions: [
+        NavigationActions.navigate({
+          routeName: "Intro"
+        }),
+        NavigationActions.navigate({
+          routeName: "Drawer",
+          action: NavigationActions.reset({
+            index: 0,
+            actions: [
+              NavigationActions.navigate({
+                routeName: "Chat",
+                params: {
+                  isStartScreen: true,
+                  questionSet: "buy"
+                }
+              })
+            ]
+          })
+        })
+      ]
+    });
+    this.props.navigation.dispatch(resetAction);
   }
 
   handleDecline() {
@@ -69,8 +87,7 @@ const styles = StyleSheet.create({
     borderRadius: 0
   },
   acceptButton: {
-    justifyContent: "center",
-    paddingHorizontal: 50
+    justifyContent: "center"
   },
   declineButton: {
     flex: 0.4,

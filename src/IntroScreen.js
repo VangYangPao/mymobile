@@ -59,7 +59,8 @@ export default class IntroScreen extends Component {
     const buttonText = "CHECK OUT OUR SUPER-BIG COVERAGE\nAT SUPER-LOW PRICES";
     const signInButton = (
       <Button
-        onPress={() => this.props.navigation.navigate("TermsOfUse")}
+        onPress={() =>
+          this.props.navigation.navigate("TermsOfUse", { page: "Drawer" })}
         containerStyle={styles.buttonContainer}
         style={styles.signInButton}
       >
@@ -99,7 +100,7 @@ export default class IntroScreen extends Component {
     );
     return (
       <View style={styles.page}>
-        <View style={styles.appNameContainer}>
+        <View accessibilityLabel="intro__logo" style={styles.appNameContainer}>
           <VectorDrawableView
             resourceName="ic_microumbrella_word"
             style={styles.appName}
@@ -125,9 +126,7 @@ export default class IntroScreen extends Component {
   }
 
   render() {
-    const renderPageIndicator = props => (
-      <PageIndicator navigation={this.props.navigation} {...props} />
-    );
+    const renderPageIndicator = props => <PageIndicator {...this.props} />;
     return (
       <ViewPager
         dataSource={this.state.dataSource}

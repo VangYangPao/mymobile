@@ -13,7 +13,8 @@ import {
   Switch,
   Keyboard,
   TouchableWithoutFeedback,
-  StatusBar
+  StatusBar,
+  ActivityIndicator
 } from "react-native";
 import { NavigationActions } from "react-navigation";
 import VectorDrawableView from "./VectorDrawableView";
@@ -48,16 +49,16 @@ const createResetAction = (policy, currentUser) => {
           policy: null,
           currentUser
         }
-      }),
-      NavigationActions.navigate({
-        routeName: "Chat",
-        params: {
-          isStartScreen: false,
-          questionSet: "claim",
-          policy,
-          currentUser
-        }
       })
+      // NavigationActions.navigate({
+      //   routeName: "Chat",
+      //   params: {
+      //     isStartScreen: false,
+      //     questionSet: "claim",
+      //     policy,
+      //     currentUser
+      //   }
+      // })
     ]
   });
 };
@@ -175,6 +176,9 @@ const userSignUpOptions = {
 class SignUpScreen extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      loading: false
+    };
     this.acceptTOS = false;
     this.handleSignUp = this.handleSignUp.bind(this);
   }
@@ -188,7 +192,11 @@ class SignUpScreen extends Component {
       //   );
       //   return;
       // }
-      this.props.onSignUp(formValues);
+      this.props.onSignUp(formValues).catch(err => {
+        if (err.code) {
+          showAlert(err.message);
+        }
+      });
     }
   }
 
@@ -248,8 +256,20 @@ class SignUpScreen extends Component {
               style={styles.tosSwitch}
             />*/}
             <View>
-              <Button onPress={this.handleSignUp} style={styles.signinButton}>
-                Sign Up
+              <Button
+                accessibilityLabel="auth__signup-btn"
+                onPress={this.handleSignUp}
+                style={styles.signinButton}
+              >
+                <View style={styles.signinButtonContainer}>
+                  <Text style={styles.signinButtonText}>SIGN UP</Text>
+                  {this.state.loading ? (
+                    <ActivityIndicator
+                      style={{ marginLeft: 10 }}
+                      color="white"
+                    />
+                  ) : null}
+                </View>
               </Button>
               <TouchableOpacity
                 onPress={this.props.onNavigateToLogin}
@@ -290,13 +310,23 @@ const userLoginOptions = {
 class LoginScreen extends Component {
   constructor(props) {
     super(props);
+    this.state = { loading: false };
     this.handleLogin = this.handleLogin.bind(this);
   }
 
   handleLogin() {
     const formValues = this.refs.form.getValue();
     if (formValues) {
-      this.props.onLogin(formValues);
+      this.setState({ loading: true });
+      this.props.onLogin(formValues).catch(err => {
+        this.setState({ loading: false });
+        console.error(err);
+        if (err.code === 101) {
+          showAlert(err.message);
+        } else {
+          showAlert("There seems to be a problem logging in");
+        }
+      });
     }
   }
 
@@ -306,17 +336,30 @@ class LoginScreen extends Component {
         <KeyboardAwareScrollView>
           <View style={[styles.container, { justifyContent: "center" }]}>
             <VectorDrawableView
+              accessibilityLabel="auth__logo"
               resourceName="ic_microumbrella_word_white"
               style={styles.logo}
             />
-            <Text style={styles.mustLogin}>
-              You must login to purchase a protection plan.
-            </Text>
+            {this.props.mustLoginToPurchase ? (
+              <Text style={styles.mustLogin}>
+                You must login to purchase a policy.
+              </Text>
+            ) : null}
             <Form ref="form" type={UserLogin} options={userLoginOptions} />
-            <Button onPress={this.handleLogin} style={styles.signinButton}>
-              LOGIN
+            <Button
+              accessibilityLabel="auth__login-btn"
+              onPress={this.handleLogin}
+              style={styles.signinButton}
+            >
+              <View style={styles.signinButtonContainer}>
+                <Text style={styles.signinButtonText}>LOGIN</Text>
+                {this.state.loading ? (
+                  <ActivityIndicator style={{ marginLeft: 10 }} color="white" />
+                ) : null}
+              </View>
             </Button>
             <TouchableOpacity
+              accessibilityLabel="auth__go-to-signup"
               onPress={this.props.onNavigateToSignUp}
               style={{ marginVertical: 20 }}
               activeOpacity={0.5}
@@ -427,63 +470,65 @@ export default class AuthScreen extends Component {
     const beneficiaryCode = generateID(6);
     user.set("beneficiaryCode", beneficiaryCode);
 
-    user
-      .signUp(null)
-      .then(user => {
-        this.handleRedirectToPurchase();
-      })
-      .catch(err => {
-        if (err.code) {
-          showAlert(err.message);
-        }
-      });
-  }
-
-  handleLogin(form) {
-    const { email, password } = form;
-    Parse.User
-      .logIn(email, password)
-      .then(user => {
-        this.handleRedirectToPurchase();
-      })
-      .catch(err => {
-        console.log(err.message);
-        if (err.code === 101) {
-          showAlert(err.message);
-        } else {
-          showAlert("There seems to be a problem logging in");
-        }
-      });
-  }
-
-  handleRedirectToPurchase() {
-    const policy = this.props.navigation.state.params.policy;
-    console.log(policy);
-    Parse.User.currentAsync().then(currentUser => {
-      // const resetAction = createResetAction(policy, currentUser);
-      const resetAction = NavigationActions.reset({
-        index: 0,
-        actions: [
-          NavigationActions.navigate({
-            routeName: "Drawer",
-            action: NavigationActions.navigate({
-              routeName: "BuyStack",
-              action: NavigationActions.navigate({
-                routeName: "Chat",
-                params: {
-                  isStartScreen: false,
-                  questionSet: "buy",
-                  policy,
-                  currentUser
-                }
-              })
-            })
-          })
-        ]
-      });
-      this.props.screenProps.rootNavigation.dispatch(resetAction);
-      // this.props.navigation.dispatch(resetAction);
+    return user.signUp(null).then(user => {
+      this.handleRedirectToPurchase(user);
     });
+  }
+
+  handleLogin(form: { email: string, password: string }) {
+    const { email, password } = form;
+    return Parse.User.logIn(email, password).then(user => {
+      this.handleRedirectToPurchase(user);
+    });
+  }
+
+  handleRedirectToPurchase(currentUser: any) {
+    let policy, subActions;
+    const { params } = this.props.navigation.state;
+    if (params && params.policy) {
+      policy = params.policy;
+      subActions = [
+        NavigationActions.navigate({
+          routeName: "Chat",
+          params: {
+            isStartScreen: true,
+            questionSet: "buy",
+            policy: null,
+            currentUser
+          }
+        }),
+        NavigationActions.navigate({
+          routeName: "Policy",
+          params: { policy }
+        }),
+        NavigationActions.navigate({
+          routeName: "Chat",
+          params: {
+            isStartScreen: false,
+            questionSet: "buy",
+            policy,
+            currentUser
+          }
+        })
+      ];
+    } else {
+      subActions = [
+        NavigationActions.navigate({
+          routeName: "Chat",
+          params: {
+            isStartScreen: true,
+            questionSet: "buy",
+            policy: null
+          }
+        })
+      ];
+    }
+    const resetAction = NavigationActions.reset({
+      index: subActions.length - 1,
+      actions: subActions
+    });
+    console.log(this.props.navigation, this.props.screenProps.rootNavigation);
+    this.props.screenProps.rootNavigation.dispatch(resetAction);
   }
 
   handleNavigateToLogin() {
@@ -505,11 +550,16 @@ export default class AuthScreen extends Component {
   }
 
   render() {
-    let screen;
+    let screen, mustLoginToPurchase;
+    const { params } = this.props.navigation.state;
+    if (params && params.policy) {
+      mustLoginToPurchase = true;
+    }
     switch (this.state.screen) {
       case "Login":
         page = (
           <LoginScreen
+            mustLoginToPurchase={mustLoginToPurchase}
             onLogin={this.handleLogin}
             onNavigateToSignUp={this.handleNavigateToSignUp}
             onNavigateToForgotPassword={this.handleNavigateToForgotPassword}
@@ -550,7 +600,7 @@ export default class AuthScreen extends Component {
     }
 
     return (
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <TouchableWithoutFeedback accessible={false} onPress={Keyboard.dismiss}>
         <View style={styles.page}>
           <StatusBar
             hidden={true}
@@ -566,6 +616,15 @@ export default class AuthScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+  signinButtonText: {
+    color: "white",
+    fontSize: 16
+  },
+  signinButtonContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center"
+  },
   mustLogin: {
     alignSelf: "center",
     marginTop: 10,

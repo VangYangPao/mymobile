@@ -43,12 +43,12 @@
 		3F06AD3B1EFF5F500028DA38 /* Comfortaa-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3F06AD3A1EFF5F500028DA38 /* Comfortaa-Bold.ttf */; };
 		3F25D6011F6C7CA50075C425 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3F25D6001F6C7CA50075C425 /* GoogleService-Info.plist */; };
 		3F41020E1EFF26FC001B4303 /* Lato.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3F41020D1EFF26FC001B4303 /* Lato.ttf */; };
+		3F4E75CD1F8FF8E30070C597 /* ZDCChat.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 3F4E75C91F8FF8E20070C597 /* ZDCChat.bundle */; };
+		3F4E75CE1F8FF8E30070C597 /* ZDCChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F4E75CA1F8FF8E20070C597 /* ZDCChat.framework */; };
+		3F4E75CF1F8FF8E30070C597 /* ZDCChatAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F4E75CB1F8FF8E20070C597 /* ZDCChatAPI.framework */; };
+		3F4E75D01F8FF8E30070C597 /* ZDCChatStrings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 3F4E75CC1F8FF8E30070C597 /* ZDCChatStrings.bundle */; };
 		3FA2DF3B1F61D88300A34E49 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3FA2DF3A1F61D88300A34E49 /* Images.xcassets */; };
 		3FA2DF6A1F61DCBF00A34E49 /* RNZendeskChatModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FA2DF691F61DCBF00A34E49 /* RNZendeskChatModule.m */; };
-		3FA60A151F61D3DD0052AF23 /* ZDCChat.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 3FA60A111F61D3DD0052AF23 /* ZDCChat.bundle */; };
-		3FA60A161F61D3DD0052AF23 /* ZDCChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3FA60A121F61D3DD0052AF23 /* ZDCChat.framework */; };
-		3FA60A171F61D3DD0052AF23 /* ZDCChatAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3FA60A131F61D3DD0052AF23 /* ZDCChatAPI.framework */; };
-		3FA60A181F61D3DD0052AF23 /* ZDCChatStrings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 3FA60A141F61D3DD0052AF23 /* ZDCChatStrings.bundle */; };
 		4D2B225A568248F5AA8E5FC1 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5A05141396E742339933A7DE /* Zocial.ttf */; };
 		4E8FE7FE56474951B29E7706 /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91968238E613443387457D28 /* libRNFS.a */; };
 		5C455B84CB9F4D31900CAF43 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5D78ED3977AD4FCABA1EB9D3 /* Ionicons.ttf */; };
@@ -350,13 +350,13 @@
 		3F06AD3A1EFF5F500028DA38 /* Comfortaa-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Comfortaa-Bold.ttf"; path = "../android/app/src/main/assets/fonts/Comfortaa-Bold.ttf"; sourceTree = "<group>"; };
 		3F25D6001F6C7CA50075C425 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		3F41020D1EFF26FC001B4303 /* Lato.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Lato.ttf; path = ../android/app/src/main/assets/fonts/Lato.ttf; sourceTree = "<group>"; };
+		3F4E75C91F8FF8E20070C597 /* ZDCChat.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ZDCChat.bundle; sourceTree = "<group>"; };
+		3F4E75CA1F8FF8E20070C597 /* ZDCChat.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ZDCChat.framework; sourceTree = "<group>"; };
+		3F4E75CB1F8FF8E20070C597 /* ZDCChatAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ZDCChatAPI.framework; sourceTree = "<group>"; };
+		3F4E75CC1F8FF8E30070C597 /* ZDCChatStrings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ZDCChatStrings.bundle; sourceTree = "<group>"; };
 		3FA2DF3A1F61D88300A34E49 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Microsurance/Images.xcassets; sourceTree = "<group>"; };
 		3FA2DF681F61DCBF00A34E49 /* RNZendeskChatModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNZendeskChatModule.h; sourceTree = "<group>"; };
 		3FA2DF691F61DCBF00A34E49 /* RNZendeskChatModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNZendeskChatModule.m; sourceTree = "<group>"; };
-		3FA60A111F61D3DD0052AF23 /* ZDCChat.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = ZDCChat.bundle; path = "../../../Downloads/zendesk_sdk_chat_ios-master/ZDCChat.bundle"; sourceTree = "<group>"; };
-		3FA60A121F61D3DD0052AF23 /* ZDCChat.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ZDCChat.framework; path = "../../../Downloads/zendesk_sdk_chat_ios-master/ZDCChat.framework"; sourceTree = "<group>"; };
-		3FA60A131F61D3DD0052AF23 /* ZDCChatAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ZDCChatAPI.framework; path = "../../../Downloads/zendesk_sdk_chat_ios-master/ZDCChatAPI.framework"; sourceTree = "<group>"; };
-		3FA60A141F61D3DD0052AF23 /* ZDCChatStrings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = ZDCChatStrings.bundle; path = "../../../Downloads/zendesk_sdk_chat_ios-master/ZDCChatStrings.bundle"; sourceTree = "<group>"; };
 		45DEFEFB1BC14CA7B6E42C2A /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		4B31F264E29847AC9260120A /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		540133F9A6C04693A58504EB /* RNSpinkit.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNSpinkit.xcodeproj; path = "../node_modules/react-native-spinkit/ios/RNSpinkit.xcodeproj"; sourceTree = "<group>"; };
@@ -406,10 +406,11 @@
 				3F06AD361EFF449F0028DA38 /* Fabric.framework in Frameworks */,
 				00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */,
 				00C302E81ABCBA2D00DB3ED1 /* libRCTImage.a in Frameworks */,
+				3F4E75CE1F8FF8E30070C597 /* ZDCChat.framework in Frameworks */,
 				133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */,
-				3FA60A161F61D3DD0052AF23 /* ZDCChat.framework in Frameworks */,
 				00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */,
 				3F06AD371EFF449F0028DA38 /* Crashlytics.framework in Frameworks */,
+				3F4E75CF1F8FF8E30070C597 /* ZDCChatAPI.framework in Frameworks */,
 				139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */,
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
@@ -420,7 +421,6 @@
 				7E8BEED215DA41F4B745CEF6 /* libRNImagePicker.a in Frameworks */,
 				A480BA14CF3F4674B9369CC7 /* libRNFetchBlob.a in Frameworks */,
 				CEDA61824C0B4CC49356BCD3 /* libRNFileOpener.a in Frameworks */,
-				3FA60A171F61D3DD0052AF23 /* ZDCChatAPI.framework in Frameworks */,
 				B1DAFECC2AC2E5345D912E18 /* libPods-Microsurance.a in Frameworks */,
 				4E8FE7FE56474951B29E7706 /* libRNFS.a in Frameworks */,
 			);
@@ -688,12 +688,12 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				3F4E75C91F8FF8E20070C597 /* ZDCChat.bundle */,
+				3F4E75CA1F8FF8E20070C597 /* ZDCChat.framework */,
+				3F4E75CB1F8FF8E20070C597 /* ZDCChatAPI.framework */,
+				3F4E75CC1F8FF8E30070C597 /* ZDCChatStrings.bundle */,
 				3FA2DF681F61DCBF00A34E49 /* RNZendeskChatModule.h */,
 				3FA2DF691F61DCBF00A34E49 /* RNZendeskChatModule.m */,
-				3FA60A111F61D3DD0052AF23 /* ZDCChat.bundle */,
-				3FA60A121F61D3DD0052AF23 /* ZDCChat.framework */,
-				3FA60A131F61D3DD0052AF23 /* ZDCChatAPI.framework */,
-				3FA60A141F61D3DD0052AF23 /* ZDCChatStrings.bundle */,
 				3F06AD341EFF449F0028DA38 /* Fabric.framework */,
 				3F06AD351EFF449F0028DA38 /* Crashlytics.framework */,
 				13B07FAE1A68108700A75B9A /* Microsurance */,
@@ -1197,18 +1197,18 @@
 				3F06AD391EFF5F3B0028DA38 /* Bitter.ttf in Resources */,
 				3F06AD3B1EFF5F500028DA38 /* Comfortaa-Bold.ttf in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
+				3F4E75CD1F8FF8E30070C597 /* ZDCChat.bundle in Resources */,
 				3F41020E1EFF26FC001B4303 /* Lato.ttf in Resources */,
 				36FDD78FFAC24A1D8C93B142 /* Entypo.ttf in Resources */,
 				CE4F8FACBB844A56948B34A7 /* EvilIcons.ttf in Resources */,
-				3FA60A151F61D3DD0052AF23 /* ZDCChat.bundle in Resources */,
 				3C47F5E1514B48E0ABB89DAB /* FontAwesome.ttf in Resources */,
 				18E439D1B3E444F9926C8E0D /* Foundation.ttf in Resources */,
 				5C455B84CB9F4D31900CAF43 /* Ionicons.ttf in Resources */,
 				EAF77E8861684225831708B9 /* MaterialCommunityIcons.ttf in Resources */,
 				3F25D6011F6C7CA50075C425 /* GoogleService-Info.plist in Resources */,
+				3F4E75D01F8FF8E30070C597 /* ZDCChatStrings.bundle in Resources */,
 				3FA2DF3B1F61D88300A34E49 /* Images.xcassets in Resources */,
 				2D2B7BEB81D847E4ACB9EBB7 /* MaterialIcons.ttf in Resources */,
-				3FA60A181F61D3DD0052AF23 /* ZDCChatStrings.bundle in Resources */,
 				6E0FAC4A025E44129027A6F5 /* Octicons.ttf in Resources */,
 				92AB07F86F4F4486A6979B15 /* SimpleLineIcons.ttf in Resources */,
 				4D2B225A568248F5AA8E5FC1 /* Zocial.ttf in Resources */,

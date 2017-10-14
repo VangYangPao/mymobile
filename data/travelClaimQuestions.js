@@ -22,14 +22,14 @@ export default (travelClaimQuestions = [
       { label: "Personal Liability", value: "personalLiability" },
       { label: "Others", value: "others" }
     ],
-    id: "claimType"
+    id: "accidentType"
   },
   {
     question:
       "You must be <%= fullName %>’s claimant/next of kin. I am so sorry for your loss. My deepest condolences to you and your family! Please share with me the date and time of the accident",
     responseType: "datetime",
     pastOnly: true,
-    id: "claimDate",
+    id: "accidentDate",
     include: ["death"]
   },
   {
@@ -44,7 +44,7 @@ export default (travelClaimQuestions = [
       "<%= fullName %>, I wish you a complete recovery. I’ll do my best to get your claim paid fast. Please share with me the date and time of the accident",
     responseType: "datetime",
     pastOnly: true,
-    id: "claimDate",
+    id: "accidentDate",
     include: ["medicalReimbursement"]
   },
   {
@@ -60,7 +60,7 @@ export default (travelClaimQuestions = [
       "<%= fullName %>, I wish you get well soon. Let me help out on the claim fast. Please share with me the date and time of the accident",
     responseType: "datetime",
     pastOnly: true,
-    id: "claimDate",
+    id: "accidentDate",
     include: ["medicalReimbursement"]
   },
   // causes crash
@@ -69,7 +69,7 @@ export default (travelClaimQuestions = [
       "<%= fullName %>, you just selected the option to claim for loss or damaged items",
     responseType: "datetime",
     pastOnly: true,
-    id: "claimDate",
+    id: "accidentDate",
     include: ["lossOfPersonalDocument"]
   },
   {
@@ -83,7 +83,7 @@ export default (travelClaimQuestions = [
     question:
       "Oh, I am so sorry to hear about the inconvenience! Will you share with me the cause of this travel delay, baggage delay, or flight misconnection? ",
     responseType: "string",
-    id: "travelDelayCause",
+    id: "accidentCause",
     include: ["travelDelay"]
   },
   {
@@ -121,7 +121,7 @@ export default (travelClaimQuestions = [
       "I am so sorry to hear about this.  Please share with me the cause of your trip curtailment or cancellation? ",
     responseType: "string",
     responseLength: 600,
-    id: "causeOfTripCurtailment",
+    id: "accidentCause",
     include: ["tripCurtailment"]
   },
   {
@@ -129,7 +129,7 @@ export default (travelClaimQuestions = [
       "Please share with me the date of trip curtailment or cancellation",
     responseType: "date",
     pastOnly: true,
-    id: "tripCurtailmentDate",
+    id: "accidentDate",
     include: ["tripCurtailment"]
   },
   {
@@ -143,13 +143,13 @@ export default (travelClaimQuestions = [
       },
       { label: "No", value: false }
     ],
-    id: "sufferedFromConditionBefore",
+    id: "recurrence",
     include: ["tripCurtailment"]
   },
   {
     question: "Please explain the medical condition in detail",
     responseType: "string",
-    id: "medicalCondition",
+    id: "recurrenceDetail",
     include: ["tripCurtailment"],
     condition: "this.state.answers.sufferedFromConditionBefore"
   },
@@ -214,14 +214,15 @@ export default (travelClaimQuestions = [
       "Oh, I am so sorry to hear this!  Please share with me the full details of the situation leading to loss or damage?",
     responseType: "string",
     responseLength: 600,
-    id: "lossDetails",
+    id: "details",
     include: ["lossOfPersonalDocument"]
   },
   {
     question:
-      "Oh, I am concerned! May I know the extent of your injury/illness?  ",
+      "Oh, I am concerned! May I know the extent of your injury/illness?",
     responseType: "string",
     responseLength: 600,
+    id: "details",
     include: ["medicalReimbursement"]
   },
   {
@@ -231,13 +232,13 @@ export default (travelClaimQuestions = [
       { label: "Yes, I have", value: true },
       { label: "No, I have not", value: false }
     ],
-    id: "hasSufferedSameInjury",
+    id: "recurrence",
     include: ["medicalReimbursement"]
   },
   {
     question: "Please explain the injury in detail",
     responseType: "string",
-    id: "injuryDetail",
+    id: "recurrenceDetail",
     include: ["medicalReimbursement"],
     condition: "this.state.answers.hasSufferedSameInjury"
   },

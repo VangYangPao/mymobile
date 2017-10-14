@@ -53,7 +53,7 @@ const redirectToStatus = () =>
     index: 0,
     actions: [
       NavigationActions.navigate({
-        routeName: "Drawer",
+        routeName: "DrawerClose",
         action: NavigationActions.navigate({
           routeName: "MyPolicies"
         })
@@ -66,7 +66,7 @@ const redirectToPolicyPurchase = policy =>
     index: 0,
     actions: [
       NavigationActions.navigate({
-        routeName: "Drawer",
+        routeName: "DrawerClose",
         action: NavigationActions.navigate({
           routeName: "BuyStack",
           action: NavigationActions.navigate({
@@ -96,7 +96,11 @@ export default class ConfirmationScreen extends Component {
   handleCheckout: Function;
   handlePurchaseResult: Function;
 
-  constructor(props: { navigation: any, totalPremium: ?number }) {
+  constructor(props: {
+    navigation: any,
+    totalPremium: ?number,
+    screenProps: any
+  }) {
     super(props);
     this.handleCheckout = this.handleCheckout.bind(this);
     this.handlePurchaseResult = this.handlePurchaseResult.bind(this);
@@ -195,13 +199,6 @@ export default class ConfirmationScreen extends Component {
     promise
       .then(res => {
         console.log("purchase complete", JSON.stringify(res));
-        const resetAction = NavigationActions.reset({
-          index: 1,
-          actions: [
-            NavigationActions.navigate({ routeName: "Chat" }),
-            NavigationActions.navigate({ routeName: "Status" })
-          ]
-        });
         const resetToStatusScreen = () =>
           this.props.screenProps.rootNavigation.dispatch(
             redirectToStatus(this.policy)

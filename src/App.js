@@ -10,7 +10,11 @@ import {
   Dimensions,
   Platform
 } from "react-native";
-import { DrawerNavigator, StackNavigator } from "react-navigation";
+import {
+  NavigationActions,
+  DrawerNavigator,
+  StackNavigator
+} from "react-navigation";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Ionicon from "react-native-vector-icons/Ionicons";
 
@@ -110,6 +114,7 @@ const BuyStackNavigator = StackNavigator(
     }
   },
   {
+    initialRouteName: "Chat",
     initialRouteParams: {
       questionSet: "buy",
       isStartScreen: true
@@ -185,9 +190,7 @@ const MyDrawerNavigator = DrawerNavigator(
   },
   {
     drawerWidth: WINDOW_WIDTH * 0.65,
-    contentComponent: props => {
-      return <DrawerContent {...props} />;
-    },
+    contentComponent: props => <DrawerContent {...props} />,
     contentOptions: {
       activeTintColor: colors.primaryOrange,
       inactiveTintColor: colors.primaryText
@@ -195,13 +198,36 @@ const MyDrawerNavigator = DrawerNavigator(
   }
 );
 
+const wrapScreen = ScreenComponent => {
+  let wrapper = ({ navigation }) => {
+    return (
+      <ScreenComponent
+        navigation={navigation}
+        screenProps={{ rootNavigation: navigation }}
+      />
+    );
+  };
+  wrapper.router = {
+    getScreenOptions: MyDrawerNavigator.router.getScreenOptions,
+    ...MyDrawerNavigator.router
+  };
+  return wrapper;
+};
+
 const stackNavigatorScreens = {
-  Intro: { screen: IntroScreen },
-  TermsOfUse: { screen: TermsOfUse },
-  Drawer: {
+  Intro: {
     screen: ({ navigation }) => (
-      <MyDrawerNavigator screenProps={{ rootNavigation: navigation }} />
+      <IntroScreen
+        navigation={navigation}
+        screenProps={{ rootNavigation: navigation }}
+      />
     )
+  },
+  TermsOfUse: {
+    screen: TermsOfUse
+  },
+  Drawer: {
+    screen: wrapScreen(MyDrawerNavigator)
   },
   Help: { screen: HelpStackNavigator }
 };
@@ -209,15 +235,39 @@ const stackNavigatorScreens = {
 let stackNavConfig = {
   headerMode: "none"
 };
-if (ENV === "development") {
-  stackNavConfig["initialRouteName"] = "Drawer";
-} else {
-  stackNavConfig["initialRouteName"] = "Intro";
+// if (ENV === "development") {
+//   stackNavConfig["initialRouteName"] = "Drawer";
+// } else {
+//   stackNavConfig["initialRouteName"] = "Intro";
+// }
+
+export default class MicroUmbrellaApp extends Component {
+  state: { loading: boolean, currentUser: any };
+
+  constructor(props: {}) {
+    super(props);
+    this.state = { loading: true, currentUser: null };
+  }
+
+  componentDidMount() {
+    Parse.User.currentAsync().then(currentUser => {
+      this.setState({ loading: false, currentUser });
+    });
+  }
+
+  render() {
+    if (this.state.currentUser) {
+      const config = Object.assign(
+        { initialRouteName: "Drawer" },
+        stackNavConfig
+      );
+      const MyStackNavigator = StackNavigator(stackNavigatorScreens, config);
+      return <MyStackNavigator />;
+    }
+    const config = Object.assign({ initialRouteName: "Intro" }, stackNavConfig);
+    const MyStackNavigator = StackNavigator(stackNavigatorScreens, config);
+    return <MyStackNavigator />;
+  }
 }
 
-export default (Microsurance = StackNavigator(
-  stackNavigatorScreens,
-  stackNavConfig
-));
-
-AppRegistry.registerComponent("Microsurance", () => Microsurance);
+AppRegistry.registerComponent("Microsurance", () => MicroUmbrellaApp);
