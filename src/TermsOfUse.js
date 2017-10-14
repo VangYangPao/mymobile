@@ -18,11 +18,14 @@ import { NavigationActions } from "react-navigation";
 
 export default class TermsOfUse extends Component {
   handleAccept() {
-    this.props.navigation.dispatch(
-      NavigationActions.navigate({
-        routeName: "Drawer",
-        action: NavigationActions.navigate({
-          routeName: "BuyStack",
+    const resetAction = NavigationActions.reset({
+      index: 1,
+      actions: [
+        NavigationActions.navigate({
+          routeName: "Intro"
+        }),
+        NavigationActions.navigate({
+          routeName: "Drawer",
           action: NavigationActions.reset({
             index: 0,
             actions: [
@@ -36,8 +39,9 @@ export default class TermsOfUse extends Component {
             ]
           })
         })
-      })
-    );
+      ]
+    });
+    this.props.navigation.dispatch(resetAction);
   }
 
   handleDecline() {

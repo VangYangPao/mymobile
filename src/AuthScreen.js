@@ -320,7 +320,7 @@ class LoginScreen extends Component {
       this.setState({ loading: true });
       this.props.onLogin(formValues).catch(err => {
         this.setState({ loading: false });
-        console.log(err.message);
+        console.error(err);
         if (err.code === 101) {
           showAlert(err.message);
         } else {
@@ -340,7 +340,11 @@ class LoginScreen extends Component {
               resourceName="ic_microumbrella_word_white"
               style={styles.logo}
             />
-            <Text style={styles.mustLogin} />
+            {this.props.mustLoginToPurchase ? (
+              <Text style={styles.mustLogin}>
+                You must login to purchase a policy.
+              </Text>
+            ) : null}
             <Form ref="form" type={UserLogin} options={userLoginOptions} />
             <Button
               accessibilityLabel="auth__login-btn"
@@ -471,7 +475,7 @@ export default class AuthScreen extends Component {
     });
   }
 
-  handleLogin(form) {
+  handleLogin(form: { email: string, password: string }) {
     const { email, password } = form;
     return Parse.User.logIn(email, password).then(user => {
       this.handleRedirectToPurchase(user);
@@ -479,13 +483,11 @@ export default class AuthScreen extends Component {
   }
 
   handleRedirectToPurchase(currentUser: any) {
-    let policy;
-    if (this.props.navigation.state.params) {
-      policy = this.props.navigation.state.params.policy;
-    }
-    const resetAction = NavigationActions.reset({
-      index: 2,
-      actions: [
+    let policy, subActions;
+    const { params } = this.props.navigation.state;
+    if (params && params.policy) {
+      policy = params.policy;
+      subActions = [
         NavigationActions.navigate({
           routeName: "Chat",
           params: {
@@ -508,11 +510,25 @@ export default class AuthScreen extends Component {
             currentUser
           }
         })
-      ]
+      ];
+    } else {
+      subActions = [
+        NavigationActions.navigate({
+          routeName: "Chat",
+          params: {
+            isStartScreen: true,
+            questionSet: "buy",
+            policy: null
+          }
+        })
+      ];
+    }
+    const resetAction = NavigationActions.reset({
+      index: subActions.length - 1,
+      actions: subActions
     });
-    this.props.navigation.dispatch(resetAction);
-    // this.props.screenProps.rootNavigation.dispatch(resetAction);
-    // this.props.navigation.dispatch(resetAction);
+    console.log(this.props.navigation, this.props.screenProps.rootNavigation);
+    this.props.screenProps.rootNavigation.dispatch(resetAction);
   }
 
   handleNavigateToLogin() {
@@ -534,11 +550,16 @@ export default class AuthScreen extends Component {
   }
 
   render() {
-    let screen;
+    let screen, mustLoginToPurchase;
+    const { params } = this.props.navigation.state;
+    if (params && params.policy) {
+      mustLoginToPurchase = true;
+    }
     switch (this.state.screen) {
       case "Login":
         page = (
           <LoginScreen
+            mustLoginToPurchase={mustLoginToPurchase}
             onLogin={this.handleLogin}
             onNavigateToSignUp={this.handleNavigateToSignUp}
             onNavigateToForgotPassword={this.handleNavigateToForgotPassword}

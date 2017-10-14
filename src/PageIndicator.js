@@ -86,16 +86,13 @@ var DefaultViewPageIndicator = React.createClass({
         }),
         NavigationActions.navigate({
           routeName: "Drawer",
-          action: NavigationActions.navigate({
-            routeName: "DrawerClose",
-            action: NavigationActions.reset({
-              index: 0,
-              actions: [
-                NavigationActions.navigate({
-                  routeName: "Auth"
-                })
-              ]
-            })
+          action: NavigationActions.reset({
+            index: 0,
+            actions: [
+              NavigationActions.navigate({
+                routeName: "Auth"
+              })
+            ]
           })
         })
       ]

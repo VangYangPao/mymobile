@@ -25,9 +25,6 @@ class Policy extends Component {
   }
 
   render() {
-    const { plans } = this.props;
-    const lastPlan = plans[plans.length - 1];
-    const highestCoverageAmount = lastPlan[Object.keys(lastPlan)[0]];
     const titleSplit = this.props.title.split(" with ");
     return (
       <TouchableOpacity
