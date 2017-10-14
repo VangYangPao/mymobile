@@ -484,23 +484,30 @@ export default class AuthScreen extends Component {
       policy = this.props.navigation.state.params.policy;
     }
     const resetAction = NavigationActions.reset({
-      index: 0,
+      index: 2,
       actions: [
-        // NavigationActions.navigate({
-        //   routeName: "Drawer",
-        //   action: NavigationActions.navigate({
-        //     routeName: "DrawerClose",
         NavigationActions.navigate({
           routeName: "Chat",
           params: {
             isStartScreen: true,
             questionSet: "buy",
+            policy: null,
+            currentUser
+          }
+        }),
+        NavigationActions.navigate({
+          routeName: "Policy",
+          params: { policy }
+        }),
+        NavigationActions.navigate({
+          routeName: "Chat",
+          params: {
+            isStartScreen: false,
+            questionSet: "buy",
             policy,
             currentUser
           }
         })
-        //   })
-        // })
       ]
     });
     this.props.navigation.dispatch(resetAction);

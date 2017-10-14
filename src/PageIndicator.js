@@ -14,12 +14,10 @@ var DOT_SPACE = 4;
 
 var styles = StyleSheet.create({
   button: {
-    flex: 1,
-    alignItems: "center"
+    flex: 1
   },
   buttonsContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between"
+    flexDirection: "row"
   },
   buttonText: {
     color: colors.primaryOrange,
@@ -80,21 +78,29 @@ var DefaultViewPageIndicator = React.createClass({
   },
 
   resetToAuth() {
-    const resetToAuthAction = NavigationActions.navigate({
-      routeName: "Drawer",
-      action: NavigationActions.navigate({
-        routeName: "DrawerClose",
-        action: NavigationActions.reset({
-          index: 0,
-          actions: [
-            NavigationActions.navigate({
-              routeName: "Auth"
+    const resetToAuthAction = NavigationActions.reset({
+      index: 1,
+      actions: [
+        NavigationActions.navigate({
+          routeName: "Intro"
+        }),
+        NavigationActions.navigate({
+          routeName: "Drawer",
+          action: NavigationActions.navigate({
+            routeName: "DrawerClose",
+            action: NavigationActions.reset({
+              index: 0,
+              actions: [
+                NavigationActions.navigate({
+                  routeName: "Auth"
+                })
+              ]
             })
-          ]
+          })
         })
-      })
+      ]
     });
-    this.props.navigation.dispatch(resetToAuthAction);
+    this.props.screenProps.rootNavigation.dispatch(resetToAuthAction);
   },
 
   renderIndicator(page) {
@@ -135,14 +141,20 @@ var DefaultViewPageIndicator = React.createClass({
           <TouchableOpacity
             accessibilityLabel="intro__sign-in"
             onPress={this.resetToAuth.bind(this)}
-            style={styles.button}
+            style={[
+              styles.button,
+              { alignItems: "flex-start", paddingLeft: 20 }
+            ]}
           >
             <Text style={styles.buttonText}>Sign In</Text>
           </TouchableOpacity>
           <TouchableOpacity
             accessibilityLabel="intro__browse"
             onPress={() => this.props.navigation.navigate("TermsOfUse")}
-            style={styles.button}
+            style={[
+              styles.button,
+              { alignItems: "flex-end", paddingRight: 20 }
+            ]}
           >
             <Text style={styles.buttonText}>Browse Products</Text>
           </TouchableOpacity>

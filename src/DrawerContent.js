@@ -48,8 +48,7 @@ export default class DrawerContent extends Component {
     }
 
     const logout = () => {
-      // console.log(this.props);
-      const { rootNavigation } = this.props.navigation.state.params;
+      const { rootNavigation } = this.props.screenProps;
       Parse.User.logOut().then(() => {
         rootNavigation.dispatch(
           NavigationActions.reset({

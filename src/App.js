@@ -198,35 +198,36 @@ const MyDrawerNavigator = DrawerNavigator(
   }
 );
 
-class DrawerNavigatorWrapper extends React.Component {
-  static router = {
-    getStateForAction: MyDrawerNavigator.router.getStateForAction,
-    getActionForPathAndParams:
-      MyDrawerNavigator.router.getActionForPathAndParams,
-    getPathAndParamsForState: MyDrawerNavigator.router.getPathAndParamsForState,
-    getComponentForState: MyDrawerNavigator.router.getComponentForState,
-    getComponentForRouteName: MyDrawerNavigator.router.getComponentForRouteName,
-    getScreenOptions: MyDrawerNavigator.router.getScreenOptions
-  };
-  render() {
-    const { navigation } = this.props;
-    const { state, dispatch } = navigation;
-    const { routes, index } = state;
-
+const wrapScreen = ScreenComponent => {
+  let wrapper = ({ navigation }) => {
     return (
-      <MyDrawerNavigator
+      <ScreenComponent
         navigation={navigation}
         screenProps={{ rootNavigation: navigation }}
       />
     );
-  }
-}
+  };
+  wrapper.router = {
+    getScreenOptions: MyDrawerNavigator.router.getScreenOptions,
+    ...MyDrawerNavigator.router
+  };
+  return wrapper;
+};
 
 const stackNavigatorScreens = {
-  Intro: { screen: IntroScreen },
-  TermsOfUse: { screen: TermsOfUse },
+  Intro: {
+    screen: ({ navigation }) => (
+      <IntroScreen
+        navigation={navigation}
+        screenProps={{ rootNavigation: navigation }}
+      />
+    )
+  },
+  TermsOfUse: {
+    screen: TermsOfUse
+  },
   Drawer: {
-    screen: DrawerNavigatorWrapper
+    screen: wrapScreen(MyDrawerNavigator)
   },
   Help: { screen: HelpStackNavigator }
 };
@@ -240,9 +241,33 @@ let stackNavConfig = {
 //   stackNavConfig["initialRouteName"] = "Intro";
 // }
 
-export default (Microsurance = StackNavigator(
-  stackNavigatorScreens,
-  stackNavConfig
-));
+export default class MicroUmbrellaApp extends Component {
+  state: { loading: boolean, currentUser: any };
 
-AppRegistry.registerComponent("Microsurance", () => Microsurance);
+  constructor(props: {}) {
+    super(props);
+    this.state = { loading: true, currentUser: null };
+  }
+
+  componentDidMount() {
+    Parse.User.currentAsync().then(currentUser => {
+      this.setState({ loading: false, currentUser });
+    });
+  }
+
+  render() {
+    if (this.state.currentUser) {
+      const config = Object.assign(
+        { initialRouteName: "Drawer" },
+        stackNavConfig
+      );
+      const MyStackNavigator = StackNavigator(stackNavigatorScreens, config);
+      return <MyStackNavigator />;
+    }
+    const config = Object.assign({ initialRouteName: "Intro" }, stackNavConfig);
+    const MyStackNavigator = StackNavigator(stackNavigatorScreens, config);
+    return <MyStackNavigator />;
+  }
+}
+
+AppRegistry.registerComponent("Microsurance", () => MicroUmbrellaApp);

@@ -53,7 +53,7 @@ const redirectToStatus = () =>
     index: 0,
     actions: [
       NavigationActions.navigate({
-        routeName: "Drawer",
+        routeName: "DrawerClose",
         action: NavigationActions.navigate({
           routeName: "MyPolicies"
         })
@@ -66,7 +66,7 @@ const redirectToPolicyPurchase = policy =>
     index: 0,
     actions: [
       NavigationActions.navigate({
-        routeName: "Drawer",
+        routeName: "DrawerClose",
         action: NavigationActions.navigate({
           routeName: "BuyStack",
           action: NavigationActions.navigate({
@@ -367,7 +367,6 @@ export default class ConfirmationScreen extends Component {
   }
 
   render() {
-    console.log(this.props.screenProps.rootNavigatio);
     const { form } = this.props.navigation.state.params;
     let formArr = [];
     for (var key in form) {

@@ -53,10 +53,9 @@ export default class PolicyScreen extends Component {
 
   constructor(props) {
     super(props);
-    const { policy, page, loggedIn } = this.props.navigation.state.params;
+    const { policy, page } = this.props.navigation.state.params;
     this.policy = policy;
     this.page = page;
-    this.loggedIn = loggedIn;
     const pricePerMonth = this.policy.plans[0].premium;
     this.handlePricePerMonthChange = this.handlePricePerMonthChange.bind(this);
     this.handlePurchase = this.handlePurchase.bind(this);

@@ -83,8 +83,7 @@ const styles = StyleSheet.create({
     borderRadius: 0
   },
   acceptButton: {
-    justifyContent: "center",
-    paddingHorizontal: 50
+    justifyContent: "center"
   },
   declineButton: {
     flex: 0.4,
