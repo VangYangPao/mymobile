@@ -62,15 +62,20 @@ class AppiumTests(unittest.TestCase):
         self.driver.quit()
 
     def test_purchase_travel(self):
+        signin_el = self.find_accessibility('intro__sign-in')
+        self.tap_on(signin_el)
         sleep(1)
+        self.do_login_flow()
+        sleep(2)
         travel_policy_choice = self.find_accessibility(
             'purchase__policy-choice-travel')
-        self.assertTrue(travel_policy_choice.is_displayed())
         self.tap_on(travel_policy_choice)
         sleep(0.5)
         purchase_btn = self.find_accessibility('policy__purchase-btn')
         self.tap_on(purchase_btn)
-        sleep(0.5)
+        sleep(2)
+
+    def do_login_flow(self):
         login_btn = self.find_accessibility('LOGIN')
         login_email_input = self.driver.find_elements_by_accessibility_id(
             'Email')[1]  # skip label
@@ -80,9 +85,8 @@ class AppiumTests(unittest.TestCase):
         self.driver.set_value(login_email_input, LOGIN_EMAIL)
         self.tap_on(login_password_input)
         self.driver.set_value(login_password_input, LOGIN_PASSWORD)
-        self.dismiss_keyboard()
         self.tap_on(login_btn)
-        sleep(10)
+        self.tap_on(login_btn)
 
     # @timeout_decorator.timeout(10)
     # def test_intro_flow(self):
@@ -97,29 +101,8 @@ class AppiumTests(unittest.TestCase):
     #     for i in range(3):
     #         self.driver.swipe(300, 200, 100, 200)
     #     self.tap_on(signin_el)
-    #     sleep(2)
-    #     login_screen = self.find_accessibility('auth__login-screen')
-    #     self.assertIsNotNone(login_screen)
-
-    # @timeout_decorator.timeout(20)
-    # def test_signin_flow(self):
     #     sleep(1)
-    #     signin_el = self.find_accessibility('intro__sign-in')
-    #     self.assertIsNotNone(signin_el)
-    #     self.tap_on(signin_el)
-    #     sleep(2)
-    #     login_screen = self.find_accessibility('auth__login-screen')
-    #     self.assertIsNotNone(login_screen)
-    #     login_btn = self.find_accessibility('auth__login-btn')
-    #     login_email_input = self.find_accessibility('auth__login-email')
-    #     login_password_input = self.find_accessibility('auth__login-password')
-    #     self.assertIsNotNone(login_btn)
-    #     self.assertIsNotNone(login_email_input)
-    #     self.assertIsNotNone(login_password_input)
-    #     self.driver.set_value(login_email_input, LOGIN_EMAIL)
-    #     self.driver.set_value(login_password_input, LOGIN_PASSWORD)
-    #     self.tap_on(login_btn)
-    #     sleep(2)
+    #     self.do_login_flow()
 
     # @timeout_decorator.timeout(20)
     # def test_signup_flow(self):
