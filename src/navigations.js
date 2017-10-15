@@ -22,6 +22,7 @@ export function renderBackButton(navigation) {
   const iconName = (Platform.OS === "ios" ? "ios" : "md") + "-arrow-back";
   return (
     <TouchableOpacity
+      accessibilityLabel="nav__back-btn"
       onPress={() => {
         navigation.dispatch(NavigationActions.back());
       }}
@@ -41,7 +42,7 @@ export function renderMenuButton(
 ) {
   return (
     <TouchableOpacity
-      accessibilityLabel="menu-button"
+      accessibilityLabel="nav__menu-btn"
       onPress={() => {
         navigation.navigate("DrawerOpen");
       }}
