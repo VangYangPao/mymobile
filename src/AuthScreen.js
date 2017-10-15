@@ -192,8 +192,10 @@ class SignUpScreen extends Component {
       //   );
       //   return;
       // }
+      this.setState({ loading: true });
       this.props.onSignUp(formValues).catch(err => {
         if (err.code) {
+          this.setState({ loading: false });
           showAlert(err.message);
         }
       });
