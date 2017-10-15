@@ -22,7 +22,7 @@ export function saveNewPurchase(
   const purchase = new Purchase();
   purchase.setACL(new Parse.ACL(user));
   purchase.set("policyTypeId", policyTypeId);
-  purchase.set("pasAppId", pasAppId);
+  purchase.set("pasAppId", "" + pasAppId);
   purchase.set("policyId", policyId);
   purchase.set("webAppId", webAppId);
   purchase.set("premium", premium);

@@ -917,6 +917,7 @@ export function getTravelQuote(
   });
   const path = "api/Travel/GetQuoteSingleTravel";
   const url = `${HLAS_URL}/${path}?${paramStr}`;
+  console.log(url);
   return fetch(url, {
     method: "GET",
     headers: {
@@ -991,6 +992,7 @@ export function verifyApplicationTravelSingle(
     optIn: OPT_IN_HLAS_MKTG,
     IPAddress: "sample string 18"
   };
+  console.log(payload);
   const url = `${HLAS_URL}/api/Travel/VerifyApp_TravelSingle`;
   return sendPOSTRequest(url, payload, "Error verifying travel application");
 }
@@ -1144,6 +1146,8 @@ export function submitApplicationTravelSingle(
   TelemoneyTransactionResponse: string,
   TelemoneyPaymentResultRow: string
 ) {
+  const _TravelStartDate = TravelStartDate;
+  const _TravelEndDate = TravelEndDate;
   TravelStartDate = moment(TravelStartDate).format("YYYY-MM-DD");
   TravelEndDate = moment(TravelEndDate).format("YYYY-MM-DD");
   const applicantTraveller = {
@@ -1195,5 +1199,38 @@ export function submitApplicationTravelSingle(
     url,
     payload,
     "Error in submitting application - Travel"
-  );
+  ).then(res => {
+    const { success, policyNo } = res;
+    const spouse =
+      InsuredTravellers.find(traveller => traveller.RelationshipID === 1) ||
+      null;
+    const children = InsuredTravellers.filter(
+      traveller => traveller.RelationshipID === 2
+    );
+    return {
+      success,
+      data: {
+        policyTypeId: "travel",
+        pasAppId: PASAppID,
+        policyId: policyNo,
+        webAppId: WebAppID,
+        premium: Premium,
+        planId: ProductPlanID,
+        optionId: 13,
+        autoRenew: false,
+        policyholderIdType: PolicyHolder.IDNumberType,
+        policyholderIdNo: PolicyHolder.IDNumber,
+        tmTxnRef: transactionRef,
+        tmVerifyEnrolment: TelemoneyTransactionResponse,
+        tmPaymentSuccessRes: TelemoneyPaymentResultRow,
+        additionalAttributes: {
+          spouse,
+          children,
+          countryId: CountryID,
+          startDate: _TravelStartDate,
+          endDate: _TravelEndDate
+        }
+      }
+    };
+  });
 }
