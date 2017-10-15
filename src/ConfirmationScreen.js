@@ -30,6 +30,7 @@ import {
   purchaseAccidentPolicy,
   purchasePhonePolicy
 } from "./hlas";
+import { saveNewPurchase } from "./parse/purchase";
 import { CONFIRMATION_PAGE_LOAD_TIME } from "react-native-dotenv";
 const PAGE_LOAD_TIME = parseInt(CONFIRMATION_PAGE_LOAD_TIME, 10);
 
@@ -48,36 +49,50 @@ type State = {
   totalPremium: ?number
 };
 
-const redirectToStatus = () =>
+const redirectToStatus = currentUser =>
   NavigationActions.reset({
-    index: 0,
+    index: 1,
     actions: [
       NavigationActions.navigate({
-        routeName: "DrawerClose",
-        action: NavigationActions.navigate({
-          routeName: "MyPolicies"
-        })
+        routeName: "Chat",
+        params: {
+          isStartScreen: true,
+          questionSet: "buy",
+          currentUser
+        }
+      }),
+      NavigationActions.navigate({
+        routeName: "MyPolicies"
       })
     ]
   });
 
-const redirectToPolicyPurchase = policy =>
+const redirectToPolicyPurchase = (policy, currentUser) =>
   NavigationActions.reset({
-    index: 0,
+    index: 2,
     actions: [
       NavigationActions.navigate({
-        routeName: "DrawerClose",
-        action: NavigationActions.navigate({
-          routeName: "BuyStack",
-          action: NavigationActions.navigate({
-            routeName: "Chat",
-            params: {
-              policy,
-              questionSet: "buy",
-              isStartScreen: false
-            }
-          })
-        })
+        routeName: "Chat",
+        params: {
+          currentUser,
+          questionSet: "buy",
+          isStartScreen: true
+        }
+      }),
+      NavigationActions.navigate({
+        routeName: "Policy",
+        params: {
+          policy
+        }
+      }),
+      NavigationActions.navigate({
+        routeName: "Chat",
+        params: {
+          policy,
+          currentUser,
+          questionSet: "buy",
+          isStartScreen: false
+        }
       })
     ]
   });
@@ -173,9 +188,10 @@ export default class ConfirmationScreen extends Component {
         .catch(err => {
           console.error(err);
           showAlert("Sorry, error getting policy quote");
+          const { currentUser } = this.props.navigation.state.params;
 
           this.props.screenProps.rootNavigation.dispatch(
-            redirectToPolicyPurchase(this.policy)
+            redirectToPolicyPurchase(this.policy, currentUser)
           );
         });
     }
@@ -196,12 +212,49 @@ export default class ConfirmationScreen extends Component {
   }
 
   handlePurchaseResult(promise: Promise<any>) {
+    const { currentUser } = this.props.navigation.state.params;
     promise
       .then(res => {
         console.log("purchase complete", JSON.stringify(res));
+        const {
+          policyTypeId,
+          pasAppId,
+          policyId,
+          webAppId,
+          premium,
+          planId,
+          optionId,
+          autoRenew,
+          policyholderIdType,
+          policyholderIdNo,
+          tmTxnRef,
+          tmVerifyEnrolment,
+          tmPaymentSuccessRes,
+          additionalAttributes
+        } = res.data;
+        return saveNewPurchase(
+          policyTypeId,
+          pasAppId,
+          policyId,
+          webAppId,
+          premium,
+          planId,
+          optionId,
+          autoRenew,
+          policyholderIdType,
+          policyholderIdNo,
+          currentUser,
+          tmTxnRef,
+          tmVerifyEnrolment,
+          tmPaymentSuccessRes,
+          additionalAttributes
+        );
+      })
+      .then(purchase => {
+        console.log(purchase);
         const resetToStatusScreen = () =>
           this.props.screenProps.rootNavigation.dispatch(
-            redirectToStatus(this.policy)
+            redirectToStatus(currentUser)
           );
         if (Platform.OS === "ios") {
           Alert.alert("Thank you!", "Your order is complete.", [
@@ -235,7 +288,7 @@ export default class ConfirmationScreen extends Component {
         });
         const afterAlert = () => {
           this.props.screenProps.rootNavigation.dispatch(
-            redirectToPolicyPurchase(this.policy)
+            redirectToPolicyPurchase(this.policy, currentUser)
           );
         };
         if (
