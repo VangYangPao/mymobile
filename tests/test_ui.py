@@ -2,6 +2,7 @@
 import sys
 import os
 import logging
+from datetime import datetime
 
 import timeout_decorator
 import unittest
@@ -12,7 +13,7 @@ from appium.webdriver.common.touch_action import TouchAction
 test_dir = os.path.dirname(os.path.realpath(__file__))
 root_dir = os.path.abspath(os.path.join(test_dir, os.pardir))
 android_app_path = os.path.join(
-    root_dir, 'android', 'app', 'build', 'outputs', 'apk', 'app-release.apk')
+    root_dir, 'android', 'app', 'build', 'outputs', 'apk', 'app-debug.apk')
 ios_app_path = os.path.join(root_dir, 'ios', 'build', 'Build',
                             'Products', 'Debug-iphonesimulator',
                             'Microsurance.app')
@@ -24,6 +25,12 @@ local_caps = {
     # 'android': {
     #     'platformName': 'Android',
     #     'platformVersion': '7.0',
+    #     'deviceName': 'Redmi',
+    #     'app': android_app_path
+    # },
+    # 'android': {
+    #     'platformName': 'Android',
+    #     'platformVersion': '6.0',
     #     'deviceName': 'Redmi',
     #     'app': android_app_path
     # },
@@ -62,18 +69,25 @@ class AppiumTests(unittest.TestCase):
         self.driver.quit()
 
     def test_purchase_travel(self):
+        sleep(3)
         signin_el = self.find_accessibility('intro__sign-in')
         self.tap_on(signin_el)
-        sleep(1)
+        sleep(2)
         self.do_login_flow()
         sleep(2)
+        menu_btn = self.find_accessibility('nav__menu-btn')
+        self.assertIsNotNone(menu_btn)
+        self.do_policy_check()
         travel_policy_choice = self.find_accessibility(
             'purchase__policy-choice-travel')
         self.tap_on(travel_policy_choice)
         sleep(0.5)
+        back_btn = self.find_accessibility('nav__back-btn')
+        self.assertIsNotNone(back_btn)
         purchase_btn = self.find_accessibility('policy__purchase-btn')
         self.tap_on(purchase_btn)
-        sleep(2)
+        sleep(4)
+        self.do_purchase_chatbot_flow()
 
     def do_login_flow(self):
         login_btn = self.find_accessibility('LOGIN')
@@ -85,24 +99,33 @@ class AppiumTests(unittest.TestCase):
         self.driver.set_value(login_email_input, LOGIN_EMAIL)
         self.tap_on(login_password_input)
         self.driver.set_value(login_password_input, LOGIN_PASSWORD)
-        self.tap_on(login_btn)
+        self.tap_on(login_btn)  # to dismiss keyboard
         self.tap_on(login_btn)
 
-    # @timeout_decorator.timeout(10)
-    # def test_intro_flow(self):
-    #     sleep(1)
-    #     logo_el = self.find_accessibility('intro__logo')
-    #     signin_el = self.find_accessibility('intro__sign-in')
-    #     browse_el = self.find_accessibility('intro__browse')
-    #     self.assertIsNotNone(logo_el)
-    #     self.assertIsNotNone(signin_el)
-    #     self.assertIsNotNone(browse_el)
-    #     # sign_in_bottom_el = self.find_accessibility('intro__sign-in')
-    #     for i in range(3):
-    #         self.driver.swipe(300, 200, 100, 200)
-    #     self.tap_on(signin_el)
-    #     sleep(1)
-    #     self.do_login_flow()
+    def do_policy_check(self):
+        policies = ['travel', 'pa', 'pa_mr', 'pa_wi']
+        for policy in policies:
+            choice_el = self.find_accessibility(
+                'purchase__policy-choice-'+policy)
+            self.assertIsNotNone(choice_el)
+
+    def do_purchase_chatbot_flow(self):
+        back_btn = self.find_accessibility('nav__back-btn')
+        self.assertIsNotNone(back_btn)
+        plan_select_btn = self.find_accessibility('SELECT PLAN')
+        self.tap_on(plan_select_btn)
+        sleep(2)
+        composer = self.find_accessibility('Type your message here...')
+        self.tap_on(composer)
+        self.driver.set_value(composer, 'Malaysia')
+        sleep(2)
+        malaysia_country_suggestion = self.driver\
+            .find_elements_by_accessibility_id('Malaysia')[1]
+        self.tap_on(malaysia_country_suggestion)
+        sleep(1)
+        date_now_str = datetime.now().strftime('%Y-%m-%d')
+        datepicker = self.find_accessibility(date_now_str)
+        self.tap_on(datepicker)
 
     # @timeout_decorator.timeout(20)
     # def test_signup_flow(self):
@@ -111,56 +134,29 @@ class AppiumTests(unittest.TestCase):
     #     self.assertIsNotNone(signin_el)
     #     self.tap_on(signin_el)
     #     sleep(1)
-    #     login_screen = self.find_accessibility('auth__login-screen')
-    #     self.assertIsNotNone(login_screen)
     #     go_to_signup = self.find_accessibility('auth__go-to-signup')
     #     self.assertIsNotNone(go_to_signup)
     #     self.tap_on(go_to_signup)
     #     sleep(1)
-    #     signup_btn = self.find_accessibility('auth__signup-btn')
-    #     signup_email_input = self.find_accessibility('auth__signup-email')
+    #     signup_btn = self.find_accessibility('SIGN UP')
+    #     signup_email_input = self.find_accessibility('Email')
     #     signup_password_input = self.find_accessibility(
-    #         'auth__signup-password')
+    #         'Password')
     #     signup_telephone_input = self.find_accessibility(
-    #         'auth__signup-telephone')
+    #         'Telephone')
     #     signup_confirm_password_input = self.find_accessibility(
-    #         'auth__signup-confirm-password')
+    #         'Confirm password')
     #     signup_first_name_input = self.find_accessibility(
-    #         'auth__signup-firstname')
+    #         'First name')
     #     signup_last_name_input = self.find_accessibility(
-    #         'auth__signup-lastname')
+    #         'Last name')
     #     self.driver.set_value(signup_email_input, 'test@gmail.com')
     #     self.driver.set_value(signup_password_input, '1234abcd')
     #     self.driver.set_value(signup_confirm_password_input, '1234abcd')
     #     self.driver.set_value(signup_telephone_input, '8888888')
     #     self.driver.set_value(signup_first_name_input, '1234abcd')
     #     self.driver.set_value(signup_last_name_input, '1234abcd')
-
-    # @timeout_decorator.timeout(LOCAL_TIMEOUT)
-    # def test_no_menu_when_not_logged_in(self):
-    #     menu_button = self.driver.find_elements_by_accessibility_id(
-    #         "menu-button")
-    #     self.assertEquals(menu_button, [])
-
-    # @timeout_decorator.timeout(LOCAL_TIMEOUT)
-    # def test_policies_exist(self):
-    #     policies = ['travel', 'pa', 'pa_mr', 'pa_wi']
-    #     for policy in policies:
-    #         choice_el = self.find_accessibility(
-    #             'purchase__policy-choice-'+policy)
-    #     self.assertIsNotNone(choice_el)
-
-    # @timeout_decorator.timeout(LOCAL_TIMEOUT)
-    # def test_purchase_travel(self):
-    #     travel_choice_el = self.find_accessibility(
-    #         'purchase__policy-choice-travel')
-    #     self.assertIsNotNone(travel_choice_el)
-    #     self.tap_on(travel_choice_el)
-    #     sleep(2)
-    #     purchase_btn_el = self.find_accessibility(
-    #         'purchase__policy-purchase-button')
-    #     self.assertIsNotNone(purchase_btn_el)
-    #     self.tap_on(purchase_btn_el)
+    #     self.tap_on(signup_btn)
 
 
 if __name__ == "__main__":
