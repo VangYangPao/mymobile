@@ -68,7 +68,6 @@ export default class StatusScreen extends Component {
         policies.forEach((policy, idx) => {
           policies[idx].key = policies[idx].get("objectId");
         });
-        console.log(policies);
         this.setState({ policies, policiesLoaded: true });
         const purchaseQuery = new Parse.Query(Purchase);
         purchaseQuery.equalTo("user", currentUser);
@@ -139,7 +138,7 @@ export default class StatusScreen extends Component {
     if (section === "policies") {
       const _amount = item.get("premium");
       policyId = item.get("policyId");
-      amount = `Premium: ${_amount.toFixed(2)}`;
+      amount = `Premium: $${_amount.toFixed(2)}`;
     } else if (section === "claims") {
       const _amount = item.get("claimAmount");
       policyId = item.get("purchase").get("policyId");
@@ -147,7 +146,7 @@ export default class StatusScreen extends Component {
         policyStatus = "pending";
         amount = "";
       } else {
-        amount = `Claim amount: ${_amount.toFixed(2)}`;
+        amount = `Claim amount: $${_amount.toFixed(2)}`;
       }
     }
     return (
@@ -202,7 +201,7 @@ export default class StatusScreen extends Component {
             params: { questionSet: "buy" }
           });
           emptySection = (
-            <View style={styles.emptySection}>
+            <View key={section.key} style={styles.emptySection}>
               <Text style={styles.emptySectionTitle}>
                 You have not purchased any policies.
               </Text>
@@ -218,7 +217,7 @@ export default class StatusScreen extends Component {
       } else if (section.key === "claims") {
         if (!this.state.policiesLoaded) {
           emptySection = (
-            <View style={styles.emptySection}>
+            <View key={section.key} style={styles.emptySection}>
               <Text style={styles.emptySectionTitle}>Loading claims...</Text>
             </View>
           );
@@ -229,7 +228,7 @@ export default class StatusScreen extends Component {
             params: { startScreen: false, questionSet: "claim", currentUser }
           });
           emptySection = (
-            <View style={styles.emptySection}>
+            <View key={section.key} style={styles.emptySection}>
               <Text style={styles.emptySectionTitle}>
                 You have not purchased any policies.
               </Text>
@@ -245,7 +244,7 @@ export default class StatusScreen extends Component {
       }
     }
     return (
-      <View style={{ backgroundColor: "white" }}>
+      <View key={section.key} style={{ backgroundColor: "white" }}>
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionHeaderText}>{section.title}</Text>
         </View>
@@ -262,6 +261,7 @@ export default class StatusScreen extends Component {
         <SectionList
           ItemSeparatorComponent={itemSeparatorComponent}
           renderSectionHeader={this.renderSectionHeader}
+          keyExtractor={(item, index) => index}
           sections={[
             {
               data: policies,

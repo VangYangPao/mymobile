@@ -17,19 +17,29 @@ export function getObjectFromUrlParams(query) {
   return result;
 }
 
-export function getDateStr(datetime) {
+function pad(num, size) {
+  var s = num + "";
+  while (s.length < size) s = "0" + s;
+  return s;
+}
+
+export function getDateStr(datetime: Date) {
   const day = datetime.getDate();
   const month = datetime.getMonth();
   const year = datetime.getFullYear();
   let hour = datetime.getHours();
   const minute = datetime.getMinutes();
+  let meridien;
   if (hour > 12) {
     meridien = "PM";
     hour -= 12;
   } else {
     meridien = "AM";
   }
-  const dateStr = `${hour}:${minute}${meridien} ${day}-${month}-${year}`;
+  const dateStr = `${hour}:${pad(minute, 2)} ${meridien} ${pad(day, 2)}-${pad(
+    month,
+    2
+  )}-${year}`;
   return dateStr;
 }
 

@@ -108,7 +108,7 @@ const BuyStackNavigator = StackNavigator(
       screen: ConfirmationScreen,
       navigationOptions: backButtonNavOptions
     },
-    Status: {
+    MyPolicies: {
       screen: StatusScreen,
       navigationOptions: backButtonNavOptions
     }
