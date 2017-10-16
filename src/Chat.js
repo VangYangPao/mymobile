@@ -156,6 +156,8 @@ class ChatScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      errLoadingPoliciesMsg: null,
+      loadingPolicies: true,
       policies: null,
       currentUser: null,
       idNumberType: "nric",
@@ -558,6 +560,24 @@ class ChatScreen extends Component {
           answers.fullName = fullName;
           this.setState({ currentUser, answers });
           const { policy, isStartScreen, questionSet } = this.props;
+          if (this.props.questionSet === "claim") {
+            const Purchase = Parse.Object.extend("Purchase");
+            const query = new Parse.Query(Purchase);
+            query.equalTo("user", currentUser);
+            query.descending("createdAt");
+            query
+              .find()
+              .then(policies => {
+                console.log(policies);
+                this.setState({ loadingPolicies: false, policies });
+              })
+              .catch(err => {
+                this.setState({
+                  loadingPolicies: false,
+                  errLoadingPoliciesMsg: err
+                });
+              });
+          }
           const setParamsAction = NavigationActions.setParams({
             params: {
               questionSet: "buy",
@@ -636,6 +656,7 @@ class ChatScreen extends Component {
       const { questionSet, policy } = this.props;
       setTimeout(() => {
         if (questionSet === "buy") {
+          const { currentUser } = this.state;
           const params = { policy, page: "checkout" };
           // this.props.navigation.navigate("Policy", params);
           let form = Object.assign({}, this.state.answers);
@@ -647,7 +668,7 @@ class ChatScreen extends Component {
           if (policy.id === "travel") {
             delete form.price;
           }
-          this.props.navigation.navigate("Confirmation", { form });
+          this.props.navigation.navigate("Confirmation", { form, currentUser });
         } else if (questionSet === "claim") {
           const purchase = this.state.policies.find(
             p => p.get("policyId") === this.state.answers.claimPolicyNo
@@ -766,18 +787,8 @@ class ChatScreen extends Component {
         return;
       }
       if (currentQuestion.id === "claimPolicyNo") {
-        //here
-        const Purchase = Parse.Object.extend("Purchase");
-        const query = new Parse.Query(Purchase);
-        query.equalTo("user", this.state.currentUser);
-        query.descending("createdAt");
-        query
-          .find()
-          .then(policies => {
-            this.setState({ policies });
-            appendWidget("claimPolicyNo", { policies });
-          })
-          .catch(err => appendWidget("claimPolicyNo", { err }));
+        //her
+        appendWidget("claimPolicyNo");
         return;
       }
       const responseTypes = [].concat(currentQuestion.responseType);
@@ -930,9 +941,13 @@ class ChatScreen extends Component {
     switch (currentMessage.type) {
       case "claimPolicyNo":
         const { policies } = currentMessage;
+        const { currentUser } = this.props.navigation.state.params;
         return (
           <ClaimPolicyChoice
-            policies={policies}
+            currentUser={currentUser}
+            loadingPolicies={this.state.loadingPolicies}
+            errLoadingPoliciesMsg={this.state.errLoadingPoliciesMsg}
+            policies={this.state.policies}
             onSelectPolicy={this.handleSelectPolicyToClaim}
           />
         );

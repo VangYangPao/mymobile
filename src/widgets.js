@@ -23,7 +23,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import ImagePicker from "react-native-image-picker";
 import DatePicker from "react-native-datepicker";
 import moment from "moment";
-import { TabNavigator, TabBarTop } from "react-navigation";
+import { TabNavigator, TabBarTop, NavigationActions } from "react-navigation";
 import VectorDrawableView from "./VectorDrawableView";
 import ModalPicker from "react-native-modal-picker";
 
@@ -71,12 +71,14 @@ export class MyDatePicker extends Component {
     if (this.props.minDate) {
       minDate = this.props.minDate;
     }
+    const placeholder = "SELECT DATE";
     return (
       <DatePicker
+        accessibilityLabel="chat__datepicker"
         style={{ flex: 1, paddingHorizontal: 10 }}
         date={this.state.date}
         mode={mode}
-        placeholder="SELECT DATE"
+        placeholder={placeholder}
         format={format}
         maxDate={maxDate}
         minDate={minDate}
@@ -436,27 +438,51 @@ export class ClaimPolicyChoice extends Component {
   }
 
   render() {
-    let policies;
+    let content;
 
-    if (!this.props.policies.length) {
-      policies = (
-        <View style={{ flex: 1, alignItems: "center" }}>
+    if (this.props.loadingPolicies) {
+      content = (
+        <View style={widgetStyles.claimScreenContainer}>
           <ActivityIndicator size="large" color="black" />
         </View>
       );
+    } else if (this.props.policies && !this.props.policies.length) {
+      content = (
+        <View style={widgetStyles.claimScreenContainer}>
+          <Text style={widgetStyles.claimScreenText}>
+            No policies to claim, purchase one first!
+          </Text>
+          {/*<Button
+            onPress={() =>
+              this.props.navigation.dispatch(navigateToPurchaseAction)}
+          >
+            PURCHASE NEW POLICY
+          </Button>*/}
+        </View>
+      );
+    } else if (this.props.errLoadingPoliciesMsg) {
+      const message =
+        this.props.errLoadingPoliciesMsg.code === 100
+          ? "No network connection,\nconnect to WiFi or data"
+          : "Oops... something went wrong";
+      content = (
+        <View style={widgetStyles.claimScreenContainer}>
+          <Text style={widgetStyles.claimScreenText}>{message}</Text>
+        </View>
+      );
     } else {
-      policies = this.props.policies.map(this.renderPolicy);
+      content = (
+        <Animated.View
+          style={[
+            widgetStyles.choicesContainer,
+            { opacity: this.state.fadeAnim, top: this.state.topAnim }
+          ]}
+        >
+          {this.props.policies.map(this.renderPolicy)}
+        </Animated.View>
+      );
     }
-    return (
-      <Animated.View
-        style={[
-          widgetStyles.choicesContainer,
-          { opacity: this.state.fadeAnim, top: this.state.topAnim }
-        ]}
-      >
-        {policies}
-      </Animated.View>
-    );
+    return content;
   }
 }
 
@@ -984,6 +1010,8 @@ export class SuggestionList extends Component {
     return (
       <TouchableHighlight
         accessibilityLabel={"chat__suggestion-" + item.value}
+        accessibilityTraits="button"
+        accessibilityComponentType="button"
         onPress={() => {
           this.props.onSelectSuggestion(item);
         }}
@@ -1157,6 +1185,15 @@ const multiInputPlaceholderSize = 16;
 const iconSize = 50;
 
 const widgetStyles = StyleSheet.create({
+  claimScreenText: {
+    fontSize: 17,
+    marginBottom: 15
+  },
+  claimScreenContainer: {
+    flex: 1,
+    alignItems: "center",
+    marginTop: 30
+  },
   select: {
     alignItems: "flex-start",
     borderWidth: 0
