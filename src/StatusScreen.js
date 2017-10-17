@@ -9,7 +9,8 @@ import {
   ListItem,
   TouchableOpacity,
   Platform,
-  Share
+  Share,
+  ActivityIndicator
 } from "react-native";
 import Ionicon from "react-native-vector-icons/Ionicons";
 import Parse from "parse/react-native";
@@ -31,7 +32,9 @@ export default class StatusScreen extends Component {
 
   state: {
     policiesLoaded: boolean,
+    errPoliciesLoad: ?Error,
     claimsLoaded: boolean,
+    errClaimsLoad: ?Error,
     currentUser: any,
     policies: Array<any>,
     claims: Array<any>
@@ -43,7 +46,9 @@ export default class StatusScreen extends Component {
     this.renderSectionHeader = this.renderSectionHeader.bind(this);
     this.state = {
       policiesLoaded: false,
+      errPoliciesLoad: null,
       claimsLoaded: false,
+      errClaimsLoad: null,
       currentUser: null,
       policies: [],
       claims: []
@@ -64,7 +69,18 @@ export default class StatusScreen extends Component {
         query.descending("createdAt");
         return query.find();
       })
+      .catch(err => {
+        this.setState({
+          policiesLoaded: true,
+          errPoliciesLoad: err,
+          claimsLoaded: true,
+          errClaimsLoad: err
+        });
+      })
       .then(policies => {
+        if (!policies) {
+          return;
+        }
         policies.forEach((policy, idx) => {
           policies[idx].key = policies[idx].get("objectId");
         });
@@ -77,13 +93,16 @@ export default class StatusScreen extends Component {
         return claimQuery.find();
       })
       .then(claims => {
+        if (!claims) {
+          return;
+        }
         claims.forEach((policy, idx) => {
           claims[idx].key = claims[idx].get("objectId");
         });
         this.setState({ claims, claimsLoaded: true });
       })
       .catch(err => {
-        console.error(err);
+        this.setState({ claimsLoaded: true, errClaimsLoad: err });
       });
   }
 
@@ -193,7 +212,18 @@ export default class StatusScreen extends Component {
         if (!this.state.policiesLoaded) {
           emptySection = (
             <View style={styles.emptySection}>
-              <Text style={styles.emptySectionTitle}>Loading policies...</Text>
+              <ActivityIndicator color="black" size="large" />
+            </View>
+          );
+        } else if (this.state.errPoliciesLoad) {
+          console.log(this.state.errPoliciesLoad);
+          const msg =
+            this.state.errPoliciesLoad.code === 100
+              ? "No network connection,\nplease connect to WiFi or data"
+              : "Oops, something went wrong";
+          emptySection = (
+            <View style={styles.emptySection}>
+              <Text style={styles.emptySectionTitle}>{msg}</Text>
             </View>
           );
         } else {
@@ -224,10 +254,20 @@ export default class StatusScreen extends Component {
           );
         }
       } else if (section.key === "claims") {
-        if (!this.state.policiesLoaded) {
+        if (!this.state.claimsLoaded) {
           emptySection = (
             <View key={section.key} style={styles.emptySection}>
-              <Text style={styles.emptySectionTitle}>Loading claims...</Text>
+              <ActivityIndicator color="black" size="large" />
+            </View>
+          );
+        } else if (this.state.errClaimsLoad) {
+          const msg =
+            this.state.errClaimsLoad.code === 100
+              ? "No network connection,\nplease connect to WiFi or data"
+              : "Oops, something went wrong";
+          emptySection = (
+            <View style={styles.emptySection}>
+              <Text style={styles.emptySectionTitle}>{msg}</Text>
             </View>
           );
         } else {

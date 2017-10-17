@@ -447,17 +447,29 @@ export class ClaimPolicyChoice extends Component {
         </View>
       );
     } else if (this.props.policies && !this.props.policies.length) {
+      const navigateToPurchaseAction = NavigationActions.reset({
+        key: null,
+        index: 0,
+        actions: [
+          NavigationActions.navigate({
+            routeName: "Drawer",
+            action: NavigationActions.navigate({
+              routeName: "BuyStack"
+            })
+          })
+        ]
+      });
       content = (
         <View style={widgetStyles.claimScreenContainer}>
           <Text style={widgetStyles.claimScreenText}>
             No policies to claim, purchase one first!
           </Text>
-          {/*<Button
+          <Button
             onPress={() =>
-              this.props.navigation.dispatch(navigateToPurchaseAction)}
+              this.props.rootNavigation.dispatch(navigateToPurchaseAction)}
           >
             PURCHASE NEW POLICY
-          </Button>*/}
+          </Button>
         </View>
       );
     } else if (this.props.errLoadingPoliciesMsg) {

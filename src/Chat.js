@@ -951,6 +951,7 @@ class ChatScreen extends Component {
         const { currentUser } = this.props.navigation.state.params;
         return (
           <ClaimPolicyChoice
+            rootNavigation={this.props.screenProps.rootNavigation}
             currentUser={currentUser}
             loadingPolicies={this.state.loadingPolicies}
             errLoadingPoliciesMsg={this.state.errLoadingPoliciesMsg}
