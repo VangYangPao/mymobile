@@ -68,13 +68,12 @@ export function saveNewClaim(
     });
     claim.setACL(new Parse.ACL(user));
     claim.set("policyTypeId", policyTypeId);
-    claim.set("claimAnswers", claimAnswers);
     claim.set("purchase", purchase);
     claim.set("documents", documents);
 
     const { claimFromPolicyholder } = claimAnswers;
 
-    if (!claimFromPolicyholder) {
+    if (claimFromPolicyholder) {
       const fields = [
         "claimFromPolicyholder",
         "claimantFirstName",
@@ -92,6 +91,7 @@ export function saveNewClaim(
         }
       });
     }
+    claim.set("claimAnswers", claimAnswers);
     return claim.save();
   });
 }

@@ -10,6 +10,24 @@ jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 it("makes claim successfully", () => {
   const policyTypeId = "pa";
   const answers = {
+    accidentType: "Death",
+    accidentDate: new Date(),
+    accidentCause: "Death",
+    accidentLocation: "Midview City",
+    details: "Death",
+    hasOtherInsuranceCoverage: true,
+    otherInsuranceCo: "AIA",
+    otherPolicyNo: "1234",
+    recurrence: true,
+    recurrenceDetail: "Death",
+    claimFromPolicyholder: true,
+    claimantFirstName: "Chan",
+    claimantLastName: "Guan",
+    claimantIdType: 1,
+    claimantIdNo: "123",
+    claimantPhone: "88888888",
+    claimantEmail: "ken@micro.com",
+    claimantAddress: "Midview City",
     images: {
       policeReport: "123.jpg",
       medicalReceipt: "234.png"
@@ -17,12 +35,16 @@ it("makes claim successfully", () => {
     travelImages: {
       policeReport: "123.jpg"
     },
-    testing: "123"
+    nonProp: "123"
   };
   let currentUser;
+  const nonProps = ["nonProp"];
   const imageProps = ["images", "travelImages"];
+  const assertions = 3;
+  const noOfKeys = Object.keys(answers).length - imageProps.length;
+  expect.assertions(assertions + noOfKeys);
   const Purchase = Parse.Object.extend("Purchase");
-  Parse.User
+  return Parse.User
     .logIn("x@aa.com", "1234abcd")
     .then(_currentUser => {
       currentUser = _currentUser;
@@ -38,10 +60,23 @@ it("makes claim successfully", () => {
         currentUser
       );
     })
-    .then(res => {
-      expect(res).toHaveProperty("className", "Claim");
-      expect(res).toHaveProperty("_objCount");
-      expect(res).toHaveProperty("id");
+    .then(claim => {
+      expect(claim).toHaveProperty("className", "Claim");
+      expect(claim).toHaveProperty("_objCount");
+      expect(claim).toHaveProperty("id");
+      for (var prop in answers) {
+        if (
+          answers.hasOwnProperty(prop) &&
+          imageProps.indexOf(prop) === -1 &&
+          nonProps.indexOf(prop) === -1
+        ) {
+          expect(claim.get(prop)).toBe(answers[prop]);
+        }
+      }
+      nonProps.forEach(prop => {
+        expect(claim.get("claimAnswers")).toHaveProperty(prop);
+      });
+      return claim;
     })
     .catch(err => console.error(err));
 });
