@@ -187,6 +187,7 @@ export default class StatusScreen extends Component {
 
   renderSectionHeader({ section }: { section: Section }) {
     let emptySection;
+    const { currentUser } = this.state;
     if (!section.data.length) {
       if (section.key === "policies") {
         if (!this.state.policiesLoaded) {
@@ -196,9 +197,17 @@ export default class StatusScreen extends Component {
             </View>
           );
         } else {
-          const navigateToPurchaseAction = NavigationActions.navigate({
-            routeName: "Chat",
-            params: { questionSet: "buy" }
+          const navigateToPurchaseAction = NavigationActions.reset({
+            index: 0,
+            key: null,
+            actions: [
+              NavigationActions.navigate({
+                routeName: "Drawer",
+                action: NavigationActions.navigate({
+                  routeName: "BuyStack"
+                })
+              })
+            ]
           });
           emptySection = (
             <View key={section.key} style={styles.emptySection}>
@@ -222,10 +231,17 @@ export default class StatusScreen extends Component {
             </View>
           );
         } else {
-          const { currentUser } = this.state;
-          const navigateToClaimsAction = NavigationActions.navigate({
-            routeName: "Chat",
-            params: { startScreen: false, questionSet: "claim", currentUser }
+          const navigateToClaimsAction = NavigationActions.reset({
+            index: 0,
+            key: null,
+            actions: [
+              NavigationActions.navigate({
+                routeName: "Drawer",
+                action: NavigationActions.navigate({
+                  routeName: "ClaimStack"
+                })
+              })
+            ]
           });
           emptySection = (
             <View key={section.key} style={styles.emptySection}>
@@ -234,7 +250,9 @@ export default class StatusScreen extends Component {
               </Text>
               <Button
                 onPress={() =>
-                  this.props.navigation.dispatch(navigateToClaimsAction)}
+                  this.props.screenProps.rootNavigation.dispatch(
+                    navigateToClaimsAction
+                  )}
               >
                 MAKE A CLAIM
               </Button>

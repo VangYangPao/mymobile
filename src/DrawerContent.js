@@ -52,6 +52,7 @@ export default class DrawerContent extends Component {
       Parse.User.logOut().then(() => {
         rootNavigation.dispatch(
           NavigationActions.reset({
+            key: null,
             index: 0,
             actions: [
               NavigationActions.navigate({

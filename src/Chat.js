@@ -568,7 +568,6 @@ class ChatScreen extends Component {
             query
               .find()
               .then(policies => {
-                console.log(policies);
                 this.setState({ loadingPolicies: false, policies });
               })
               .catch(err => {
@@ -674,22 +673,30 @@ class ChatScreen extends Component {
             p => p.get("policyId") === this.state.answers.claimPolicyNo
           );
           const policyTypeId = purchase.get("policyTypeId");
+          console.log(
+            policyTypeId,
+            this.state.answers,
+            purchase,
+            this.state.imageProps,
+            this.state.currentUser
+          );
           saveNewClaim(
             policyTypeId,
             this.state.answers,
             purchase,
-            this.state.imageProps
+            this.state.imageProps,
+            this.state.currentUser
           )
             .then(res => {
               console.log(res);
               showAlert("Thank you! Your claim has been submitted.", () => {
-                this.props.navigation.navigate("Status");
+                this.props.navigation.navigate("MyPolicies");
               });
             })
             .catch(err => {
               console.error(err);
               showAlert("Sorry, something went wrong with your claim.", () => {
-                this.props.navigation.navigate("Status");
+                this.props.navigation.navigate("MyPolicies");
               });
             });
         }
