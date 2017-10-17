@@ -472,9 +472,15 @@ export default class AuthScreen extends Component {
     const beneficiaryCode = generateID(6);
     user.set("beneficiaryCode", beneficiaryCode);
 
-    return user.signUp(null).then(user => {
-      this.handleRedirectToPurchase(user);
-    });
+    return user
+      .signUp(null)
+      .then(user => {
+        user.setACL(new Parse.ACL(user));
+        return user.save();
+      })
+      .then(user => {
+        this.handleRedirectToPurchase(user);
+      });
   }
 
   handleLogin(form: { email: string, password: string }) {
