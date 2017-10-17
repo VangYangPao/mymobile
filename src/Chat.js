@@ -13,7 +13,9 @@ import {
   Alert,
   ToastAndroid,
   Keyboard,
-  InteractionManager
+  InteractionManager,
+  ActivityIndicator,
+  Modal
 } from "react-native";
 import {
   GiftedChat,
@@ -156,6 +158,7 @@ class ChatScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      loadingSave: false,
       errLoadingPoliciesMsg: null,
       loadingPolicies: true,
       policies: null,
@@ -209,6 +212,7 @@ class ChatScreen extends Component {
     this.askNextQuestion = this.askNextQuestion.bind(this);
     this.reaskQuestion = this.reaskQuestion.bind(this);
     this.sendNewMessage = this.sendNewMessage.bind(this);
+    this.handleProceedButtonPress = this.handleProceedButtonPress.bind(this);
 
     this.concatMessageUpdater = message => {
       return prevState => {
@@ -549,6 +553,49 @@ class ChatScreen extends Component {
     );
   }
 
+  handleProceedButtonPress() {
+    const { questionSet, policy } = this.props;
+    if (questionSet === "buy") {
+      const { currentUser } = this.state;
+      const params = { policy, page: "checkout" };
+      // this.props.navigation.navigate("Policy", params);
+      let form = Object.assign({}, this.state.answers);
+      form.policy = this.props.policy;
+      const { planIndex } = form;
+      // delete form.policy;
+      // delete form.planIndex;
+      delete form.icImage;
+      if (policy.id === "travel") {
+        delete form.price;
+      }
+      this.props.navigation.navigate("Confirmation", { form, currentUser });
+    } else if (questionSet === "claim") {
+      this.setState({ loadingSave: true });
+      const purchase = this.state.policies.find(
+        p => p.get("policyId") === this.state.answers.claimPolicyNo
+      );
+      const policyTypeId = purchase.get("policyTypeId");
+      saveNewClaim(
+        policyTypeId,
+        this.state.answers,
+        purchase,
+        this.state.imageProps,
+        this.state.currentUser
+      )
+        .then(res => {
+          this.setState({ loadingSave: false });
+          console.log(res);
+          this.props.navigation.navigate("MyPolicies");
+        })
+        .catch(err => {
+          this.setState({ loadingSave: false });
+          showAlert("Sorry, something went wrong with your claim.", () => {
+            this.props.navigation.navigate("MyPolicies");
+          });
+        });
+    }
+  }
+
   componentDidMount() {
     Parse.User
       .currentAsync()
@@ -652,55 +699,6 @@ class ChatScreen extends Component {
 
     // end the questionnaire and redirect user to checkout page
     if (currentQuestionIndex >= this.questions.length) {
-      const { questionSet, policy } = this.props;
-      setTimeout(() => {
-        if (questionSet === "buy") {
-          const { currentUser } = this.state;
-          const params = { policy, page: "checkout" };
-          // this.props.navigation.navigate("Policy", params);
-          let form = Object.assign({}, this.state.answers);
-          form.policy = this.props.policy;
-          const { planIndex } = form;
-          // delete form.policy;
-          // delete form.planIndex;
-          delete form.icImage;
-          if (policy.id === "travel") {
-            delete form.price;
-          }
-          this.props.navigation.navigate("Confirmation", { form, currentUser });
-        } else if (questionSet === "claim") {
-          const purchase = this.state.policies.find(
-            p => p.get("policyId") === this.state.answers.claimPolicyNo
-          );
-          const policyTypeId = purchase.get("policyTypeId");
-          console.log(
-            policyTypeId,
-            this.state.answers,
-            purchase,
-            this.state.imageProps,
-            this.state.currentUser
-          );
-          saveNewClaim(
-            policyTypeId,
-            this.state.answers,
-            purchase,
-            this.state.imageProps,
-            this.state.currentUser
-          )
-            .then(res => {
-              console.log(res);
-              showAlert("Thank you! Your claim has been submitted.", () => {
-                this.props.navigation.navigate("MyPolicies");
-              });
-            })
-            .catch(err => {
-              console.error(err);
-              showAlert("Sorry, something went wrong with your claim.", () => {
-                this.props.navigation.navigate("MyPolicies");
-              });
-            });
-        }
-      }, 2000);
       return;
     }
 
@@ -1113,6 +1111,20 @@ class ChatScreen extends Component {
     const dateIndex = responseType.indexOf("date");
     const dateTimeIndex = responseType.indexOf("datetime");
 
+    if (currentQuestionIndex >= this.questions.length - 1) {
+      return (
+        <Button
+          onPress={this.handleProceedButtonPress}
+          containerStyle={{ flex: 1, borderRadius: 0 }}
+          style={{
+            borderRadius: 0
+          }}
+        >
+          PROCEED
+        </Button>
+      );
+    }
+
     if (dateIndex !== -1 || dateTimeIndex !== -1) {
       let index;
       if (dateIndex !== -1) {
@@ -1238,8 +1250,23 @@ class ChatScreen extends Component {
       };
     }
 
+    const loadingModal = (
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={true}
+        onRequestClose={() => {}}
+      >
+        <View style={styles.modalContainer}>
+          <Text style={styles.loadingClaimText}>Submitting claim...</Text>
+          <ActivityIndicator color="white" size="large" />
+        </View>
+      </Modal>
+    );
+
     return (
       <View style={styles.container}>
+        {this.state.loadingSave ? loadingModal : null}
         <GiftedChat
           ref="chat"
           messages={this.state.messages}
@@ -1273,6 +1300,28 @@ const messageContainerStyle = {
 };
 
 const styles = StyleSheet.create({
+  loadingClaimText: {
+    marginBottom: 15,
+    color: "white",
+    fontSize: 20,
+    fontWeight: "700"
+  },
+  modalContentContainer: {
+    alignItems: "stretch",
+    justifyContent: "center",
+    width: 100,
+    backgroundColor: "white"
+  },
+  modalContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(0,0,0,0.5)"
+  },
   idNumberTypeText: {
     marginLeft: 7,
     marginTop: Platform.select({ ios: -5, android: 0 }),

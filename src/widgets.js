@@ -1239,8 +1239,7 @@ const widgetStyles = StyleSheet.create({
     width: iconSize
   },
   selectPlanButton: {
-    borderTopLeftRadius: 0,
-    borderTopRightRadius: 0
+    borderRadius: 0
   },
   planTitle: {
     color: colors.primaryText
