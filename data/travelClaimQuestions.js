@@ -272,7 +272,7 @@ export default (travelClaimQuestions = [
   {
     question: "What is the insurance company and policy number?",
     responseType: ["string", "string"],
-    id: ["otherInsuranceCo", "otherPolicyNumber"],
+    id: ["otherInsuranceCo", "otherPolicyNo"],
     labels: ["Insurance company name", "Policy number"],
     include: ["death", "permanentDisability", "medicalReimbursement"],
     condition: "this.state.answers.hasOtherInsuranceCoverage"

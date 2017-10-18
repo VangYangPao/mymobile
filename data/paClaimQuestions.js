@@ -10,7 +10,7 @@ export default (paClaimQuestions = [
       { label: "Permanent Disability", value: "permanentDisability" }
     ],
     include: ["pa"],
-    id: "claimType"
+    id: "accidentType"
   },
   {
     question:
@@ -26,7 +26,7 @@ export default (paClaimQuestions = [
       }
     ],
     include: ["pa_mr"],
-    id: "claimType"
+    id: "accidentType"
   },
   {
     question:
@@ -42,7 +42,7 @@ export default (paClaimQuestions = [
       }
     ],
     include: ["pa_wi"],
-    id: "claimType"
+    id: "accidentType"
   },
 
   // Intros
@@ -81,14 +81,14 @@ export default (paClaimQuestions = [
     question: "What happened in detail?",
     responseType: "string",
     responseLength: 600,
-    id: "description",
+    id: "details",
     include: ["death"]
   },
   {
     question: "Share with me how you sustained your injury?",
     responseType: "string",
     responseLength: 600,
-    id: "description",
+    id: "details",
     include: [
       "permanentDisability",
       "medicalReimbursement",
@@ -109,15 +109,15 @@ export default (paClaimQuestions = [
       { label: "Yes, I have", value: true },
       { label: "No, I have not", value: false }
     ],
-    id: "hasSufferedSameInjury",
+    id: "recurrence",
     exclude: ["death"]
   },
   {
     question: "Please explain the injury in detail?",
     responseType: "string",
-    id: "injuryDetail",
+    id: "recurrenceDetail",
     exclude: ["death"],
-    condition: "this.state.answers.hasSufferedSameInjury"
+    condition: "this.state.answers.recurrence"
   },
   // FIX: THIS QUESTION CRASHES APP WHEN UNCOMMENTED
   {
@@ -125,7 +125,7 @@ export default (paClaimQuestions = [
     responseType: "date",
     id: "symptomsAppearDate",
     include: ["medicalReimbursement", "weeklyCompensation"],
-    condition: "this.state.answers.hasSufferedSameInjury"
+    condition: "this.state.answers.recurrence"
   },
   {
     question:
@@ -141,7 +141,7 @@ export default (paClaimQuestions = [
       { label: "No", value: false }
     ],
     exclude: ["death"],
-    condition: "this.state.answers.hasSufferedSameInjury"
+    condition: "this.state.answers.recurrence"
   },
   {
     question:
@@ -161,7 +161,7 @@ export default (paClaimQuestions = [
   {
     question: "What is the insurance company and policy number?",
     responseType: ["string", "string"],
-    id: ["otherInsuranceCo", "otherPolicyNumber"],
+    id: ["otherInsuranceCo", "otherPolicyNo"],
     labels: ["Insurance company name", "Policy number"],
     include: ["death"],
     condition: "this.state.answers.hasOtherInsuranceCoverage===true"
@@ -169,11 +169,11 @@ export default (paClaimQuestions = [
   {
     question: "What is the insurance company and policy number?",
     responseType: ["string", "string"],
-    id: ["otherInsuranceCo", "otherPolicyNumber"],
+    id: ["otherInsuranceCo", "otherPolicyNo"],
     labels: ["Insurance company name", "Policy number"],
     exclude: ["death"],
     condition:
-      "this.state.answers.hasSufferedSameInjury && this.state.answers.hasOtherInsuranceCoverage"
+      "this.state.answers.recurrence && this.state.answers.hasOtherInsuranceCoverage"
   },
   {
     question: "Have you completed your treatment?",
@@ -187,7 +187,7 @@ export default (paClaimQuestions = [
       { label: "No", value: false }
     ],
     include: ["medicalReimbursement", "weeklyCompensation"],
-    condition: "this.state.answers.hasSufferedSameInjury"
+    condition: "this.state.answers.recurrence"
   },
   {
     question: "When is the treatment expected to be completed?",
@@ -195,7 +195,7 @@ export default (paClaimQuestions = [
     futureOnly: true,
     id: "treatmentCompleteDate",
     condition:
-      "this.state.answers.hasSufferedSameInjury && !this.state.answers.hasCompletedTreatment",
+      "this.state.answers.recurrence && !this.state.answers.hasCompletedTreatment",
     include: ["medicalReimbursement", "weeklyCompensation"]
   },
 

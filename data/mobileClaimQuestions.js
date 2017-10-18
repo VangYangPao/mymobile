@@ -15,7 +15,7 @@ export default (mobileClaimQuestions = [
     question: "How did the damage occur? Please specify in detail",
     responseType: "string",
     responseLength: 600,
-    id: "description"
+    id: "details"
   },
   {
     question:
