@@ -355,8 +355,37 @@ export function submitApplicationPhone(
   return sendPOSTRequest(
     url,
     payload,
-    "Error updating payment transaction phone protect"
-  );
+    "Error submit application phone protect"
+  ).then(res => {
+    const { success, policyNo } = res;
+    const { brandID, modelID, serialNo, purchasePlaceID } = mobileDetails;
+    return {
+      success,
+      data: {
+        policyTypeId: "mobile",
+        pasAppId: pasAppID,
+        policyId: policyNo,
+        webAppId: webAppID,
+        premium,
+        planId: PHONE_PRODUCT_PLAN_ID,
+        optionId: 1,
+        autoRenew: false,
+        policyholderIdType: policyHolder.IDNumberType,
+        policyholderIdNo: policyHolder.IDNumber,
+        tmTxnRef: transactionRef,
+        tmVerifyEnrolment: TelemoneyTransactionResponse,
+        tmPaymentSuccessRes: TelemoneyPaymentResultRow,
+        additionalAttributes: {
+          brandId: brandID,
+          modelId: modelID,
+          serialNo,
+          purchasePlaceId: purchasePlaceID,
+          commencementDate: policyCommencementDate,
+          purchaseDate: moment(mobileDetails.purchaseDate).toDate()
+        }
+      }
+    };
+  });
 }
 
 export function getAccidentQuote(
@@ -743,7 +772,39 @@ export function submitApplicationAccident(
     url,
     payload,
     "Error submitting application - Accident"
-  );
+  ).then(res => {
+    const { success, policyNo } = res;
+    const {
+      ProductPlanID,
+      PolicyTermsID,
+      OptionsID,
+      OccupationID
+    } = AccidentDetails;
+    const commencementDate = moment(PolicyCommencementDate).toDate();
+    return {
+      success,
+      data: {
+        policyTypeId: "pa",
+        pasAppId: PASAppID,
+        policyId: policyNo,
+        webAppId: WebAppID,
+        premium: Premium,
+        planId: ProductPlanID,
+        optionId: OptionsID,
+        autoRenew: false,
+        policyholderIdType: PolicyHolder.IDNumberType,
+        policyholderIdNo: PolicyHolder.IDNumber,
+        tmTxnRef: transactionRef,
+        tmVerifyEnrolment: TelemoneyTransactionResponse,
+        tmPaymentSuccessRes: TelemoneyPaymentResultRow,
+        additionalAttributes: {
+          commencementDate,
+          occupationId: OccupationID,
+          policyTermsId: PolicyTermsID
+        }
+      }
+    };
+  });
 }
 
 function padStart(str, padString, length) {
