@@ -40,9 +40,9 @@ export default class TableScreen extends Component {
       values: []
     };
     const { columns } = this.props.navigation.state.params;
-    for (let i = 0; i < columns.length; i++) {
-      this.state.values.push("");
-    }
+    columns.forEach(column => {
+      this.state.values.push(column.value || "");
+    });
     tableValues = this.state.values;
   }
 
@@ -52,7 +52,8 @@ export default class TableScreen extends Component {
     }
   }
 
-  renderField({ id, label, choices, responseType }, index) {
+  renderField(field, index) {
+    let { id, label, choices, responseType, value } = field;
     const { renderError, columns } = this.props.navigation.state.params;
     responseType = [].concat(responseType);
     let inputElement;
@@ -62,20 +63,22 @@ export default class TableScreen extends Component {
       responseType.indexOf("datetime") !== -1
     ) {
       // const eighteenYearsAgo = moment(new Date()).subtract(18, "years");
-      const maxDate = moment(new Date()).format("YYYY-MM-DD");
+      const maxDate = field.pastOnly
+        ? value || moment(new Date()).format("YYYY-MM-DD")
+        : null;
+      const minDate = field.futureOnly ? value : null;
       inputElement = (
         <TouchableOpacity
           style={styles.selectContainer}
           onPress={() => this.inputRefs[index].onPressDate()}
         >
           <Text
-            style={
-              renderError && this.state.values[index] === "" ? (
-                styles.inputErr
-              ) : (
-                styles.selectText
-              )
-            }
+            style={[
+              renderError && this.state.values[index] === ""
+                ? styles.inputErr
+                : styles.selectText,
+              { flex: 1 }
+            ]}
           >
             Select {label.toLowerCase()}
           </Text>
@@ -85,6 +88,7 @@ export default class TableScreen extends Component {
             mode="date"
             placeholder=""
             format="YYYY-MM-DD"
+            minDate={minDate}
             maxDate={maxDate}
             confirmBtnText="Confirm"
             cancelBtnText="Cancel"
@@ -93,17 +97,15 @@ export default class TableScreen extends Component {
               placeholderText: renderError
                 ? styles.inputErr
                 : styles.selectText,
-              dateInput: {
-                alignItems: "flex-end",
-                borderWidth: 0
-              },
+              dateInput: styles.dateInput,
               dateText: [styles.selectText, styles.selectTextResult],
               btnTextConfirm: {
                 color: colors.primaryOrange
               }
             }}
-            onDateChange={date => {
+            onDateChange={dateStr => {
               const values = Object.assign([], this.state.values);
+              const date = moment(dateStr).toDate();
               values[index] = date;
               this.setState({ values });
             }}
@@ -128,17 +130,18 @@ export default class TableScreen extends Component {
         >
           <View key={index} style={styles.selectContainer}>
             <Text
-              style={
-                renderError && this.state.values[index] === "" ? (
-                  styles.inputErr
-                ) : (
-                  styles.selectText
-                )
-              }
+              style={[
+                renderError && this.state.values[index] === ""
+                  ? styles.inputErr
+                  : styles.selectText,
+                { flex: 1 }
+              ]}
             >
               Select {lowerlabel}
             </Text>
-            <Text style={[styles.selectText, styles.selectTextResult]}>
+            <Text
+              style={[styles.selectText, styles.selectTextResult, { flex: 1 }]}
+            >
               {selectedChoice ? selectedChoice.label : null}
             </Text>
           </View>
@@ -190,14 +193,22 @@ export default class TableScreen extends Component {
 const fieldInputFontSize = 17.5;
 
 const styles = StyleSheet.create({
+  dateInput: {
+    alignItems: "flex-end",
+    borderWidth: 0
+  },
   inputErr: {
     color: colors.errorRed,
     fontSize: fieldInputFontSize
   },
   selectTextResult: {
+    // flex: 1,
+    alignItems: "center",
+    textAlign: "right",
     color: colors.primaryText
   },
   selectText: {
+    // flex: 1,
     color: colors.borderLine,
     fontSize: fieldInputFontSize
   },
@@ -219,7 +230,6 @@ const styles = StyleSheet.create({
   selectContainer: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
     padding: 15
   },
   fieldContainer: {

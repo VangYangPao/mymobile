@@ -389,7 +389,8 @@ export const QUESTION_SETS = {
         {
           label: "Date of birth",
           id: "DOB",
-          responseType: "date"
+          responseType: "date",
+          pastOnly: true
         },
         {
           label: "Gender",

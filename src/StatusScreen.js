@@ -66,6 +66,7 @@ export default class StatusScreen extends Component {
         this.setState({ currentUser });
         const query = new Parse.Query(Purchase);
         query.equalTo("user", _currentUser);
+        query.notEqualTo("cancelled", true);
         query.descending("createdAt");
         return query.find();
       })

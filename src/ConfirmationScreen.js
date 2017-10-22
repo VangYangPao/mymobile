@@ -51,18 +51,14 @@ type State = {
 
 const redirectToStatus = currentUser =>
   NavigationActions.reset({
-    index: 1,
+    key: null,
+    index: 0,
     actions: [
       NavigationActions.navigate({
-        routeName: "Chat",
-        params: {
-          isStartScreen: true,
-          questionSet: "buy",
-          currentUser
-        }
-      }),
-      NavigationActions.navigate({
-        routeName: "MyPolicies"
+        routeName: "Drawer",
+        action: NavigationActions.navigate({
+          routeName: "MyPolicies"
+        })
       })
     ]
   });
@@ -414,7 +410,6 @@ export default class ConfirmationScreen extends Component {
   }
 
   renderField(key: string, value: any) {
-    console.log(this.fieldMapping);
     const label = this.fieldMapping[key]
       ? this.fieldMapping[key]
       : prettifyCamelCase(key);
