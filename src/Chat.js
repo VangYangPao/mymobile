@@ -39,6 +39,7 @@ import Parse from "parse/react-native";
 
 import { saveNewClaim } from "./parse/claims";
 import CheckoutModal from "./CheckoutModal";
+import PolicyDetails from "./PolicyDetails";
 import {
   MultiInput,
   MultipleImagePicker,
@@ -49,7 +50,7 @@ import {
   ChoiceList,
   SuggestionList,
   PlansTabView,
-  TableInput
+  TravellerTableInput
 } from "./widgets";
 import TravelPlansView from "./TravelPlansView";
 import database from "./HackStorage";
@@ -523,6 +524,7 @@ class ChatScreen extends Component {
   }
 
   handleTableInputSubmit(items) {
+    console.log(items);
     let { messages } = this.state;
     messages = messages.slice(0, messages.length - 1);
     messages = messages.concat({
@@ -959,7 +961,7 @@ class ChatScreen extends Component {
         );
       case "table":
         return (
-          <TableInput
+          <TravellerTableInput
             itemName="traveller"
             navigation={this.props.navigation}
             keyboardHeight={this.state.keyboardHeight}
@@ -1219,7 +1221,7 @@ class ChatScreen extends Component {
   }
 
   render() {
-    // return <CheckoutModal purchasing={true} price={13.599} purchasing={true} />;
+    // return <PolicyDetails policy={{ policyTypeId: "pa" }} />;
     const additionalProps = {};
     let minInputToolbarHeight = 44;
     if (
