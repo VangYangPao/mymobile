@@ -150,7 +150,7 @@ const StatusStackNavigator = StackNavigator(
         headerStyle: styles.header,
         headerTitleStyle: styles.headerTitle,
         headerLeft: renderMenuButton(navigation),
-        drawerLabel: "My Policies",
+        drawerLabel: "My Policies & Status",
         drawerIcon: ({ tintColor }) => (
           <Icon name={"book"} size={22} color={tintColor} />
         )
@@ -159,6 +159,9 @@ const StatusStackNavigator = StackNavigator(
     PolicyDetails: {
       screen: PolicyDetailsScreen,
       navigationOptions: backButtonNavOptions
+    },
+    Table: {
+      screen: TableScreen
     }
   },
   {

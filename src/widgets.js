@@ -747,7 +747,7 @@ export class TravellerTableInput extends Component {
         <TouchableOpacity
           onPress={() =>
             this.props.navigation.navigate("Table", {
-              itemName: "traveller",
+              title: "Add New Traveller",
               columns: this.props.columns,
               onSaveTable: this.handleSaveNewItem
             })}

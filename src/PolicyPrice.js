@@ -53,7 +53,13 @@ export default class PolicyPrice extends Component {
               <Text style={styles.pricePerMonth}>FROM</Text>
             ) : null}
             <View style={styles.price}>
-              <Text style={[styles.priceAmount, styles.priceDuration]}>
+              <Text
+                style={[
+                  styles.priceAmount,
+                  styles.priceDuration,
+                  { textAlign: "center" }
+                ]}
+              >
                 {minimumCoverage}
               </Text>
             </View>

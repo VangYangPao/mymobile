@@ -17,7 +17,7 @@ let tableValues = [];
 export default class TableScreen extends Component {
   static navigationOptions = ({ navigation, screenProps }) => {
     let options = backButtonNavOptions({ navigation });
-    const { itemName, onSaveTable, columns } = navigation.state.params;
+    const { title, onSaveTable, columns } = navigation.state.params;
     const handleSave = () => onSaveTable(navigation, tableValues);
 
     options.headerRight = (
@@ -28,7 +28,7 @@ export default class TableScreen extends Component {
     const headerTitleStyle = StyleSheet.flatten(options.headerTitleStyle);
     headerTitleStyle.paddingRight = 0;
     options.headerTitleStyle = headerTitleStyle;
-    options.title = "ADD NEW " + itemName.toUpperCase();
+    options.title = title;
     return options;
   };
 
