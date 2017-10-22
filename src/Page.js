@@ -6,6 +6,7 @@ import {
   InteractionManager,
   Animated
 } from "react-native";
+import colors from "./colors";
 
 export default class Page extends Component {
   constructor(props) {
@@ -81,6 +82,10 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 17,
     elevation: 4,
+    shadowColor: colors.borderLine,
+    shadowOffset: { width: 0, height: 3.5 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
     borderRadius: 3,
     backgroundColor: "white"
   }
