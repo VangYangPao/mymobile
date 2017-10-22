@@ -174,6 +174,21 @@ export default class StatusScreen extends Component {
         policy: item,
         policyMetadata
       });
+    const itemContent = (
+      <View style={styles.policy}>
+        <View style={styles.policyContent}>
+          <Text style={styles.policyName}>{policyTypeTitle}</Text>
+          <Text style={styles.date}>Policy No: {policyId}</Text>
+          <Text style={styles.date}>Purchased on: {dateStr}</Text>
+          <Text style={styles.date}>{amount}</Text>
+        </View>
+        <View style={styles.policyStatus}>
+          <Text style={[styles.policyStatusText, styleMap[policyStatus]]}>
+            {policyStatus && policyStatus.toUpperCase()}
+          </Text>
+        </View>
+      </View>
+    );
     return (
       <View key={index}>
         {renderSharePolicy ? (
@@ -193,21 +208,13 @@ export default class StatusScreen extends Component {
             </View>
           </TouchableOpacity>
         ) : null}
-        <TouchableOpacity onPress={navigateToPolicyDetails}>
-          <View style={styles.policy}>
-            <View style={styles.policyContent}>
-              <Text style={styles.policyName}>{policyTypeTitle}</Text>
-              <Text style={styles.date}>Policy No: {policyId}</Text>
-              <Text style={styles.date}>Purchased on: {dateStr}</Text>
-              <Text style={styles.date}>{amount}</Text>
-            </View>
-            <View style={styles.policyStatus}>
-              <Text style={[styles.policyStatusText, styleMap[policyStatus]]}>
-                {policyStatus && policyStatus.toUpperCase()}
-              </Text>
-            </View>
-          </View>
-        </TouchableOpacity>
+        {section === "policies" ? (
+          <TouchableOpacity onPress={navigateToPolicyDetails}>
+            {itemContent}
+          </TouchableOpacity>
+        ) : (
+          itemContent
+        )}
       </View>
     );
   }
