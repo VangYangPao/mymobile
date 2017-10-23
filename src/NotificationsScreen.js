@@ -5,7 +5,8 @@ import {
   TouchableOpacity,
   View,
   Button,
-  ToastAndroid
+  ToastAndroid,
+  FlatList
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
@@ -30,6 +31,11 @@ export default class NotificationsScreen extends Component {
         {
           message: "Adeline Tan has shared with you their policy information!",
           new: false
+        },
+        {
+          message:
+            "Share your Micro Protect360 policy with your loved ones. This allows your beneficiary to claim on your behalf.",
+          new: false
         }
       ]
     };
@@ -47,16 +53,15 @@ export default class NotificationsScreen extends Component {
     }, 2000);
   }
 
-  renderNotification(notification, idx) {
+  renderNotification({ item, index }) {
+    const notification = item;
     return (
-      <TouchableOpacity key={idx}>
+      <TouchableOpacity key={index}>
         <View
-          style={{
-            padding: 15,
-            borderBottomWidth: 1,
-            borderBottomColor: colors.softBorderLine,
-            backgroundColor: notification.new ? colors.softBorderLine : "white"
-          }}
+          style={[
+            styles.notificationContainer,
+            notification.new ? styles.notificationNew : styles.notificationRead
+          ]}
         >
           <Text>{notification.message}</Text>
         </View>
@@ -65,10 +70,36 @@ export default class NotificationsScreen extends Component {
   }
 
   render() {
+    const ItemSeparatorComponent = () => <View style={styles.separator} />;
     return (
-      <View style={{ flex: 1, backgroundColor: "white" }}>
-        {this.state.notifications.map(this.renderNotification)}
+      <View style={styles.container}>
+        <FlatList
+          data={this.state.notifications}
+          keyExtractor={(item, idx) => idx}
+          renderItem={this.renderNotification}
+          ItemSeparatorComponent={ItemSeparatorComponent}
+        />
       </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  notificationRead: {
+    backgroundColor: "white"
+  },
+  notificationNew: {
+    backgroundColor: colors.softBorderLine
+  },
+  notificationContainer: {
+    padding: 15
+  },
+  separator: {
+    borderBottomColor: colors.softBorderLine,
+    borderBottomWidth: 1
+  },
+  container: {
+    flex: 1,
+    backgroundColor: "white"
+  }
+});

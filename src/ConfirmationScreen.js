@@ -51,18 +51,14 @@ type State = {
 
 const redirectToStatus = currentUser =>
   NavigationActions.reset({
-    index: 1,
+    key: null,
+    index: 0,
     actions: [
       NavigationActions.navigate({
-        routeName: "Chat",
-        params: {
-          isStartScreen: true,
-          questionSet: "buy",
-          currentUser
-        }
-      }),
-      NavigationActions.navigate({
-        routeName: "MyPolicies"
+        routeName: "Drawer",
+        action: NavigationActions.navigate({
+          routeName: "MyPolicies"
+        })
       })
     ]
   });
@@ -110,6 +106,7 @@ export default class ConfirmationScreen extends Component {
   policy: any;
   handleCheckout: Function;
   handlePurchaseResult: Function;
+  fieldMapping: { [string]: string };
 
   constructor(props: {
     navigation: any,
@@ -119,6 +116,7 @@ export default class ConfirmationScreen extends Component {
     super(props);
     this.handleCheckout = this.handleCheckout.bind(this);
     this.handlePurchaseResult = this.handlePurchaseResult.bind(this);
+    this.renderField = this.renderField.bind(this);
     const { form } = this.props.navigation.state.params;
     this.policy = form.policy;
     delete form.policy;
@@ -140,6 +138,10 @@ export default class ConfirmationScreen extends Component {
       pa: 0,
       pa_mr: 1,
       pa_wi: 2
+    };
+    this.fieldMapping = {
+      idNumber: "ID Number",
+      idNumberType: "ID Number Type"
     };
   }
 
@@ -407,13 +409,16 @@ export default class ConfirmationScreen extends Component {
     }
   }
 
-  renderField(key, value) {
+  renderField(key: string, value: any) {
+    const label = this.fieldMapping[key]
+      ? this.fieldMapping[key]
+      : prettifyCamelCase(key);
     const isDate = moment.isDate(value);
     value = isDate ? moment(value).format("DD MMMM YYYY") : value;
     if (typeof value !== "string") return null;
     return (
       <View style={styles.field} key={key}>
-        <Text style={styles.fieldKey}>{prettifyCamelCase(key)}</Text>
+        <Text style={styles.fieldKey}>{label}</Text>
         <Text style={styles.fieldValue}>{value}</Text>
       </View>
     );

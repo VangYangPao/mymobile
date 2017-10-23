@@ -32,6 +32,7 @@ import HelpScreen from "./HelpScreen";
 import colors from "./colors";
 import TableScreen from "./TableScreen";
 import DrawerContent from "./DrawerContent";
+import PolicyDetailsScreen from "./PolicyDetails";
 import {
   styles,
   backButtonNavOptions,
@@ -107,11 +108,11 @@ const BuyStackNavigator = StackNavigator(
     Confirmation: {
       screen: ConfirmationScreen,
       navigationOptions: backButtonNavOptions
-    },
-    MyPolicies: {
-      screen: StatusScreen,
-      navigationOptions: backButtonNavOptions
     }
+    // MyPolicies: {
+    //   screen: StatusScreen,
+    //   navigationOptions: backButtonNavOptions
+    // }
   },
   {
     initialRouteName: "Chat",
@@ -141,12 +142,32 @@ const ClaimStackNavigator = StackNavigator(
   }
 );
 
-const StatusStackNavigator = StackNavigator({
-  Status: {
-    screen: StatusScreen,
-    navigationOptions: backButtonNavOptions
+const StatusStackNavigator = StackNavigator(
+  {
+    Status: {
+      screen: StatusScreen,
+      navigationOptions: ({ navigation }) => ({
+        headerStyle: styles.header,
+        headerTitleStyle: styles.headerTitle,
+        headerLeft: renderMenuButton(navigation),
+        drawerLabel: "My Policies & Status",
+        drawerIcon: ({ tintColor }) => (
+          <Icon name={"book"} size={22} color={tintColor} />
+        )
+      })
+    },
+    PolicyDetails: {
+      screen: PolicyDetailsScreen,
+      navigationOptions: backButtonNavOptions
+    },
+    Table: {
+      screen: TableScreen
+    }
+  },
+  {
+    initialRouteName: "Status"
   }
-});
+);
 
 class SettingsScreen extends Component {
   static navigationOptions = createDrawerNavOptions("Settings", "settings");
@@ -177,8 +198,7 @@ const MyDrawerNavigator = DrawerNavigator(
       screen: ClaimStackNavigator
     },
     MyPolicies: {
-      screen: StatusStackNavigator,
-      navigationOptions: createDrawerNavOptions("My Polices & Status", "book")
+      screen: StatusStackNavigator
     }
     // Notification: {
     //   screen: NotificationsStackNavigator

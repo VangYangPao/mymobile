@@ -1,3 +1,5 @@
+import OCCUPATIONS from "./occupations";
+
 const notCovered = [
   "cashlessMedicalBenefit",
   "naturalDisaster",
@@ -8,6 +10,18 @@ const notCovered = [
   "suicide",
   "preExistingConditions"
 ];
+
+const paParseData = {
+  subclassName: "PurchaseAccident",
+  endorsementFields: [
+    {
+      label: "Occupation",
+      id: "occupationId",
+      responseType: ["choice", "number"],
+      choices: OCCUPATIONS
+    }
+  ]
+};
 
 export default (policies = [
   {
@@ -39,7 +53,16 @@ export default (policies = [
       "personalLiability",
       "lossOfHomeContents"
     ],
-    notCovered
+    notCovered,
+    subclassName: "PurchaseTravel",
+    endorsementFields: [
+      {
+        label: "End Date",
+        id: "endDate",
+        responseType: "date",
+        futureOnly: true
+      }
+    ]
   },
   {
     id: "pa",
@@ -89,7 +112,8 @@ export default (policies = [
       }
     ],
     covered: ["accidentalDeath", "permanentDisablement"],
-    notCovered
+    notCovered,
+    ...paParseData
   },
   {
     id: "pa_mr",
@@ -151,7 +175,8 @@ export default (policies = [
       "mrFoodPoisoning",
       "mrMosquitoBite"
     ],
-    notCovered
+    notCovered,
+    ...paParseData
   },
   {
     id: "pa_wi",
@@ -207,7 +232,8 @@ export default (policies = [
       }
     ],
     covered: ["accidentalDeath", "permanentDisablement", "weeklyIndemnity"],
-    notCovered
+    notCovered,
+    ...paParseData
   },
   {
     id: "mobile",
@@ -225,6 +251,8 @@ export default (policies = [
       }
     ],
     covered: ["phoneDamage", "phoneWet"],
-    notCovered: ["phoneCosmetic", "phoneWearTear", "selfInflicted"]
+    notCovered: ["phoneCosmetic", "phoneWearTear", "selfInflicted"],
+    subclassName: "PurchasePhone",
+    endorsementFields: []
   }
 ]);

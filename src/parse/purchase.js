@@ -43,11 +43,16 @@ export function saveNewPurchase(
       policyTypeId === "pa_wi"
     ) {
       const PurchaseAccident = Parse.Object.extend("PurchaseAccident");
-      const { policyTermsId, commencementDate } = additionalAttributes;
+      const {
+        policyTermsId,
+        commencementDate,
+        occupationId
+      } = additionalAttributes;
       const purchaseAccident = new PurchaseAccident();
       purchaseAccident.setACL(new Parse.ACL(user));
       purchaseAccident.set("policyTermsId", policyTermsId);
       purchaseAccident.set("commencementDate", commencementDate);
+      purchaseAccident.set("occupationId", occupationId);
       purchaseAccident.set("purchaseId", purchase);
       return purchaseAccident.save();
     } else if (policyTypeId === "travel") {

@@ -39,6 +39,8 @@ import Parse from "parse/react-native";
 
 import { saveNewClaim } from "./parse/claims";
 import CheckoutModal from "./CheckoutModal";
+import OverlayModal from "./OverlayModal";
+import PolicyDetails from "./PolicyDetails";
 import {
   MultiInput,
   MultipleImagePicker,
@@ -49,7 +51,7 @@ import {
   ChoiceList,
   SuggestionList,
   PlansTabView,
-  TableInput
+  TravellerTableInput
 } from "./widgets";
 import TravelPlansView from "./TravelPlansView";
 import database from "./HackStorage";
@@ -523,6 +525,7 @@ class ChatScreen extends Component {
   }
 
   handleTableInputSubmit(items) {
+    console.log(items);
     let { messages } = this.state;
     messages = messages.slice(0, messages.length - 1);
     messages = messages.concat({
@@ -575,6 +578,18 @@ class ChatScreen extends Component {
         p => p.get("policyId") === this.state.answers.claimPolicyNo
       );
       const policyTypeId = purchase.get("policyTypeId");
+      const navigateToPoliciesAction = NavigationActions.reset({
+        key: null,
+        index: 0,
+        actions: [
+          NavigationActions.navigate({
+            routeName: "Drawer",
+            action: NavigationActions.navigate({
+              routeName: "MyPolicies"
+            })
+          })
+        ]
+      });
       saveNewClaim(
         policyTypeId,
         this.state.answers,
@@ -585,12 +600,16 @@ class ChatScreen extends Component {
         .then(res => {
           this.setState({ loadingSave: false });
           console.log(res);
-          this.props.navigation.navigate("MyPolicies");
+          this.props.screenProps.rootNavigation.dispatch(
+            navigateToPoliciesAction
+          );
         })
         .catch(err => {
           this.setState({ loadingSave: false });
           showAlert("Sorry, something went wrong with your claim.", () => {
-            this.props.navigation.navigate("MyPolicies");
+            this.props.screenProps.rootNavigation.dispatch(
+              navigateToPoliciesAction
+            );
           });
         });
     }
@@ -611,6 +630,7 @@ class ChatScreen extends Component {
             const Purchase = Parse.Object.extend("Purchase");
             const query = new Parse.Query(Purchase);
             query.equalTo("user", currentUser);
+            query.notEqualTo("cancelled", true);
             query.descending("createdAt");
             query
               .find()
@@ -959,7 +979,7 @@ class ChatScreen extends Component {
         );
       case "table":
         return (
-          <TableInput
+          <TravellerTableInput
             itemName="traveller"
             navigation={this.props.navigation}
             keyboardHeight={this.state.keyboardHeight}
@@ -1219,7 +1239,7 @@ class ChatScreen extends Component {
   }
 
   render() {
-    // return <CheckoutModal purchasing={true} price={13.599} purchasing={true} />;
+    // return <PolicyDetails policy={{ policyTypeId: "pa" }} />;
     const additionalProps = {};
     let minInputToolbarHeight = 44;
     if (
@@ -1250,19 +1270,7 @@ class ChatScreen extends Component {
       };
     }
 
-    const loadingModal = (
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={true}
-        onRequestClose={() => {}}
-      >
-        <View style={styles.modalContainer}>
-          <Text style={styles.loadingClaimText}>Submitting claim...</Text>
-          <ActivityIndicator color="white" size="large" />
-        </View>
-      </Modal>
-    );
+    const loadingModal = <OverlayModal loadingText="Submitting claim..." />;
 
     return (
       <View style={styles.container}>
@@ -1300,12 +1308,6 @@ const messageContainerStyle = {
 };
 
 const styles = StyleSheet.create({
-  loadingClaimText: {
-    marginBottom: 15,
-    color: "white",
-    fontSize: 20,
-    fontWeight: "700"
-  },
   modalContentContainer: {
     alignItems: "stretch",
     justifyContent: "center",

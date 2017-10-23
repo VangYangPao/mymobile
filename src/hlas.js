@@ -75,7 +75,7 @@ export function purchasePhonePolicy(
   premium: number,
   policyCommencementDate: Date,
   mobileDetails: MobileDetails,
-  policyHolder: string,
+  policyHolder: any,
   paymentDetails: PaymentDetails
 ) {
   let PASAppID,

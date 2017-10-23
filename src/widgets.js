@@ -615,7 +615,7 @@ class ErrorMessages extends Component {
 
 const sideIconSize = 30;
 
-export class TableInput extends Component {
+export class TravellerTableInput extends Component {
   constructor(props) {
     super(props);
     this.handleSaveNewItem = this.handleSaveNewItem.bind(this);
@@ -626,16 +626,79 @@ export class TableInput extends Component {
     };
   }
 
-  handleSaveNewItem(values) {
+  handleSaveNewItem(navigation, tableValues) {
+    const { columns } = this.props;
+    const SPOUSE_ID = 1;
+    const CHILD_ID = 2;
+    const isValid = tableValues.every(v => v !== "");
+    const currentParams = navigation.state.params;
+    if (!isValid) {
+      showAlert("The form is incomplete");
+      navigation.setParams({ renderError: true, ...currentParams });
+      return;
+    }
+    const dobIndex = columns.findIndex(c => c.id === "DOB");
+    const relationshipIndex = columns.findIndex(c => c.id === "relationship");
+    const dob = tableValues[dobIndex];
+    const relationshipId = tableValues[relationshipIndex];
+    const ageInMonths = moment(new Date()).diff(dob, "months");
+    if (relationshipId === CHILD_ID && ageInMonths < 3) {
+      showAlert("Child cannot be less than 3 months old");
+      navigation.setParams({ renderError: true, ...currentParams });
+      return;
+    }
+    if (relationshipId === CHILD_ID && ageInMonths > 12 * 18) {
+      showAlert("Child cannot be older than 18 years old");
+      navigation.setParams({ renderError: true, ...currentParams });
+      return;
+    }
+    if (relationshipId === SPOUSE_ID && ageInMonths < 12 * 18) {
+      showAlert("Adult must be older than 18 years old");
+      navigation.setParams({ renderError: true, ...currentParams });
+      return;
+    }
+    const firstNameIndex = columns.findIndex(c => c.id === "firstName");
+    const lastNameIndex = columns.findIndex(c => c.id === "lastName");
+    const firstName = tableValues[firstNameIndex];
+    const lastName = tableValues[lastNameIndex];
+    const namePattern = /^([A-Za-z ,\.@/\(\)])+$/;
+    const firstNameMatch = firstName.match(namePattern);
+    const lastNameMatch = lastName.match(namePattern);
+    if (!firstNameMatch) {
+      showAlert(
+        "First name must only contain alphabets and these symbols: @, / and ()"
+      );
+      navigation.setParams({ renderError: true, ...currentParams });
+      return;
+    }
+    if (!lastNameMatch) {
+      showAlert(
+        "Last name must only contain alphabets and these symbols: @, / and ()"
+      );
+      navigation.setParams({ renderError: true, ...currentParams });
+      return;
+    }
+    navigation.dispatch(NavigationActions.back());
+
     let item = {};
-    const columns = this.props.columns;
-    values.forEach((value, idx) => {
+    tableValues.forEach((value, idx) => {
       item[columns[idx].id] = value;
     });
     item.key = this.state.items.length;
     const items = this.state.items.concat(item);
     this.setState({ items });
   }
+
+  // handleSaveNewItem(values) {
+  //   let item = {};
+  //   const columns = this.props.columns;
+  //   values.forEach((value, idx) => {
+  //     item[columns[idx].id] = value;
+  //   });
+  //   item.key = this.state.items.length;
+  //   const items = this.state.items.concat(item);
+  //   this.setState({ items });
+  // }
 
   renderItem({ item, index }) {
     const { firstName, lastName } = item;
@@ -684,7 +747,7 @@ export class TableInput extends Component {
         <TouchableOpacity
           onPress={() =>
             this.props.navigation.navigate("Table", {
-              itemName: this.props.itemName,
+              title: "Add New Traveller",
               columns: this.props.columns,
               onSaveTable: this.handleSaveNewItem
             })}
