@@ -121,7 +121,6 @@ const styles = StyleSheet.create({
   configTitle: {
     color: colors.primaryText,
     fontSize: 17,
-    fontWeight: "500",
     marginBottom: 20
   },
   configSubtitle: {
@@ -150,8 +149,7 @@ const styles = StyleSheet.create({
   policyTitle: {
     alignSelf: "center",
     color: colors.primaryText,
-    fontFamily: "Bitter",
-    fontSize: 20,
+    fontSize: 22,
     textAlign: "center"
   }
 });
