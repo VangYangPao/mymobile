@@ -246,6 +246,13 @@ const stackNavigatorScreens = {
   TermsOfUse: {
     screen: TermsOfUse
   },
+  Profile: {
+    screen: StackNavigator({
+      Profile: {
+        screen: TableScreen
+      }
+    })
+  },
   Drawer: {
     screen: wrapScreen(MyDrawerNavigator)
   },

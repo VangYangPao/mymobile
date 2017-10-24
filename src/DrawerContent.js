@@ -7,6 +7,66 @@ import Parse from "parse/react-native";
 import colors from "./colors";
 import { Text } from "./defaultComponents";
 
+function resetToProfileAction(currentUser) {
+  const columns = [
+    {
+      label: "First Name",
+      id: "firstName",
+      value: currentUser.get("firstName")
+    },
+    {
+      label: "Last Name",
+      id: "lastName",
+      value: currentUser.get("lastName")
+    },
+    {
+      label: "Email",
+      id: "email",
+      value: currentUser.get("email")
+    }
+  ];
+  const handleSaveTable = (navigation, values) => {
+    values.forEach((value, idx) => {
+      const column = columns[idx];
+      if (column.value && column.value !== value) {
+        currentUser.set(column.id, value);
+      }
+    });
+    currentUser
+      .save()
+      .then(() => {
+        console.log(navigation);
+        navigation.goBack();
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  };
+  const profileParams = {
+    currentUser,
+    columns,
+    title: "My Profile",
+    onSaveTable: handleSaveTable
+  };
+  return NavigationActions.reset({
+    key: null,
+    index: 1,
+    actions: [
+      NavigationActions.navigate({
+        routeName: "Drawer",
+        action: NavigationActions.navigate({
+          routeName: "DrawerClose",
+          params: { currentUser }
+        })
+      }),
+      NavigationActions.navigate({
+        routeName: "Profile",
+        params: profileParams
+      })
+    ]
+  });
+}
+
 export default class DrawerContent extends Component {
   constructor(props) {
     super(props);
@@ -64,6 +124,13 @@ export default class DrawerContent extends Component {
       });
     };
 
+    const handleViewProfile = () => {
+      if (currentUser) {
+        const { rootNavigation } = this.props.screenProps;
+        rootNavigation.dispatch(resetToProfileAction(currentUser));
+      }
+    };
+
     return (
       <View style={styles.container}>
         <View style={styles.container}>
@@ -71,7 +138,7 @@ export default class DrawerContent extends Component {
             {image}
             <Text style={styles.name}>{fullName || "Not logged in yet!"}</Text>
             {fullName ? (
-              <TouchableOpacity onPress={() => {}}>
+              <TouchableOpacity onPress={handleViewProfile}>
                 <View style={styles.viewEditProfile}>
                   <Text style={styles.viewEditProfileText}>
                     View / Edit profile
