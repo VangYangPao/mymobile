@@ -106,7 +106,7 @@ export default class IntroScreen extends Component {
             style={styles.appName}
           />
         </View>
-        <View style={styles.contentContaier}>
+        <View style={styles.contentContainer}>
           <Text style={styles.title}>{page.title}</Text>
           {page.type === "cta" ? null : (
             <Text style={styles.subtitle}>{page.subtitle}</Text>
@@ -144,8 +144,8 @@ const backgroundImageWidth = windowWidth * backgroundImagePercent;
 const backgroundImageHoriPadding =
   windowWidth * ((1 - backgroundImagePercent) / 2);
 
-const appNamePercentage = 0.2;
-const contentPercentage = 0.2;
+const appNamePercentage = 0.15;
+const contentPercentage = 0.35;
 const bottomContainerPercentage = 0.6;
 
 const styles = StyleSheet.create({
@@ -176,9 +176,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 5
   },
-  image: {
-    flex: 1
-  },
   benefitsView: {
     flex: bottomContainerPercentage,
     alignItems: "center",
@@ -188,9 +185,10 @@ const styles = StyleSheet.create({
     // left: backgroundImageHoriPadding,
     // right: backgroundImageHoriPadding
   },
-  contentContaier: {
+  contentContainer: {
     flex: contentPercentage,
-    zIndex: 2
+    alignItems: "center",
+    justifyContent: "center"
   },
   signin: {
     alignSelf: "center",
@@ -200,14 +198,14 @@ const styles = StyleSheet.create({
     color: colors.primaryOrange
   },
   appNameContainer: {
-    flex: appNamePercentage,
-    justifyContent: "flex-end"
+    flex: appNamePercentage
   },
   appName: {
-    flex: appNamePercentage,
+    flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    marginHorizontal: windowWidth * 0.2
+    marginHorizontal: windowWidth * 0.2,
+    marginTop: windowDim.height * appNamePercentage * 0.1
   },
   title: {
     alignSelf: "center",
@@ -223,6 +221,7 @@ const styles = StyleSheet.create({
     color: colors.primaryText
   },
   image: {
+    // zIndex: 2,
     flex: bottomContainerPercentage,
     width: backgroundImageWidth,
     marginLeft: backgroundImageHoriPadding,

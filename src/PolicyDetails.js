@@ -72,28 +72,31 @@ export default class PolicyDetails extends Component {
   }
 
   handleSaveUpdates(navigation: any, values: Array<any>) {
-    this.setState({ loadingUpdate: true });
-    const { policyMetadata } = this.props.navigation.state.params;
-    const { subPurchase } = this.state;
-    let { endorsementFields } = policyMetadata;
-    endorsementFields.forEach((field, idx) => {
-      const key = endorsementFields[idx].id;
-      const value = values[idx];
-      if (subPurchase.get(key) === value) {
-        return;
-      }
-      subPurchase.set(key, value);
-    });
-    subPurchase
-      .save()
-      .then(() => {
-        this.setState({ loadingUpdate: false });
-        navigation.goBack();
-      })
-      .catch(err => {
-        this.setState({ loadingUpdate: false });
-        console.error(err);
+    navigation.goBack();
+    InteractionManager.runAfterInteractions(() => {
+      this.setState({ loadingUpdate: true });
+      const { policyMetadata } = this.props.navigation.state.params;
+      const { subPurchase } = this.state;
+      let { endorsementFields } = policyMetadata;
+      endorsementFields.forEach((field, idx) => {
+        const key = endorsementFields[idx].id;
+        const value = values[idx];
+        if (subPurchase.get(key) === value) {
+          return;
+        }
+        subPurchase.set(key, value);
       });
+      subPurchase
+        .save()
+        .then(() => {
+          this.setState({ loadingUpdate: false });
+          // navigation.goBack();
+        })
+        .catch(err => {
+          this.setState({ loadingUpdate: false });
+          console.error(err);
+        });
+    });
   }
 
   handleUpdatePolicy() {
