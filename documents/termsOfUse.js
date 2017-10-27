@@ -1012,8 +1012,7 @@ table.MsoNormalTable
 
 <!--StartFragment-->
 
-<h1 class="MsoNormal" align="center" style="margin-top: 12pt; margin-bottom: 12pt; text-align: center; line-height: normal;"><b><u><span lang="EN-US" style="font-size:14.0pt;
-mso-bidi-font-size:12.0pt;font-family:Arial">Terms and Conditions<o:p></o:p></span></u></b></h1>
+<h1>Terms and Conditions</h1>
 
 <p style="margin-top: 12pt; margin-bottom: 12pt; background: white;"><span lang="EN-MY" style="font-family:Arial">This Terms and
 Conditions sets out microUmbrella.com’s policy when you access and use its
@@ -1174,13 +1173,10 @@ and other intellectual property rights. Similarly, unless the prior written
 consent of WECARE TECH LLP or the relevant proprietor has been obtained, no
 such titles, copyrights and other intellectual property rights may be used as a
 link or to mark any link to the WECARE TECH LLP’s mobile application or any
-other mobile application and/or website<span class="MsoCommentReference"><a></a><!--[if !supportAnnotations]--><a class="msocomanchor" id="_anchor_21" href="#_msocom_21" language="JavaScript" name="_msoanchor_21">[LPM21]</a><!--[endif]-->&nbsp;</span></span><span class="MsoCommentReference"><span lang="EN-US" style="font-size:8.0pt"><a></a><!--[if !supportAnnotations]--><a class="msocomanchor" id="_anchor_22" href="#_msocom_22" language="JavaScript" name="_msoanchor_22">[u22]</a><!--[endif]-->&nbsp;</span></span><span lang="EN-US" style="font-size:12.0pt;
-font-family:Arial">.<o:p></o:p></span></p>
+other mobile application and/or website.<span class="MsoCommentReference"><a></a><!--[if !supportAnnotations]--><a class="msocomanchor" id="_anchor_21" href="#_msocom_21" language="JavaScript" name="_msoanchor_21">[LPM21]</a><!--[endif]-->&nbsp;</span></span><span class="MsoCommentReference"><span lang="EN-US" style="font-size:8.0pt"><a></a><!--[if !supportAnnotations]--><a class="msocomanchor" id="_anchor_22" href="#_msocom_22" language="JavaScript" name="_msoanchor_22">[u22]</a><!--[endif]-->&nbsp;</span></span><span lang="EN-US" style="font-size:12.0pt;
+font-family:Arial"><o:p></o:p></span></p>
 
-<p class="MsoNormal"><b><u><span lang="EN-US" style="font-size:12.0pt;line-height:107%;font-family:Arial"><o:p><span style="text-decoration-line: none;">&nbsp;</span></o:p></span></u></b></p>
-
-<p class="MsoNormal"><a></a><a><b><u><span lang="EN-US" style="font-size:12.0pt;line-height:107%;
-font-family:Arial">Personal Data</span></u></b></a><span class="MsoCommentReference"><span lang="EN-US" style="font-size:8.0pt;line-height:107%"><!--[if !supportAnnotations]--><a class="msocomanchor" id="_anchor_23" href="#_msocom_23" language="JavaScript" name="_msoanchor_23">[CMT23]</a><!--[endif]-->&nbsp;</span></span><span class="MsoCommentReference"><span lang="EN-US" style="font-size:8.0pt;line-height:107%"><!--[if !supportAnnotations]--><a class="msocomanchor" id="_anchor_24" href="#_msocom_24" language="JavaScript" name="_msoanchor_24">[u24]</a><!--[endif]-->&nbsp;</span></span><b><u><span lang="EN-US" style="font-size:12.0pt;line-height:107%;font-family:Arial"><o:p></o:p></span></u></b></p>
+<h1>Policy on Personal Data</h1>
 
 <p style="margin-top: 12pt; margin-bottom: 12pt; background: white;"><span lang="EN-MY" style="font-family:Arial">The Policy on
 Personal Data is part of the Terms and Conditions sets out microUmbrella.com’s
@@ -1189,16 +1185,12 @@ deemed to have read, accepted, and agreed to be legally bound by the Personal
 Data policies, regardless of whether
 you have registered as a user on microUmbrella.com <o:p></o:p></span></p>
 
-<p class="MsoNormal"><b><u><span lang="EN-US" style="font-size:12.0pt;line-height:107%;font-family:Arial"><o:p><span style="text-decoration-line: none;">&nbsp;</span></o:p></span></u></b></p>
-
 <p class="MsoNormal" style="margin-top: 12pt; margin-bottom: 12pt; line-height: normal;"><span lang="EN-US" style="font-size:
 12.0pt;font-family:Arial">You agree to be bound by Policy on Personal Data,
 which will apply to all data provided by the customer as well as to data
 arising as a result of use of this mobile application<span class="MsoCommentReference"><a></a><!--[if !supportAnnotations]--><a class="msocomanchor" id="_anchor_25" href="#_msocom_25" language="JavaScript" name="_msoanchor_25">[LPM25]</a><!--[endif]-->&nbsp;</span>. All data, ideas, concepts and other
 information collected or derived from the information made available to us
 through this mobile application shall deem to be and remain our property. <b><o:p></o:p></b></span></p>
-
-<p class="MsoNormal" style="margin-top: 12pt; margin-bottom: 12pt; line-height: normal;"><b><span lang="EN-US" style="font-size:12.0pt;font-family:Arial"><o:p>&nbsp;</o:p></span></b></p>
 
 <p class="MsoNormal" style="margin-top: 12pt; margin-bottom: 12pt; line-height: normal;"><b><span lang="EN-US" style="font-size:12.0pt;font-family:Arial">Indemnification<o:p></o:p></span></b></p>
 
@@ -1215,15 +1207,6 @@ Jurisdiction<o:p></o:p></span></b></p>
 12.0pt;font-family:Arial">These terms and condition will be governed by the
 laws of the Republic of Singapore and the parties agree to submit to the
 exclusive jurisdiction of the courts in the Republic of Singapore.<o:p></o:p></span></p>
-
-<p class="MsoNormal" style="margin-top: 12pt; margin-bottom: 12pt; line-height: normal;"><span lang="EN-US" style="font-size:
-12.0pt;font-family:Arial"><o:p>&nbsp;</o:p></span></p>
-
-<p class="MsoNormal" style="margin-top: 12pt; margin-bottom: 12pt; line-height: normal;"><span lang="EN-US" style="font-size:
-12.0pt;font-family:Arial"><o:p>&nbsp;</o:p></span></p>
-
-<p class="MsoNormal" align="center" style="margin-top: 12pt; margin-bottom: 12pt; text-align: center; line-height: normal;"><b><u><span lang="EN-US" style="font-size:12.0pt;
-font-family:Arial">Policy on Personal Data<o:p></o:p></span></u></b></p>
 
 <p style="margin-top: 12pt; margin-bottom: 12pt; background: white;"><span lang="EN-MY" style="font-family:Arial;mso-bidi-font-weight:
 bold">By accessing and using WECARE TECH’s </span><span lang="EN-MY" style="font-family:Arial">mobile application and/or website</span><span class="MsoCommentReference"><span lang="EN-MY" style="font-size:8.0pt;font-family:
@@ -1445,8 +1428,6 @@ that the information you supply will not be intercepted while being transmitted
 over the internet. Accordingly, any personal data or other information that you
 transmit to WECARE TECH LLP is transmitted at your own risk.<o:p></o:p></span></p>
 
-<p style="margin-top: 12pt; margin-bottom: 12pt; vertical-align: baseline;"><span lang="EN-MY" style="font-family:Arial">&nbsp;</span></p>
-
 <p style="margin-top: 12pt; margin-bottom: 12pt; vertical-align: baseline;"><b><span lang="EN-MY" style="font-family:Arial">Cookies<o:p></o:p></span></b></p>
 
 <p style="margin-top: 12pt; margin-bottom: 12pt; vertical-align: baseline;"><span lang="EN-MY" style="font-family:Arial">When
@@ -1530,9 +1511,6 @@ any time, including:<o:p></o:p></span></p>
      offers from WECARE TECH LLP and its partners and associates<o:p></o:p></span></li>
 </ul>
 
-<p class="MsoNormal" style="margin-top: 12pt; margin-bottom: 12pt; line-height: normal; background: white;"><span lang="EN-MY" style="font-size:12.0pt;font-family:Arial;mso-fareast-font-family:&quot;Times New Roman&quot;;
-mso-ansi-language:EN-MY;mso-fareast-language:EN-MY"><o:p>&nbsp;</o:p></span></p>
-
 <p class="Title1" style="margin-top: 12pt; margin-bottom: 12pt; background: white;"><b><span lang="EN-MY" style="font-family:Arial">Communications <o:p></o:p></span></b></p>
 
 <p style="margin-top: 12pt; margin-bottom: 12pt; background: white;"><span lang="EN-MY" style="font-family:Arial">WECARE TECH
@@ -1560,7 +1538,4 @@ breach of your privacy, please use the contact details set out below.<o:p></o:p>
 <p class="MsoNormal" style="margin-top: 12pt; margin-bottom: 12pt; line-height: normal; vertical-align: baseline;"><span lang="EN-MY" style="font-size:12.0pt;font-family:Arial;mso-fareast-font-family:
 &quot;Times New Roman&quot;;mso-ansi-language:EN-MY;mso-fareast-language:EN-MY">WECARE
 TECH LLP<o:p></o:p></span></p>
-
-<p class="MsoNormal" style="margin-top: 12pt; margin-bottom: 12pt; line-height: normal; vertical-align: baseline;"><span lang="EN-MY" style="font-size:12.0pt;font-family:Arial;mso-fareast-font-family:
-&quot;Times New Roman&quot;;mso-ansi-language:EN-MY;mso-fareast-language:EN-MY">Email: help@microumbrella.com<o:p></o:p></span></p>
 `);
