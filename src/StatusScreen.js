@@ -368,6 +368,8 @@ const styles = StyleSheet.create({
   },
   shareIcon: {
     marginRight: 15,
+    fontSize: 32,
+    fontWeight: "bold",
     color: "white"
   },
   shareText: {
@@ -379,7 +381,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 20,
-    paddingHorizontal: 20,
+    paddingHorizontal: 13,
     backgroundColor: colors.primaryOrange
   },
   policyStatusText: { fontSize: 18, fontWeight: "400" },

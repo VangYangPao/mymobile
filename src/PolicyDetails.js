@@ -154,7 +154,7 @@ export default class PolicyDetails extends Component {
             onPress: this.handleCancelPolicy
           },
           {
-            text: "Cancel",
+            text: "No",
             style: "cancel",
             onPress: () => {}
           }
