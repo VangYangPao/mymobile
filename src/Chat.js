@@ -190,7 +190,10 @@ class ChatScreen extends Component {
     this.renderSend = this.renderSend.bind(this);
     this.renderChatFooter = this.renderChatFooter.bind(this);
     this.renderActions = this.renderActions.bind(this);
+    this.renderEditButton = this.renderEditButton.bind(this);
 
+    this.createMessageObject = this.createMessageObject.bind(this);
+    this.handleEditMessage = this.handleEditMessage.bind(this);
     this.handleUserSend = this.handleUserSend.bind(this);
     this.handleAgentSend = this.handleAgentSend.bind(this);
     this.handleSelectSuggestion = this.handleSelectSuggestion.bind(this);
@@ -219,6 +222,9 @@ class ChatScreen extends Component {
 
     this.concatMessageUpdater = message => {
       return prevState => {
+        const { currentQuestionIndex } = this.state;
+        message.questionId = this.questions[currentQuestionIndex].id;
+        console.log(message.questionId);
         return { messages: prevState.messages.concat(message) };
       };
     };
@@ -288,6 +294,33 @@ class ChatScreen extends Component {
     }, MESSAGE_LOAD_TIME);
   }
 
+  handleEditMessage(messageId: string) {
+    const messageIndex = this.state.messages.findIndex(
+      m => m._id === messageId
+    );
+    if (messageIndex === -1) return;
+    const message = this.state.messages[messageIndex];
+    console.log(message.questionId);
+    const editQuestionIndex = this.questions.findIndex(
+      q => q.id === message.questionId
+    );
+    const sliceToQuestionId = this.questions[editQuestionIndex - 1].id;
+    const messageQuestionIds = this.state.messages.map(m => m.questionId);
+    const sliceToMessageIndex = messageQuestionIds.lastIndexOf(
+      sliceToQuestionId
+    );
+    const messages = this.state.messages.slice(0, sliceToMessageIndex);
+    this.setState(
+      {
+        currentQuestionIndex: editQuestionIndex - 1,
+        // renderInput: true,
+        // answering: true,
+        messages
+      },
+      this.askNextQuestion
+    );
+  }
+
   handleUserSend(messages) {
     this.setState(this.concatMessageUpdater(messages), () => {
       this.setState({ answering: false });
@@ -306,6 +339,11 @@ class ChatScreen extends Component {
     const afterLoading = () => {
       InteractionManager.runAfterInteractions(() => {
         const messages = this.state.messages.slice();
+        const { currentQuestionIndex } = this.state;
+        if (currentQuestionIndex !== -1) {
+          const questionId = this.questions[currentQuestionIndex].id;
+          message.questionId = questionId;
+        }
         messages.splice(messageIndex, 1, message);
         this.setState({ renderInput: true, messages: messages }, () => {
           this.playNewMessageSound();
@@ -355,7 +393,9 @@ class ChatScreen extends Component {
     const { messages } = this.state;
     let newMessages = messages.slice();
     const messagesLen = messages.length;
+    const questionId = this.questions[this.state.currentQuestionIndex].id;
     const planMessage = {
+      questionId,
       type: "text",
       _id: uuid.v4(),
       text: `${plans[planIndex]} plan`,
@@ -371,7 +411,9 @@ class ChatScreen extends Component {
   handleSelectPlan(planIndex) {
     const planAlphabet = ["A", "B", "C", "D", "E"];
     const premium = this.props.policy.plans[planIndex].premium;
+    const questionId = this.questions[this.state.currentQuestionIndex].id;
     const planMessage = {
+      questionId,
       type: "text",
       _id: uuid.v4(),
       text: `I choose Plan ${planAlphabet[planIndex]}`,
@@ -530,17 +572,27 @@ class ChatScreen extends Component {
     );
   }
 
+  createMessageObject(message) {
+    const { currentQuestionIndex } = this.state;
+    const questionId = this.questions[currentQuestionIndex].id;
+    return {
+      questionId,
+      type: "text",
+      _id: uuid.v4(),
+      user: CUSTOMER_USER,
+      ...message
+    };
+  }
+
   handleTableInputSubmit(items) {
     console.log(items);
     let { messages } = this.state;
     messages = messages.slice(0, messages.length - 1);
-    messages = messages.concat({
-      type: "text",
-      _id: uuid.v4(),
+    const message = this.createMessageObject({
       text: "These are the details of my spouse and children",
-      value: items,
-      user: CUSTOMER_USER
+      value: items
     });
+    messages = messages.concat(message);
     this.setState({ messages }, () =>
       this.setState({ answering: false, renderInput: true })
     );
@@ -549,14 +601,12 @@ class ChatScreen extends Component {
   handleMultiInputSubmit(inputs) {
     let { messages } = this.state;
     messages = messages.slice(0, messages.length - 1);
-    messages = messages.concat({
-      type: "text",
-      _id: uuid.v4(),
+    const message = this.createMessageObject({
       text: inputs.map(i => i.value).join(" "),
       value: inputs,
-      user: CUSTOMER_USER,
       multi: true
     });
+    messages = messages.concat(message);
     this.setState({ messages }, () =>
       this.setState({ answering: false, renderInput: true })
     );
@@ -1247,6 +1297,19 @@ class ChatScreen extends Component {
     }
   }
 
+  renderEditButton(props) {
+    const { user, _id: messageId } = props.currentMessage;
+    if (user._id === CUSTOMER_USER_ID) {
+      return (
+        <TouchableOpacity onPress={() => this.handleEditMessage(messageId)}>
+          <View style={styles.editButton}>
+            <Icon style={styles.editButtonIcon} name="mode-edit" size={15} />
+          </View>
+        </TouchableOpacity>
+      );
+    }
+  }
+
   render() {
     // return <PolicyDetails policy={{ policyTypeId: "pa" }} />;
     const additionalProps = {};
@@ -1291,6 +1354,7 @@ class ChatScreen extends Component {
           user={CUSTOMER_USER}
           onLongPress={() => {}}
           renderActions={this.renderActions}
+          renderCustomView={this.renderEditButton}
           renderTime={() => {}}
           renderDay={() => {}}
           renderBubble={this.renderBubble}
@@ -1317,6 +1381,16 @@ const messageContainerStyle = {
 };
 
 const styles = StyleSheet.create({
+  editButtonIcon: {
+    color: colors.primaryText
+  },
+  editButton: {
+    alignItems: "flex-end",
+    justifyContent: "center",
+    marginTop: 4,
+    marginBottom: 8,
+    paddingHorizontal: 10
+  },
   modalContentContainer: {
     alignItems: "stretch",
     justifyContent: "center",
