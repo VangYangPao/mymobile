@@ -157,6 +157,7 @@ class ChatScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      coverageDuration: null,
       loadingSave: false,
       errLoadingPoliciesMsg: null,
       loadingPolicies: true,
@@ -196,6 +197,9 @@ class ChatScreen extends Component {
     this.handleSelectPolicy = this.handleSelectPolicy.bind(this);
     this.handleSelectPlan = this.handleSelectPlan.bind(this);
     this.handleSelectTravelInsurancePlan = this.handleSelectTravelInsurancePlan.bind(
+      this
+    );
+    this.handleChangeCoverageDuration = this.handleChangeCoverageDuration.bind(
       this
     );
     this.handleSelectDuration = this.handleSelectDuration.bind(this);
@@ -360,7 +364,7 @@ class ChatScreen extends Component {
     };
     newMessages.splice(messagesLen - 1, 1, planMessage);
     this.setState({ messages: newMessages }, () =>
-      this.setState({ answering: false, renderInput: true })
+      this.setState({ answering: false, renderInput: false })
     );
   }
 
@@ -383,7 +387,12 @@ class ChatScreen extends Component {
     );
   }
 
-  handleSelectDuration(months) {
+  handleChangeCoverageDuration(coverageDuration) {
+    this.setState({ coverageDuration });
+  }
+
+  handleSelectDuration() {
+    const months = this.state.coverageDuration;
     const currentQuestion = this.questions[this.state.currentQuestionIndex];
     if (currentQuestion.id !== "coverageDuration") return;
     const s = months > 1 ? "s" : "";
@@ -761,7 +770,7 @@ class ChatScreen extends Component {
       this.state.answers
     );
 
-    const appendWidget = (key, additionalProps) => {
+    const appendWidget = (key, additionalProps, renderInput = false) => {
       Keyboard.dismiss();
       this.setState(
         {
@@ -772,7 +781,7 @@ class ChatScreen extends Component {
             ...additionalProps
           })
         },
-        () => this.setState({ renderInput: false })
+        () => this.setState({ renderInput })
       );
     };
 
@@ -799,15 +808,13 @@ class ChatScreen extends Component {
         appendWidget("multiInput", { columns: transformOldWidgets(inputs) });
         return;
       }
-      const widgets = [
-        "planIndex",
-        "coverageDuration"
-        // "travelDetails"
-      ];
-      if (widgets.indexOf(currentQuestion.id) !== -1) {
-        appendWidget(currentQuestion.id);
-        return;
+      if (currentQuestion.id === "planIndex") {
+        appendWidget("planIndex", {}, false);
       }
+      if (currentQuestion.id === "coverageDuration") {
+        appendWidget("coverageDuration", {}, true);
+      }
+
       if (currentQuestion.id === "claimPolicyNo") {
         //her
         appendWidget("claimPolicyNo");
@@ -1060,7 +1067,7 @@ class ChatScreen extends Component {
         const { planIndex } = this.state.answers;
         return (
           <CoverageDurationWidget
-            onSelectDuration={this.handleSelectDuration}
+            onChangeDuration={this.handleChangeCoverageDuration}
             monthlyPremium={this.props.policy.plans[planIndex].premium}
             disabled={notCurrentQuestion}
           />
@@ -1130,16 +1137,19 @@ class ChatScreen extends Component {
     const dateIndex = responseType.indexOf("date");
     const dateTimeIndex = responseType.indexOf("datetime");
 
-    if (currentQuestionIndex >= this.questions.length - 1) {
+    if (
+      currentQuestionIndex >= this.questions.length - 1 ||
+      this.questions[currentQuestionIndex].id === "coverageDuration"
+    ) {
       return (
         <Button
-          onPress={this.handleProceedButtonPress}
+          onPress={() => this.handleSelectDuration()}
           containerStyle={{ flex: 1, borderRadius: 0 }}
           style={{
             borderRadius: 0
           }}
         >
-          PROCEED
+          CONFIRM DURATION
         </Button>
       );
     }

@@ -381,7 +381,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 20,
-    paddingHorizontal: 13,
+    paddingHorizontal: 15,
     backgroundColor: colors.primaryOrange
   },
   policyStatusText: { fontSize: 18, fontWeight: "400" },

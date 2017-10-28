@@ -27,6 +27,7 @@ import { TabNavigator, TabBarTop, NavigationActions } from "react-navigation";
 import VectorDrawableView from "./VectorDrawableView";
 import ModalPicker from "react-native-modal-picker";
 
+import COVERAGE_DURATIONS from "../data/coverageDurations";
 import database from "./HackStorage";
 import POLICIES from "../data/policies";
 import RangeSlider from "./RangeSlider";
@@ -112,10 +113,12 @@ const SLIDER_RADIUS_PERCENT = 0.15;
 export class CoverageDurationWidget extends Component {
   constructor(props) {
     super(props);
-    this.coverageDurations = [1, 3, 6, 12];
+    this.coverageDurations = COVERAGE_DURATIONS;
+    const initialCoverageDuration = this.coverageDurations[0];
     this.state = {
-      months: this.coverageDurations[0]
+      months: initialCoverageDuration
     };
+    props.onChangeDuration(initialCoverageDuration);
   }
 
   render() {
@@ -129,18 +132,12 @@ export class CoverageDurationWidget extends Component {
     const buttonText = `CHOOSE ${months + ""} MONTH${s} - $${totalPremium}`;
     return (
       <View style={widgetStyles.durationContainer}>
-        <Button
-          onPress={() => {
-            if (!this.props.onSelectDuration) return;
-            this.props.onSelectDuration(this.state.months);
-          }}
-          containerStyle={widgetStyles.confirmButtonContainer}
-        >
-          {buttonText}
-        </Button>
         <RangeSlider
           elements={elements}
-          onValueChange={months => this.setState({ months })}
+          onValueChange={months => {
+            this.props.onChangeDuration(months);
+            this.setState({ months });
+          }}
           containerStyle={{
             marginBottom: 20
           }}
@@ -1295,6 +1292,8 @@ const widgetStyles = StyleSheet.create({
     fontSize: 15
   },
   coverageTitleText: {
+    flex: 1,
+    flexWrap: "wrap",
     marginBottom: 5,
     color: colors.primaryText,
     fontSize: 15,
