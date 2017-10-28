@@ -49,6 +49,7 @@
 		3F4E75D01F8FF8E30070C597 /* ZDCChatStrings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 3F4E75CC1F8FF8E30070C597 /* ZDCChatStrings.bundle */; };
 		3FA2DF3B1F61D88300A34E49 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3FA2DF3A1F61D88300A34E49 /* Images.xcassets */; };
 		3FA2DF6A1F61DCBF00A34E49 /* RNZendeskChatModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FA2DF691F61DCBF00A34E49 /* RNZendeskChatModule.m */; };
+		3FF0AD0D1FA3749D008F09E1 /* Lato_Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3FF0AD0C1FA3749D008F09E1 /* Lato_Bold.ttf */; };
 		4D2B225A568248F5AA8E5FC1 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5A05141396E742339933A7DE /* Zocial.ttf */; };
 		4E8FE7FE56474951B29E7706 /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91968238E613443387457D28 /* libRNFS.a */; };
 		5C455B84CB9F4D31900CAF43 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5D78ED3977AD4FCABA1EB9D3 /* Ionicons.ttf */; };
@@ -357,6 +358,7 @@
 		3FA2DF3A1F61D88300A34E49 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Microsurance/Images.xcassets; sourceTree = "<group>"; };
 		3FA2DF681F61DCBF00A34E49 /* RNZendeskChatModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNZendeskChatModule.h; sourceTree = "<group>"; };
 		3FA2DF691F61DCBF00A34E49 /* RNZendeskChatModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNZendeskChatModule.m; sourceTree = "<group>"; };
+		3FF0AD0C1FA3749D008F09E1 /* Lato_Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Lato_Bold.ttf; path = ../../../Downloads/Lato_Bold.ttf; sourceTree = "<group>"; };
 		45DEFEFB1BC14CA7B6E42C2A /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		4B31F264E29847AC9260120A /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		540133F9A6C04693A58504EB /* RNSpinkit.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNSpinkit.xcodeproj; path = "../node_modules/react-native-spinkit/ios/RNSpinkit.xcodeproj"; sourceTree = "<group>"; };
@@ -722,6 +724,7 @@
 		A0F852F93A8C4A0185A33EEE /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3FF0AD0C1FA3749D008F09E1 /* Lato_Bold.ttf */,
 				3F06AD3A1EFF5F500028DA38 /* Comfortaa-Bold.ttf */,
 				3F06AD381EFF5F3B0028DA38 /* Bitter.ttf */,
 				3F41020D1EFF26FC001B4303 /* Lato.ttf */,
@@ -1211,6 +1214,7 @@
 				2D2B7BEB81D847E4ACB9EBB7 /* MaterialIcons.ttf in Resources */,
 				6E0FAC4A025E44129027A6F5 /* Octicons.ttf in Resources */,
 				92AB07F86F4F4486A6979B15 /* SimpleLineIcons.ttf in Resources */,
+				3FF0AD0D1FA3749D008F09E1 /* Lato_Bold.ttf in Resources */,
 				4D2B225A568248F5AA8E5FC1 /* Zocial.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

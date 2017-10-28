@@ -77,7 +77,7 @@ function validateBoolean(bool) {
 }
 
 function validateNRIC(str) {
-  const msg = "Please enter a valid NRIC/FIN";
+  const msg = `Please enter a valid Singaporean NRIC/FIN. If you're not a Singaporean, please choose "Passport" on the left of the chat box.`;
   if (str.length != 9) return new ValidationResult(false, msg);
 
   str = str.toUpperCase();
@@ -353,7 +353,7 @@ export const QUESTION_SETS = {
     },
     {
       question:
-        "Nice to meet you <%= firstName %> <%= lastName %>! What's your NRIC/FIN/Passport?",
+        "Nice to meet you <%= firstName %> <%= lastName %>! What's your Singaporean NRIC? Or if you're a non-Singaporean, what's your Passport number?",
       responseType: ["string", "nric"],
       id: "idNumber"
     },

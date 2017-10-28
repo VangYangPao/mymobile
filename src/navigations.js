@@ -105,9 +105,8 @@ export const styles = StyleSheet.create({
           MENU_ICON_SIZE + MENU_ICON_PADDING_LEFT + MENU_ICON_PADDING_RIGHT
       }
     }),
-    color: colors.primaryText,
-    fontWeight: "400",
-    fontFamily: "Comfortaa-Bold"
+    fontFamily: "Lato",
+    color: colors.primaryText
   },
   homeHeaderMenuIcon: {
     paddingLeft: MENU_ICON_PADDING_LEFT,
@@ -120,8 +119,5 @@ export const styles = StyleSheet.create({
     paddingRight: MENU_ICON_PADDING_RIGHT,
     color: colors.primaryText
   },
-  planHeaderTitle: {
-    fontWeight: "500",
-    fontFamily: "Lato"
-  }
+  planHeaderTitle: {}
 });

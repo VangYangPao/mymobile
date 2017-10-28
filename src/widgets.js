@@ -1100,13 +1100,24 @@ export class SuggestionList extends Component {
   }
 
   render() {
+    let scrollViewContent = null;
+    if (this.props.items.length) {
+      scrollViewContent = this.props.items.map(this.renderSuggestion);
+    } else if (this.props.searchValue && !this.props.items.length) {
+      scrollViewContent = (
+        <View style={widgetStyles.emptyContainer}>
+          <Text>No matching result. Please try other phrases.</Text>
+        </View>
+      );
+    }
+
     const scrollView = (
       <ScrollView
         keyboardShouldPersistTaps="always"
         style={widgetStyles.suggestionListScrollView}
         contentContainerStyle={widgetStyles.suggestionListContainer}
       >
-        {this.props.items.map(this.renderSuggestion)}
+        {scrollViewContent}
       </ScrollView>
     );
     return Platform.select({
@@ -1349,6 +1360,10 @@ const widgetStyles = StyleSheet.create({
     right: 0,
     bottom: 0,
     height: 150
+  },
+  emptyContainer: {
+    padding: 20,
+    backgroundColor: "white"
   },
   suggestionContainer: {
     flex: 1,

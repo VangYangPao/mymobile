@@ -67,6 +67,10 @@ const BuyStackNavigator = StackNavigator(
           StyleSheet.flatten(styles.headerTitle)
         );
 
+        if (params.isStartScreen) {
+          headerTitleStyle.fontFamily = "Comfortaa-Bold";
+        }
+
         if (Platform.OS === "android") {
           if (params.isStartScreen) {
             // weird limitation

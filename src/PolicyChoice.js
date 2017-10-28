@@ -107,11 +107,7 @@ export default class PolicyChoice extends Component {
 
 const styles = StyleSheet.create({
   boldedText: {
-    fontWeight: "500",
-    ...Platform.select({
-      ios: { color: "black" },
-      android: {}
-    })
+    fontWeight: "bold"
   },
   policyContainer: {
     flexDirection: "row",

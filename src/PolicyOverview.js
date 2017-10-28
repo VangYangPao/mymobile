@@ -51,7 +51,7 @@ class PolicyCoverages extends Component {
         <Text style={styles.configTitle}>COVERAGE HIGHLIGHTS</Text>
         <View style={styles.coverage}>
           {this.props.covered
-            .slice(0, 4)
+            .slice(0, 3)
             .map(item => (
               <CoverageItem
                 key={item}
@@ -148,8 +148,8 @@ const styles = StyleSheet.create({
   },
   policyTitle: {
     alignSelf: "center",
-    color: colors.primaryText,
     fontSize: 22,
+    fontWeight: "bold",
     textAlign: "center"
   }
 });

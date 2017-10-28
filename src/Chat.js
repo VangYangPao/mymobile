@@ -129,7 +129,7 @@ export default function ChatScreenWrapper() {
   }
 
   wrapper.navigationOptions = ({ navigation }) => {
-    const { questionSet } = navigation.state.params;
+    const { questionSet, isStartScreen } = navigation.state.params;
     let drawerLabel;
     let drawerIcon;
     if (questionSet === "buy") {
@@ -140,10 +140,7 @@ export default function ChatScreenWrapper() {
       drawerIcon = "attach-money";
     }
     return {
-      title: "microUmbrella",
-      headerTitleStyle: {
-        fontWeight: "300"
-      },
+      title: isStartScreen ? "microUmbrella" : drawerLabel,
       drawerLabel,
       drawerIcon: ({ tintColor }) => (
         <Icon name={drawerIcon} size={22} color={tintColor} />
@@ -1084,9 +1081,11 @@ class ChatScreen extends Component {
         currentQuestion.choices,
         currentQuestion.searchOptions
       );
-      const matchedItems = fuse.search(this.state.composerText);
+      const { composerText } = this.state;
+      const matchedItems = fuse.search(composerText);
       return (
         <SuggestionList
+          searchValue={composerText}
           items={matchedItems}
           onSelectSuggestion={this.handleSelectSuggestion}
         />

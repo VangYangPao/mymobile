@@ -107,6 +107,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1
   },
   description: {
+    textAlign: "justify",
     fontSize: 16,
     color: colors.primaryText
   },
