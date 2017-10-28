@@ -1,4 +1,5 @@
 // @flow
+import isEqual from "lodash/isEqual";
 import uuid from "uuid";
 import React, { Component } from "react";
 import {
@@ -300,10 +301,20 @@ class ChatScreen extends Component {
     );
     if (messageIndex === -1) return;
     const message = this.state.messages[messageIndex];
-    console.log(message.questionId);
-    const editQuestionIndex = this.questions.findIndex(
-      q => q.id === message.questionId
-    );
+    let editQuestionIndex;
+    if (message.multi) {
+      editQuestionIndex = this.questions.findIndex(q => {
+        if (q.columns) {
+          const questionColumnIds = q.columns.map(c => c.id);
+          const messageColumnIds = message.value.map(c => c.id);
+          return isEqual(questionColumnIds, messageColumnIds);
+        }
+      });
+    } else {
+      editQuestionIndex = this.questions.findIndex(
+        q => q.id === message.questionId
+      );
+    }
     const sliceToQuestionId = this.questions[editQuestionIndex - 1].id;
     const messageQuestionIds = this.state.messages.map(m => m.questionId);
     const sliceToMessageIndex = messageQuestionIds.lastIndexOf(
@@ -590,7 +601,8 @@ class ChatScreen extends Component {
     messages = messages.slice(0, messages.length - 1);
     const message = this.createMessageObject({
       text: "These are the details of my spouse and children",
-      value: items
+      value: items,
+      multi: true
     });
     messages = messages.concat(message);
     this.setState({ messages }, () =>
