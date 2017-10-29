@@ -5,7 +5,8 @@ import {
   View,
   TouchableOpacity,
   Dimensions,
-  Platform
+  Platform,
+  PixelRatio
 } from "react-native";
 import { NavigationActions } from "react-navigation";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -13,7 +14,12 @@ import Ionicon from "react-native-vector-icons/Ionicons";
 
 import colors from "./colors";
 
-export const MENU_ICON_SIZE = 35;
+const menuIconSizes = {
+  2: 30,
+  3: 35
+};
+
+export const MENU_ICON_SIZE = menuIconSizes[PixelRatio.get()];
 export const MENU_ICON_PADDING_LEFT = 15;
 export const MENU_ICON_PADDING_RIGHT = 10;
 const WINDOW_WIDTH = Dimensions.get("window").width;
