@@ -35,8 +35,7 @@ function resetToProfileAction(currentUser) {
     currentUser
       .save()
       .then(() => {
-        console.log(navigation);
-        navigation.goBack();
+        navigation.goBack(null);
       })
       .catch(err => {
         console.error(err);
