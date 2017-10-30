@@ -945,13 +945,15 @@ export class MultiInput extends Component {
       if (responseTypes.indexOf("number") !== -1) keyboardType = "numeric";
       if (responseTypes.indexOf("email") !== -1) keyboardType = "email-address";
       if (responseTypes.indexOf("") !== -1) keyboardType = "email-address";
+      let autoCapitalize = "none";
+      if (responseTypes.indexOf("name") !== -1) autoCapitalize = "words";
       inputElement = (
         <TextInput
           key={input.id}
           style={widgetStyles.textInput}
           placeholder={input.label}
           autoCorrect={false}
-          autoCapitalize="none"
+          autoCapitalize={autoCapitalize}
           underlineColorAndroid="transparent"
           onChangeText={text => {
             const values = this.state.values.slice();
