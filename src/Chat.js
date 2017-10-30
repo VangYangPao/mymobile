@@ -224,8 +224,11 @@ class ChatScreen extends Component {
     this.concatMessageUpdater = message => {
       return prevState => {
         const { currentQuestionIndex } = this.state;
-        message.questionId = this.questions[currentQuestionIndex].id;
-        console.log(message.questionId);
+        if (Array.isArray(message)) {
+          message = message[0];
+        }
+        message.questionIndex = currentQuestionIndex;
+        console.log(message);
         return { messages: prevState.messages.concat(message) };
       };
     };
@@ -301,24 +304,18 @@ class ChatScreen extends Component {
     );
     if (messageIndex === -1) return;
     const message = this.state.messages[messageIndex];
-    let editQuestionIndex;
-    if (message.multi) {
-      editQuestionIndex = this.questions.findIndex(q => {
-        if (q.columns) {
-          const questionColumnIds = q.columns.map(c => c.id);
-          const messageColumnIds = message.value.map(c => c.id);
-          return isEqual(questionColumnIds, messageColumnIds);
-        }
-      });
-    } else {
-      editQuestionIndex = this.questions.findIndex(
-        q => q.id === message.questionId
-      );
-    }
-    const sliceToQuestionId = this.questions[editQuestionIndex - 1].id;
-    const messageQuestionIds = this.state.messages.map(m => m.questionId);
-    const sliceToMessageIndex = messageQuestionIds.lastIndexOf(
-      sliceToQuestionId
+    const { questionIndex: editQuestionIndex } = message;
+    const reverseToQuestionIndex = editQuestionIndex - 1;
+    const reverseToMessageIndex = this.state.messages.findIndex(
+      m => m.questionIndex === reverseToQuestionIndex
+    );
+    const sliceToMessageIndex = reverseToMessageIndex + 1;
+    console.log(
+      message,
+      editQuestionIndex,
+      reverseToQuestionIndex,
+      reverseToMessageIndex,
+      sliceToMessageIndex
     );
     const messages = this.state.messages.slice(0, sliceToMessageIndex);
     this.setState(
@@ -352,8 +349,8 @@ class ChatScreen extends Component {
         const messages = this.state.messages.slice();
         const { currentQuestionIndex } = this.state;
         if (currentQuestionIndex !== -1) {
-          const questionId = this.questions[currentQuestionIndex].id;
-          message.questionId = questionId;
+          const questionIndex = currentQuestionIndex;
+          message.questionIndex = questionIndex;
         }
         messages.splice(messageIndex, 1, message);
         this.setState({ renderInput: true, messages: messages }, () => {
@@ -404,9 +401,9 @@ class ChatScreen extends Component {
     const { messages } = this.state;
     let newMessages = messages.slice();
     const messagesLen = messages.length;
-    const questionId = this.questions[this.state.currentQuestionIndex].id;
+    console.log(this.state.currentQuestionIndex);
     const planMessage = {
-      questionId,
+      questionIndex: this.state.currentQuestionIndex,
       type: "text",
       _id: uuid.v4(),
       text: `${plans[planIndex]} plan`,
@@ -422,9 +419,8 @@ class ChatScreen extends Component {
   handleSelectPlan(planIndex) {
     const planAlphabet = ["A", "B", "C", "D", "E"];
     const premium = this.props.policy.plans[planIndex].premium;
-    const questionId = this.questions[this.state.currentQuestionIndex].id;
     const planMessage = {
-      questionId,
+      questionIndex: this.state.currentQuestionIndex,
       type: "text",
       _id: uuid.v4(),
       text: `I choose Plan ${planAlphabet[planIndex]}`,
@@ -584,10 +580,9 @@ class ChatScreen extends Component {
   }
 
   createMessageObject(message) {
-    const { currentQuestionIndex } = this.state;
-    const questionId = this.questions[currentQuestionIndex].id;
+    const { currentQuestionIndex: questionIndex } = this.state;
     return {
-      questionId,
+      questionIndex,
       type: "text",
       _id: uuid.v4(),
       user: CUSTOMER_USER,
@@ -1144,6 +1139,7 @@ class ChatScreen extends Component {
     const { currentQuestionIndex } = this.state;
     if (currentQuestionIndex < 0 || !this.state.renderInput) return null;
     const currentQuestion = this.questions[currentQuestionIndex];
+    console.log(currentQuestion, currentQuestionIndex);
 
     if (currentQuestion.searchChoices) {
       const fuse = new Fuse(
