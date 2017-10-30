@@ -535,7 +535,6 @@ export default class AuthScreen extends Component {
       index: subActions.length - 1,
       actions: subActions
     });
-    console.log(this.props.navigation, this.props.screenProps.rootNavigation);
     this.props.screenProps.rootNavigation.dispatch(resetAction);
   }
 

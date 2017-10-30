@@ -119,14 +119,14 @@ class AppiumTests(unittest.TestCase):
         self.tap_on(composer)
         self.driver.set_value(composer, 'Malaysia')
         sleep(1)
-        # with open('source.txt', 'w') as f:
-        #     f.write(self.driver.page_source)
         malaysia_country_suggestion = self.find_accessibility(
             'chat__suggestion-55')
         self.tap_on(malaysia_country_suggestion)
         sleep(1)
+        with open('source.txt', 'w') as f:
+            f.write(self.driver.page_source)
         date_now_str = datetime.now().strftime('%Y-%m-%d')
-        datepicker = self.find_accessibility(date_now_str)
+        datepicker = self.find_accessibility('chat__datepicker')
         self.tap_on(datepicker)
 
     # @timeout_decorator.timeout(20)
