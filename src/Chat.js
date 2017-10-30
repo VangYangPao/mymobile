@@ -228,7 +228,6 @@ class ChatScreen extends Component {
           message = message[0];
         }
         message.questionIndex = currentQuestionIndex;
-        console.log(message);
         return { messages: prevState.messages.concat(message) };
       };
     };
@@ -310,13 +309,13 @@ class ChatScreen extends Component {
       m => m.questionIndex === reverseToQuestionIndex
     );
     const sliceToMessageIndex = reverseToMessageIndex + 1;
-    console.log(
-      message,
-      editQuestionIndex,
-      reverseToQuestionIndex,
-      reverseToMessageIndex,
-      sliceToMessageIndex
-    );
+    // console.log(
+    //   message,
+    //   editQuestionIndex,
+    //   reverseToQuestionIndex,
+    //   reverseToMessageIndex,
+    //   sliceToMessageIndex
+    // );
     const messages = this.state.messages.slice(0, sliceToMessageIndex);
     this.setState(
       {
@@ -401,7 +400,6 @@ class ChatScreen extends Component {
     const { messages } = this.state;
     let newMessages = messages.slice();
     const messagesLen = messages.length;
-    console.log(this.state.currentQuestionIndex);
     const planMessage = {
       questionIndex: this.state.currentQuestionIndex,
       type: "text",
@@ -591,13 +589,12 @@ class ChatScreen extends Component {
   }
 
   handleTableInputSubmit(items) {
-    console.log(items);
     let { messages } = this.state;
     messages = messages.slice(0, messages.length - 1);
     const message = this.createMessageObject({
       text: "These are the details of my spouse and children",
-      value: items,
-      multi: true
+      value: items
+      // multi: true
     });
     messages = messages.concat(message);
     this.setState({ messages }, () =>
@@ -1139,7 +1136,6 @@ class ChatScreen extends Component {
     const { currentQuestionIndex } = this.state;
     if (currentQuestionIndex < 0 || !this.state.renderInput) return null;
     const currentQuestion = this.questions[currentQuestionIndex];
-    console.log(currentQuestion, currentQuestionIndex);
 
     if (currentQuestion.searchChoices) {
       const fuse = new Fuse(
@@ -1195,10 +1191,21 @@ class ChatScreen extends Component {
     const dateIndex = responseType.indexOf("date");
     const dateTimeIndex = responseType.indexOf("datetime");
 
-    if (
-      currentQuestionIndex >= this.questions.length - 1 ||
-      this.questions[currentQuestionIndex].id === "coverageDuration"
-    ) {
+    if (currentQuestionIndex >= this.questions.length - 1) {
+      return (
+        <Button
+          onPress={this.handleProceedButtonPress}
+          containerStyle={{ flex: 1, borderRadius: 0 }}
+          style={{
+            borderRadius: 0
+          }}
+        >
+          PROCEED
+        </Button>
+      );
+    }
+
+    if (this.questions[currentQuestionIndex].id === "coverageDuration") {
       return (
         <Button
           onPress={() => this.handleSelectDuration()}
