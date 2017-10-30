@@ -131,7 +131,7 @@ export class CoverageDurationWidget extends Component {
     const totalPremium = (this.props.monthlyPremium * months).toFixed(2);
     const buttonText = `CHOOSE ${months + ""} MONTH${s} - $${totalPremium}`;
     return (
-      <View style={widgetStyles.durationContainer}>
+      <View style={styles.durationContainer}>
         <RangeSlider
           elements={elements}
           onValueChange={months => {
@@ -186,8 +186,8 @@ export class MultipleImagePicker extends Component {
         key={idx}
         source={{ uri: imageUri }}
         style={[
-          widgetStyles.pickedImage,
-          idx === images.length - 1 ? widgetStyles.lastImage : null
+          styles.pickedImage,
+          idx === images.length - 1 ? styles.lastImage : null
         ]}
         resizeMode="cover"
       />
@@ -196,29 +196,29 @@ export class MultipleImagePicker extends Component {
 
   render() {
     return (
-      <View style={widgetStyles.imageGalleryContainer}>
-        <Text style={widgetStyles.imageGalleryTitle}>
+      <View style={styles.imageGalleryContainer}>
+        <Text style={styles.imageGalleryTitle}>
           Press on the '+'{"\n"}to start adding images
         </Text>
-        <ScrollView horizontal={true} style={widgetStyles.imageGallery}>
+        <ScrollView horizontal={true} style={styles.imageGallery}>
           <TouchableOpacity activeOpacity={0.7} onPress={this.handlePress}>
-            <View style={[widgetStyles.pickedImage, widgetStyles.emptyImage]}>
-              <Icon name="add" size={55} style={widgetStyles.plusIcon} />
+            <View style={[styles.pickedImage, styles.emptyImage]}>
+              <Icon name="add" size={55} style={styles.plusIcon} />
             </View>
           </TouchableOpacity>
           {this.state.images.reverse().map(this.renderImage)}
         </ScrollView>
         <Button
           onPress={this.handleFinishSelectImages}
-          style={widgetStyles.confirmUpload}
+          style={styles.confirmUpload}
         >
           UPLOAD IMAGES
         </Button>
         <Button
           onPress={this.handleSkipUpload}
-          containerStyle={widgetStyles.skipUploadContainer}
-          style={widgetStyles.skipUpload}
-          textStyle={widgetStyles.skipUploadText}
+          containerStyle={styles.skipUploadContainer}
+          style={styles.skipUpload}
+          textStyle={styles.skipUploadText}
         >
           SKIP UPLOAD
         </Button>
@@ -307,10 +307,7 @@ export class ImageTable extends Component {
                 <Icon
                   name="add"
                   size={55}
-                  style={[
-                    widgetStyles.plusIcon,
-                    { color: colors.softBorderLine }
-                  ]}
+                  style={[styles.plusIcon, { color: colors.softBorderLine }]}
                 />
               ) : (
                 <Image
@@ -336,9 +333,9 @@ export class ImageTable extends Component {
       <View style={{ marginVertical: 25 }}>
         {rows}
         <Button
-          containerStyle={widgetStyles.noBorderRadius}
+          containerStyle={styles.noBorderRadius}
           onPress={this.handleFinishSelectImages}
-          style={[widgetStyles.confirmUpload, widgetStyles.noBorderRadius]}
+          style={[styles.confirmUpload, styles.noBorderRadius]}
         >
           UPLOAD IMAGES
         </Button>
@@ -396,15 +393,13 @@ export class ClaimPolicyChoice extends Component {
       >
         <View
           style={[
-            widgetStyles.policyContainer,
-            this.state.disabled ? widgetStyles.disabledPolicyChoice : null
+            styles.policyContainer,
+            this.state.disabled ? styles.disabledPolicyChoice : null
           ]}
         >
-          <Text style={widgetStyles.policyChoiceName}>{policyTypeTitle}</Text>
-          <Text style={widgetStyles.policyDetailText}>
-            Policy No.: {policyId}
-          </Text>
-          <Text style={widgetStyles.policyDetailText}>
+          <Text style={styles.policyChoiceName}>{policyTypeTitle}</Text>
+          <Text style={styles.policyDetailText}>Policy No.: {policyId}</Text>
+          <Text style={styles.policyDetailText}>
             Purchase date: {purchaseDate}
           </Text>
           {/*policy.coverageSummary.length ? (
@@ -428,7 +423,7 @@ export class ClaimPolicyChoice extends Component {
               </View>
             </View>
           ) : null*/}
-          <Text style={widgetStyles.policyDetailText}>Premium: ${premium}</Text>
+          <Text style={styles.policyDetailText}>Premium: ${premium}</Text>
         </View>
       </TouchableOpacity>
     );
@@ -439,7 +434,7 @@ export class ClaimPolicyChoice extends Component {
 
     if (this.props.loadingPolicies) {
       content = (
-        <View style={widgetStyles.claimScreenContainer}>
+        <View style={styles.claimScreenContainer}>
           <ActivityIndicator size="large" color="black" />
         </View>
       );
@@ -457,8 +452,8 @@ export class ClaimPolicyChoice extends Component {
         ]
       });
       content = (
-        <View style={widgetStyles.claimScreenContainer}>
-          <Text style={widgetStyles.claimScreenText}>
+        <View style={styles.claimScreenContainer}>
+          <Text style={styles.claimScreenText}>
             No policies to claim, purchase one first!
           </Text>
           <Button
@@ -475,15 +470,15 @@ export class ClaimPolicyChoice extends Component {
           ? "No network connection,\nconnect to WiFi or data"
           : "Oops... something went wrong";
       content = (
-        <View style={widgetStyles.claimScreenContainer}>
-          <Text style={widgetStyles.claimScreenText}>{message}</Text>
+        <View style={styles.claimScreenContainer}>
+          <Text style={styles.claimScreenText}>{message}</Text>
         </View>
       );
     } else {
       content = (
         <Animated.View
           style={[
-            widgetStyles.choicesContainer,
+            styles.choicesContainer,
             { opacity: this.state.fadeAnim, top: this.state.topAnim }
           ]}
         >
@@ -513,27 +508,23 @@ export class ChoiceList extends Component {
 
   renderChoice(choice, index, choices) {
     const len = choices.length;
-    const startStylesOrNull = index === 0 ? widgetStyles.choicesStart : null;
-    const endStylesOrNull = index === len - 1 ? widgetStyles.choicesEnd : null;
+    const startStylesOrNull = index === 0 ? styles.choicesStart : null;
+    const endStylesOrNull = index === len - 1 ? styles.choicesEnd : null;
     const choiceTouchableEnd =
-      index === len - 1 ? widgetStyles.choiceTouchableEnd : null;
+      index === len - 1 ? styles.choiceTouchableEnd : null;
     return (
       <View
-        style={[
-          widgetStyles.choiceContainer,
-          startStylesOrNull,
-          endStylesOrNull
-        ]}
+        style={[styles.choiceContainer, startStylesOrNull, endStylesOrNull]}
         key={choice.value}
       >
         <TouchableHighlight
-          style={[widgetStyles.choiceTouchable, choiceTouchableEnd]}
+          style={[styles.choiceTouchable, choiceTouchableEnd]}
           onPress={() => this.handlePickChoice(choice)}
           activeOpacity={0.6}
           underlayColor={colors.softBorderLine}
         >
           <View style={{ flex: 1 }}>
-            <Text style={widgetStyles.choiceText}>{choice.label}</Text>
+            <Text style={styles.choiceText}>{choice.label}</Text>
           </View>
         </TouchableHighlight>
       </View>
@@ -542,10 +533,10 @@ export class ChoiceList extends Component {
 
   render() {
     const disabledStyle = this.state.disabled
-      ? widgetStyles.disabledChoiceList
+      ? styles.disabledChoiceList
       : null;
     return (
-      <View style={[widgetStyles.choicesList, disabledStyle]}>
+      <View style={[styles.choicesList, disabledStyle]}>
         {this.props.choices.map(this.renderChoice)}
       </View>
     );
@@ -585,11 +576,8 @@ class ErrorMessages extends Component {
   renderError(response, idx) {
     if (response.isValid) return null;
     return (
-      <View
-        key={idx}
-        style={[widgetStyles.errMessage, { alignItems: "center" }]}
-      >
-        <Text style={widgetStyles.errMessageText}>{response.errMessage}</Text>
+      <View key={idx} style={[styles.errMessage, { alignItems: "center" }]}>
+        <Text style={styles.errMessageText}>{response.errMessage}</Text>
       </View>
     );
   }
@@ -599,7 +587,7 @@ class ErrorMessages extends Component {
     return (
       <Animated.View
         style={[
-          widgetStyles.errContainer,
+          styles.errContainer,
           { marginHorizontal: 0 },
           { opacity: fadeAnim, top: topAnim }
         ]}
@@ -886,8 +874,8 @@ export class MultiInput extends Component {
 
   renderInput(input, index, inputs) {
     const len = inputs.length;
-    const startStylesOrNull = index === 0 ? widgetStyles.choicesStart : null;
-    const endStylesOrNull = index === len - 1 ? widgetStyles.choicesEnd : null;
+    const startStylesOrNull = index === 0 ? styles.choicesStart : null;
+    const endStylesOrNull = index === len - 1 ? styles.choicesEnd : null;
 
     const response = this.state.responses[index];
     const responseTypes = [].concat(input.responseType);
@@ -936,8 +924,8 @@ export class MultiInput extends Component {
             values[index] = option.key;
             this.setState({ values });
           }}
-          selectStyle={widgetStyles.select}
-          selectTextStyle={widgetStyles.selectText}
+          selectStyle={styles.select}
+          selectTextStyle={styles.selectText}
         />
       );
     } else {
@@ -950,7 +938,7 @@ export class MultiInput extends Component {
       inputElement = (
         <TextInput
           key={input.id}
-          style={widgetStyles.textInput}
+          style={styles.textInput}
           placeholder={input.label}
           autoCorrect={false}
           autoCapitalize={autoCapitalize}
@@ -969,8 +957,8 @@ export class MultiInput extends Component {
       <View
         key={input.id}
         style={[
-          widgetStyles.textInputContainer,
-          !response.isValid ? widgetStyles.textInputError : null,
+          styles.textInputContainer,
+          !response.isValid ? styles.textInputError : null,
           startStylesOrNull
         ]}
       >
@@ -982,8 +970,8 @@ export class MultiInput extends Component {
   renderError(response, idx) {
     if (response.isValid) return null;
     return (
-      <View key={idx} style={widgetStyles.errMessage}>
-        <Text style={widgetStyles.errMessageText}>{response.errMessage}</Text>
+      <View key={idx} style={styles.errMessage}>
+        <Text style={styles.errMessageText}>{response.errMessage}</Text>
       </View>
     );
   }
@@ -1018,10 +1006,7 @@ export class MultiInput extends Component {
 
     if (!this.props.submitButtonComponent) {
       button = (
-        <Button
-          onPress={this.handleSubmit}
-          style={widgetStyles.sendButtonContainer}
-        >
+        <Button onPress={this.handleSubmit} style={styles.sendButtonContainer}>
           SEND
         </Button>
       );
@@ -1037,15 +1022,12 @@ export class MultiInput extends Component {
     });
     return (
       <View style={{ marginBottom: keyboardHeight }}>
-        <View style={[widgetStyles.choicesList]}>
+        <View style={[styles.choicesList]}>
           {inputContainer}
           {button}
         </View>
         <Animated.View
-          style={[
-            widgetStyles.errContainer,
-            { opacity: fadeAnim, top: topAnim }
-          ]}
+          style={[styles.errContainer, { opacity: fadeAnim, top: topAnim }]}
         >
           {this.state.responses.map(this.renderError)}
         </Animated.View>
@@ -1080,18 +1062,16 @@ export class SuggestionList extends Component {
     ).start();
   }
 
-  renderSuggestion(item) {
+  renderSuggestion({ item }) {
     return (
       <TouchableHighlight
         accessibilityLabel={"chat__suggestion-" + item.value}
-        accessibilityTraits="button"
-        accessibilityComponentType="button"
         onPress={() => {
           this.props.onSelectSuggestion(item);
         }}
         key={item.value}
       >
-        <View style={widgetStyles.suggestionContainer}>
+        <View style={styles.suggestionContainer}>
           <Text>{item.label}</Text>
         </View>
       </TouchableHighlight>
@@ -1099,26 +1079,28 @@ export class SuggestionList extends Component {
   }
 
   render() {
-    let scrollViewContent = null;
+    let scrollView = null;
+
     if (this.props.items.length) {
-      scrollViewContent = this.props.items.map(this.renderSuggestion);
+      const itemSeparatorComponent = () => <View style={styles.separator} />;
+      scrollView = (
+        <FlatList
+          style={styles.suggestionListScrollView}
+          ItemSeparatorComponent={itemSeparatorComponent}
+          keyboardShouldPersistTaps="always"
+          data={this.props.items}
+          renderItem={this.renderSuggestion}
+          keyExtractor={item => item.value}
+        />
+      );
     } else if (this.props.searchValue && !this.props.items.length) {
-      scrollViewContent = (
-        <View style={widgetStyles.emptyContainer}>
+      scrollView = (
+        <View style={styles.emptyContainer}>
           <Text>No matching result. Please try other phrases.</Text>
         </View>
       );
     }
 
-    const scrollView = (
-      <ScrollView
-        keyboardShouldPersistTaps="always"
-        style={widgetStyles.suggestionListScrollView}
-        contentContainerStyle={widgetStyles.suggestionListContainer}
-      >
-        {scrollViewContent}
-      </ScrollView>
-    );
     return Platform.select({
       ios: (
         <Animated.View
@@ -1156,14 +1138,14 @@ class PlanTab extends Component {
       this.props.plans[planIdx].coverage[coverageKey]
     );
     return (
-      <View key={coverageKey} style={widgetStyles.coverageRow}>
+      <View key={coverageKey} style={styles.coverageRow}>
         <VectorDrawableView
           resourceName={coverage.icon}
-          style={widgetStyles.coverageIcon}
+          style={styles.coverageIcon}
         />
-        <View style={widgetStyles.coverageDetailsContainer}>
-          <Text style={widgetStyles.coverageTitleText}>{coverage.title}</Text>
-          <Text style={widgetStyles.coverageAmountText}>${coverageAmount}</Text>
+        <View style={styles.coverageDetailsContainer}>
+          <Text style={styles.coverageTitleText}>{coverage.title}</Text>
+          <Text style={styles.coverageAmountText}>${coverageAmount}</Text>
         </View>
       </View>
     );
@@ -1172,15 +1154,15 @@ class PlanTab extends Component {
   render() {
     const { plan, planIndex } = this.props;
     return (
-      <View style={widgetStyles.planContainer}>
-        <View style={widgetStyles.planContentContainer}>
+      <View style={styles.planContainer}>
+        <View style={styles.planContentContainer}>
           {Object.keys(plan.coverage).map(coverageKey =>
             this.renderCoverage(planIndex, coverageKey)
           )}
         </View>
         <Button
           onPress={this.handleSelectPlan(planIndex)}
-          style={widgetStyles.selectPlanButton}
+          style={styles.selectPlanButton}
         >
           SELECT PLAN
         </Button>
@@ -1237,7 +1219,7 @@ export class PlansTabNavigator extends Component {
       }
     });
     return (
-      <View style={[widgetStyles.plansTabContainer]}>
+      <View style={[styles.plansTabContainer]}>
         <_PlansTabNavigator />
       </View>
     );
@@ -1269,7 +1251,7 @@ export class PlansTabView extends Component {
 const multiInputPlaceholderSize = 16;
 const iconSize = 50;
 
-const widgetStyles = StyleSheet.create({
+const styles = StyleSheet.create({
   claimScreenText: {
     fontSize: 17,
     marginBottom: 15
@@ -1356,11 +1338,11 @@ const widgetStyles = StyleSheet.create({
     justifyContent: "flex-end"
   },
   suggestionListScrollView: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    bottom: 0,
-    height: 150
+    // position: "absolute",
+    // left: 0,
+    // right: 0,
+    // bottom: 0,
+    maxHeight: 150
   },
   emptyContainer: {
     padding: 20,
@@ -1542,5 +1524,9 @@ const widgetStyles = StyleSheet.create({
     borderRadius: 3,
     backgroundColor: "white",
     elevation: 4
+  },
+  separator: {
+    borderBottomColor: colors.softBorderLine,
+    borderBottomWidth: 1
   }
 });

@@ -118,9 +118,11 @@ class AppiumTests(unittest.TestCase):
         composer = self.find_accessibility('Type your message here...')
         self.tap_on(composer)
         self.driver.set_value(composer, 'Malaysia')
-        sleep(2)
-        malaysia_country_suggestion = self.driver\
-            .find_elements_by_accessibility_id('Malaysia')[1]
+        sleep(1)
+        # with open('source.txt', 'w') as f:
+        #     f.write(self.driver.page_source)
+        malaysia_country_suggestion = self.find_accessibility(
+            'chat__suggestion-55')
         self.tap_on(malaysia_country_suggestion)
         sleep(1)
         date_now_str = datetime.now().strftime('%Y-%m-%d')
