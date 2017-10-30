@@ -122,6 +122,11 @@ export default class TableScreen extends Component {
         <ModalPicker
           data={data}
           initValue={"Select " + lowerlabel}
+          style={styles.whiteBackground}
+          cancelStyle={styles.whiteBackground}
+          cancelTextStyle={{ color: colors.primaryText }}
+          optionStyle={styles.modalOption}
+          optionTextStyle={styles.modalOptionText}
           onChange={option => {
             const values = Object.assign([], this.state.values);
             values[index] = option.key;
@@ -193,6 +198,16 @@ export default class TableScreen extends Component {
 const fieldInputFontSize = 17.5;
 
 const styles = StyleSheet.create({
+  modalOption: {
+    marginHorizontal: 10,
+    backgroundColor: "white"
+  },
+  whiteBackground: {
+    backgroundColor: "white"
+  },
+  modalOptionText: {
+    color: colors.primaryOrange
+  },
   dateInput: {
     alignItems: "flex-end",
     borderWidth: 0
