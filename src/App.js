@@ -1,5 +1,5 @@
 import { AppRegistry } from "react-native";
-import createMicroUmbrellaApp from "../microumbrella-core/createMicroUmbrellaApp";
+import createMicroUmbrellaApp from "microumbrella-core";
 
 AppRegistry.registerComponent("Microsurance", () =>
   createMicroUmbrellaApp({

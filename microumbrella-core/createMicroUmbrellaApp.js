@@ -20,7 +20,6 @@ import Ionicon from "react-native-vector-icons/Ionicons";
 
 import defaultOptions from "./defaultOptions";
 import ChatScreenWrapper from "./screens/Chat";
-import IntroScreen from "./screens/IntroScreen";
 import PolicyScreen from "./screens/PolicyScreen";
 import ConfirmationScreen from "./screens/ConfirmationScreen";
 import StatusScreen from "./screens/StatusScreen";
@@ -234,31 +233,6 @@ const wrapScreen = ScreenComponent => {
   return wrapper;
 };
 
-const stackNavigatorScreens = {
-  Intro: {
-    screen: ({ navigation }) => (
-      <IntroScreen
-        navigation={navigation}
-        screenProps={{ rootNavigation: navigation }}
-      />
-    )
-  },
-  TermsOfUse: {
-    screen: TermsOfUse
-  },
-  Profile: {
-    screen: StackNavigator({
-      Profile: {
-        screen: TableScreen
-      }
-    })
-  },
-  Drawer: {
-    screen: wrapScreen(MyDrawerNavigator)
-  },
-  Help: { screen: HelpStackNavigator }
-};
-
 let stackNavConfig = {
   headerMode: "none"
 };
@@ -269,9 +243,10 @@ let stackNavConfig = {
 // }
 
 class MicroUmbrellaApp extends Component {
+  props: createAppOptionsType;
   state: { loading: boolean, currentUser: any };
 
-  constructor(props: {}) {
+  constructor(props: createAppOptionsType) {
     super(props);
     this.state = { loading: true, currentUser: null };
   }
@@ -283,31 +258,52 @@ class MicroUmbrellaApp extends Component {
   }
 
   render() {
+    const stackNavigatorScreens = {
+      Intro: {
+        screen: this.props.renderIntroScreen
+      },
+      TermsOfUse: {
+        screen: TermsOfUse
+      },
+      Profile: {
+        screen: StackNavigator({
+          Profile: {
+            screen: TableScreen
+          }
+        })
+      },
+      Drawer: {
+        screen: wrapScreen(MyDrawerNavigator)
+      },
+      Help: { screen: HelpStackNavigator }
+    };
     if (this.state.currentUser) {
-      const config = Object.assign(
-        { initialRouteName: "Drawer" },
-        stackNavConfig
-      );
+      let config = Object.assign({}, stackNavConfig);
+      config.initialRouteName = "Drawer";
       const MyStackNavigator = StackNavigator(stackNavigatorScreens, config);
       return <MyStackNavigator />;
     }
-    const config = Object.assign({ initialRouteName: "Intro" }, stackNavConfig);
+    let config = Object.assign({}, stackNavConfig);
+    config.initialRouteName = "Intro";
     const MyStackNavigator = StackNavigator(stackNavigatorScreens, config);
     return <MyStackNavigator />;
   }
 }
 
-export default function createMicroUmbrellaApp(
-  options: {
-    parseAppId?: string,
-    parseServerURL?: string,
-    appIcon?: number,
-    headerTitle?: ReactNode,
-    headerStyle?: StyleSheet.Styles
-  } = defaultOptions
-) {
+type createAppOptionsType = {
+  parseAppId?: string,
+  parseServerURL?: string,
+  appIcon?: number,
+  headerTitle?: ReactNode,
+  headerStyle?: StyleSheet.Styles,
+  renderIntroScreen?: ({ navigation: any }) => ReactNode
+};
+
+export default function createMicroUmbrellaApp(options: createAppOptionsType) {
+  for (var i in defaultOptions) {
+    if (typeof options[i] == "undefined") options[i] = defaultOptions[i];
+  }
   Parse.initialize(options.parseAppId);
-  // Parse.serverURL = SERVER_URL;
   Parse.serverURL = options.parseServerURL;
-  return MicroUmbrellaApp;
+  return () => <MicroUmbrellaApp {...options} />;
 }
