@@ -38,6 +38,8 @@ import { template } from "lodash";
 import { NavigationActions } from "react-navigation";
 import Parse from "parse/react-native";
 
+import observer from "mobx-react";
+import AppStore from "../../stores/AppStore";
 import { saveNewClaim } from "../parse/claims";
 import CheckoutModal from "../components/CheckoutModal";
 import OverlayModal from "../components/OverlayModal";
@@ -61,13 +63,7 @@ import { Text } from "../components/defaultComponents";
 import PolicyChoice from "../components/PolicyChoice";
 import colors from "../styles/colors";
 import POLICIES from "../../data/policies";
-import {
-  validateAnswer,
-  QUESTION_SETS,
-  paClaimQuestions,
-  travelClaimQuestions,
-  mobileClaimQuestions
-} from "../../data/questions";
+import { validateAnswer, QUESTION_SETS } from "../../data/questions";
 import Button from "../components/Button";
 import CHAT_STYLES from "../styles/Chat.styles";
 import { MESSAGE_LOAD_TIME as _MESSAGE_LOAD_TIME } from "react-native-dotenv";
@@ -153,6 +149,7 @@ export default function ChatScreenWrapper() {
 
 const WINDOW_HEIGHT = Dimensions.get("window").height;
 
+@observer
 class ChatScreen extends Component {
   constructor(props) {
     super(props);
@@ -180,7 +177,7 @@ class ChatScreen extends Component {
     };
 
     if (props.questionSet) {
-      this.questions = QUESTION_SETS[props.questionSet];
+      this.questions = AppStore.questionSets[props.questionSet];
     }
 
     this.renderMessage = this.renderMessage.bind(this);
@@ -543,13 +540,7 @@ class ChatScreen extends Component {
     });
     this.setState({ answers });
 
-    if (policyTypeId.indexOf("pa") !== -1) {
-      this.questions.push.apply(this.questions, paClaimQuestions);
-    } else if (policyTypeId.indexOf("travel") !== -1) {
-      this.questions.push.apply(this.questions, travelClaimQuestions);
-    } else if (policyTypeId.indexOf("mobile") !== -1) {
-      this.questions.push.apply(this.questions, mobileClaimQuestions);
-    }
+    AppStore.pushClaimQuestionsOfType(policyTypeId);
 
     this.setState(
       this.concatMessageUpdater({
