@@ -1,4 +1,4 @@
-/* @flow */
+// @flow
 import React, { Component } from "react";
 import {
   AppRegistry,
@@ -18,21 +18,19 @@ import {
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Ionicon from "react-native-vector-icons/Ionicons";
 
-import ChatScreenWrapper from "./Chat";
-import IntroScreen from "./IntroScreen";
-import PolicyScreen from "./PolicyScreen";
-import ConfirmationScreen from "./ConfirmationScreen";
-import StatusScreen from "./StatusScreen";
-import AuthScreen from "./AuthScreen";
-import HomeScreen from "./HomeScreen";
-import TermsOfUse from "./TermsOfUse";
-import NotificationsScreen from "./NotificationsScreen";
-import { TermsOfUseStack, PrivacyPolicyStack } from "./TermsAndPrivacyPolicy";
-import HelpScreen from "./HelpScreen";
-import colors from "./colors";
-import TableScreen from "./TableScreen";
-import DrawerContent from "./DrawerContent";
-import PolicyDetailsScreen from "./PolicyDetails";
+import ChatScreenWrapper from "./screens/Chat";
+import IntroScreen from "./screens/IntroScreen";
+import PolicyScreen from "./screens/PolicyScreen";
+import ConfirmationScreen from "./screens/ConfirmationScreen";
+import StatusScreen from "./screens/StatusScreen";
+import AuthScreen from "./screens/AuthScreen";
+import TermsOfUse from "./screens/TermsOfUse";
+import NotificationsScreen from "./screens/NotificationsScreen";
+import HelpScreen from "./screens/HelpScreen";
+import colors from "./styles/colors";
+import TableScreen from "./screens/TableScreen";
+import DrawerContent from "./components/DrawerContent";
+import PolicyDetailsScreen from "./screens/PolicyDetails";
 import {
   styles,
   backButtonNavOptions,

@@ -12,7 +12,7 @@ import { NavigationActions } from "react-navigation";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Ionicon from "react-native-vector-icons/Ionicons";
 
-import colors from "./colors";
+import colors from "./styles/colors";
 
 const menuIconSizes = {
   2: 30,
