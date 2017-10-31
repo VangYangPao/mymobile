@@ -16,7 +16,7 @@ import Ionicon from "react-native-vector-icons/Ionicons";
 import Parse from "parse/react-native";
 import { NavigationActions } from "react-navigation";
 
-import POLICIES from "../../data/policies";
+import AppStore from "../../stores/AppStore";
 import { getDateStr, generateID } from "../utils";
 import { Text } from "../components/defaultComponents";
 import colors from "../styles/colors";
@@ -150,7 +150,7 @@ export default class StatusScreen extends Component {
     const policyTypeId = item.get("policyTypeId");
     let policyStatus = item.get("status");
 
-    const policyMetadata = POLICIES.find(p => p.id === policyTypeId);
+    const policyMetadata = AppStore.policies.find(p => p.id === policyTypeId);
     const policyTypeTitle = policyMetadata.title;
 
     let amount;

@@ -4,9 +4,9 @@ import { StyleSheet, TouchableOpacity, View, ScrollView } from "react-native";
 import Ionicon from "react-native-vector-icons/Ionicons";
 import VectorDrawableView from "./VectorDrawableView";
 
+import AppStore from "../../stores/AppStore";
 import { Text } from "./defaultComponents";
 import colors from "../styles/colors";
-import coverages from "../../data/coverage";
 
 export default class Coverage extends Component {
   static navigationOptions = { title: "Coverage" };
@@ -37,7 +37,7 @@ export default class Coverage extends Component {
   renderNotCovered() {
     if (!this.state.expanded) return null;
     const { policy } = this.props.screenProps;
-    const notCoveredItems = policy.notCovered.map(i => coverages[i]);
+    const notCoveredItems = policy.notCovered.map(i => AppStore.coverages[i]);
     return (
       <View style={styles.coverages}>
         <Text style={[styles.title, styles.notCoveredTitle]}>Not Covered</Text>
@@ -48,7 +48,7 @@ export default class Coverage extends Component {
 
   render() {
     const { policy } = this.props.screenProps;
-    const coveredItems = policy.covered.map(i => coverages[i]);
+    const coveredItems = policy.covered.map(i => AppStore.coverages[i]);
     return (
       <View style={styles.page}>
         <ScrollView

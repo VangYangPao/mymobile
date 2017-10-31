@@ -16,7 +16,6 @@ import PolicyPrice from "../components/PolicyPrice";
 import { getDateStr } from "../utils";
 import Button from "../components/Button";
 import colors from "../styles/colors";
-import POLICIES from "../../data/policies";
 import OverlayModal from "../components/OverlayModal";
 
 export default class PolicyDetails extends Component {

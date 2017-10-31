@@ -28,8 +28,8 @@ import { TabNavigator, TabBarTop, NavigationActions } from "react-navigation";
 import VectorDrawableView from "./VectorDrawableView";
 import ModalPicker from "react-native-modal-picker";
 
+import AppStore from "../../stores/AppStore";
 import COVERAGE_DURATIONS from "../../data/coverageDurations";
-import POLICIES from "../../data/policies";
 import RangeSlider from "./RangeSlider";
 import { Text } from "./defaultComponents";
 import colors from "../styles/colors";
@@ -39,9 +39,8 @@ import {
   validateAnswer,
   validateOneAnswer,
   ValidationResult
-} from "../../data/questions";
+} from "../models/validations";
 import tabStyles from "../styles/TabBar.styles";
-import COVERAGES from "../../data/coverage";
 
 const imageHeight = 150;
 const imageWidth = 100;
@@ -379,7 +378,7 @@ export class ClaimPolicyChoice extends Component {
 
   renderPolicy(policy, idx) {
     const policyTypeId = policy.get("policyTypeId");
-    const { title: policyTypeTitle } = POLICIES.find(
+    const { title: policyTypeTitle } = AppStore.policies.find(
       p => p.id === policyTypeId
     );
     const policyId = policy.get("policyId");
@@ -1133,7 +1132,7 @@ class PlanTab extends Component {
   }
 
   renderCoverage(planIdx, coverageKey) {
-    const coverage = COVERAGES[coverageKey];
+    const coverage = AppStore.coverages[coverageKey];
     const coverageAmount = addCommas(
       this.props.plans[planIdx].coverage[coverageKey]
     );

@@ -38,7 +38,7 @@ import { template } from "lodash";
 import { NavigationActions } from "react-navigation";
 import Parse from "parse/react-native";
 
-import observer from "mobx-react";
+import { observer } from "mobx-react";
 import AppStore from "../../stores/AppStore";
 import { saveNewClaim } from "../parse/claims";
 import CheckoutModal from "../components/CheckoutModal";
@@ -62,8 +62,7 @@ import TravelPlansView from "../components/TravelPlansView";
 import { Text } from "../components/defaultComponents";
 import PolicyChoice from "../components/PolicyChoice";
 import colors from "../styles/colors";
-import POLICIES from "../../data/policies";
-import { validateAnswer, QUESTION_SETS } from "../../data/questions";
+import { validateAnswer } from "../models/validations";
 import Button from "../components/Button";
 import CHAT_STYLES from "../styles/Chat.styles";
 import { MESSAGE_LOAD_TIME as _MESSAGE_LOAD_TIME } from "react-native-dotenv";
@@ -88,7 +87,7 @@ const CUSTOMER_USER = {
 };
 function transposePolicyChoiceByTitle() {
   let policyDict = {};
-  POLICIES.forEach(policy => {
+  AppStore.policies.forEach(policy => {
     policyDict[policy.title] = policy;
   });
   return policyDict;
@@ -534,7 +533,7 @@ class ChatScreen extends Component {
   handleSelectPolicyToClaim(policy) {
     const policyId = policy.get("policyId");
     const policyTypeId = policy.get("policyTypeId");
-    const { title } = POLICIES.find(p => p.id === policyTypeId);
+    const { title } = AppStore.policies.find(p => p.id === policyTypeId);
     let answers = Object.assign(this.state.answers, {
       policyName: title
     });

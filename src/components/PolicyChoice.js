@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from "react";
 import {
   View,
@@ -11,7 +12,7 @@ import VectorDrawableView from "./VectorDrawableView";
 
 import { Text } from "./defaultComponents";
 import colors from "../styles/colors";
-import policies from "../../data/policies";
+import AppStore from "../../stores/AppStore";
 import { addCommas } from "../utils";
 
 class Policy extends Component {
@@ -91,7 +92,7 @@ export default class PolicyChoice extends Component {
           { opacity: this.state.fadeAnim, top: this.state.topAnim }
         ]}
       >
-        {policies.map(policy => {
+        {AppStore.policies.map(policy => {
           return (
             <Policy
               key={policy.title}

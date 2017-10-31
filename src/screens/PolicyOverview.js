@@ -3,11 +3,11 @@ import React, { Component } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import VectorDrawableView from "../components/VectorDrawableView";
 
+import AppStore from "../../stores/AppStore";
 import Page from "../components/Page";
 import PolicyPrice from "../components/PolicyPrice";
 import { Text } from "../components/defaultComponents";
 import colors from "../styles/colors";
-import coveragesData from "../../data/coverage";
 
 class CoverageItem extends Component {
   constructor(props) {
@@ -57,7 +57,7 @@ class PolicyCoverages extends Component {
                 key={item}
                 navigation={this.props.navigation}
                 covered={true}
-                {...coveragesData[item]}
+                {...AppStore.coverages[item]}
               />
             ))}
         </View>

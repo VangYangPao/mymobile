@@ -17,7 +17,9 @@ import {
 } from "react-navigation";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Ionicon from "react-native-vector-icons/Ionicons";
+import { observer } from "mobx-react";
 
+import AppStore from "./stores/AppStore";
 import defaultOptions from "./defaultOptions";
 import ChatScreenWrapper from "./src/screens/Chat";
 import PolicyScreen from "./src/screens/PolicyScreen";
@@ -242,8 +244,9 @@ let stackNavConfig = {
 //   stackNavConfig["initialRouteName"] = "Intro";
 // }
 
+@observer
 class MicroUmbrellaApp extends Component {
-  props: createAppOptionsType;
+  props: any;
   state: { loading: boolean, currentUser: any };
 
   constructor(props: createAppOptionsType) {
@@ -260,7 +263,7 @@ class MicroUmbrellaApp extends Component {
   render() {
     const stackNavigatorScreens = {
       Intro: {
-        screen: this.props.renderIntroScreen
+        screen: AppStore.renderIntroScreen
       },
       TermsOfUse: {
         screen: TermsOfUse
@@ -300,10 +303,12 @@ type createAppOptionsType = {
 };
 
 export default function createMicroUmbrellaApp(options: createAppOptionsType) {
-  for (var i in defaultOptions) {
-    if (typeof options[i] == "undefined") options[i] = defaultOptions[i];
+  for (var i in options) {
+    if (typeof options[i] !== "undefined") {
+      AppStore[i] = options[i];
+    }
   }
-  Parse.initialize(options.parseAppId);
-  Parse.serverURL = options.parseServerURL;
-  return () => <MicroUmbrellaApp {...options} />;
+  Parse.initialize(AppStore.parseAppId);
+  Parse.serverURL = AppStore.parseServerURL;
+  return () => <MicroUmbrellaApp />;
 }

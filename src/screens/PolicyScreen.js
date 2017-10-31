@@ -15,7 +15,6 @@ import { Text } from "../components/defaultComponents";
 import Footer from "../components/Footer";
 import ChatScreenWrapper from "./Chat";
 import PolicyOverview from "./PolicyOverview";
-import POLICIES from "../../data/policies";
 import CoveragePage from "../components/Coverage";
 import colors from "../styles/colors";
 import { ENV } from "react-native-dotenv";
