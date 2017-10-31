@@ -19,18 +19,18 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import Ionicon from "react-native-vector-icons/Ionicons";
 
 import defaultOptions from "./defaultOptions";
-import ChatScreenWrapper from "./screens/Chat";
-import PolicyScreen from "./screens/PolicyScreen";
-import ConfirmationScreen from "./screens/ConfirmationScreen";
-import StatusScreen from "./screens/StatusScreen";
-import AuthScreen from "./screens/AuthScreen";
-import TermsOfUse from "./screens/TermsOfUse";
-import NotificationsScreen from "./screens/NotificationsScreen";
-import HelpScreen from "./screens/HelpScreen";
-import colors from "./styles/colors";
-import TableScreen from "./screens/TableScreen";
-import DrawerContent from "./components/DrawerContent";
-import PolicyDetailsScreen from "./screens/PolicyDetails";
+import ChatScreenWrapper from "./src/screens/Chat";
+import PolicyScreen from "./src/screens/PolicyScreen";
+import ConfirmationScreen from "./src/screens/ConfirmationScreen";
+import StatusScreen from "./src/screens/StatusScreen";
+import AuthScreen from "./src/screens/AuthScreen";
+import TermsOfUse from "./src/screens/TermsOfUse";
+import NotificationsScreen from "./src/screens/NotificationsScreen";
+import HelpScreen from "./src/screens/HelpScreen";
+import colors from "./src/styles/colors";
+import TableScreen from "./src/screens/TableScreen";
+import DrawerContent from "./src/components/DrawerContent";
+import PolicyDetailsScreen from "./src/screens/PolicyDetails";
 import {
   styles,
   backButtonNavOptions,
@@ -40,7 +40,7 @@ import {
   MENU_ICON_SIZE,
   MENU_ICON_PADDING_LEFT,
   MENU_ICON_PADDING_RIGHT
-} from "./navigations";
+} from "./src/navigations";
 import { ENV, SERVER_URL } from "react-native-dotenv";
 
 import Parse from "parse/react-native";

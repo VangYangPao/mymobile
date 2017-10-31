@@ -20,7 +20,7 @@ import {
 import { StackNavigator } from "react-navigation";
 import { Text } from "../components/defaultComponents";
 import Page from "../components/Page";
-import { backButtonNavOptions } from "../navigations";
+import { backButtonNavOptions } from "./navigations";
 import colors from "../styles/colors";
 import CHAT_STYLES from "../styles/Chat.styles";
 import { SuggestionList } from "../components/chatWidgets";
