@@ -1,5 +1,5 @@
 import React from "react";
-import IntroScreen from "./screens/IntroScreen";
+import IntroScreen from "./src/screens/IntroScreen";
 
 export default (defaultOptions = {
   parseAppId: "microumbrella",

@@ -8,7 +8,7 @@ import ModalPicker from "react-native-modal-picker";
 import DatePicker from "react-native-datepicker";
 import moment from "moment";
 
-import { backButtonNavOptions } from "./navigations";
+import { backButtonNavOptions } from "../navigations";
 import colors from "../styles/colors";
 import { Text } from "../components/defaultComponents";
 import { showAlert } from "../utils";
