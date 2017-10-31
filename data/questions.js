@@ -2,10 +2,6 @@ import COUNTRIES from "./countries";
 import PHONE_MAKES from "./phoneMake";
 import PHONE_MODELS from "./phoneModels";
 import OCCUPATIONS from "./occupations";
-import paClaimQuestions from "./paClaimQuestions";
-import travelClaimQuestions from "./travelClaimQuestions";
-import mobileClaimQuestions from "./mobileClaimQuestions";
-export { paClaimQuestions, travelClaimQuestions, mobileClaimQuestions };
 
 const claimIntro = [
   {
