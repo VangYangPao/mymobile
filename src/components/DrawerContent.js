@@ -5,7 +5,8 @@ import { DrawerItems, NavigationActions } from "react-navigation";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Parse from "parse/react-native";
 
-import colors from "../styles/colors";
+import AppStore from "../../stores/AppStore";
+const colors = AppStore.colors;
 import { Text } from "./defaultComponents";
 
 function resetToProfileAction(currentUser) {

@@ -21,7 +21,8 @@ import { StackNavigator } from "react-navigation";
 import { Text } from "../components/defaultComponents";
 import Page from "../components/Page";
 import { backButtonNavOptions } from "../navigations";
-import colors from "../styles/colors";
+import AppStore from "../../stores/AppStore";
+const colors = AppStore.colors;
 import CHAT_STYLES from "../styles/Chat.styles";
 import { SuggestionList } from "../components/chatWidgets";
 import { searchArticles } from "../models/zendesk";
@@ -208,7 +209,7 @@ export default class HelpScreen extends Component {
     const injectcss = `
     <style>
     body {
-      background-color: ${colors.primaryOrange};
+      background-color: ${colors.primaryAccent};
       font-family: Arial;
       font-size: 15px;
       color: white;
@@ -226,7 +227,7 @@ export default class HelpScreen extends Component {
         <WebView
           contentInset={{ top: 10, bottom: 10, left: 10, right: 10 }}
           style={{
-            backgroundColor: colors.primaryOrange,
+            backgroundColor: colors.primaryAccent,
             width: 300,
             height: 400
           }}

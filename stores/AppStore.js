@@ -1,7 +1,5 @@
 import React from "react";
 import { observable, computed, asStructure } from "mobx";
-import defaultOptions from "../defaultOptions";
-import IntroScreen from "../src/screens/IntroScreen";
 import colors from "../src/styles/colors";
 import policies from "../data/policies";
 import coverages from "../data/coverage";
@@ -16,13 +14,6 @@ class AppStore {
   @observable parseAppId: string = "microumbrella";
   @observable
   parseServerURL: string = "https://api-dev.microumbrella.com/parse";
-  @observable
-  renderIntroScreen = ({ navigation }) => (
-    <IntroScreen
-      navigation={navigation}
-      screenProps={{ rootNavigation: navigation }}
-    />
-  );
   @observable colors: { [string]: string } = colors;
   @observable policies: Array<Policy> = policies;
   @observable coverages: { [string]: Coverage } = coverages;

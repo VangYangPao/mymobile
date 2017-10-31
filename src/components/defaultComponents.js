@@ -1,6 +1,8 @@
+// @flow
 import React, { Component } from "react";
 import { StyleSheet, Text as DefaultText } from "react-native";
-import colors from "../styles/colors";
+import AppStore from "../../stores/AppStore";
+const colors = AppStore.colors;
 
 export class Text extends Component {
   render() {

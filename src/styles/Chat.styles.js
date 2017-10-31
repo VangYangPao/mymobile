@@ -1,15 +1,16 @@
-import colors from "../styles/colors";
+import AppStore from "../../stores/AppStore";
+const colors = AppStore.colors;
 
 export default (styles = {
   textInput: {
     backgroundColor: colors.softBorderLine
   },
   sendButton: {
-    color: colors.primaryOrange
+    color: colors.primaryAccent
   },
   bubbleLeft: {
     borderRadius: 15,
-    backgroundColor: colors.primaryOrange
+    backgroundColor: colors.primaryAccent
   },
   messageTextLeft: {
     textDecorationLine: "none",

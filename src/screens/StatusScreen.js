@@ -19,7 +19,7 @@ import { NavigationActions } from "react-navigation";
 import AppStore from "../../stores/AppStore";
 import { getDateStr, generateID } from "../utils";
 import { Text } from "../components/defaultComponents";
-import colors from "../styles/colors";
+const colors = AppStore.colors;
 import Button from "../components/Button";
 
 type Section = { title: string, key: string };
@@ -116,7 +116,7 @@ export default class StatusScreen extends Component {
         url,
         title
       },
-      { tintColor: colors.primaryOrange, dialogTitle: title }
+      { tintColor: colors.primaryAccent, dialogTitle: title }
     );
   }
 
@@ -381,7 +381,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingVertical: 20,
     paddingHorizontal: 15,
-    backgroundColor: colors.primaryOrange
+    backgroundColor: colors.primaryAccent
   },
   policyStatusText: { fontSize: 18, fontWeight: "400" },
   policyStatusTextActive: { color: "green" },

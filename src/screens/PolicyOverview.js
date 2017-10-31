@@ -4,10 +4,10 @@ import { StyleSheet, TouchableOpacity, View } from "react-native";
 import VectorDrawableView from "../components/VectorDrawableView";
 
 import AppStore from "../../stores/AppStore";
+const colors = AppStore.colors;
 import Page from "../components/Page";
 import PolicyPrice from "../components/PolicyPrice";
 import { Text } from "../components/defaultComponents";
-import colors from "../styles/colors";
 
 class CoverageItem extends Component {
   constructor(props) {

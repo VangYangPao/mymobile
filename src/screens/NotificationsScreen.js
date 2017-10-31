@@ -12,7 +12,8 @@ import {
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 import { Text } from "../components/defaultComponents";
-import colors from "../styles/colors";
+import AppStore from "../../stores/AppStore";
+const colors = AppStore.colors;
 
 const SCREEN_TITLE = "Notifications";
 

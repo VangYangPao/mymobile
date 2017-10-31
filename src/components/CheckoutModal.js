@@ -18,7 +18,8 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import { CreditCardInput } from "react-native-credit-card-input";
 
 import { Text } from "./defaultComponents";
-import colors from "../styles/colors";
+import AppStore from "../../stores/AppStore";
+const colors = AppStore.colors;
 import Button from "./Button";
 
 const windowWidth = Dimensions.get("window").width;

@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from "react";
 import {
   AppRegistry,
@@ -12,7 +13,8 @@ import { NavigationActions } from "react-navigation";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Ionicon from "react-native-vector-icons/Ionicons";
 
-import colors from "./styles/colors";
+import AppStore from "../stores/AppStore";
+const colors = AppStore.colors;
 
 const menuIconSizes = {
   2: 30,
@@ -81,7 +83,7 @@ export function createDrawerNavOptions(drawerLabel, iconName) {
 export const styles = StyleSheet.create({
   navigatorContainer: {
     flex: 1,
-    backgroundColor: colors.primaryOrange
+    backgroundColor: colors.primaryAccent
   },
   backgroundImage: {
     position: "absolute",

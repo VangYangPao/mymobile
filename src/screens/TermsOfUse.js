@@ -14,7 +14,8 @@ import documentStyle from "../../documents/documentStyle";
 import termsOfUseHTML from "../../documents/termsOfUse";
 import Button from "../components/Button";
 import { Text } from "../components/defaultComponents";
-import colors from "../styles/colors";
+import AppStore from "../../stores/AppStore";
+const colors = AppStore.colors;
 import { NavigationActions } from "react-navigation";
 
 export default class TermsOfUse extends Component {

@@ -11,7 +11,8 @@ import { PlansTabNavigator } from "../components/chatWidgets";
 
 import _TRAVEL_BENEFITS from "../../data/travelBenefits";
 import { Text } from "./defaultComponents";
-import colors from "../styles/colors";
+import AppStore from "../../stores/AppStore";
+const colors = AppStore.colors;
 import Button from "./Button";
 
 type TravelPlans = "basic" | "enhanced" | "superior";
@@ -274,7 +275,7 @@ export default class TravelPlansView extends Component {
 const styles = StyleSheet.create({
   readMoreText: {
     margin: 15,
-    color: colors.primaryOrange,
+    color: colors.primaryAccent,
     fontSize: 17
   },
   selectPlanButton: {

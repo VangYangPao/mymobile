@@ -6,7 +6,8 @@ var { Dimensions, StyleSheet, TouchableOpacity, View, Animated } = ReactNative;
 import { NavigationActions } from "react-navigation";
 
 import { Text } from "./defaultComponents";
-import colors from "../styles/colors";
+import AppStore from "../../stores/AppStore";
+const colors = AppStore.colors;
 
 var deviceWidth = Dimensions.get("window").width;
 var DOT_SIZE = 6;
@@ -20,7 +21,7 @@ var styles = StyleSheet.create({
     flexDirection: "row"
   },
   buttonText: {
-    color: colors.primaryOrange,
+    color: colors.primaryAccent,
     fontSize: 18
   },
   indicators: {
@@ -51,7 +52,7 @@ var styles = StyleSheet.create({
     width: DOT_SIZE,
     height: DOT_SIZE,
     borderRadius: DOT_SIZE / 2,
-    backgroundColor: colors.primaryOrange,
+    backgroundColor: colors.primaryAccent,
     margin: DOT_SPACE,
     bottom: 0
   },

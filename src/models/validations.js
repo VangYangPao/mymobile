@@ -204,6 +204,7 @@ export function validateOneAnswer(
   var validateFunc;
   for (var i = 0; i < responseTypes.length; i++) {
     validateFunc = TypeValidators[responseTypes[i]];
+    console.log(responseTypes, i);
     const response = validateFunc(answer, answers);
     if (!response.isValid) return response;
   }

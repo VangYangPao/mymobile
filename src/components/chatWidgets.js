@@ -29,10 +29,10 @@ import VectorDrawableView from "./VectorDrawableView";
 import ModalPicker from "react-native-modal-picker";
 
 import AppStore from "../../stores/AppStore";
+const colors = AppStore.colors;
 import COVERAGE_DURATIONS from "../../data/coverageDurations";
 import RangeSlider from "./RangeSlider";
 import { Text } from "./defaultComponents";
-import colors from "../styles/colors";
 import { getDateStr, addCommas, showAlert } from "../utils";
 import Button from "./Button";
 import {
@@ -95,7 +95,7 @@ export class MyDatePicker extends Component {
             marginLeft: 36
           },
           btnTextConfirm: {
-            color: colors.primaryOrange
+            color: colors.primaryAccent
           }
         }}
         onDateChange={this.onPickDate.bind(this)}
@@ -749,7 +749,7 @@ export class TravellerTableInput extends Component {
           >
             <Icon
               size={sideIconSize}
-              style={{ color: colors.primaryOrange, marginRight: 15 }}
+              style={{ color: colors.primaryAccent, marginRight: 15 }}
               name="add-circle-outline"
             />
             <Text style={{ flex: 1, fontSize: 16 }}>ADD NEW TRAVELLER</Text>
@@ -1209,7 +1209,7 @@ export class PlansTabNavigator extends Component {
       tabBarPosition: "top",
       tabBarOptions: {
         upperCaseLabel: true,
-        activeTintColor: colors.primaryOrange,
+        activeTintColor: colors.primaryAccent,
         inactiveTintColor: colors.primaryText,
         style: tabContainerStyle,
         tabStyle: tabStyles.tabItem,
@@ -1505,7 +1505,7 @@ const styles = StyleSheet.create({
   },
   actionButtonContainer: {
     flex: 1,
-    backgroundColor: colors.primaryOrange,
+    backgroundColor: colors.primaryAccent,
     height: 44
   },
   confirmButtonContainer: {

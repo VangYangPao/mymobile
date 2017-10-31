@@ -8,7 +8,8 @@ import {
 } from "react-native";
 
 import { Text } from "./defaultComponents";
-import colors from "../styles/colors";
+import AppStore from "../../stores/AppStore";
+const colors = AppStore.colors;
 
 const buttonBorderRadius = 5;
 
@@ -44,7 +45,7 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 10,
     borderRadius: buttonBorderRadius,
-    backgroundColor: colors.primaryOrange
+    backgroundColor: colors.primaryAccent
   },
   buttonText: {
     color: "white",

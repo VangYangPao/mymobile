@@ -9,7 +9,8 @@ import {
 } from "react-native";
 
 import { Text } from "./defaultComponents";
-import colors from "../styles/colors";
+import AppStore from "../../stores/AppStore";
+const colors = AppStore.colors;
 
 export default class PolicyPrice extends Component {
   props: {
@@ -88,7 +89,7 @@ const styles = StyleSheet.create({
     width: PRICE_CONTAINER_SIZE,
     marginVertical: 13,
     borderRadius: PRICE_CONTAINER_SIZE / 2,
-    backgroundColor: colors.primaryOrange
+    backgroundColor: colors.primaryAccent
   },
   price: {
     flexDirection: "row",
@@ -110,7 +111,7 @@ const styles = StyleSheet.create({
     height: PRICE_DECIMAL_CONTAINER_SIZE,
     width: PRICE_DECIMAL_CONTAINER_SIZE,
     borderRadius: PRICE_DECIMAL_CONTAINER_SIZE / 2,
-    backgroundColor: colors.primaryOrange
+    backgroundColor: colors.primaryAccent
   },
   priceDuration: {
     fontSize: 25

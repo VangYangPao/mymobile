@@ -9,7 +9,8 @@ import DatePicker from "react-native-datepicker";
 import moment from "moment";
 
 import { backButtonNavOptions } from "../navigations";
-import colors from "../styles/colors";
+import AppStore from "../../stores/AppStore";
+const colors = AppStore.colors;
 import { Text } from "../components/defaultComponents";
 import { showAlert } from "../utils";
 
@@ -101,7 +102,7 @@ export default class TableScreen extends Component {
               dateInput: styles.dateInput,
               dateText: [styles.selectText, styles.selectTextResult],
               btnTextConfirm: {
-                color: colors.primaryOrange
+                color: colors.primaryAccent
               }
             }}
             onDateChange={dateStr => {
@@ -207,7 +208,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white"
   },
   modalOptionText: {
-    color: colors.primaryOrange
+    color: colors.primaryAccent
   },
   dateInput: {
     alignItems: "flex-end",
@@ -230,7 +231,7 @@ const styles = StyleSheet.create({
   },
   headerRight: {
     marginRight: 15,
-    color: colors.primaryOrange,
+    color: colors.primaryAccent,
     fontWeight: "500",
     fontSize: 16
   },

@@ -11,8 +11,8 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import VectorDrawableView from "./VectorDrawableView";
 
 import { Text } from "./defaultComponents";
-import colors from "../styles/colors";
 import AppStore from "../../stores/AppStore";
+const colors = AppStore.colors;
 import { addCommas } from "../utils";
 
 class Policy extends Component {

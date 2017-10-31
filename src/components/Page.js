@@ -6,7 +6,8 @@ import {
   InteractionManager,
   Animated
 } from "react-native";
-import colors from "../styles/colors";
+import AppStore from "../../stores/AppStore";
+const colors = AppStore.colors;
 
 export default class Page extends Component {
   constructor(props) {

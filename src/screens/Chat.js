@@ -61,7 +61,7 @@ import TravelPlansView from "../components/TravelPlansView";
 // import TravelInsurancePlanCarousel from "./TravelInsurancePlanCarousel";
 import { Text } from "../components/defaultComponents";
 import PolicyChoice from "../components/PolicyChoice";
-import colors from "../styles/colors";
+const colors = AppStore.colors;
 import { validateAnswer } from "../models/validations";
 import Button from "../components/Button";
 import CHAT_STYLES from "../styles/Chat.styles";
@@ -1414,7 +1414,7 @@ const styles = StyleSheet.create({
   idNumberTypeText: {
     marginLeft: 7,
     marginTop: Platform.select({ ios: -5, android: 0 }),
-    color: colors.primaryOrange,
+    color: colors.primaryAccent,
     fontSize: 15
   },
   datetimeInput: {},

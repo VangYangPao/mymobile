@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 
 import { Text } from "./defaultComponents";
-import colors from "../styles/colors";
+import AppStore from "../../stores/AppStore";
+const colors = AppStore.colors;
 
 export default class Footer extends Component {
   render() {
@@ -33,7 +34,7 @@ export default class Footer extends Component {
 
 const styles = StyleSheet.create({
   footerPurchase: {
-    backgroundColor: colors.primaryOrange
+    backgroundColor: colors.primaryAccent
   },
   footerGoBackText: {
     color: colors.primaryText

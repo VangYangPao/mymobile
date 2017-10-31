@@ -13,7 +13,8 @@ import VectorDrawableView from "../components/VectorDrawableView";
 
 import { Text } from "../components/defaultComponents";
 import Button from "../components/Button";
-import colors from "../styles/colors";
+import AppStore from "../../stores/AppStore";
+const colors = AppStore.colors;
 import PageIndicator from "../components/PageIndicator";
 
 export default class IntroScreen extends Component {
@@ -196,7 +197,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
     fontSize: 20,
     fontWeight: "600",
-    color: colors.primaryOrange
+    color: colors.primaryAccent
   },
   appNameContainer: {
     flex: appNamePercentage

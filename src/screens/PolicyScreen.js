@@ -16,7 +16,8 @@ import Footer from "../components/Footer";
 import ChatScreenWrapper from "./Chat";
 import PolicyOverview from "./PolicyOverview";
 import CoveragePage from "../components/Coverage";
-import colors from "../styles/colors";
+import AppStore from "../../stores/AppStore";
+const colors = AppStore.colors;
 import { ENV } from "react-native-dotenv";
 import tabStyles from "../styles/TabBar.styles";
 
@@ -34,7 +35,7 @@ const PlanTabNavigator = TabNavigator(
     tabBarPosition: "top",
     tabBarOptions: {
       upperCaseLabel: true,
-      activeTintColor: colors.primaryOrange,
+      activeTintColor: colors.primaryAccent,
       inactiveTintColor: colors.primaryText,
       style: tabStyles.tabContainer,
       labelStyle: tabStyles.tabLabel,
@@ -106,7 +107,7 @@ export default class PolicyScreen extends Component {
 
 const styles = StyleSheet.create({
   tabIndicator: {
-    backgroundColor: colors.primaryOrange,
+    backgroundColor: colors.primaryAccent,
     height: 3
   },
   tabLabel: {

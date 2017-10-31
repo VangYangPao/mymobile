@@ -15,7 +15,8 @@ import Page from "../components/Page";
 import PolicyPrice from "../components/PolicyPrice";
 import { getDateStr } from "../utils";
 import Button from "../components/Button";
-import colors from "../styles/colors";
+import AppStore from "../../stores/AppStore";
+const colors = AppStore.colors;
 import OverlayModal from "../components/OverlayModal";
 
 export default class PolicyDetails extends Component {

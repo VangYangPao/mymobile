@@ -1,4 +1,5 @@
-import colors from "../styles/colors";
+import AppStore from "../../stores/AppStore";
+const colors = AppStore.colors;
 export default (styles = {
   tabItem: {
     borderLeftWidth: 1,
@@ -6,7 +7,7 @@ export default (styles = {
     borderColor: colors.softBorderLine
   },
   tabIndicator: {
-    backgroundColor: colors.primaryOrange,
+    backgroundColor: colors.primaryAccent,
     height: 4
   },
   tabLabel: {

@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import Slider from "react-native-slider";
 
-import colors from "../styles/colors";
+import AppStore from "../../stores/AppStore";
+const colors = AppStore.colors;
 
 export default class RangeSlider extends Component {
   constructor(props) {
@@ -65,8 +66,8 @@ export default class RangeSlider extends Component {
       value: this.state.currentIndex,
       step: 1,
       maximumTrackTintColor: colors.borderLine,
-      minimumTrackTintColor: colors.primaryOrange,
-      thumbTintColor: colors.primaryOrange,
+      minimumTrackTintColor: colors.primaryAccent,
+      thumbTintColor: colors.primaryAccent,
       thumbStyle: styles.thumb,
       trackStyle: styles.track
     };
@@ -105,7 +106,7 @@ const styles = StyleSheet.create({
     paddingRight: 0
   },
   activeTrackStep: {
-    backgroundColor: colors.primaryOrange
+    backgroundColor: colors.primaryAccent
   },
   trackStep: {
     height: THUMB_SIZE,
@@ -115,7 +116,7 @@ const styles = StyleSheet.create({
   },
   activeLabel: {
     fontSize: 17,
-    color: colors.primaryOrange
+    color: colors.primaryAccent
   },
   label: {
     fontWeight: "600",

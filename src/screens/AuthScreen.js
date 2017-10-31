@@ -23,7 +23,8 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import t from "tcomb-form-native";
 const Form = t.form.Form;
 
-import colors from "../styles/colors";
+import AppStore from "../../stores/AppStore";
+const colors = AppStore.colors;
 import Button from "../components/Button";
 import { generateID, showAlert } from "../utils";
 import { Text } from "../components/defaultComponents";
@@ -611,7 +612,7 @@ export default class AuthScreen extends Component {
         <View style={styles.page}>
           <StatusBar
             hidden={true}
-            backgroundColor={colors.primaryOrange}
+            backgroundColor={colors.primaryAccent}
             barStyle="light-content"
           />
           {backgroundImage}
@@ -698,6 +699,6 @@ const styles = StyleSheet.create({
   page: {
     flex: 1,
     justifyContent: "center",
-    backgroundColor: colors.primaryOrange
+    backgroundColor: colors.primaryAccent
   }
 });

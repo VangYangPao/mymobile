@@ -5,8 +5,8 @@ import Ionicon from "react-native-vector-icons/Ionicons";
 import VectorDrawableView from "./VectorDrawableView";
 
 import AppStore from "../../stores/AppStore";
+const colors = AppStore.colors;
 import { Text } from "./defaultComponents";
-import colors from "../styles/colors";
 
 export default class Coverage extends Component {
   static navigationOptions = { title: "Coverage" };
