@@ -7,8 +7,10 @@
         "test": "jest"
     },
     "dependencies": {
+        "babel-preset-react-native-stage-0": "^1.0.1",
         "exceljs": "^0.6.2",
-        "microumbrella-core": "git+ssh://git@github.com/mavenave/microumbrella-core.git",
+        "microumbrella-core": "file:microumbrella-core",
+        "mobx-react": "^4.3.3",
         "parse": "^1.10.0",
         "react": "16.0.0-alpha.6",
         "react-native": "0.44.0",
@@ -20,6 +22,7 @@
         "babel-jest": "19.0.0",
         "babel-plugin-add-module-exports": "^0.2.1",
         "babel-plugin-flow-react-proptypes": "^1.2.0",
+        "babel-plugin-transform-decorators-legacy": "^1.3.4",
         "babel-plugin-transform-function-bind": "^6.22.0",
         "babel-preset-es2015": "^6.24.1",
         "babel-preset-react-native": "1.9.1",
