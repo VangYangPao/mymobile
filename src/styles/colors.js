@@ -1,5 +1,5 @@
 export default (COLORS = {
-  primaryAccent: "red",
+  primaryAccent: "#FB8C00",
   primaryText: "#424242",
   borderLine: "#BDBDBD",
   softBorderLine: "#EEEEEE",
