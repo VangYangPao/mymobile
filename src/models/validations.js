@@ -1,5 +1,6 @@
 // @flow
 import moment from "moment";
+import { isObservableArray } from "mobx";
 
 export class ValidationResult {
   isValid: boolean;
@@ -213,7 +214,11 @@ export function validateOneAnswer(
 
 export function validateAnswer(question, answer, answers) {
   const { responseType } = question;
-  const responseTypes = [].concat(responseType);
+  const responseTypes = [].concat(
+    isObservableArray(question.responseType)
+      ? question.responseType.slice()
+      : question.responseType
+  );
   // if (Array.isArray(question.id)) {
   //   const responses = answer.map((subAnswer, idx) => {
   //     const responseType = responseTypes[idx];

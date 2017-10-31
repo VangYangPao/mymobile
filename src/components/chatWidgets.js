@@ -35,11 +35,7 @@ import RangeSlider from "./RangeSlider";
 import { Text } from "./defaultComponents";
 import { getDateStr, addCommas, showAlert } from "../utils";
 import Button from "./Button";
-import {
-  validateAnswer,
-  validateOneAnswer,
-  ValidationResult
-} from "../models/validations";
+import { validateOneAnswer, ValidationResult } from "../models/validations";
 import tabStyles from "../styles/TabBar.styles";
 
 const imageHeight = 150;

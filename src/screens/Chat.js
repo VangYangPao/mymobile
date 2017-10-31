@@ -38,6 +38,7 @@ import { template } from "lodash";
 import { NavigationActions } from "react-navigation";
 import Parse from "parse/react-native";
 
+import { computed, isObservableArray } from "mobx";
 import { observer } from "mobx-react";
 import AppStore from "../../stores/AppStore";
 import { saveNewClaim } from "../parse/claims";
@@ -150,6 +151,15 @@ const WINDOW_HEIGHT = Dimensions.get("window").height;
 
 @observer
 class ChatScreen extends Component {
+  questions: Array<any>;
+
+  @computed
+  get questions() {
+    if (this.props.questionSet) {
+      return AppStore.questionSets[this.props.questionSet];
+    }
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -174,10 +184,6 @@ class ChatScreen extends Component {
         planIndex: null
       }
     };
-
-    if (props.questionSet) {
-      this.questions = AppStore.questionSets[props.questionSet];
-    }
 
     this.renderMessage = this.renderMessage.bind(this);
     this.renderBubble = this.renderBubble.bind(this);
@@ -838,6 +844,7 @@ class ChatScreen extends Component {
 
     const handleAppendWidget = () => {
       const currentQuestion = this.questions[this.state.currentQuestionIndex];
+      console.log(currentQuestion);
       if (currentQuestion.responseType === null) {
         this.askNextQuestion();
         return;
@@ -863,7 +870,12 @@ class ChatScreen extends Component {
         appendWidget("claimPolicyNo");
         return;
       }
-      const responseTypes = [].concat(currentQuestion.responseType);
+      const responseTypes = [].concat(
+        isObservableArray(currentQuestion.responseType)
+          ? currentQuestion.responseType.slice()
+          : currentQuestion.responseType
+      );
+      console.log("responseTypes", responseTypes);
       responseTypes.forEach(type => {
         if (type === "images") appendWidget("images");
         if (type === "choice") {
