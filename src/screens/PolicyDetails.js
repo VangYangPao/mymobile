@@ -238,7 +238,7 @@ const styles = StyleSheet.create({
   },
   updateButtonText: {
     fontSize: 17,
-    color: colors.tertiaryGreen
+    color: colors.secondaryAccent
   },
   button: {
     borderWidth: 1.5,
@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
   },
   updateButton: {
     marginTop: 40,
-    borderColor: colors.tertiaryGreen
+    borderColor: colors.secondaryAccent
   },
   cancelButton: {
     borderColor: colors.errorRed

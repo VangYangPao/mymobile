@@ -1,4 +1,5 @@
 import React from "react";
+import { StyleSheet, Image } from "react-native";
 import { observable, computed, asStructure } from "mobx";
 import colors from "../src/styles/colors";
 import policies from "../data/policies";
@@ -10,17 +11,36 @@ import travelClaimQuestions from "../data/travelClaimQuestions";
 import mobileClaimQuestions from "../data/mobileClaimQuestions";
 import { QUESTION_SETS } from "../data/questions";
 
+const styles = StyleSheet.create({
+  authBackgroundImage: {
+    // flex: 1,
+    position: "absolute",
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+    width: null,
+    height: null,
+    resizeMode: "cover"
+  }
+});
+
 class AppStore {
-  @observable parseAppId: string = "microumbrella";
-  @observable
+  parseAppId: string = "microumbrella";
   parseServerURL: string = "https://api-dev.microumbrella.com/parse";
   @observable colors: { [string]: string } = colors;
-  @observable policies: Array<Policy> = policies;
-  @observable coverages: { [string]: Coverage } = coverages;
+  policies: Array<Policy> = policies;
+  coverages: { [string]: Coverage } = coverages;
 
-  @observable renderIntroScreen = () => {};
-
+  @observable introScreen = () => {};
   @observable
+  authBackgroundImage = (
+    <Image
+      source={require("../../images/background.png")}
+      style={styles.authBackgroundImage}
+    />
+  );
+
   questionSets = {
     buy: QUESTION_SETS.buy,
     claim: QUESTION_SETS.claim

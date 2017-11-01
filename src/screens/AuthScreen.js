@@ -255,7 +255,7 @@ class SignUpScreen extends Component {
                 this.tosSwitch._rctSwitch.setNativeProps({ value: val });
               }}
               value={false}
-              onTintColor={colors.tertiaryGreen}
+              onTintColor={colors.secondaryAccent}
               style={styles.tosSwitch}
             />*/}
             <View>
@@ -338,11 +338,13 @@ class LoginScreen extends Component {
       <View>
         <KeyboardAwareScrollView>
           <View style={[styles.container, { justifyContent: "center" }]}>
-            <VectorDrawableView
-              accessibilityLabel="auth__logo"
-              resourceName="ic_microumbrella_word_white"
-              style={styles.logo}
-            />
+            {AppStore.authLogo || (
+              <VectorDrawableView
+                accessibilityLabel="auth__logo"
+                resourceName="ic_microumbrella_word_white"
+                style={styles.logo}
+              />
+            )}
             {this.props.mustLoginToPurchase ? (
               <Text style={styles.mustLogin}>
                 You must login to purchase a policy.
@@ -597,12 +599,7 @@ export default class AuthScreen extends Component {
 
     let backgroundImage;
     if (this.state.renderBackgroundImage) {
-      backgroundImage = (
-        <Image
-          source={require("../../images/background.png")}
-          style={styles.backgroundImage}
-        />
-      );
+      backgroundImage = AppStore.authBackgroundImage;
     } else {
       backgroundImage = null;
     }
@@ -659,7 +656,7 @@ const styles = StyleSheet.create({
     marginBottom: 5
   },
   signinButton: {
-    backgroundColor: "#8BC34A"
+    backgroundColor: colors.secondaryAccent
   },
   signUpHeader: {
     marginBottom: 15,
@@ -685,20 +682,9 @@ const styles = StyleSheet.create({
   logo: {
     height: 40
   },
-  backgroundImage: {
-    // flex: 1,
-    position: "absolute",
-    top: 0,
-    left: 0,
-    bottom: 0,
-    right: 0,
-    width: null,
-    height: null,
-    resizeMode: "cover"
-  },
   page: {
     flex: 1,
     justifyContent: "center",
-    backgroundColor: colors.primaryAccent
+    backgroundColor: colors.authBackgroundColor
   }
 });
