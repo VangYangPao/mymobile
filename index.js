@@ -24,5 +24,16 @@ export default function createMicroUmbrellaApp(options: createAppOptionsType) {
   Parse.initialize(AppStore.parseAppId);
   Parse.serverURL = AppStore.parseServerURL;
   const MicroUmbrellaApp = require("./src/MicroUmbrellaApp").default;
+
+  if (!options.introScreen) {
+    const IntroScreen = require("./src/screens/IntroScreen").default;
+    AppStore.introScreen = ({ navigation }) => (
+      <IntroScreen
+        navigation={navigation}
+        screenProps={{ rootNavigation: navigation }}
+      />
+    );
+  }
+
   return () => <MicroUmbrellaApp />;
 }

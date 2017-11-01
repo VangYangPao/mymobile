@@ -264,12 +264,7 @@ export default class MicroUmbrellaApp extends Component {
   render() {
     const stackNavigatorScreens = {
       Intro: {
-        screen: ({ navigation }) => (
-          <IntroScreen
-            navigation={navigation}
-            screenProps={{ rootNavigation: navigation }}
-          />
-        )
+        screen: AppStore.introScreen
       },
       TermsOfUse: {
         screen: TermsOfUse

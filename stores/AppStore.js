@@ -18,6 +18,8 @@ class AppStore {
   @observable policies: Array<Policy> = policies;
   @observable coverages: { [string]: Coverage } = coverages;
 
+  @observable renderIntroScreen = () => {};
+
   @observable
   questionSets = {
     buy: QUESTION_SETS.buy,
