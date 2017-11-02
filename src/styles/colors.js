@@ -3,6 +3,7 @@ export default (COLORS = {
   primaryText: "#424242",
   borderLine: "#BDBDBD",
   softBorderLine: "#EEEEEE",
-  tertiaryGreen: "#8BC34A",
+  secondaryAccent: "#8BC34A",
+  authBackgroundColor: "#FB8C00",
   errorRed: "#F44336"
 });
