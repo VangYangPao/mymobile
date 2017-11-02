@@ -20,6 +20,7 @@ import Ionicon from "react-native-vector-icons/Ionicons";
 import { observer } from "mobx-react";
 
 import AppStore from "../stores/AppStore";
+import SplashScreen from "./screens/SplashScreen";
 import IntroScreen from "./screens/IntroScreen";
 import ChatScreenWrapper from "./screens/Chat";
 import PolicyScreen from "./screens/PolicyScreen";
@@ -257,12 +258,17 @@ export default class MicroUmbrellaApp extends Component {
 
   componentDidMount() {
     Parse.User.currentAsync().then(currentUser => {
-      this.setState({ loading: false, currentUser });
+      setTimeout(() => {
+        this.setState({ loading: false, currentUser });
+      }, 500);
     });
   }
 
   render() {
     const stackNavigatorScreens = {
+      Splash: {
+        screen: SplashScreen
+      },
       Intro: {
         screen: AppStore.introScreen
       },
@@ -281,14 +287,14 @@ export default class MicroUmbrellaApp extends Component {
       },
       Help: { screen: HelpStackNavigator }
     };
-    if (this.state.currentUser) {
-      let config = Object.assign({}, stackNavConfig);
-      config.initialRouteName = "Drawer";
-      const MyStackNavigator = StackNavigator(stackNavigatorScreens, config);
-      return <MyStackNavigator />;
-    }
     let config = Object.assign({}, stackNavConfig);
-    config.initialRouteName = "Intro";
+    if (this.state.loading) {
+      config.initialRouteName = "Splash";
+    } else if (this.state.currentUser) {
+      config.initialRouteName = "Drawer";
+    } else {
+      config.initialRouteName = "Intro";
+    }
     const MyStackNavigator = StackNavigator(stackNavigatorScreens, config);
     return <MyStackNavigator />;
   }
