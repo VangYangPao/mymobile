@@ -682,12 +682,7 @@ class ChatScreen extends Component {
           this.setState({ currentUser, answers });
           const { policy, isStartScreen, questionSet } = this.props;
           if (this.props.questionSet === "claim") {
-            const Purchase = Parse.Object.extend("Purchase");
-            const query = new Parse.Query(Purchase);
-            query.equalTo("user", currentUser);
-            query.notEqualTo("cancelled", true);
-            query.descending("createdAt");
-            query
+            AppStore.fetchPurchases(Parse, currentUser)
               .find()
               .then(policies => {
                 this.setState({ loadingPolicies: false, policies });

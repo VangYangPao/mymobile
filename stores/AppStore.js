@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, Image } from "react-native";
 import { observable, computed, asStructure } from "mobx";
+import Parse from "parse/react-native";
 import colors from "../src/styles/colors";
 import policies from "../data/policies";
 import coverages from "../data/coverage";
@@ -54,6 +55,16 @@ class AppStore {
     travel: travelClaimQuestions,
     mobile: mobileClaimQuestions
   };
+
+  @observable
+  fetchPurchases(currentUser) {
+    const Purchase = Parse.Object.extend("Purchase");
+    const query = new Parse.Query(Purchase);
+    query.equalTo("user", currentUser);
+    query.notEqualTo("cancelled", true);
+    query.descending("createdAt");
+    return query;
+  }
 
   pushClaimQuestionsOfType(policyType: string) {
     const questionSet = this.claimQuestionSets[policyType];
