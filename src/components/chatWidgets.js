@@ -826,7 +826,7 @@ export class MultiInput extends Component {
     }));
     const validationResponses = inputs.map((input, idx) => {
       const column = this.props.columns[idx];
-      const responseTypes = [].concat(column.responseType);
+      const responseTypes = [].concat(column.responseType.slice());
       if (responseTypes.indexOf("choice") !== -1) {
         const choiceValues = column.choices.map(c => c.value);
         if (choiceValues.indexOf(input.value) === -1) {

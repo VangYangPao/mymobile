@@ -17,7 +17,6 @@ import {
 } from "react-navigation";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Ionicon from "react-native-vector-icons/Ionicons";
-import { observer } from "mobx-react";
 
 import AppStore from "../stores/AppStore";
 import SplashScreen from "./screens/SplashScreen";
@@ -246,7 +245,6 @@ let stackNavConfig = {
 //   stackNavConfig["initialRouteName"] = "Intro";
 // }
 
-@observer
 export default class MicroUmbrellaApp extends Component {
   props: any;
   state: { loading: boolean, currentUser: any };

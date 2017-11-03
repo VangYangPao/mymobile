@@ -184,6 +184,11 @@ class ChatScreen extends Component {
         planIndex: null
       }
     };
+    if (AppStore.messages.length) {
+      showAlert("reusing old messages");
+      this.state.messages = AppStore.messages.slice();
+    }
+    AppStore.messages = [];
 
     this.renderMessage = this.renderMessage.bind(this);
     this.renderBubble = this.renderBubble.bind(this);
@@ -839,7 +844,6 @@ class ChatScreen extends Component {
 
     const handleAppendWidget = () => {
       const currentQuestion = this.questions[this.state.currentQuestionIndex];
-      console.log(currentQuestion);
       if (currentQuestion.responseType === null) {
         this.askNextQuestion();
         return;
@@ -870,7 +874,6 @@ class ChatScreen extends Component {
           ? currentQuestion.responseType.slice()
           : currentQuestion.responseType
       );
-      console.log("responseTypes", responseTypes);
       responseTypes.forEach(type => {
         if (type === "images") appendWidget("images");
         if (type === "choice") {
@@ -903,6 +906,12 @@ class ChatScreen extends Component {
     };
 
     this.sendNewMessage(nextQuestionText, handleAfterSendMessage);
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    if (!isEqual(this.state.messages, nextState.messages)) {
+      AppStore.messages = nextState.messages;
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -1360,7 +1369,7 @@ class ChatScreen extends Component {
         {this.state.loadingSave ? loadingModal : null}
         <GiftedChat
           ref="chat"
-          messages={this.state.messages}
+          messages={this.state.messages /*AppStore.messages.slice()*/}
           onSend={this.handleUserSend}
           user={CUSTOMER_USER}
           onLongPress={() => {}}
