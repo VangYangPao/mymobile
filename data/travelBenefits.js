@@ -61,7 +61,7 @@ export default (benefits = [
         ]
       },
       {
-        title: "Compassionate Visitᵃ",
+        title: "Compassionate Visit",
         benefitPayable: {
           basic: "$3,000",
           enhanced: "$5,000",
@@ -69,7 +69,7 @@ export default (benefits = [
         }
       },
       {
-        title: "Repatriation of Mortal Remainsᵃ",
+        title: "Repatriation of Mortal Remains",
         benefitPayable: {
           basic: "Unlimited",
           enhanced: "Unlimited",
@@ -85,7 +85,7 @@ export default (benefits = [
         }
       },
       {
-        title: "Return of Minor Childrenᵃ",
+        title: "Return of Minor Children",
         benefitPayable: {
           basic: "$3,000",
           enhanced: "$5,000",
@@ -93,7 +93,7 @@ export default (benefits = [
         }
       },
       {
-        title: "Emergency Medical Evacuationᵃ",
+        title: "Emergency Medical Evacuation",
         benefitPayable: {
           basic: "Unlimited",
           enhanced: "Unlimited",
