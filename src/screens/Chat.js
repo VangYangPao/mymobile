@@ -8,6 +8,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   TouchableHighlight,
+  TouchableWithoutFeedback,
   View,
   ScrollView,
   Platform,
@@ -184,10 +185,10 @@ class ChatScreen extends Component {
         planIndex: null
       }
     };
-    if (AppStore.messages.length) {
-      showAlert("reusing old messages");
-      this.state.messages = AppStore.messages.slice();
-    }
+    // if (AppStore.messages.length) {
+    //   showAlert("reusing old messages");
+    //   this.state.messages = AppStore.messages.slice();
+    // }
     AppStore.messages = [];
 
     this.renderMessage = this.renderMessage.bind(this);
@@ -1243,6 +1244,9 @@ class ChatScreen extends Component {
       ) {
         return <Composer placeholder="Type your message here..." {...props} />;
       }
+      const TouchableComponent = props => (
+        <TouchableHighlight {...props} accessibilityLabel="chat__datepicker" />
+      );
       return (
         <MyDatePicker
           pastOnly={currentQuestion.pastOnly}
@@ -1250,6 +1254,7 @@ class ChatScreen extends Component {
           minDate={minDateFrom}
           mode={pickerMode}
           onPickDate={this.handlePickDate}
+          TouchableComponent={TouchableComponent}
         />
       );
     }
@@ -1299,6 +1304,7 @@ class ChatScreen extends Component {
       };
       return (
         <TouchableOpacity
+          accessibilityLabel="chat__action-picker"
           onPress={() =>
             this.setState({
               renderActionsPicker: !this.state.renderActionsPicker
