@@ -70,7 +70,6 @@ export class MyDatePicker extends Component {
     const placeholder = "SELECT DATE";
     return (
       <DatePicker
-        accessibilityLabel="chat__datepicker"
         style={{ flex: 1, paddingHorizontal: 10 }}
         date={this.state.date}
         mode={mode}
@@ -752,6 +751,7 @@ export class TravellerTableInput extends Component {
           </View>
         </TouchableOpacity>
         <Button
+          accessibilityLabel="chat__submit-traveller"
           style={{
             height: 60,
             borderTopLeftRadius: 0,
@@ -932,6 +932,7 @@ export class MultiInput extends Component {
       if (responseTypes.indexOf("name") !== -1) autoCapitalize = "words";
       inputElement = (
         <TextInput
+          accessibilityLabel={"chat__input-" + input.id}
           key={input.id}
           style={styles.textInput}
           placeholder={input.label}
@@ -1001,7 +1002,11 @@ export class MultiInput extends Component {
 
     if (!this.props.submitButtonComponent) {
       button = (
-        <Button onPress={this.handleSubmit} style={styles.sendButtonContainer}>
+        <Button
+          accessibilityLabel="chat__multiinput-send"
+          onPress={this.handleSubmit}
+          style={styles.sendButtonContainer}
+        >
           SEND
         </Button>
       );

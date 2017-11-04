@@ -108,15 +108,9 @@ class TravelPlanTab extends Component {
     const coverageStyle = {
       padding: 15
     };
-    const additionalStyle = coverage.sections
-      ? {}
-      : {
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center"
-        };
+    const additionalStyle = coverage.sections ? {} : styles.section;
     return (
-      <View key={coverage.title} style={[coverageStyle, additionalStyle]}>
+      <View key={coverage.title} style={[coverageStyle, styles.section]}>
         <Text style={styles.coverageTitle}>{coverage.title}</Text>
         {sections}
         {benefitPayable}

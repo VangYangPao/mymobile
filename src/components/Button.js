@@ -27,6 +27,7 @@ export default class Button extends Component {
     }
     return (
       <TouchableHighlight
+        accessibilityLabel={this.props.accessibilityLabel}
         onPress={this.props.onPress}
         activeOpacity={0.7}
         style={[styles.container, this.props.containerStyle]}
