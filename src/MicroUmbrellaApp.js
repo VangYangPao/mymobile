@@ -42,7 +42,13 @@ import {
   MENU_ICON_PADDING_LEFT,
   MENU_ICON_PADDING_RIGHT
 } from "./navigations";
-import { ENV, SERVER_URL } from "react-native-dotenv";
+import {
+  ENV,
+  SERVER_URL,
+  SPLASH_LOAD_TIME as _SPLASH_LOAD_TIME
+} from "react-native-dotenv";
+
+const SPLASH_LOAD_TIME = parseInt(_SPLASH_LOAD_TIME, 10);
 
 const colors = AppStore.colors;
 
@@ -258,7 +264,7 @@ export default class MicroUmbrellaApp extends Component {
     Parse.User.currentAsync().then(currentUser => {
       setTimeout(() => {
         this.setState({ loading: false, currentUser });
-      }, 500);
+      }, SPLASH_LOAD_TIME);
     });
   }
 

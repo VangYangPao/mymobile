@@ -17,6 +17,7 @@ import {
   Bubble,
   Time
 } from "react-native-gifted-chat";
+import HTMLView from "react-native-htmlview";
 import { StackNavigator } from "react-navigation";
 import { Text } from "../components/defaultComponents";
 import Page from "../components/Page";
@@ -49,6 +50,7 @@ export default class HelpScreen extends Component {
     this.state = { messages: [], composerText: "", suggestedArticles: [] };
     this.handleUserSend = this.handleUserSend.bind(this);
     this.handleSelectSuggestion = this.handleSelectSuggestion.bind(this);
+    this.renderMessageText = this.renderMessageText.bind(this);
     this.renderComposer = this.renderComposer.bind(this);
     this.renderFooter = this.renderFooter.bind(this);
     this.renderChatFooter = this.renderChatFooter.bind(this);
@@ -57,14 +59,17 @@ export default class HelpScreen extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.composerText !== prevState.composerText) {
-      searchArticles(this.state.composerText).then(res => {
-        if (this.state.composerText === "") {
-          this.setState({ suggestedArticles: [] });
-          return;
-        }
-        this.setState({ suggestedArticles: res.results });
-      });
+    if (
+      this.state.composerText !== prevState.composerText &&
+      /\S/.test(this.state.composerText)
+    ) {
+      searchArticles(this.state.composerText)
+        .then(res => {
+          this.setState({ suggestedArticles: res.results });
+        })
+        .catch(err => {
+          console.error(err);
+        });
     }
   }
 
@@ -127,6 +132,7 @@ export default class HelpScreen extends Component {
       }));
       return (
         <SuggestionList
+          searchValue={this.state.composerText}
           items={articles}
           onSelectSuggestion={this.handleSelectSuggestion}
         />
@@ -192,6 +198,14 @@ export default class HelpScreen extends Component {
     );
   }
 
+  renderMessageText(props) {
+    console.log(props.currentMessage);
+    if (props.currentMessage.isArticleBody) {
+      return <HTMLView value={props.currentMessage.text} />;
+    }
+    return <MessageText {...props} />;
+  }
+
   renderMessage(props) {
     const messageContainerStyle = {
       left: {
@@ -204,39 +218,39 @@ export default class HelpScreen extends Component {
     return <Message {...props} containerStyle={messageContainerStyle} />;
   }
 
-  renderCustomView(props) {
-    const currentMessage = props.currentMessage;
-    const injectcss = `
-    <style>
-    body {
-      background-color: ${colors.primaryAccent};
-      font-family: Arial;
-      font-size: 15px;
-      color: white;
-    }
-    img {
-      width: 200px;
-    }
-    </style>`;
-    if (currentMessage.isArticleBody) {
-      const text = currentMessage.text.replace(
-        new RegExp("////", "g"),
-        "https://"
-      );
-      return (
-        <WebView
-          contentInset={{ top: 10, bottom: 10, left: 10, right: 10 }}
-          style={{
-            backgroundColor: colors.primaryAccent,
-            width: 300,
-            height: 400
-          }}
-          source={{ html: injectcss + text }}
-          scalesPageToFit={true}
-        />
-      );
-    }
-  }
+  // renderCustomView(props) {
+  //   const currentMessage = props.currentMessage;
+  //   const injectcss = `
+  //   <style>
+  //   body {
+  //     background-color: ${colors.primaryAccent};
+  //     font-family: Arial;
+  //     font-size: 15px;
+  //     color: white;
+  //   }
+  //   img {
+  //     width: 200px;
+  //   }
+  //   </style>`;
+  //   if (currentMessage.isArticleBody) {
+  //     const text = currentMessage.text.replace(
+  //       new RegExp("////", "g"),
+  //       "https://"
+  //     );
+  //     return (
+  //       <WebView
+  //         contentInset={{ top: 10, bottom: 10, left: 10, right: 10 }}
+  //         style={{
+  //           backgroundColor: colors.primaryAccent,
+  //           width: 300,
+  //           height: 400
+  //         }}
+  //         source={{ html: injectcss + text }}
+  //         scalesPageToFit={true}
+  //       />
+  //     );
+  //   }
+  // }
 
   renderBubble(props) {
     // if (props.currentMessage.isArticleBody) {
@@ -284,7 +298,6 @@ export default class HelpScreen extends Component {
     //   return (
     //     <View style={[bubbleStyle[props.position].container]}>
     //       <View style={[bubbleStyle[props.position].wrapper]} />
-    //       {this.renderCustomView(props)}
     //     </View>
     //   );
     // }
@@ -300,7 +313,12 @@ export default class HelpScreen extends Component {
   }
 
   renderMessageText(props) {
-    if (props.currentMessage.isArticleBody) return null;
+    if (props.currentMessage.isArticleBody) {
+      console.log(props.currentMessage.text);
+      return (
+        <HTMLView value={props.currentMessage.text} stylesheet={htmlStyles} />
+      );
+    }
     return (
       <MessageText
         {...props}
@@ -341,6 +359,18 @@ export default class HelpScreen extends Component {
 }
 
 const imageDim = 150;
+
+const htmlStyles = StyleSheet.create({
+  p: {
+    fontSize: 16,
+    lineHeight: 20,
+    marginTop: 5,
+    marginBottom: 5,
+    marginLeft: 10,
+    marginRight: 10,
+    color: "white"
+  }
+});
 
 const styles = StyleSheet.create({
   instructions: {
