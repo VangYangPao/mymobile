@@ -207,10 +207,10 @@ const MyDrawerNavigator = DrawerNavigator(
     },
     MyPolicies: {
       screen: StatusStackNavigator
+    },
+    Notification: {
+      screen: NotificationsStackNavigator
     }
-    // Notification: {
-    //   screen: NotificationsStackNavigator
-    // }
     // Profile: {
     //   screen: StatusStackNavigator,
     //   navigationOptions: createDrawerNavOptions("My Profile", "account-circle")
