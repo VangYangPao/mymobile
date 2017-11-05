@@ -12,39 +12,58 @@ from appium.webdriver.common.touch_action import TouchAction
 
 test_dir = os.path.dirname(os.path.realpath(__file__))
 root_dir = os.path.abspath(os.path.join(test_dir, os.pardir))
+
+build_type = sys.argv[1]
+
+if (build_type != 'release' and build_type != 'debug'):
+    sys.exit()
+
+apk_type = 'app-debug.apk'
+if build_type == 'release':
+    apk_type = 'app-release.apk'
+
+ipa_type = 'Debug-iphonesimulator'
+if build_type == 'release':
+    ipa_type = 'Release-iphonesimulator'
+
 android_app_path = os.path.join(
-    root_dir, 'android', 'app', 'build', 'outputs', 'apk', 'app-debug.apk')
+    root_dir, 'android', 'app', 'build', 'outputs', 'apk', apk_type)
 ios_app_path = os.path.join(root_dir, 'ios', 'build', 'Build',
-                            'Products', 'Debug-iphonesimulator',
+                            'Products', ipa_type,
                             'Microsurance.app')
 
 LOGIN_EMAIL = 'x@aa.com'
 LOGIN_PASSWORD = '1234abcd'
 
 local_caps = {
-    # 'android': {
-    #     'platformName': 'Android',
-    #     'platformVersion': '7.0',
-    #     'deviceName': 'Redmi',
-    #     'app': android_app_path
-    # },
+    'android': {
+        'platformName': 'Android',
+        'platformVersion': '7.0',
+        'deviceName': 'Redmi',
+        'app': android_app_path
+    },
     # 'android': {
     #     'platformName': 'Android',
     #     'platformVersion': '6.0',
     #     'deviceName': 'Redmi',
     #     'app': android_app_path
     # },
-    'iPhone 5s': {
-        'platformName': 'iOS',
-        'platformVersion': '10.3',
-        'deviceName': 'iPhone 5s',
-        'app': ios_app_path
-    }
+    # 'iPhone 5s': {
+    #     'platformName': 'iOS',
+    #     'platformVersion': '10.3',
+    #     'deviceName': 'iPhone 5s',
+    #     'app': ios_app_path
+    # }
 }
 
 current_cap = {}
 
 LOCAL_TIMEOUT = 10
+
+LOAD_TIME_MULTIPLY = 2
+
+if build_type == 'debug':
+    LOAD_TIME_MULTIPLY = 1
 
 
 class AppiumTests(unittest.TestCase):
@@ -72,7 +91,7 @@ class AppiumTests(unittest.TestCase):
         sleep(3)
         signin_el = self.find_accessibility('intro__sign-in')
         self.tap_on(signin_el)
-        sleep(2)
+        sleep(2 * LOAD_TIME_MULTIPLY)
         self.do_login_flow()
         sleep(2)
         menu_btn = self.find_accessibility('nav__menu-btn')
@@ -86,11 +105,11 @@ class AppiumTests(unittest.TestCase):
         self.assertIsNotNone(back_btn)
         purchase_btn = self.find_accessibility('policy__purchase-btn')
         self.tap_on(purchase_btn)
-        sleep(4)
+        sleep(3)
         self.do_purchase_chatbot_flow()
 
     def do_login_flow(self):
-        login_btn = self.find_accessibility('LOGIN')
+        login_btn = self.find_accessibility('auth__login-btn')
         login_email_input = self.driver.find_elements_by_accessibility_id(
             'Email')[1]  # skip label
         login_password_input = self.driver\
@@ -110,24 +129,61 @@ class AppiumTests(unittest.TestCase):
             self.assertIsNotNone(choice_el)
 
     def do_purchase_chatbot_flow(self):
+        COMPOSER_PLACEHOLDER = 'Type your message here...'
         back_btn = self.find_accessibility('nav__back-btn')
         self.assertIsNotNone(back_btn)
         plan_select_btn = self.find_accessibility('SELECT PLAN')
         self.tap_on(plan_select_btn)
-        sleep(2)
-        composer = self.find_accessibility('Type your message here...')
+        sleep(2 * LOAD_TIME_MULTIPLY)
+        composer = self.find_accessibility(COMPOSER_PLACEHOLDER)
         self.tap_on(composer)
         self.driver.set_value(composer, 'Malaysia')
-        sleep(1)
+        sleep(0.5)
         malaysia_country_suggestion = self.find_accessibility(
             'chat__suggestion-55')
         self.tap_on(malaysia_country_suggestion)
+        sleep(1 * LOAD_TIME_MULTIPLY)
+        # with open('source.txt', 'w') as f:
+        #     f.write(self.driver.page_source)
+        self.tap_on(self.find_accessibility('chat__datepicker'))
         sleep(1)
-        with open('source.txt', 'w') as f:
-            f.write(self.driver.page_source)
-        date_now_str = datetime.now().strftime('%Y-%m-%d')
-        datepicker = self.find_accessibility('chat__datepicker')
-        self.tap_on(datepicker)
+        self.tap_on(self.find_accessibility('Confirm'))
+        sleep(1 * LOAD_TIME_MULTIPLY)
+        self.tap_on(self.find_accessibility('chat__datepicker'))
+        sleep(1)
+        self.tap_on(self.find_accessibility('Confirm'))
+        sleep(1.5 * LOAD_TIME_MULTIPLY)
+        first_name_input = self.find_accessibility('chat__input-firstName')
+        last_name_input = self.find_accessibility('chat__input-lastName')
+        self.tap_on(first_name_input)
+        self.driver.set_value(first_name_input, 'Ken')
+        self.tap_on(last_name_input)
+        self.driver.set_value(last_name_input, 'Chan')
+        sleep(0.5)
+        # with open('source.txt', 'w') as f:
+        #     f.write(self.driver.page_source)
+        self.tap_on(self.find_accessibility('chat__multiinput-send'))
+        sleep(0.5)
+        self.tap_on(self.find_accessibility('chat__multiinput-send'))
+        sleep(1.5 * LOAD_TIME_MULTIPLY)
+        self.tap_on(self.find_accessibility('chat__action-picker'))
+        sleep(1)
+        self.tap_on(self.find_accessibility('chat__suggestion-passport'))
+        sleep(0.5)
+        composer = self.find_accessibility(COMPOSER_PLACEHOLDER)
+        self.tap_on(composer)
+        self.driver.set_value(composer, '9999')
+        self.tap_on(self.find_accessibility('Send'))
+        sleep(0.5 * LOAD_TIME_MULTIPLY)
+        composer = self.find_accessibility(COMPOSER_PLACEHOLDER)
+        self.tap_on(composer)
+        self.driver.set_value(composer, 'guanhao3797@gmail.com')
+        self.tap_on(self.find_accessibility('Send'))
+        sleep(1 * LOAD_TIME_MULTIPLY)
+        self.tap_on(self.find_accessibility('chat__submit-traveller'))
+        sleep(0.5 * LOAD_TIME_MULTIPLY)
+        self.tap_on(self.find_accessibility('PROCEED'))
+        sleep(10)
 
     # @timeout_decorator.timeout(20)
     # def test_signup_flow(self):
