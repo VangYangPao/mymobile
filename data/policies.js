@@ -12,6 +12,7 @@ const notCovered = [
 ];
 
 const paParseData = {
+  renewable: true,
   subclassName: "PurchaseAccident",
   endorsementFields: [
     {
@@ -62,7 +63,8 @@ export default (policies = [
         responseType: "date",
         futureOnly: true
       }
-    ]
+    ],
+    renewable: false
   },
   {
     id: "pa",
@@ -253,6 +255,7 @@ export default (policies = [
     covered: ["phoneDamage", "phoneWet"],
     notCovered: ["phoneCosmetic", "phoneWearTear", "selfInflicted"],
     subclassName: "PurchasePhone",
-    endorsementFields: []
+    endorsementFields: [],
+    renewable: true
   }
 ]);
