@@ -96,35 +96,35 @@ export const QUESTION_SETS = {
         "For the next steps, I will be asking you some questions to get you covered instantly. Please be patient with my questions. 😬",
       responseType: null
     },
-    {
-      question: "May I know your full name?",
-      responseType: "multiInput",
-      columns: [
-        {
-          label: "First name",
-          id: "firstName",
-          responseType: ["string", "name"],
-          responseLength: 60
-        },
-        {
-          label: "Last name",
-          id: "lastName",
-          responseType: ["string", "name"],
-          responseLength: 60
-        }
-      ]
-    },
+    // {
+    //   question: "May I know your full name?",
+    //   responseType: "multiInput",
+    //   columns: [
+    //     {
+    //       label: "First name",
+    //       id: "firstName",
+    //       responseType: ["string", "name"],
+    //       responseLength: 60
+    //     },
+    //     {
+    //       label: "Last name",
+    //       id: "lastName",
+    //       responseType: ["string", "name"],
+    //       responseLength: 60
+    //     }
+    //   ]
+    // },
     {
       question:
         "Nice to meet you <%= firstName %> <%= lastName %>! What's your Singaporean NRIC? Or if you're a non-Singaporean, what's your Passport number?",
       responseType: ["string", "nric"],
       id: "idNumber"
     },
-    {
-      question: "What's your email address? ✉️",
-      responseType: ["string", "email"],
-      id: "email"
-    },
+    // {
+    //   question: "What's your email address? ✉️",
+    //   responseType: ["string", "email"],
+    //   id: "email"
+    // },
     {
       question:
         "What are the details of your spouse or children travelling with you?",

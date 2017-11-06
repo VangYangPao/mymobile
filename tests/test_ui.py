@@ -36,24 +36,24 @@ LOGIN_EMAIL = 'x@aa.com'
 LOGIN_PASSWORD = '1234abcd'
 
 local_caps = {
-    'android': {
-        'platformName': 'Android',
-        'platformVersion': '7.0',
-        'deviceName': 'Redmi',
-        'app': android_app_path
-    },
+    # 'android': {
+    #     'platformName': 'Android',
+    #     'platformVersion': '7.0',
+    #     'deviceName': 'Redmi',
+    #     'app': android_app_path
+    # },
     # 'android': {
     #     'platformName': 'Android',
     #     'platformVersion': '6.0',
     #     'deviceName': 'Redmi',
     #     'app': android_app_path
     # },
-    # 'iPhone 5s': {
-    #     'platformName': 'iOS',
-    #     'platformVersion': '10.3',
-    #     'deviceName': 'iPhone 5s',
-    #     'app': ios_app_path
-    # }
+    'iPhone 5s': {
+        'platformName': 'iOS',
+        'platformVersion': '10.3',
+        'deviceName': 'iPhone 5s',
+        'app': ios_app_path
+    }
 }
 
 current_cap = {}
@@ -153,19 +153,22 @@ class AppiumTests(unittest.TestCase):
         sleep(1)
         self.tap_on(self.find_accessibility('Confirm'))
         sleep(1.5 * LOAD_TIME_MULTIPLY)
-        first_name_input = self.find_accessibility('chat__input-firstName')
-        last_name_input = self.find_accessibility('chat__input-lastName')
-        self.tap_on(first_name_input)
-        self.driver.set_value(first_name_input, 'Ken')
-        self.tap_on(last_name_input)
-        self.driver.set_value(last_name_input, 'Chan')
-        sleep(0.5)
+
+        # FIRST AND LAST NAME
+        # first_name_input = self.find_accessibility('chat__input-firstName')
+        # last_name_input = self.find_accessibility('chat__input-lastName')
+        # self.tap_on(first_name_input)
+        # self.driver.set_value(first_name_input, 'Ken')
+        # self.tap_on(last_name_input)
+        # self.driver.set_value(last_name_input, 'Chan')
+        # sleep(0.5)
         # with open('source.txt', 'w') as f:
         #     f.write(self.driver.page_source)
-        self.tap_on(self.find_accessibility('chat__multiinput-send'))
-        sleep(0.5)
-        self.tap_on(self.find_accessibility('chat__multiinput-send'))
-        sleep(1.5 * LOAD_TIME_MULTIPLY)
+        # self.tap_on(self.find_accessibility('chat__multiinput-send'))
+        # sleep(0.5)
+        # self.tap_on(self.find_accessibility('chat__multiinput-send'))
+        # sleep(1.5 * LOAD_TIME_MULTIPLY)
+
         self.tap_on(self.find_accessibility('chat__action-picker'))
         sleep(1)
         self.tap_on(self.find_accessibility('chat__suggestion-passport'))
@@ -175,11 +178,14 @@ class AppiumTests(unittest.TestCase):
         self.driver.set_value(composer, '9999')
         self.tap_on(self.find_accessibility('Send'))
         sleep(0.5 * LOAD_TIME_MULTIPLY)
-        composer = self.find_accessibility(COMPOSER_PLACEHOLDER)
-        self.tap_on(composer)
-        self.driver.set_value(composer, 'guanhao3797@gmail.com')
-        self.tap_on(self.find_accessibility('Send'))
-        sleep(1 * LOAD_TIME_MULTIPLY)
+
+        # EMAIL ADDRESS
+        # composer = self.find_accessibility(COMPOSER_PLACEHOLDER)
+        # self.tap_on(composer)
+        # self.driver.set_value(composer, 'guanhao3797@gmail.com')
+        # self.tap_on(self.find_accessibility('Send'))
+        # sleep(1 * LOAD_TIME_MULTIPLY)
+
         self.tap_on(self.find_accessibility('chat__submit-traveller'))
         sleep(0.5 * LOAD_TIME_MULTIPLY)
         self.tap_on(self.find_accessibility('PROCEED'))
