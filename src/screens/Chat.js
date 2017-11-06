@@ -681,10 +681,11 @@ class ChatScreen extends Component {
       .currentAsync()
       .then(currentUser => {
         if (currentUser) {
-          const fullName =
-            currentUser.get("firstName") + " " + currentUser.get("lastName");
           let answers = Object.assign({}, this.state.answers);
-          answers.fullName = fullName;
+          answers.firstName = currentUser.get("firstName");
+          answers.lastName = currentUser.get("lastName");
+          answers.email = currentUser.get("email");
+          const fullName = answers.firstName + " " + answers.lastName;
           this.setState({ currentUser, answers });
           const { policy, isStartScreen, questionSet } = this.props;
           if (this.props.questionSet === "claim") {
