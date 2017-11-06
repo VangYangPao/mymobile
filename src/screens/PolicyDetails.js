@@ -19,6 +19,8 @@ import Button from "../components/Button";
 import AppStore from "../../stores/AppStore";
 const colors = AppStore.colors;
 import OverlayModal from "../components/OverlayModal";
+import { endorsePolicy } from "../parse/endorsement";
+import { EndorsementType } from "../types/policies";
 
 export default class PolicyDetails extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -34,13 +36,14 @@ export default class PolicyDetails extends Component {
   };
   state: {
     loadingSubPurchase: boolean,
+    loadingText: ?string,
     subPurchase: any,
-    loadingCancel: boolean,
-    loadingUpdate: boolean
+    renewValue: boolean
   };
   handleUpdatePolicy: Function;
   handleCancelPolicy: Function;
   handleSaveUpdates: Function;
+  handleRenewChange: Function;
   renderDetailRow: Function;
 
   constructor(props: { navigation: any, policy: any, policyMetadata: any }) {
@@ -51,6 +54,7 @@ export default class PolicyDetails extends Component {
     this.handleRenewChange = this.handleRenewChange.bind(this);
     this.renderDetailRow = this.renderDetailRow.bind(this);
     this.state = {
+      loadingSubPurchase: false,
       loadingText: null,
       subPurchase: null,
       renewValue: false
@@ -76,19 +80,29 @@ export default class PolicyDetails extends Component {
     navigation.goBack();
     InteractionManager.runAfterInteractions(() => {
       this.setState({ loadingText: "Updating policy details..." });
-      const { policyMetadata } = this.props.navigation.state.params;
+      const { policy, policyMetadata } = this.props.navigation.state.params;
       const { subPurchase } = this.state;
       let { endorsementFields } = policyMetadata;
-      endorsementFields.forEach((field, idx) => {
-        const key = endorsementFields[idx].id;
-        const value = values[idx];
-        if (subPurchase.get(key) === value) {
-          return;
-        }
-        subPurchase.set(key, value);
+      let endorsementChanges: Array<
+        EndorsementType
+      > = endorsementFields.map((field, idx) => {
+        const key = field.id;
+        const oldValue = subPurchase.get(key);
+        const newValue = values[idx];
+        return { field: key, oldValue, newValue };
       });
-      subPurchase
-        .save()
+      endorsementChanges = endorsementChanges.filter(
+        (change: EndorsementType) => {
+          return change.newValue !== change.oldValue;
+        }
+      );
+      endorsePolicy(policy, endorsementChanges)
+        .then(() => {
+          endorsementChanges.forEach((change: EndorsementType) => {
+            subPurchase.set(change.field, change.newValue);
+          });
+          return subPurchase.save();
+        })
         .then(() => {
           this.setState({ loadingText: null });
           // navigation.goBack();
@@ -130,7 +144,7 @@ export default class PolicyDetails extends Component {
     });
   }
 
-  handleRenewChange(renewValue) {
+  handleRenewChange(renewValue: boolean) {
     this.setState({ renewValue, loadingText: "Updating policy detail..." });
     const { policy: purchase } = this.props.navigation.state.params;
     purchase.set("autoRenew", renewValue);
@@ -147,8 +161,8 @@ export default class PolicyDetails extends Component {
   renderDetailRow(row: { label: string, value: any }) {
     return (
       <View key={row.value} style={styles.detailRow}>
-        <Text style={styles.detailLabel}>{row.label}</Text>
-        <Text style={styles.detailValue}>{row.value}</Text>
+        <Text style={[styles.detailText, styles.detailLabel]}>{row.label}</Text>
+        <Text style={[styles.detailText, styles.detailValue]}>{row.value}</Text>
       </View>
     );
   }
@@ -224,13 +238,16 @@ export default class PolicyDetails extends Component {
         ) : null}
         <Text style={styles.policyTitle}>{policyMetadata.title}</Text>
         <PolicyPrice
+          showFrom={false}
           pricePerMonth={policyPrice}
           minimumCoverage={"per\nmonth"}
         />
         <View>{rows.map(this.renderDetailRow)}</View>
         {policyMetadata.renewable ? (
           <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>Auto renew policy</Text>
+            <Text style={[styles.detailText, styles.detailLabel]}>
+              Auto renew policy
+            </Text>
             <Switch
               onValueChange={this.handleRenewChange}
               value={this.state.renewValue}
@@ -278,11 +295,15 @@ const styles = StyleSheet.create({
   cancelButton: {
     borderColor: colors.errorRed
   },
+  detailText: {
+    flex: 1,
+    fontSize: 16
+  },
   detailLabel: {
-    fontSize: 16,
     fontWeight: "bold"
   },
   detailValue: {
+    flex: 1,
     fontSize: 16,
     textAlign: "right"
   },

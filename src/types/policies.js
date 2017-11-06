@@ -26,3 +26,9 @@ export type Policy = {
   subclassName: string,
   endorsementFields: Array<any>
 };
+
+export type EndorsementType = {
+  field: string,
+  oldValue: any,
+  newValue: any
+};
