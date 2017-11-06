@@ -19,7 +19,8 @@ import Button from "../components/Button";
 import AppStore from "../../stores/AppStore";
 const colors = AppStore.colors;
 import OverlayModal from "../components/OverlayModal";
-import { endorsePolicy } from "../parse/endorsement";
+import { saveNewEndorsement } from "../parse/endorsement";
+import { saveNonRenewal } from "../parse/non-renewal";
 import { EndorsementType } from "../types/policies";
 
 export default class PolicyDetails extends Component {
@@ -96,7 +97,7 @@ export default class PolicyDetails extends Component {
           return change.newValue !== change.oldValue;
         }
       );
-      endorsePolicy(policy, endorsementChanges)
+      saveNewEndorsement(policy, endorsementChanges)
         .then(() => {
           endorsementChanges.forEach((change: EndorsementType) => {
             subPurchase.set(change.field, change.newValue);
@@ -136,20 +137,34 @@ export default class PolicyDetails extends Component {
 
   handleCancelPolicy() {
     this.setState({ loadingText: "Cancelling policy..." });
+    const { subPurchase } = this.state;
     const { policy: purchase } = this.props.navigation.state.params;
-    purchase.set("cancelled", true);
-    purchase.save().then(() => {
-      this.setState({ loadingText: null });
-      this.props.navigation.goBack();
+    return saveNonRenewal(purchase, subPurchase).then(() => {
+      purchase.set("cancelled", true);
+      return purchase.save().then(() => {
+        this.setState({ loadingText: null });
+        this.props.navigation.goBack();
+      });
     });
   }
 
   handleRenewChange(renewValue: boolean) {
     this.setState({ renewValue, loadingText: "Updating policy detail..." });
+    const { subPurchase } = this.state;
     const { policy: purchase } = this.props.navigation.state.params;
-    purchase.set("autoRenew", renewValue);
-    purchase
-      .save()
+    return new Promise((resolve, reject) => {
+      // only save a non-renewal when the switch is off
+      if (renewValue) {
+        resolve();
+      } else {
+        const promise = saveNonRenewal(purchase, subPurchase);
+        resolve(promise);
+      }
+    })
+      .then(() => {
+        purchase.set("autoRenew", renewValue);
+        return purchase.save();
+      })
       .then(() => {
         this.setState({ loadingText: null });
       })
