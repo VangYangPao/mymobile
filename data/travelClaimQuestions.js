@@ -297,7 +297,7 @@ export default (travelClaimQuestions = [
         id: "repatriationReport"
       },
       {
-        question:
+        label:
           "Letter from Immigration and Checkpoint Authority (ICA) (if death occurs overseas)",
         id: "immigrationLetter"
       },
@@ -519,7 +519,7 @@ export default (travelClaimQuestions = [
   },
   {
     question:
-      "<%= fullName %>, to complete your claim, I need your help to post all the ORIGINAL RECEIPTS to: HLAS, 11 Keppel Road #11-01 ABI Plaza Singapore 089057, within 48 hours ",
+      "<%= firstName %> <%= lastName %>, to complete your claim, I need your help to post all the ORIGINAL RECEIPTS to: HLAS, 11 Keppel Road #11-01 ABI Plaza Singapore 089057, within 48 hours ",
     responseType: null
   },
   {
