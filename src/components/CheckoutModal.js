@@ -129,6 +129,20 @@ export default class CheckoutModal extends Component {
     );
 
     const btnText = `CONFIRM PURCHASE ($${this.props.price.toFixed(2)})`;
+    const additionalInputsProps = {
+      number: {
+        accessibilityLabel: "purchase__card-number-input"
+      },
+      expiry: {
+        accessibilityLabel: "purchase__expiry-input"
+      },
+      cvc: {
+        accessibilityLabel: "purchase__cvc-input"
+      },
+      name: {
+        accessibilityLabel: "purchase__card-name-input"
+      }
+    };
 
     return (
       <Modal
@@ -150,12 +164,14 @@ export default class CheckoutModal extends Component {
                 inputContainerStyle={styles.inputContainerStyle}
                 invalidColor={colors.errorRed}
                 additionalInputStyles={additionalInputStyles}
+                additionalInputsProps={additionalInputsProps}
                 onChange={this.handleInputChange}
                 requiresName={true}
                 requiresCVC={true}
               />
             </View>
             <Button
+              accessibilityLabel="purchase__confirm-purchase-btn"
               containerStyle={styles.noBorderRadius}
               style={styles.noBorderRadius}
               onPress={this.handleCheckout}

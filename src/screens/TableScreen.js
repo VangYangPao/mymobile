@@ -23,7 +23,10 @@ export default class TableScreen extends Component {
     const handleSave = () => onSaveTable(navigation, tableValues);
 
     options.headerRight = (
-      <TouchableOpacity onPress={handleSave}>
+      <TouchableOpacity
+        accessibilityLabel="table__save-btn"
+        onPress={handleSave}
+      >
         <Text style={styles.headerRight}>SAVE</Text>
       </TouchableOpacity>
     );
@@ -71,6 +74,7 @@ export default class TableScreen extends Component {
       const minDate = field.futureOnly ? value : null;
       inputElement = (
         <TouchableOpacity
+          accessibilityLabel={"table__field-" + id}
           style={styles.selectContainer}
           onPress={() => this.inputRefs[index].onPressDate()}
         >
@@ -122,6 +126,7 @@ export default class TableScreen extends Component {
       );
       inputElement = (
         <ModalPicker
+          accessibilityLabel={"table__field-" + id}
           data={data}
           initValue={"Select " + lowerlabel}
           style={styles.whiteBackground}
@@ -157,6 +162,7 @@ export default class TableScreen extends Component {
     } else {
       inputElement = (
         <TextInput
+          accessibilityLabel={"table__field-" + id}
           ref={ti => (this.inputRefs[index] = ti)}
           style={styles.input}
           autoCorrect={false}

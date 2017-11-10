@@ -57,14 +57,16 @@ const redirectToStatus = currentUser =>
       NavigationActions.navigate({
         routeName: "Drawer",
         action: NavigationActions.navigate({
+          currentUser,
           routeName: "MyPolicies"
         })
       })
     ]
   });
 
-const redirectToPolicyPurchase = (policy, currentUser) =>
-  NavigationActions.reset({
+const redirectToPolicyPurchase = (props, policy, currentUser) => {
+  const { chatScreenState } = props.navigation.state.params;
+  return NavigationActions.reset({
     index: 2,
     actions: [
       NavigationActions.navigate({
@@ -86,12 +88,14 @@ const redirectToPolicyPurchase = (policy, currentUser) =>
         params: {
           policy,
           currentUser,
+          chatScreenState,
           questionSet: "buy",
           isStartScreen: false
         }
       })
     ]
   });
+};
 
 export default class ConfirmationScreen extends Component {
   static navigationOptions = {
@@ -157,7 +161,7 @@ export default class ConfirmationScreen extends Component {
       const countryid = form.travelDestination;
       const tripDurationInDays =
         moment(form.returnDate).diff(form.departureDate, "days") + 1;
-      const planid = this.travelPlans[form.planIndex];
+      const planid = form.planIndex;
       const [hasSpouse, hasChildren] = this.getHasSpouseAndChildren(
         form.travellers
       );
@@ -185,6 +189,7 @@ export default class ConfirmationScreen extends Component {
     if (promise) {
       promise
         .then(res => {
+          // throw new Error("yolo");
           this.setState({ totalPremium: parseFloat(res.data) });
         })
         .catch(err => {
@@ -193,7 +198,7 @@ export default class ConfirmationScreen extends Component {
           const { currentUser } = this.props.navigation.state.params;
 
           this.props.screenProps.rootNavigation.dispatch(
-            redirectToPolicyPurchase(this.policy, currentUser)
+            redirectToPolicyPurchase(this.props, this.policy, currentUser)
           );
         });
     }
@@ -290,7 +295,7 @@ export default class ConfirmationScreen extends Component {
         });
         const afterAlert = () => {
           this.props.screenProps.rootNavigation.dispatch(
-            redirectToPolicyPurchase(this.policy, currentUser)
+            redirectToPolicyPurchase(this.props, this.policy, currentUser)
           );
         };
         if (

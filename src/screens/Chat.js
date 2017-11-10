@@ -185,6 +185,11 @@ class ChatScreen extends Component {
         planIndex: null
       }
     };
+    const initialChatScreenState =
+      props.navigation.state.params.chatScreenState;
+    if (initialChatScreenState) {
+      this.state = initialChatScreenState;
+    }
     // if (AppStore.messages.length) {
     //   showAlert("reusing old messages");
     //   this.state.messages = AppStore.messages.slice();
@@ -632,7 +637,11 @@ class ChatScreen extends Component {
       if (policy.id === "travel") {
         delete form.price;
       }
-      this.props.navigation.navigate("Confirmation", { form, currentUser });
+      this.props.navigation.navigate("Confirmation", {
+        chatScreenState: this.state,
+        form,
+        currentUser
+      });
     } else if (questionSet === "claim") {
       this.setState({ loadingSave: true });
       const purchase = this.state.policies.find(
@@ -1197,6 +1206,11 @@ class ChatScreen extends Component {
 
     const dateIndex = responseType.indexOf("date");
     const dateTimeIndex = responseType.indexOf("datetime");
+    console.log(
+      currentQuestionIndex,
+      this.questions.length,
+      currentQuestionIndex >= this.questions.length - 1
+    );
 
     if (currentQuestionIndex >= this.questions.length - 1) {
       return (
@@ -1338,6 +1352,7 @@ class ChatScreen extends Component {
   }
 
   render() {
+    // return <CheckoutModal price={0.5} />;
     // return <PolicyDetails policy={{ policyTypeId: "pa" }} />;
     const additionalProps = {};
     let minInputToolbarHeight = 44;

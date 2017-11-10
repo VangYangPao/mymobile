@@ -172,6 +172,7 @@ class TravelPlanTab extends Component {
           </View>
         </TouchableOpacity>
         <Button
+          accessibilityLabel={"chat__" + "select-plan_" + this.props.plan}
           onPress={() => this.props.onSelectPlan(this.props.planIndex)}
           style={styles.selectPlanButton}
         >
@@ -202,6 +203,7 @@ class TravelPlanTab extends Component {
           sections={listSections}
         />
         <Button
+          accessibilityLabel={"chat__" + "select-plan_" + this.props.plan}
           onPress={() => this.props.onSelectPlan(this.props.planIndex)}
           style={styles.selectPlanButton}
         >

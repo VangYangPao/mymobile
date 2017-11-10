@@ -694,6 +694,7 @@ export class TravellerTableInput extends Component {
         }}
       >
         <TouchableOpacity
+          accessibilityLabel="purchase__remove-traveller"
           onPress={() => {
             const items = this.state.items.slice();
             items.splice(index, 1);
@@ -724,6 +725,7 @@ export class TravellerTableInput extends Component {
         />
         <TouchableOpacity />
         <TouchableOpacity
+          accessibilityLabel="purchase__add-traveller"
           onPress={() =>
             this.props.navigation.navigate("Table", {
               title: "Add New Traveller",
