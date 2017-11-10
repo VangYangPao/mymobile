@@ -96,7 +96,7 @@ CHILD = {
 }
 
 
-class PurchaseTests(MicroUmbrellaAppTest):
+class PurchaseTravelTests(MicroUmbrellaAppTest):
 
     def setUp(self):
         self.driver = webdriver.Remote(
@@ -164,6 +164,45 @@ class PurchaseTests(MicroUmbrellaAppTest):
             travel_area=2,
             start_date=create_date(2017, 12, 10),
             duration=9, plan='superior', spouse=SPOUSE, child=CHILD)
+
+    # def test_purchase_travel_applicant_7(self):
+    #     return self.purchase_travel_policy(
+    #         travel_area=3,
+    #         start_date=create_date(2017, 12, 10),
+    #         duration=35, plan='basic')
+
+    def test_purchase_travel_applicant_8(self):
+        return self.purchase_travel_policy(
+            travel_area=1,
+            start_date=create_date(2017, 12, 10),
+            duration=24, plan='superior', spouse={
+                'dob': get_birth_date(75),
+                'relationship': SPOUSE_OPTION
+            })
+
+    def test_purchase_travel_applicant_9(self):
+        return self.purchase_travel_policy(
+            travel_area=3,
+            start_date=create_date(2017, 12, 10),
+            duration=183, plan='superior')
+
+    def test_purchase_travel_applicant_10(self):
+        return self.purchase_travel_policy(
+            travel_area=2,
+            start_date=create_date(2017, 12, 10),
+            duration=6, plan='superior', child={
+                'dob': get_birth_date(0.1),
+                'relationship': CHILD_OPTION
+            })
+
+    def test_purchase_travel_applicant_11(self):
+        return self.purchase_travel_policy(
+            travel_area=2,
+            start_date=create_date(2017, 12, 10),
+            duration=6, plan='superior', child={
+                'dob': get_birth_date(19),
+                'relationship': CHILD_OPTION
+            })
 
     @timeout(3 * 60)
     def purchase_travel_policy(
@@ -259,6 +298,6 @@ if __name__ == '__main__':
     for cap in local_caps:
         current_cap = local_caps[cap]
         logging.basicConfig(stream=sys.stderr)
-        logging.getLogger("PurchaseTests").setLevel(logging.DEBUG)
-        suite = unittest.TestLoader().loadTestsFromTestCase(PurchaseTests)
+        logging.getLogger("PurchaseTravelTests").setLevel(logging.DEBUG)
+        suite = unittest.TestLoader().loadTestsFromTestCase(PurchaseTravelTests)
         unittest.TextTestRunner(verbosity=2).run(suite)

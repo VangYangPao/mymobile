@@ -101,11 +101,11 @@ class MicroUmbrellaAppTest(unittest.TestCase):
             'XCUIElementTypePickerWheel')
         now = datetime.datetime.now()
         self.paginate_date_till_value(
-            datepicker[0], now.month, date.month, is_month=True)
+            datepicker[2], now.year, date.year)
         self.paginate_date_till_value(
             datepicker[1], now.day, date.day)
         self.paginate_date_till_value(
-            datepicker[2], now.year, date.year)
+            datepicker[0], now.month, date.month, is_month=True)
         sleep(3)
         self.tap_on(self.find_accessibility('Confirm'))
 
