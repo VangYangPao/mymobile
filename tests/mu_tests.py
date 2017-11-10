@@ -11,6 +11,8 @@ from calendar import month_name
 LOGIN_EMAIL = 'x@aa.com'
 LOGIN_PASSWORD = '1234abcd'
 
+THRESHOLD_SLEEP_TIME = 7
+
 
 class MicroUmbrellaAppTest(unittest.TestCase):
 
@@ -31,20 +33,29 @@ class MicroUmbrellaAppTest(unittest.TestCase):
         action = TouchAction(self.driver)
         action.tap(el).perform()
 
+    def poll_accessibility(self, selector, threshold_sleep_time=THRESHOLD_SLEEP_TIME):
+        return self.poll_tree_until_found(
+            self.driver.find_element_by_accessibility_id,
+            selector, threshold_sleep_time)
+
     def poll_tree_until_found(
-            self, accessibility_label, threshold_sleep_time=7):
+            self, function, selector, threshold_sleep_time=THRESHOLD_SLEEP_TIME):
         counter = 1
         base_sleep_time = 0.1
         while True:
             try:
-                return self.find_accessibility(
-                    accessibility_label)
+                el = function(selector)
+                if el:
+                    return el
+                raise NoSuchElementException(
+                    'Polling element tree error: '
+                    + selector)
             except NoSuchElementException as e:
                 sleep_time = base_sleep_time * counter
                 if sleep_time >= threshold_sleep_time:
                     raise NoSuchElementException(
                         'Polling element tree threshold reached: '
-                        + accessibility_label)
+                        + selector)
                 sleep(sleep_time)
                 counter += 1
             except Exception as e:
@@ -83,7 +94,10 @@ class MicroUmbrellaAppTest(unittest.TestCase):
                     break
 
     def select_date(self, date):
-        datepicker = self.driver.find_elements_by_class_name(
+        # datepicker = self.driver.find_elements_by_class_name(
+        #     'XCUIElementTypePickerWheel')
+        datepicker = self.poll_tree_until_found(
+            self.driver.find_elements_by_class_name,
             'XCUIElementTypePickerWheel')
         now = datetime.datetime.now()
         self.paginate_date_till_value(
@@ -96,7 +110,7 @@ class MicroUmbrellaAppTest(unittest.TestCase):
         self.tap_on(self.find_accessibility('Confirm'))
 
     def login_user(self, email=LOGIN_EMAIL, password=LOGIN_PASSWORD):
-        login_btn = self.poll_tree_until_found('auth__login-btn')
+        login_btn = self.poll_accessibility('auth__login-btn')
         login_email_input = self.driver.find_elements_by_accessibility_id(
             'Email')[1]  # skip label
         login_password_input = self.driver\
