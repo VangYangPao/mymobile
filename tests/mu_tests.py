@@ -2,6 +2,7 @@ import sys
 import os
 import unittest
 from time import sleep
+from selenium.common.exceptions import NoSuchElementException
 from appium import webdriver
 from appium.webdriver.common.touch_action import TouchAction
 from calendar import month_name
@@ -18,9 +19,25 @@ class MicroUmbrellaAppTest(unittest.TestCase):
     def tearDown(self):
         self.driver.quit()
 
+    def find_accessibility(self, accessibility_label):
+        return self.driver.find_element_by_accessibility_id(
+            accessibility_label)
+
     def tap_on(self, el):
         action = TouchAction(self.driver)
         action.tap(el).perform()
+
+    def poll_tree_until_found(self, accessibility_label):
+        counter = 1
+        sleep_time = 0.1
+        while True:
+            try:
+                return self.find_accessibility(accessibility_label)
+            except NoSuchElementException:
+                sleep(sleep_time * counter)
+                counter += 1
+            except Exception as e:
+                raise e
 
     def select_date(self, date):
         self.tap_on(self.find_accessibility('chat__datepicker'))

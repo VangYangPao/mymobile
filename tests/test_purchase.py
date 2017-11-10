@@ -71,7 +71,6 @@ class PurchaseTests(MicroUmbrellaAppTest):
     def setUp(self):
         self.driver = webdriver.Remote(
             'http://localhost:4723/wd/hub', current_cap)
-        self.find_accessibility = self.driver.find_element_by_accessibility_id
 
     def test_purchase_travel_applicant(self):
         self.purchase_travel_policy(
@@ -83,14 +82,16 @@ class PurchaseTests(MicroUmbrellaAppTest):
             self, country_name, country_code,
             start_date, duration, plan):
         sleep(3)
-        signin_el = self.find_accessibility('intro__sign-in')
+        signin_el = self.poll_tree_until_found('intro__sign-in')
+        # signin_el = self.find_accessibility('intro__sign-in')
         self.tap_on(signin_el)
         sleep(2 * LOAD_TIME_MULTIPLY)
         self.login_user()
-        sleep(2)
-        menu_btn = self.find_accessibility('nav__menu-btn')
+        # sleep(2)
+
+        menu_btn = self.poll_tree_until_found('nav__menu-btn')
         self.assertIsNotNone(menu_btn)
-        travel_policy_choice = self.find_accessibility(
+        travel_policy_choice = self.poll_tree_until_found(
             'purchase__policy-choice-travel')
         self.tap_on(travel_policy_choice)
         sleep(0.5)
@@ -98,11 +99,11 @@ class PurchaseTests(MicroUmbrellaAppTest):
         self.assertIsNotNone(back_btn)
         purchase_btn = self.find_accessibility('policy__purchase-btn')
         self.tap_on(purchase_btn)
-        sleep(3)
+        # sleep(3)
         COMPOSER_PLACEHOLDER = 'Type your message here...'
-        back_btn = self.find_accessibility('nav__back-btn')
+        back_btn = self.poll_tree_until_found('nav__back-btn')
         self.assertIsNotNone(back_btn)
-        self.tap_on(self.find_accessibility(plan.upper()+'\nPLAN'))
+        self.tap_on(self.poll_tree_until_found(plan.upper()+'\nPLAN'))
         self.tap_on(self.find_accessibility('chat__select-plan_'+plan))
         sleep(2 * LOAD_TIME_MULTIPLY)
         composer = self.find_accessibility(COMPOSER_PLACEHOLDER)
@@ -116,53 +117,52 @@ class PurchaseTests(MicroUmbrellaAppTest):
         self.select_date(start_date)
         sleep(1 * LOAD_TIME_MULTIPLY)
         self.select_date(start_date + timedelta(days=duration))
-        sleep(1.5 * LOAD_TIME_MULTIPLY)
+        # sleep(1.5 * LOAD_TIME_MULTIPLY)
 
-        self.tap_on(self.find_accessibility('chat__action-picker'))
+        self.tap_on(self.poll_tree_until_found('chat__action-picker'))
         sleep(1)
         self.tap_on(self.find_accessibility('chat__suggestion-passport'))
         sleep(0.5)
         composer = self.find_accessibility(COMPOSER_PLACEHOLDER)
         self.tap_on(composer)
-        self.driver.set_value(composer, str(uuid4()))
+        self.driver.set_value(composer, str(uuid4())[:15])
         self.tap_on(self.find_accessibility('Send'))
-        sleep(1 * LOAD_TIME_MULTIPLY)
+        # sleep(1 * LOAD_TIME_MULTIPLY)
 
-        self.tap_on(self.find_accessibility('chat__submit-traveller'))
+        self.tap_on(self.poll_tree_until_found('chat__submit-traveller'))
         sleep(0.5 * LOAD_TIME_MULTIPLY)
         self.tap_on(self.find_accessibility('PROCEED'))
         sleep(5)
         self.tap_on(self.find_accessibility('policy__purchase-btn'))
-        sleep(2 * LOAD_TIME_MULTIPLY)
-        # card_number_input = self.find_accessibility(
-        #     'CARD NUMBER 1234 5678 1234 5678')
-        card_number_input = self.find_accessibility(
+        card_number_input = self.poll_tree_until_found(
             'purchase__card-number-input')
         self.tap_on(card_number_input)
         sleep(2)
         self.driver.set_value(card_number_input, '4005550000000001')
-        sleep(2)
         # with open('source.txt', 'w') as f:
         #     f.write(self.driver.page_source)
-        expiry_input = self.find_accessibility('purchase__expiry-input')
+        expiry_input = self.poll_tree_until_found('purchase__expiry-input')
         # expiry_input = self.find_accessibility('purchase__expiry-input')
         self.tap_on(expiry_input)
         sleep(0.5)
         self.driver.set_value(expiry_input, '0121')
         sleep(0.5)
-        cvc_input = self.find_accessibility('purchase__cvc-input')
+        cvc_input = self.poll_tree_until_found('purchase__cvc-input')
         self.tap_on(cvc_input)
         sleep(0.5)
         self.driver.set_value(cvc_input, '602')
         sleep(0.5)
-        full_name_input = self.find_accessibility(
+        full_name_input = self.poll_tree_until_found(
             'purchase__card-name-input')
         self.tap_on(full_name_input)
         sleep(0.5)
         self.driver.set_value(full_name_input, 'Chan')
-        sleep(0.5)
+        self.driver.hide_keyboard('return')
+        sleep(2)
         self.tap_on(self.find_accessibility('purchase__confirm-purchase-btn'))
-        sleep(20)
+        sleep(40)
+        ok_button = self.find_accessibility('OK')
+        self.tap_on(ok_button)
 
 
 if __name__ == '__main__':
