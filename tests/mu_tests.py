@@ -1,6 +1,7 @@
 import sys
 import os
 import unittest
+import datetime
 from time import sleep
 from selenium.common.exceptions import NoSuchElementException
 from appium import webdriver
@@ -19,6 +20,9 @@ class MicroUmbrellaAppTest(unittest.TestCase):
     def tearDown(self):
         self.driver.quit()
 
+    def hide_keyboard(self):
+        self.driver.hide_keyboard('return')
+
     def find_accessibility(self, accessibility_label):
         return self.driver.find_element_by_accessibility_id(
             accessibility_label)
@@ -27,30 +31,72 @@ class MicroUmbrellaAppTest(unittest.TestCase):
         action = TouchAction(self.driver)
         action.tap(el).perform()
 
-    def poll_tree_until_found(self, accessibility_label):
+    def poll_tree_until_found(
+            self, accessibility_label, threshold_sleep_time=7):
         counter = 1
-        sleep_time = 0.1
+        base_sleep_time = 0.1
         while True:
             try:
-                return self.find_accessibility(accessibility_label)
-            except NoSuchElementException:
-                sleep(sleep_time * counter)
+                return self.find_accessibility(
+                    accessibility_label)
+            except NoSuchElementException as e:
+                sleep_time = base_sleep_time * counter
+                if sleep_time >= threshold_sleep_time:
+                    raise NoSuchElementException(
+                        'Polling element tree threshold reached: '
+                        + accessibility_label)
+                sleep(sleep_time)
                 counter += 1
             except Exception as e:
                 raise e
 
+    def paginate_date_till_value(
+            self, picker_wheel, default_value, value, is_month=False):
+
+        INCREMENT_VALUE = 3
+
+        def send_picker_keys(value):
+            if is_month:
+                value = month_name[value]
+            else:
+                value = str(value)
+            picker_wheel.send_keys(value)
+
+        while True:
+            if value > default_value:
+                if value > default_value + INCREMENT_VALUE:
+                    default_value += INCREMENT_VALUE
+                    # print('default', default_value)
+                    send_picker_keys(default_value)
+                else:
+                    # print('set', value)
+                    send_picker_keys(value)
+                    break
+            else:
+                if value < default_value - INCREMENT_VALUE:
+                    default_value -= INCREMENT_VALUE
+                    # print('default', default_value)
+                    send_picker_keys(default_value)
+                else:
+                    # print('set', value)
+                    send_picker_keys(value)
+                    break
+
     def select_date(self, date):
-        self.tap_on(self.find_accessibility('chat__datepicker'))
-        sleep(1)
         datepicker = self.driver.find_elements_by_class_name(
             'XCUIElementTypePickerWheel')
-        datepicker[0].send_keys(month_name[date.month])
-        datepicker[1].send_keys(str(date.day))
-        datepicker[2].send_keys(str(date.year))
+        now = datetime.datetime.now()
+        self.paginate_date_till_value(
+            datepicker[0], now.month, date.month, is_month=True)
+        self.paginate_date_till_value(
+            datepicker[1], now.day, date.day)
+        self.paginate_date_till_value(
+            datepicker[2], now.year, date.year)
+        sleep(3)
         self.tap_on(self.find_accessibility('Confirm'))
 
     def login_user(self, email=LOGIN_EMAIL, password=LOGIN_PASSWORD):
-        login_btn = self.find_accessibility('auth__login-btn')
+        login_btn = self.poll_tree_until_found('auth__login-btn')
         login_email_input = self.driver.find_elements_by_accessibility_id(
             'Email')[1]  # skip label
         login_password_input = self.driver\
