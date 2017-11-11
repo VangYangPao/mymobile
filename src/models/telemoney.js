@@ -1,5 +1,4 @@
 // @flow
-import * as cheerio from "cheerio-without-node-native";
 import { sha512 } from "js-sha512";
 import moment from "moment";
 
@@ -215,7 +214,8 @@ export function doFull3DSTransaction(
   cardDetails: CardDetails,
   paytype: number,
   amtFloat: number,
-  verifyEnrolmentResponse: any
+  verifyEnrolmentResponse: any,
+  renderACSUrl: Function
 ) {
   let ref: string;
   const amt = amtFloat.toFixed(2);
@@ -247,10 +247,14 @@ export function doFull3DSTransaction(
       // .catch(err => {
       //   console.error("verify enrolment", err);
       // })
-      .then(html => {
+      .then(renderACSUrl)
+      .then(PaRes => {
         console.log("acs redirected");
-        const $ = cheerio.load(html);
-        const PaRes = $('input[name="PaRes"]').val();
+        // render html in webview
+        // redirect to TermUrl
+        // detect redirection, perform payment auth
+        // const $ = cheerio.load(html);
+        // const PaRes = $('input[name="PaRes"]').val();
         return performPaymentAuthRequest(ref, amt, PaRes);
       })
       // .catch(err => {

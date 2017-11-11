@@ -22,6 +22,7 @@ import Page from "../components/Page";
 import Footer from "../components/Footer";
 import PolicyPrice from "../components/PolicyPrice";
 import CheckoutModal from "../components/CheckoutModal";
+import { extractPaRes } from "../utils";
 import {
   getTravelQuote,
   getAccidentQuote,

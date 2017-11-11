@@ -76,7 +76,8 @@ export function purchasePhonePolicy(
   policyCommencementDate: Date,
   mobileDetails: MobileDetails,
   policyHolder: any,
-  paymentDetails: PaymentDetails
+  paymentDetails: PaymentDetails,
+  extractPaRes: Function
 ) {
   let PASAppID,
     verifyEnrolmentResponseObj,
@@ -140,7 +141,8 @@ export function purchasePhonePolicy(
           telemoneyCard,
           paymentDetails.CardType,
           premium,
-          verifyEnrolmentResponseObj
+          verifyEnrolmentResponseObj,
+          extractPaRes
         );
       });
     })
@@ -451,7 +453,8 @@ export function purchaseAccidentPolicy(
   optionid: AccidentOptionID,
   occupationid: OccupationID,
   policyHolder: PolicyHolder,
-  paymentDetails: PaymentDetails
+  paymentDetails: PaymentDetails,
+  extractPaRes: Function
 ) {
   let PASAppID,
     verifyEnrolmentResponseObj,
@@ -521,7 +524,8 @@ export function purchaseAccidentPolicy(
           telemoneyCard,
           paymentDetails.CardType,
           premium,
-          verifyEnrolmentResponseObj
+          verifyEnrolmentResponseObj,
+          extractPaRes
         );
       });
     })
@@ -831,7 +835,8 @@ export function purchaseTravelPolicy(
   planid: TravelProductPlanID,
   travellers: Array<MUTraveller>,
   policyHolder: PolicyHolder,
-  paymentDetails: PaymentDetails
+  paymentDetails: PaymentDetails,
+  extractPaRes: Function
 ) {
   console.log(
     premium,
@@ -917,7 +922,8 @@ export function purchaseTravelPolicy(
           card,
           paymentDetails.CardType,
           premium,
-          verifyEnrolmentResponseObj
+          verifyEnrolmentResponseObj,
+          extractPaRes
         );
       });
     })
