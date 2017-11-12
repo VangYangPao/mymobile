@@ -31,7 +31,30 @@ export default (policies = [
     imageSource: "ic_travel_protection",
     description:
       "At a super-low price, this is a super-big comprehensive plan that covers most of your financial loss and unforeseen expenses when you travel overseas. It covers you and your family's medical expenses, loss of baggage, loss of cash, and loss of home contents. You and your family enjoy unlimited emergency medical evacuation, cash compensation for flight delay, diversion or cancellation. In the event accidental death or permanent disability, your loved ones will receive a lump sum cash within days. These are just some highlights, and we are constantly adding more benefits and coverage to make you travel happily and peacefully!",
-    plans: [{ 0: 50000, premium: 35 }], // hardcoded for display purposes only
+    // plans: [{ 0: 50000, premium: 35 }], // hardcoded for display purposes only
+    plans: [
+      {
+        id: 1,
+        legacyId: "basic",
+        title: "Basic Plan",
+        premium: 35
+      },
+      {
+        id: 2,
+        legacyId: "enhanced",
+        title: "Enhanced Plan"
+      },
+      {
+        id: 84,
+        legacyId: "superior",
+        title: "Superior Plan"
+      },
+      {
+        id: 85,
+        legacyId: "premium",
+        title: "Premium Plan"
+      }
+    ],
     isTravelInsurance: true,
     from: "1 day",
     covered: [
@@ -81,7 +104,8 @@ export default (policies = [
       //   }
       // },
       {
-        title: "Plan A",
+        id: 101,
+        title: "Basic Plan",
         premium: 5.35,
         coverage: {
           accidentalDeath: 10000,
@@ -89,7 +113,8 @@ export default (policies = [
         }
       },
       {
-        title: "Plan B",
+        id: 102,
+        title: "Enhanced Plan",
         premium: 9.84,
         coverage: {
           accidentalDeath: 20000,
@@ -97,7 +122,8 @@ export default (policies = [
         }
       },
       {
-        title: "Plan C",
+        id: 103,
+        title: "Superior Plan",
         premium: 17.87,
         coverage: {
           accidentalDeath: 40000,
@@ -105,7 +131,8 @@ export default (policies = [
         }
       },
       {
-        title: "Plan D",
+        id: 104,
+        title: "Premium Plan",
         premium: 17.87,
         coverage: {
           accidentalDeath: 40000,
@@ -134,7 +161,8 @@ export default (policies = [
       //   premium: 2.68
       // },
       {
-        title: "Plan A",
+        id: 101,
+        title: "Basic Plan",
         coverage: {
           accidentalDeath: 10000,
           permanentDisablement: 10000,
@@ -143,7 +171,8 @@ export default (policies = [
         premium: 5.35
       },
       {
-        title: "Plan B",
+        id: 102,
+        title: "Enhanced Plan",
         coverage: {
           accidentalDeath: 20000,
           permanentDisablement: 20000,
@@ -152,7 +181,8 @@ export default (policies = [
         premium: 9.84
       },
       {
-        title: "Plan C",
+        id: 103,
+        title: "Superior Plan",
         coverage: {
           accidentalDeath: 40000,
           permanentDisablement: 40000,
@@ -161,7 +191,8 @@ export default (policies = [
         premium: 17.87
       },
       {
-        title: "Plan D",
+        id: 104,
+        title: "Premium Plan",
         coverage: {
           accidentalDeath: 100000,
           permanentDisablement: 100000,
@@ -187,17 +218,9 @@ export default (policies = [
     imageSource: "ic_ad_pd_weekly_indemnity",
     from: "1 month",
     plans: [
-      // {
-      //   title: "Plan A",
-      //   coverage: {
-      //     accidentalDeath: 5000,
-      //     permanentDisablement: 5000,
-      //     weeklyIndemnity: 200
-      //   },
-      //   premium: 2.2
-      // },
       {
-        title: "Plan A",
+        id: 101,
+        title: "Basic Plan",
         coverage: {
           accidentalDeath: 10000,
           permanentDisablement: 10000,
@@ -206,7 +229,8 @@ export default (policies = [
         premium: 4.09
       },
       {
-        title: "Plan B",
+        id: 102,
+        title: "Enhanced Plan",
         coverage: {
           accidentalDeath: 20000,
           permanentDisablement: 20000,
@@ -215,7 +239,8 @@ export default (policies = [
         premium: 7.75
       },
       {
-        title: "Plan C",
+        id: 103,
+        title: "Superior Plan",
         coverage: {
           accidentalDeath: 40000,
           permanentDisablement: 40000,
@@ -224,7 +249,8 @@ export default (policies = [
         premium: 14.97
       },
       {
-        title: "Plan D",
+        id: 104,
+        title: "Premium Plan",
         coverage: {
           accidentalDeath: 100000,
           permanentDisablement: 100000,
@@ -244,6 +270,7 @@ export default (policies = [
     from: "1 year",
     plans: [
       {
+        id: 99,
         title: "Annual Plan",
         coverage: {
           accidentalDamage: 1000,
