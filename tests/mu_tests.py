@@ -8,7 +8,7 @@ from appium import webdriver
 from appium.webdriver.common.touch_action import TouchAction
 from calendar import month_name
 
-LOGIN_EMAIL = 'x@aa.com'
+LOGIN_EMAIL = 'kendrick@microassure.com'
 LOGIN_PASSWORD = '1234abcd'
 
 THRESHOLD_SLEEP_TIME = 7
@@ -33,13 +33,15 @@ class MicroUmbrellaAppTest(unittest.TestCase):
         action = TouchAction(self.driver)
         action.tap(el).perform()
 
-    def poll_accessibility(self, selector, threshold_sleep_time=THRESHOLD_SLEEP_TIME):
+    def poll_accessibility(
+            self, selector, threshold_sleep_time=THRESHOLD_SLEEP_TIME):
         return self.poll_tree_until_found(
             self.driver.find_element_by_accessibility_id,
             selector, threshold_sleep_time)
 
     def poll_tree_until_found(
-            self, function, selector, threshold_sleep_time=THRESHOLD_SLEEP_TIME):
+            self, function, selector,
+            threshold_sleep_time=THRESHOLD_SLEEP_TIME):
         counter = 1
         base_sleep_time = 0.1
         while True:
@@ -94,11 +96,13 @@ class MicroUmbrellaAppTest(unittest.TestCase):
                     break
 
     def select_date(self, date):
-        # datepicker = self.driver.find_elements_by_class_name(
-        #     'XCUIElementTypePickerWheel')
-        datepicker = self.poll_tree_until_found(
-            self.driver.find_elements_by_class_name,
-            'XCUIElementTypePickerWheel')
+        datepicker = None
+        while True:
+            datepicker = self.driver.find_elements_by_class_name(
+                'XCUIElementTypePickerWheel')
+            if len(datepicker) >= 3:
+                break
+            sleep(1)
         now = datetime.datetime.now()
         self.paginate_date_till_value(
             datepicker[2], now.year, date.year)
@@ -108,6 +112,38 @@ class MicroUmbrellaAppTest(unittest.TestCase):
             datepicker[0], now.month, date.month, is_month=True)
         sleep(3)
         self.tap_on(self.find_accessibility('Confirm'))
+
+    def do_checkout(self):
+        sleep(2)
+        self.tap_on(self.find_accessibility('PROCEED'))
+        self.tap_on(self.poll_accessibility('policy__purchase-btn'))
+        card_number_input = self.poll_accessibility(
+            'purchase__card-number-input')
+        self.tap_on(card_number_input)
+        sleep(2)
+        self.driver.set_value(card_number_input, '4005550000000001')
+        # with open('source.txt', 'w') as f:
+        #     f.write(self.driver.page_source)
+        expiry_input = self.poll_accessibility('purchase__expiry-input')
+        # expiry_input = self.find_accessibility('purchase__expiry-input')
+        self.tap_on(expiry_input)
+        sleep(0.5)
+        self.driver.set_value(expiry_input, '0121')
+        sleep(0.5)
+        cvc_input = self.poll_accessibility('purchase__cvc-input')
+        self.tap_on(cvc_input)
+        sleep(0.5)
+        self.driver.set_value(cvc_input, '602')
+        sleep(0.5)
+        full_name_input = self.poll_accessibility(
+            'purchase__card-name-input')
+        self.tap_on(full_name_input)
+        sleep(0.5)
+        self.driver.set_value(full_name_input, 'Chan')
+        self.hide_keyboard()
+        sleep(2)
+        self.tap_on(self.find_accessibility('purchase__confirm-purchase-btn'))
+        self.tap_on(self.poll_accessibility('OK', 20))
 
     def login_user(self, email=LOGIN_EMAIL, password=LOGIN_PASSWORD):
         login_btn = self.poll_accessibility('auth__login-btn')

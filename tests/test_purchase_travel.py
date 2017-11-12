@@ -127,7 +127,6 @@ class PurchaseTravelTests(MicroUmbrellaAppTest):
         self.tap_on(self.poll_accessibility(
             'picker__option-'+str(traveller['relationship'])))
         self.tap_on(self.find_accessibility('table__save-btn'))
-        self.tap_on(self.poll_accessibility('chat__submit-traveller'))
 
     def test_purchase_travel_applicant_1(self):
         self.purchase_travel_policy(
@@ -165,11 +164,11 @@ class PurchaseTravelTests(MicroUmbrellaAppTest):
             start_date=create_date(2017, 12, 10),
             duration=9, plan='superior', spouse=SPOUSE, child=CHILD)
 
-    # def test_purchase_travel_applicant_7(self):
-    #     return self.purchase_travel_policy(
-    #         travel_area=3,
-    #         start_date=create_date(2017, 12, 10),
-    #         duration=35, plan='basic')
+    def test_purchase_travel_applicant_7(self):
+        return self.purchase_travel_policy(
+            travel_area=3,
+            start_date=create_date(2017, 12, 10),
+            duration=35, plan='basic')
 
     def test_purchase_travel_applicant_8(self):
         return self.purchase_travel_policy(
@@ -204,7 +203,7 @@ class PurchaseTravelTests(MicroUmbrellaAppTest):
                 'relationship': CHILD_OPTION
             })
 
-    @timeout(3 * 60)
+    @timeout(4 * 60)
     def purchase_travel_policy(
             self, travel_area,
             start_date, duration, plan, spouse=None, child=None):
@@ -231,7 +230,7 @@ class PurchaseTravelTests(MicroUmbrellaAppTest):
         self.assertIsNotNone(back_btn)
 
         self.tap_on(self.poll_accessibility(plan.upper()+'\nPLAN'))
-        self.tap_on(self.find_accessibility('chat__select-plan_'+plan))
+        self.tap_on(self.poll_accessibility('chat__select-plan_'+plan))
         composer = self.poll_accessibility(COMPOSER_PLACEHOLDER)
         self.tap_on(composer)
         self.driver.set_value(composer, country_name)
@@ -244,7 +243,7 @@ class PurchaseTravelTests(MicroUmbrellaAppTest):
         self.tap_on(self.poll_accessibility('chat__datepicker'))
         self.select_date(start_date)
         self.tap_on(self.poll_accessibility('chat__datepicker'))
-        self.select_date(start_date + timedelta(days=duration))
+        self.select_date(start_date + timedelta(days=duration+1))
         # sleep(1.5 * LOAD_TIME_MULTIPLY)
 
         self.tap_on(self.poll_accessibility('chat__action-picker'))
@@ -262,36 +261,10 @@ class PurchaseTravelTests(MicroUmbrellaAppTest):
             self.add_traveller(spouse)
         if child:
             self.add_traveller(child)
+        self.tap_on(self.poll_accessibility('chat__submit-traveller'))
 
-        self.tap_on(self.poll_accessibility('PROCEED'))
-        self.tap_on(self.poll_accessibility('policy__purchase-btn'))
-        card_number_input = self.poll_accessibility(
-            'purchase__card-number-input')
-        self.tap_on(card_number_input)
         sleep(2)
-        self.driver.set_value(card_number_input, '4005550000000001')
-        # with open('source.txt', 'w') as f:
-        #     f.write(self.driver.page_source)
-        expiry_input = self.poll_accessibility('purchase__expiry-input')
-        # expiry_input = self.find_accessibility('purchase__expiry-input')
-        self.tap_on(expiry_input)
-        sleep(0.5)
-        self.driver.set_value(expiry_input, '0121')
-        sleep(0.5)
-        cvc_input = self.poll_accessibility('purchase__cvc-input')
-        self.tap_on(cvc_input)
-        sleep(0.5)
-        self.driver.set_value(cvc_input, '602')
-        sleep(0.5)
-        full_name_input = self.poll_accessibility(
-            'purchase__card-name-input')
-        self.tap_on(full_name_input)
-        sleep(0.5)
-        self.driver.set_value(full_name_input, 'Chan')
-        self.hide_keyboard()
-        sleep(2)
-        self.tap_on(self.find_accessibility('purchase__confirm-purchase-btn'))
-        self.tap_on(self.poll_accessibility('OK', 20))
+        self.do_checkout()
 
 
 if __name__ == '__main__':
@@ -299,5 +272,6 @@ if __name__ == '__main__':
         current_cap = local_caps[cap]
         logging.basicConfig(stream=sys.stderr)
         logging.getLogger("PurchaseTravelTests").setLevel(logging.DEBUG)
-        suite = unittest.TestLoader().loadTestsFromTestCase(PurchaseTravelTests)
+        suite = unittest.TestLoader()\
+            .loadTestsFromTestCase(PurchaseTravelTests)
         unittest.TextTestRunner(verbosity=2).run(suite)
