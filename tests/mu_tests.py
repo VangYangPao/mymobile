@@ -116,6 +116,7 @@ class MicroUmbrellaAppTest(unittest.TestCase):
     def do_checkout(self):
         sleep(2)
         self.tap_on(self.find_accessibility('PROCEED'))
+        sleep(5)
         self.tap_on(self.poll_accessibility('policy__purchase-btn'))
         card_number_input = self.poll_accessibility(
             'purchase__card-number-input')
