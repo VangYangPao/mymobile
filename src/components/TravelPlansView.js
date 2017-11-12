@@ -172,7 +172,7 @@ class TravelPlanTab extends Component {
           </View>
         </TouchableOpacity>
         <Button
-          accessibilityLabel={"chat__" + "select-plan_" + this.props.plan}
+          accessibilityLabel={"chat__select-plan_" + this.props.plan}
           onPress={() => this.props.onSelectPlan(this.props.planIndex)}
           style={styles.selectPlanButton}
         >
@@ -229,41 +229,21 @@ export default class TravelPlansView extends Component {
   }
 
   render() {
-    const tabRoutes = {
-      "Basic\nPlan": {
+    let tabRoutes = {};
+    const travelPolicy = AppStore.policies.find(p => p.id === "travel");
+    travelPolicy.plans.forEach((plan, idx) => {
+      tabRoutes[plan.title] = {
         screen: () => (
           <TravelPlanTab
-            plan="basic"
+            plan={plan.legacyId}
             onSelectPlan={this.props.onSelectPlan}
             onExpand={this.handleExpand}
             expanded={this.state.expanded}
-            planIndex={0}
+            planIndex={idx}
           />
         )
-      },
-      "Enhanced\nPlan": {
-        screen: () => (
-          <TravelPlanTab
-            plan="enhanced"
-            onSelectPlan={this.props.onSelectPlan}
-            onExpand={this.handleExpand}
-            expanded={this.state.expanded}
-            planIndex={1}
-          />
-        )
-      },
-      "Superior\nPlan": {
-        screen: () => (
-          <TravelPlanTab
-            plan="superior"
-            onSelectPlan={this.props.onSelectPlan}
-            onExpand={this.handleExpand}
-            expanded={this.state.expanded}
-            planIndex={2}
-          />
-        )
-      }
-    };
+      };
+    });
     return <PlansTabNavigator tabRoutes={tabRoutes} />;
   }
 }

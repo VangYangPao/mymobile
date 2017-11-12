@@ -104,8 +104,6 @@ export default class ConfirmationScreen extends Component {
   };
 
   state: State;
-  travelPlans: Array<number>;
-  paPlans: Array<number>;
   paOptions: { pa: number, pa_mr: number, pa_wi: number };
   paTerms: { "1": 1, "3": 2, "6": 3, "12": 4 };
   policy: any;
@@ -131,8 +129,6 @@ export default class ConfirmationScreen extends Component {
       purchasing: false,
       totalPremium: null
     };
-    this.travelPlans = [1, 2, 84, 85];
-    this.paPlans = [101, 102, 103, 104];
     this.paTerms = {
       "1": 1,
       "3": 2,
@@ -179,7 +175,7 @@ export default class ConfirmationScreen extends Component {
         this.policy.id === "pa_mr" ||
         this.policy.id === "pa_wi")
     ) {
-      const planid = this.paPlans[form.planIndex];
+      const planid = form.planIndex;
       const termid = this.paTerms[form.coverageDuration];
       const optionid = this.paOptions[this.policy.id];
       const commencementDate = new Date();
@@ -191,11 +187,11 @@ export default class ConfirmationScreen extends Component {
       promise
         .then(res => {
           // throw new Error("yolo");
+          console.log(res);
           this.setState({ totalPremium: parseFloat(res.data) });
         })
         .catch(err => {
           console.error(err);
-          showAlert("Sorry, error getting policy quote");
           const { currentUser } = this.props.navigation.state.params;
 
           this.props.screenProps.rootNavigation.dispatch(
@@ -308,7 +304,7 @@ export default class ConfirmationScreen extends Component {
             afterAlert
           );
         } else {
-          showAlert("Sorry, something went wrong", afterAlert);
+          showAlert("Sorry, something went wrong " + err.message, afterAlert);
         }
       });
   }
@@ -353,7 +349,7 @@ export default class ConfirmationScreen extends Component {
       const countryid = form.travelDestination;
       const startDate = form.departureDate;
       const endDate = form.returnDate;
-      const planid = this.travelPlans[form.planIndex];
+      const planid = form.planIndex;
       const travellers = form.travellers;
       const [hasSpouse, hasChildren] = this.getHasSpouseAndChildren(
         form.travellers
@@ -367,7 +363,8 @@ export default class ConfirmationScreen extends Component {
           planid,
           travellers,
           policyHolder,
-          paymentDetails
+          paymentDetails,
+          extractPaRes
         );
       }
     } else if (
@@ -377,7 +374,7 @@ export default class ConfirmationScreen extends Component {
         this.policy.id === "pa_wi")
     ) {
       if (this.state.totalPremium) {
-        const planid = this.paPlans[form.planIndex];
+        const planid = form.planIndex;
         const policytermid = this.paTerms[form.coverageDuration];
         const occupationid = form.occupation;
         const optionid = this.paOptions[this.policy.id];
@@ -388,7 +385,8 @@ export default class ConfirmationScreen extends Component {
           optionid,
           occupationid,
           policyHolder,
-          paymentDetails
+          paymentDetails,
+          extractPaRes
         );
       }
     } else if (this.policy && this.policy.id === "mobile") {
@@ -406,7 +404,8 @@ export default class ConfirmationScreen extends Component {
           policyCommencementDate,
           mobileDetails,
           policyHolder,
-          paymentDetails
+          paymentDetails,
+          extractPaRes
         );
       }
     }
@@ -449,7 +448,9 @@ export default class ConfirmationScreen extends Component {
       pageContent = (
         <Page>
           <Text style={styles.pageTitle}>Confirm your details</Text>
-          <PolicyPrice pricePerMonth={this.state.totalPremium} />
+          {this.state.totalPremium ? (
+            <PolicyPrice pricePerMonth={this.state.totalPremium} />
+          ) : null}
           {formArr.map(f => this.renderField(f.key, f.value))}
         </Page>
       );

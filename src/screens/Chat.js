@@ -212,9 +212,6 @@ class ChatScreen extends Component {
     this.handleSelectSuggestion = this.handleSelectSuggestion.bind(this);
     this.handleSelectPolicy = this.handleSelectPolicy.bind(this);
     this.handleSelectPlan = this.handleSelectPlan.bind(this);
-    this.handleSelectTravelInsurancePlan = this.handleSelectTravelInsurancePlan.bind(
-      this
-    );
     this.handleChangeCoverageDuration = this.handleChangeCoverageDuration.bind(
       this
     );
@@ -406,35 +403,14 @@ class ChatScreen extends Component {
     this.props.navigation.navigate("Policy", params);
   }
 
-  handleSelectTravelInsurancePlan(planIndex) {
-    const planID = [1, 2, 84, 85];
-    const plans = ["Basic", "Enhanced", "Superior", "Premier"];
-    const { messages } = this.state;
-    let newMessages = messages.slice();
-    const messagesLen = messages.length;
-    const planMessage = {
-      questionIndex: this.state.currentQuestionIndex,
-      type: "text",
-      _id: uuid.v4(),
-      text: `${plans[planIndex]} plan`,
-      value: planID[planIndex],
-      user: CUSTOMER_USER
-    };
-    newMessages.splice(messagesLen - 1, 1, planMessage);
-    this.setState({ messages: newMessages }, () =>
-      this.setState({ answering: false, renderInput: false })
-    );
-  }
-
   handleSelectPlan(planIndex) {
-    const planAlphabet = ["A", "B", "C", "D", "E"];
-    const premium = this.props.policy.plans[planIndex].premium;
+    const { title, premium, id } = this.props.policy.plans[planIndex];
     const planMessage = {
       questionIndex: this.state.currentQuestionIndex,
       type: "text",
       _id: uuid.v4(),
-      text: `I choose Plan ${planAlphabet[planIndex]}`,
-      value: planIndex,
+      text: `I choose ${title}`,
+      value: id,
       user: CUSTOMER_USER
     };
     const { messages } = this.state;
@@ -1113,9 +1089,7 @@ class ChatScreen extends Component {
             travelDuration: days
           };
           return (
-            <TravelPlansView
-              onSelectPlan={this.handleSelectTravelInsurancePlan}
-            />
+            <TravelPlansView onSelectPlan={this.handleSelectPlan} />
             // <TravelInsurancePlanCarousel
             //   {...carouselProps}
             //   {...additionalProps}
@@ -1135,10 +1109,11 @@ class ChatScreen extends Component {
           this.questions[this.state.currentQuestionIndex].id !==
           "coverageDuration";
         const { planIndex } = this.state.answers;
+        const plan = this.props.policy.plans.find(p => p.id === planIndex);
         return (
           <CoverageDurationWidget
             onChangeDuration={this.handleChangeCoverageDuration}
-            monthlyPremium={this.props.policy.plans[planIndex].premium}
+            monthlyPremium={plan.premium}
             disabled={notCurrentQuestion}
           />
         );
@@ -1206,11 +1181,6 @@ class ChatScreen extends Component {
 
     const dateIndex = responseType.indexOf("date");
     const dateTimeIndex = responseType.indexOf("datetime");
-    console.log(
-      currentQuestionIndex,
-      this.questions.length,
-      currentQuestionIndex >= this.questions.length - 1
-    );
 
     if (currentQuestionIndex >= this.questions.length - 1) {
       return (

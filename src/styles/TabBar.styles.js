@@ -10,6 +10,10 @@ export default (styles = {
     backgroundColor: colors.primaryAccent,
     height: 4
   },
+  planTabLabel: {
+    fontSize: 11,
+    fontWeight: "600"
+  },
   tabLabel: {
     fontWeight: "600"
   },

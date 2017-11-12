@@ -126,6 +126,9 @@ export class CoverageDurationWidget extends Component {
     const buttonText = `CHOOSE ${months + ""} MONTH${s} - $${totalPremium}`;
     return (
       <View style={styles.durationContainer}>
+        <Text style={styles.durationText}>
+          {months} MONTH{s}
+        </Text>
         <RangeSlider
           elements={elements}
           onValueChange={months => {
@@ -1163,6 +1166,7 @@ class PlanTab extends Component {
           )}
         </View>
         <Button
+          accessibilityLabel={"chat__select-plan_" + plan.id}
           onPress={this.handleSelectPlan(planIndex)}
           style={styles.selectPlanButton}
         >
@@ -1216,7 +1220,7 @@ export class PlansTabNavigator extends Component {
         inactiveTintColor: colors.primaryText,
         style: tabContainerStyle,
         tabStyle: tabStyles.tabItem,
-        labelStyle: tabStyles.tabLabel,
+        labelStyle: tabStyles.planTabLabel,
         indicatorStyle: tabStyles.tabIndicator
       }
     });
@@ -1254,6 +1258,12 @@ const multiInputPlaceholderSize = 16;
 const iconSize = 50;
 
 const styles = StyleSheet.create({
+  durationText: {
+    marginBottom: 20,
+    fontSize: 17,
+    fontWeight: "bold",
+    textAlign: "center"
+  },
   claimScreenText: {
     fontSize: 17,
     marginBottom: 15
@@ -1310,7 +1320,7 @@ const styles = StyleSheet.create({
   plansTabContainer: {
     marginTop: 20,
     marginBottom: 10,
-    marginHorizontal: 15,
+    marginHorizontal: 7,
     borderRadius: 5,
     backgroundColor: "white",
     shadowColor: "#424242",
