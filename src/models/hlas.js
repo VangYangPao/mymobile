@@ -1,6 +1,7 @@
 // @flow
 import uuidv4 from "uuid/v4";
 import moment from "moment";
+import promiseRetry from "promise-retry";
 
 import type {
   TravelProductPlanID,
@@ -20,7 +21,7 @@ import {
   verifyEnrolment,
   doFull3DSTransaction
 } from "./telemoney";
-import { objectToUrlParams, retry } from "../utils";
+import { objectToUrlParams } from "../utils";
 
 const HLAS_URL = "http://42.61.99.229:8080";
 const AGENT_CODE = "MIC00002"; // just to track microassurce account
@@ -38,6 +39,12 @@ const postHeaders = {
 function generateRandomNumberFromRange(min, max) {
   return Math.floor(Math.random() * max) + min;
 }
+
+const RETRY_OPTIONS = {
+  retries: 5,
+  factor: 2,
+  minTimeout: 1000
+};
 
 export function generateNRIC() {
   let numbers = "";
@@ -101,7 +108,7 @@ export function purchasePhonePolicy(
       PASAppID = res.applciationNo;
       console.log("verified application", PASAppID);
       let count = 0;
-      return retry(5, () => {
+      return promiseRetry(() => {
         console.log("retry", ++count);
         return verifyEnrolment(
           transactionRef,
@@ -109,7 +116,7 @@ export function purchasePhonePolicy(
           paymentDetails.CardType,
           premium.toFixed(2)
         );
-      });
+      }, RETRY_OPTIONS);
     })
     .then(res => {
       verifyEnrolmentResponseObj = res;
@@ -135,7 +142,7 @@ export function purchasePhonePolicy(
       // ];
       // return retryPromise(doFull3DSTransaction, args, 5, 2000);
       let count = 0;
-      return retry(5, () => {
+      return promiseRetry(() => {
         console.log("retry", ++count);
         return doFull3DSTransaction(
           telemoneyCard,
@@ -144,7 +151,7 @@ export function purchasePhonePolicy(
           verifyEnrolmentResponseObj,
           extractPaRes
         );
-      });
+      }, RETRY_OPTIONS);
     })
     .then(res => {
       console.log("payment res", res);
@@ -483,8 +490,9 @@ export function purchaseAccidentPolicy(
     .then(res => {
       PASAppID = res.applciationNo;
       console.log("verified application", PASAppID);
+
       let count = 0;
-      return retry(5, () => {
+      return promiseRetry(() => {
         console.log("retry", ++count);
         return verifyEnrolment(
           transactionRef,
@@ -492,7 +500,7 @@ export function purchaseAccidentPolicy(
           paymentDetails.CardType,
           premium.toFixed(2)
         );
-      });
+      }, RETRY_OPTIONS);
     })
     .then(res => {
       verifyEnrolmentResponseObj = res;
@@ -518,7 +526,8 @@ export function purchaseAccidentPolicy(
       // ];
       // return retryPromise(doFull3DSTransaction, args, 5, 2000);
       let count = 0;
-      return retry(5, () => {
+
+      return promiseRetry(() => {
         console.log("retry", ++count);
         return doFull3DSTransaction(
           telemoneyCard,
@@ -527,7 +536,7 @@ export function purchaseAccidentPolicy(
           verifyEnrolmentResponseObj,
           extractPaRes
         );
-      });
+      }, RETRY_OPTIONS);
     })
     .then(res => {
       console.log("payment res", res);
@@ -879,7 +888,7 @@ export function purchaseTravelPolicy(
       PASAppID = res.applciationNo;
       console.log("verified application", PASAppID);
       let count = 0;
-      return retry(5, () => {
+      return promiseRetry(() => {
         console.log("retry", ++count);
         return verifyEnrolment(
           transactionRef,
@@ -887,7 +896,7 @@ export function purchaseTravelPolicy(
           paymentDetails.CardType,
           premium.toFixed(2)
         );
-      });
+      }, RETRY_OPTIONS);
     })
     .then(res => {
       verifyEnrolmentResponseObj = res;
@@ -916,7 +925,7 @@ export function purchaseTravelPolicy(
       // ];
       // return retryPromise(doFull3DSTransaction, args, 5, 2000);
       let count = 0;
-      return retry(5, () => {
+      return promiseRetry(() => {
         console.log("retry", ++count);
         return doFull3DSTransaction(
           card,
@@ -925,7 +934,7 @@ export function purchaseTravelPolicy(
           verifyEnrolmentResponseObj,
           extractPaRes
         );
-      });
+      }, RETRY_OPTIONS);
     })
     .then(res => {
       console.log("payment res", res);
@@ -1031,7 +1040,7 @@ export function verifyApplicationTravelSingle(
     WebAppID,
     AutoRenew: false,
     ReferralSouceID: REFERRAL_SOURCE_ID,
-    CountryID: 80,
+    CountryID,
     TravelStartDate,
     TravelEndDate,
     ProductPlanID,
@@ -1094,7 +1103,7 @@ export function createPaymentTransactionTravelSingle(
     WebAppID,
     AutoRenew: false,
     ReferralSouceID: REFERRAL_SOURCE_ID,
-    CountryID: 80,
+    CountryID,
     TravelStartDate,
     TravelEndDate,
     ProductPlanID,

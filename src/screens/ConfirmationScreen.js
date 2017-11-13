@@ -47,7 +47,8 @@ type State = {
   renderCheckoutModal: boolean,
   loading: boolean,
   purchasing: boolean,
-  totalPremium: ?number
+  totalPremium: ?number,
+  acsRedirectionHTML: ?string
 };
 
 const redirectToStatus = currentUser =>
@@ -109,6 +110,7 @@ export default class ConfirmationScreen extends Component {
   policy: any;
   handleCheckout: Function;
   handlePurchaseResult: Function;
+  handleACSRedirection: Function;
   fieldMapping: { [string]: string };
 
   constructor(props: {
@@ -119,6 +121,8 @@ export default class ConfirmationScreen extends Component {
     super(props);
     this.handleCheckout = this.handleCheckout.bind(this);
     this.handlePurchaseResult = this.handlePurchaseResult.bind(this);
+    this.handleACSRedirection = this.handleACSRedirection.bind(this);
+    // this.handleACSResult = this.handleACSResult.bind(this);
     this.renderField = this.renderField.bind(this);
     const { form } = this.props.navigation.state.params;
     this.policy = form.policy;
@@ -127,7 +131,8 @@ export default class ConfirmationScreen extends Component {
       renderCheckoutModal: false,
       loading: true,
       purchasing: false,
-      totalPremium: null
+      totalPremium: null,
+      acsRedirectionHTML: null
     };
     this.paTerms = {
       "1": 1,
@@ -213,6 +218,15 @@ export default class ConfirmationScreen extends Component {
       hasChildren = true;
     }
     return [hasSpouse, hasChildren];
+  }
+
+  handleACSRedirection(acsRedirectionHTML: string) {
+    return extractPaRes(acsRedirectionHTML);
+    // this.setState({ renderCheckoutModal: false, purchasing: false });
+    // this.props.navigation.navigate("ACS", {
+    //   acsRedirectionHTML,
+    //   handleACSResult: this.handleACSResult
+    // });
   }
 
   handlePurchaseResult(promise: Promise<any>) {
@@ -304,7 +318,7 @@ export default class ConfirmationScreen extends Component {
             afterAlert
           );
         } else {
-          showAlert("Sorry, something went wrong " + err.message, afterAlert);
+          showAlert("Sorry, something went wrong ", afterAlert);
         }
       });
   }
@@ -364,7 +378,8 @@ export default class ConfirmationScreen extends Component {
           travellers,
           policyHolder,
           paymentDetails,
-          extractPaRes
+          // extractPaRes
+          this.handleACSRedirection
         );
       }
     } else if (
@@ -386,7 +401,7 @@ export default class ConfirmationScreen extends Component {
           occupationid,
           policyHolder,
           paymentDetails,
-          extractPaRes
+          this.handleACSRedirection
         );
       }
     } else if (this.policy && this.policy.id === "mobile") {
@@ -405,7 +420,7 @@ export default class ConfirmationScreen extends Component {
           mobileDetails,
           policyHolder,
           paymentDetails,
-          extractPaRes
+          this.handleACSRedirection
         );
       }
     }

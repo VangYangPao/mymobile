@@ -108,11 +108,19 @@ export function generateID(len: number = 6) {
   return text;
 }
 
-export function retry(maxRetries: number, fn: Function) {
+export function exponentialRetry(
+  maxRetries: number,
+  retryTimes: number,
+  fn: Function
+) {
   return fn().catch(function(err) {
-    if (maxRetries <= 0) {
+    if (retryTimes >= maxRetries) {
       throw err;
     }
-    return retry(maxRetries - 1, fn);
+    const delay = 1000;
+    retryTimes += 1;
+    setTimeout(() => {
+      return exponentialRetry(maxRetries, retryTimes, fn);
+    }, retryTimes * delay);
   });
 }

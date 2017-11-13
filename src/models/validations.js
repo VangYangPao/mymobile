@@ -199,8 +199,8 @@ const TypeValidators = {
 
 export function validateOneAnswer(
   responseTypes: Array<string>,
-  answer,
-  answers
+  answer: Object,
+  answers: Array<Object>
 ) {
   var validateFunc;
   for (var i = 0; i < responseTypes.length; i++) {
@@ -242,5 +242,15 @@ export function validateAnswer(question, answer, answers) {
   //   // const collatedErrMessage = responses.map(r => r.errMessage).join(" ");
   //   // return new ValidationResult(false, collatedErrMessage);
   // }
-  return validateOneAnswer(responseTypes, answer, answers);
+  let result = validateOneAnswer(responseTypes, answer, answers);
+  if (result.isValid && question.responseLength && answer.length) {
+    const { responseLength: maxLength } = question;
+    if (answer.length >= maxLength) {
+      result = new ValidationResult(
+        false,
+        `Answer must be not longer than ${maxLength} characters`
+      );
+    }
+  }
+  return result;
 }

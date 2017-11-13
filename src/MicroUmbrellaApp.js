@@ -32,6 +32,7 @@ import HelpScreen from "./screens/HelpScreen";
 import TableScreen from "./screens/TableScreen";
 import DrawerContent from "./components/DrawerContent";
 import PolicyDetailsScreen from "./screens/PolicyDetails";
+import ACSScreen from "./screens/ACSScreen";
 import {
   styles,
   backButtonNavOptions,
@@ -116,6 +117,10 @@ const BuyStackNavigator = StackNavigator(
     Confirmation: {
       screen: ConfirmationScreen,
       navigationOptions: backButtonNavOptions
+    },
+    ACS: {
+      screen: ACSScreen,
+      navigationOptions: backButtonNavOptions
     }
     // MyPolicies: {
     //   screen: StatusScreen,
@@ -123,6 +128,8 @@ const BuyStackNavigator = StackNavigator(
     // }
   },
   {
+    // initialRouteName: "ACS",
+    // initialRouteParams: {}
     initialRouteName: "Chat",
     initialRouteParams: {
       questionSet: "buy",
