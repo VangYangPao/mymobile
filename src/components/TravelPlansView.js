@@ -203,7 +203,7 @@ class TravelPlanTab extends Component {
           sections={listSections}
         />
         <Button
-          accessibilityLabel={"chat__" + "select-plan_" + this.props.plan}
+          accessibilityLabel={"chat__select-plan_" + this.props.plan}
           onPress={() => this.props.onSelectPlan(this.props.planIndex)}
           style={styles.selectPlanButton}
         >
@@ -255,8 +255,7 @@ const styles = StyleSheet.create({
     fontSize: 17
   },
   selectPlanButton: {
-    borderTopLeftRadius: 0,
-    borderTopRightRadius: 0
+    borderRadius: 0
   },
   sections: {
     marginTop: 10
