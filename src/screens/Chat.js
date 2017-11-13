@@ -27,7 +27,8 @@ import {
   InputToolbar,
   Composer,
   Send,
-  Actions
+  Actions,
+  MessageImage
 } from "react-native-gifted-chat";
 import moment from "moment";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -197,6 +198,7 @@ class ChatScreen extends Component {
     AppStore.messages = [];
 
     this.renderMessage = this.renderMessage.bind(this);
+    this.renderMessageImage = this.renderMessageImage.bind(this);
     this.renderBubble = this.renderBubble.bind(this);
     this.renderMessageText = this.renderMessageText.bind(this);
     this.renderComposer = this.renderComposer.bind(this);
@@ -738,21 +740,23 @@ class ChatScreen extends Component {
     this.setState({ keyboardHeight: 0 });
   }
 
-  sendNewMessage(msgText, cb) {
+  sendNewMessage(msg: { text: string, image?: number }, cb) {
+    const { text, image } = msg;
     this.handleAgentSend(
       {
         _id: uuid.v4(),
         type: "text",
-        text: msgText,
+        text,
         createdAt: new Date(),
-        user: AGENT_USER
+        user: AGENT_USER,
+        image
       },
       cb
     );
   }
 
   reaskQuestion(errMessage) {
-    this.sendNewMessage(errMessage);
+    this.sendNewMessage({ text: errMessage });
     this.setState({ answering: true });
   }
 
@@ -892,7 +896,10 @@ class ChatScreen extends Component {
       );
     };
 
-    this.sendNewMessage(nextQuestionText, handleAfterSendMessage);
+    this.sendNewMessage(
+      { text: nextQuestionText, image: nextQuestion.image },
+      handleAfterSendMessage
+    );
   }
 
   componentWillUpdate(nextProps, nextState) {
@@ -982,6 +989,12 @@ class ChatScreen extends Component {
           right: StyleSheet.flatten(styles.bubbleRight)
         }}
       />
+    );
+  }
+
+  renderMessageImage(props) {
+    return (
+      <Image style={styles.messageImage} source={props.currentMessage.image} />
     );
   }
 
@@ -1371,6 +1384,7 @@ class ChatScreen extends Component {
           renderDay={() => {}}
           renderBubble={this.renderBubble}
           renderMessage={this.renderMessage}
+          renderMessageImage={this.renderMessageImage}
           renderMessageText={this.renderMessageText}
           renderSend={this.renderSend}
           renderComposer={this.renderComposer}
@@ -1393,6 +1407,12 @@ const messageContainerStyle = {
 };
 
 const styles = StyleSheet.create({
+  messageImage: {
+    width: 250,
+    height: 250,
+    alignSelf: "center",
+    resizeMode: "contain"
+  },
   editButtonIcon: {
     color: colors.primaryText
   },
