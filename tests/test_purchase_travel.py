@@ -263,7 +263,7 @@ class PurchaseTravelTests(MicroUmbrellaAppTest):
             self.add_traveller(child)
         self.tap_on(self.poll_accessibility('chat__submit-traveller'))
 
-        sleep(2)
+        sleep(4)
         self.do_checkout()
 
 
