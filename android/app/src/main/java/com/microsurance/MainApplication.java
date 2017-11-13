@@ -3,6 +3,7 @@ package com.microsurance;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.geektime.rnonesignalandroid.ReactNativeOneSignalPackage;
 import com.rnfs.RNFSPackage;
 import com.fileopener.FileOpenerPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
@@ -36,6 +37,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new ReactNativeOneSignalPackage(),
             new RNFSPackage(),
             new FileOpenerPackage(),
             new RNFetchBlobPackage(),
