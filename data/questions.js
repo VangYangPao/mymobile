@@ -177,10 +177,11 @@ export const QUESTION_SETS = {
     // },
     {
       question:
-        "What's your phone's IMEI number? IMEI number is a unique 15-digit serial number given to every mobile phone. Check this at the back of your phone.",
+        "What's your phone's IMEI number? IMEI number is a unique 15-digit serial number given to every mobile phone. Check this at your Settings > General > About.",
       responseType: ["string", "imei"],
       id: "serialNo",
-      include: ["mobile"]
+      include: ["mobile"],
+      image: require("../images/imei-guide.png")
     },
     {
       question: "What brand is your phone?",
