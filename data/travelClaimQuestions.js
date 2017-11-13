@@ -26,7 +26,7 @@ export default (travelClaimQuestions = [
   },
   {
     question:
-      "You must be <%= fullName %>’s claimant/next of kin. I am so sorry for your loss. My deepest condolences to you and your family! Please share with me the date and time of the accident",
+      "You must be <%= firstName %> <%= lastName %>’s claimant/next of kin. I am so sorry for your loss. My deepest condolences to you and your family! Please share with me the date and time of the accident",
     responseType: "datetime",
     pastOnly: true,
     id: "accidentDate",
@@ -41,7 +41,7 @@ export default (travelClaimQuestions = [
   // causes crash
   {
     question:
-      "<%= fullName %>, I wish you a complete recovery. I’ll do my best to get your claim paid fast. Please share with me the date and time of the accident",
+      "<%= firstName %> <%= lastName %>, I wish you a complete recovery. I’ll do my best to get your claim paid fast. Please share with me the date and time of the accident",
     responseType: "datetime",
     pastOnly: true,
     id: "accidentDate",
@@ -57,7 +57,7 @@ export default (travelClaimQuestions = [
   },
   {
     question:
-      "<%= fullName %>, I wish you get well soon. Let me help out on the claim fast. Please share with me the date and time of the accident",
+      "<%= firstName %> <%= lastName %>, I wish you get well soon. Let me help out on the claim fast. Please share with me the date and time of the accident",
     responseType: "datetime",
     pastOnly: true,
     id: "accidentDate",
@@ -66,7 +66,7 @@ export default (travelClaimQuestions = [
   // causes crash
   {
     question:
-      "<%= fullName %>, you just selected the option to claim for loss or damaged items",
+      "<%= firstName %> <%= lastName %>, you just selected the option to claim for loss or damaged items",
     responseType: "datetime",
     pastOnly: true,
     id: "accidentDate",
@@ -87,7 +87,8 @@ export default (travelClaimQuestions = [
     include: ["travelDelay"]
   },
   {
-    question: "<%= fullName %>, share with me what had happened?  ",
+    question:
+      "<%= firstName %> <%= lastName %>, share with me what had happened?  ",
     responseType: "string",
     responseLength: 600,
     id: "details",
@@ -254,7 +255,7 @@ export default (travelClaimQuestions = [
 
   {
     question:
-      "Does <%= fullName %> have other insurance coverage for this accident?",
+      "Does <%= firstName %> <%= lastName %> have other insurance coverage for this accident?",
     responseType: ["boolean", "choice"],
     id: "hasOtherInsuranceCoverage",
     choices: [{ label: "Yes", value: true }, { label: "No", value: false }],

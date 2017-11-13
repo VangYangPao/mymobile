@@ -48,7 +48,7 @@ export default (paClaimQuestions = [
   // Intros
   {
     question:
-      "You must be <%= fullName %>’s claimant/next of kin. I am so sorry for your loss. My deepest condolences to you and your family! Please share with me the date and time of the accident",
+      "You must be <%= firstName %> <%= lastName %>’s claimant/next of kin. I am so sorry for your loss. My deepest condolences to you and your family! Please share with me the date and time of the accident",
     responseType: "datetime",
     pastOnly: true,
     id: "accidentDate",
@@ -145,7 +145,7 @@ export default (paClaimQuestions = [
   },
   {
     question:
-      "Does <%= fullName %> have other insurance coverage for this accident?",
+      "Does <%= firstName %> <%= lastName %> have other insurance coverage for this accident?",
     responseType: ["boolean", "choice"],
     id: "hasOtherInsuranceCoverage",
     label: "OTHER INSURANCE COVERAGE",
@@ -202,7 +202,7 @@ export default (paClaimQuestions = [
   // 2nd half
   {
     question:
-      "May I know if <%= fullName %> passed away in Singapore or outside of Singapore?",
+      "May I know if <%= firstName %> <%= lastName %> passed away in Singapore or outside of Singapore?",
     responseType: ["string", "choice"],
     id: "deathInSingapore",
     choices: [
@@ -319,7 +319,7 @@ export default (paClaimQuestions = [
   },
   {
     question:
-      "<%= fullName %>, to complete your claim, I need your help to post the ORIGINAL MEDICAL BILLS AND/OR RECEIPTS to: HLAS, 11 Keppel Road #11-01 ABI Plaza Singapore 089057, within 48 hours",
+      "<%= firstName %> <%= lastName %>, to complete your claim, I need your help to post the ORIGINAL MEDICAL BILLS AND/OR RECEIPTS to: HLAS, 11 Keppel Road #11-01 ABI Plaza Singapore 089057, within 48 hours",
     responseType: null,
     exclude: ["death"]
   },
