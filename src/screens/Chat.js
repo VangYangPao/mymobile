@@ -646,10 +646,15 @@ class ChatScreen extends Component {
         this.state.currentUser
       )
         .then(res => {
-          this.setState({ loadingSave: false });
           console.log(res);
-          this.props.screenProps.rootNavigation.dispatch(
-            navigateToPoliciesAction
+          showAlert(
+            "Your claim has been submitted. You will be notified on this app for updates",
+            () => {
+              this.setState({ loadingSave: false });
+              this.props.screenProps.rootNavigation.dispatch(
+                navigateToPoliciesAction
+              );
+            }
           );
         })
         .catch(err => {
@@ -1410,6 +1415,7 @@ const styles = StyleSheet.create({
   messageImage: {
     width: 250,
     height: 250,
+    marginTop: 10,
     alignSelf: "center",
     resizeMode: "contain"
   },

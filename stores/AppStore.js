@@ -67,7 +67,7 @@ class AppStore {
 
   pushClaimQuestionsOfType(policyType: string) {
     const questionSet = this.claimQuestionSets[policyType];
-    this.questionSets.claim.push.apply(this.questionSets.claim, questionSet);
+    this.questionSets.claim = QUESTION_SETS.claim.concat(questionSet);
   }
 }
 
