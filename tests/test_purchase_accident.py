@@ -152,7 +152,7 @@ class PurchaseAccidentTests(MicroUmbrellaAppTest):
         sleep(0.5)
         composer = self.find_accessibility(COMPOSER_PLACEHOLDER)
         self.tap_on(composer)
-        self.driver.set_value(composer, str(uuid4())[:15])
+        self.driver.set_value(composer, str(uuid4())[:14])
         self.tap_on(self.find_accessibility('Send'))
         # sleep(1 * LOAD_TIME_MULTIPLY)
 

@@ -229,7 +229,7 @@ class PurchaseTravelTests(MicroUmbrellaAppTest):
         back_btn = self.poll_accessibility('nav__back-btn')
         self.assertIsNotNone(back_btn)
 
-        self.tap_on(self.poll_accessibility(plan.upper()+'\nPLAN'))
+        self.tap_on(self.poll_accessibility(plan.upper()+' PLAN'))
         self.tap_on(self.poll_accessibility('chat__select-plan_'+plan))
         composer = self.poll_accessibility(COMPOSER_PLACEHOLDER)
         self.tap_on(composer)
@@ -252,7 +252,7 @@ class PurchaseTravelTests(MicroUmbrellaAppTest):
         sleep(0.5)
         composer = self.find_accessibility(COMPOSER_PLACEHOLDER)
         self.tap_on(composer)
-        self.driver.set_value(composer, str(uuid4())[:15])
+        self.driver.set_value(composer, str(uuid4())[:14])
         self.tap_on(self.find_accessibility('Send'))
         # sleep(1 * LOAD_TIME_MULTIPLY)
 
