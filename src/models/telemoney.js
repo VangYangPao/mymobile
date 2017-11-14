@@ -141,7 +141,6 @@ export function performPaymentAuthRequest(
       .then(resStr => {
         const res = getObjectFromUrlParams(resStr);
         if (res.TM_Status === "NO") {
-          console.log("pass");
           throw new Error(JSON.stringify(res));
         }
         return res;

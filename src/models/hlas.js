@@ -108,14 +108,14 @@ export function purchasePhonePolicy(
       PASAppID = res.applciationNo;
       console.log("verified application", PASAppID);
       let count = 0;
-      return promiseRetry(() => {
+      return promiseRetry((retry: Function, number: number) => {
         console.log("retry", ++count);
         return verifyEnrolment(
           transactionRef,
           telemoneyCard,
           paymentDetails.CardType,
           premium.toFixed(2)
-        );
+        ).catch(retry);
       }, RETRY_OPTIONS);
     })
     .then(res => {
@@ -141,16 +141,15 @@ export function purchasePhonePolicy(
       //   verifyEnrolmentResponseObj
       // ];
       // return retryPromise(doFull3DSTransaction, args, 5, 2000);
-      let count = 0;
-      return promiseRetry(() => {
-        console.log("retry", ++count);
+      return promiseRetry((retry: Function, number: number) => {
+        console.log("retry", number);
         return doFull3DSTransaction(
           telemoneyCard,
           paymentDetails.CardType,
           premium,
           verifyEnrolmentResponseObj,
           extractPaRes
-        );
+        ).catch(retry);
       }, RETRY_OPTIONS);
     })
     .then(res => {
@@ -492,14 +491,14 @@ export function purchaseAccidentPolicy(
       console.log("verified application", PASAppID);
 
       let count = 0;
-      return promiseRetry(() => {
-        console.log("retry", ++count);
+      return promiseRetry((retry: Function, number: number) => {
+        console.log("retry", number);
         return verifyEnrolment(
           transactionRef,
           telemoneyCard,
           paymentDetails.CardType,
           premium.toFixed(2)
-        );
+        ).catch(retry);
       }, RETRY_OPTIONS);
     })
     .then(res => {
@@ -527,15 +526,15 @@ export function purchaseAccidentPolicy(
       // return retryPromise(doFull3DSTransaction, args, 5, 2000);
       let count = 0;
 
-      return promiseRetry(() => {
-        console.log("retry", ++count);
+      return promiseRetry((retry: Function, number: number) => {
+        console.log("retry", number);
         return doFull3DSTransaction(
           telemoneyCard,
           paymentDetails.CardType,
           premium,
           verifyEnrolmentResponseObj,
           extractPaRes
-        );
+        ).catch(retry);
       }, RETRY_OPTIONS);
     })
     .then(res => {
@@ -847,16 +846,6 @@ export function purchaseTravelPolicy(
   paymentDetails: PaymentDetails,
   extractPaRes: Function
 ) {
-  console.log(
-    premium,
-    countryid,
-    startDate,
-    endDate,
-    planid,
-    travellers,
-    policyHolder,
-    paymentDetails
-  );
   let PASAppID,
     args,
     verifyEnrolmentResponseObj,
@@ -888,14 +877,14 @@ export function purchaseTravelPolicy(
       PASAppID = res.applciationNo;
       console.log("verified application", PASAppID);
       let count = 0;
-      return promiseRetry(() => {
-        console.log("retry", ++count);
+      return promiseRetry((retry: Function, number: number) => {
+        console.log("retry", number);
         return verifyEnrolment(
           transactionRef,
           card,
           paymentDetails.CardType,
           premium.toFixed(2)
-        );
+        ).catch(retry);
       }, RETRY_OPTIONS);
     })
     .then(res => {
@@ -925,19 +914,18 @@ export function purchaseTravelPolicy(
       // ];
       // return retryPromise(doFull3DSTransaction, args, 5, 2000);
       let count = 0;
-      return promiseRetry(() => {
-        console.log("retry", ++count);
+      return promiseRetry((retry: Function, number: number) => {
+        console.log("retry", number);
         return doFull3DSTransaction(
           card,
           paymentDetails.CardType,
           premium,
           verifyEnrolmentResponseObj,
           extractPaRes
-        );
+        ).catch(retry);
       }, RETRY_OPTIONS);
     })
     .then(res => {
-      console.log("payment res", res);
       paymentSuccessfulResponse = objectToUrlParams(res);
       console.log("payment successful", res);
       return updatePaymentTransactionTravelSingle(

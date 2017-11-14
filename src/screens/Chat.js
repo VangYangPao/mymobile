@@ -1305,6 +1305,9 @@ class ChatScreen extends Component {
         nric: "NRIC/FIN",
         passport: "Passport"
       };
+      const actionPickerIconType = this.state.renderActionsPicker
+        ? "keyboard-arrow-up"
+        : "keyboard-arrow-down";
       return (
         <TouchableOpacity
           accessibilityLabel="chat__action-picker"
@@ -1312,12 +1315,13 @@ class ChatScreen extends Component {
             this.setState({
               renderActionsPicker: !this.state.renderActionsPicker
             })}
-          style={{
-            alignItems: "center",
-            justifyContent: "center",
-            alignSelf: "center"
-          }}
+          style={styles.actionPicker}
         >
+          <Icon
+            style={styles.actionPickerIcon}
+            size={20}
+            name={actionPickerIconType}
+          />
           <Text style={styles.idNumberTypeText}>
             {mapping[this.state.idNumberType]}
           </Text>
@@ -1412,6 +1416,18 @@ const messageContainerStyle = {
 };
 
 const styles = StyleSheet.create({
+  actionPickerIcon: {
+    marginLeft: 7,
+    marginRight: 3,
+    color: colors.primaryAccent
+  },
+  actionPicker: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    alignSelf: "center",
+    paddingTop: Platform.select({ ios: -5, android: 0 })
+  },
   messageImage: {
     width: 250,
     height: 250,
@@ -1446,8 +1462,6 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.5)"
   },
   idNumberTypeText: {
-    marginLeft: 7,
-    marginTop: Platform.select({ ios: -5, android: 0 }),
     color: colors.primaryAccent,
     fontSize: 15
   },

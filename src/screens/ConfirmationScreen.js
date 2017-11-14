@@ -378,8 +378,8 @@ export default class ConfirmationScreen extends Component {
           travellers,
           policyHolder,
           paymentDetails,
-          // extractPaRes
-          this.handleACSRedirection
+          extractPaRes
+          // this.handleACSRedirection
         );
       }
     } else if (
@@ -401,7 +401,8 @@ export default class ConfirmationScreen extends Component {
           occupationid,
           policyHolder,
           paymentDetails,
-          this.handleACSRedirection
+          extractPaRes
+          // this.handleACSRedirection
         );
       }
     } else if (this.policy && this.policy.id === "mobile") {
@@ -420,7 +421,8 @@ export default class ConfirmationScreen extends Component {
           mobileDetails,
           policyHolder,
           paymentDetails,
-          this.handleACSRedirection
+          extractPaRes
+          // this.handleACSRedirection
         );
       }
     }
