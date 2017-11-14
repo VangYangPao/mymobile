@@ -17,6 +17,7 @@ import {
   Bubble,
   Time
 } from "react-native-gifted-chat";
+import Icon from "react-native-vector-icons/MaterialIcons";
 import HTMLView from "react-native-htmlview";
 import { StackNavigator } from "react-navigation";
 import { Text } from "../components/defaultComponents";
@@ -42,7 +43,10 @@ const CUSTOMER_USER = {
 
 export default class HelpScreen extends Component {
   static navigationOptions = {
-    title: "Help"
+    title: "Help",
+    drawerIcon: ({ tintColor }) => (
+      <Icon name="feedback" size={22} color={tintColor} />
+    )
   };
 
   constructor(props) {

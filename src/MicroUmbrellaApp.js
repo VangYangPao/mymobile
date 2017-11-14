@@ -218,6 +218,9 @@ const MyDrawerNavigator = DrawerNavigator(
     },
     Notification: {
       screen: NotificationsStackNavigator
+    },
+    Help: {
+      screen: HelpStackNavigator
     }
     // Profile: {
     //   screen: StatusStackNavigator,

@@ -92,7 +92,7 @@ export default class NotificationsScreen extends Component {
     const emptyNotifications = (
       <View style={styles.emptyNotifications}>
         <Text style={styles.emptyNotificationsTitle}>
-          You have no notifications.
+          Welcome to MicroUmbrella!
         </Text>
         <Text
           style={[
