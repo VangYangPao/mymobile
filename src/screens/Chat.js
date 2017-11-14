@@ -83,7 +83,7 @@ const CUSTOMER_USER_ID = 1;
 const AGENT_USER = {
   _id: AGENT_USER_ID,
   name: "Carol",
-  avatar: require("../../images/eve-avatar.jpg")
+  avatar: require("../../images/eve-avatar.png")
 };
 const CUSTOMER_USER = {
   _id: CUSTOMER_USER_ID

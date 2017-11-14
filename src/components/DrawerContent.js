@@ -135,11 +135,13 @@ export default class DrawerContent extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.container}>
-          <View style={styles.header}>
-            {image}
-            <Text style={styles.name}>{fullName || "Not logged in yet!"}</Text>
-            {fullName ? (
-              <TouchableOpacity onPress={handleViewProfile}>
+          <TouchableOpacity onPress={handleViewProfile}>
+            <View style={styles.header}>
+              {image}
+              <Text style={styles.name}>
+                {fullName || "Not logged in yet!"}
+              </Text>
+              {fullName ? (
                 <View style={styles.viewEditProfile}>
                   <Text style={styles.viewEditProfileText}>
                     View / Edit profile
@@ -150,9 +152,9 @@ export default class DrawerContent extends Component {
                     size={18}
                   />
                 </View>
-              </TouchableOpacity>
-            ) : null}
-          </View>
+              ) : null}
+            </View>
+          </TouchableOpacity>
           <DrawerItems labelStyle={styles.drawerItemLabel} {...this.props} />
         </View>
         {fullName ? (
