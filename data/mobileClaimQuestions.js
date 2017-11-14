@@ -48,12 +48,7 @@ export default (mobileClaimQuestions = [
   },
   {
     question:
-      "Please bring a copy of the above images when you submit your mobile phone to any of our listed workshop for claim. Here is the list of workshops",
-    responseType: null
-  },
-  {
-    question:
-      "Here is the final question, in the past 3 years, have you made any claim on mobile phone under any type of insurance policy? ",
+      "In the past 3 years, have you made any claim on mobile phone under any type of insurance policy? ",
     responseType: ["boolean", "choice"],
     choices: [
       { label: "Yes, I have", value: true },
@@ -62,8 +57,15 @@ export default (mobileClaimQuestions = [
     id: "hasMadeClaim"
   },
   {
-    question:
-      "Thank you for your patience. Please keep this phone with you at all times, as I shall send you notifications and messages on your claim. Please switch on the notification. ",
+    question: `Please select your preferred workshops;
+ 
+1) Workshop ABC - Pasir Ris
+2) Workshop EDP - Ang Mo Kio
+3) Workshop EEE - Woodlands
+ 
+Your choice of workshop and the time required to repair the phone are subject to parts availability and complexity of repair.  Please take note that only simple repair can be done on site. 
+We or/ and the workshop personnel will follow up with a call very soon. Thank you. 
+ `,
     responseType: null
   }
 ]);
