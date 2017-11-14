@@ -43,6 +43,8 @@ class AppStore {
 
   @observable messages = [];
 
+  validations = {};
+
   questionSets = {
     buy: QUESTION_SETS.buy,
     claim: QUESTION_SETS.claim

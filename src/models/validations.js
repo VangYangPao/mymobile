@@ -2,6 +2,8 @@
 import moment from "moment";
 import { isObservableArray } from "mobx";
 
+import AppStore from "../../stores/AppStore";
+
 export class ValidationResult {
   isValid: boolean;
   errMessage: string | boolean;
@@ -194,7 +196,8 @@ const TypeValidators = {
   nric: validateNRIC,
   multiInput: () => new ValidationResult(true, true),
   table: () => new ValidationResult(true, true),
-  boolean: validateBoolean
+  boolean: validateBoolean,
+  ...AppStore.validations
 };
 
 export function validateOneAnswer(
