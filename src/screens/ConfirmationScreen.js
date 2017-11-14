@@ -14,6 +14,7 @@ import {
 } from "react-native";
 import moment from "moment";
 import { NavigationActions } from "react-navigation";
+import promiseRetry from "promise-retry";
 
 import type { PolicyHolder, PaymentDetails, MUTraveller } from "../types/hlas";
 import { Text } from "../components/defaultComponents";
@@ -97,6 +98,12 @@ const redirectToPolicyPurchase = (props, policy, currentUser) => {
       })
     ]
   });
+};
+
+const RETRY_OPTIONS = {
+  retries: 5,
+  factor: 2,
+  minTimeout: 1000
 };
 
 export default class ConfirmationScreen extends Component {
@@ -188,22 +195,24 @@ export default class ConfirmationScreen extends Component {
     } else if (this.policy && this.policy.id === "mobile") {
       promise = getPhoneProtectQuote();
     }
-    if (promise) {
-      promise
-        .then(res => {
-          // throw new Error("yolo");
-          console.log(res);
-          this.setState({ totalPremium: parseFloat(res.data) });
-        })
-        .catch(err => {
-          console.error(err);
-          const { currentUser } = this.props.navigation.state.params;
+    promiseRetry((retry: Function, number: number) => {
+      if (promise) {
+        return promise.catch(retry);
+      }
+    }, RETRY_OPTIONS)
+      .then(res => {
+        // throw new Error("yolo");
+        console.log(res);
+        this.setState({ totalPremium: parseFloat(res.data) });
+      })
+      .catch(err => {
+        console.error(err);
+        const { currentUser } = this.props.navigation.state.params;
 
-          this.props.screenProps.rootNavigation.dispatch(
-            redirectToPolicyPurchase(this.props, this.policy, currentUser)
-          );
-        });
-    }
+        this.props.screenProps.rootNavigation.dispatch(
+          redirectToPolicyPurchase(this.props, this.policy, currentUser)
+        );
+      });
   }
 
   getHasSpouseAndChildren(travellers: Array<MUTraveller>): [boolean, boolean] {
