@@ -9,7 +9,7 @@ const ALL_OCCUPATIONS = OCCUPATIONS.concat(INVALID_OCCUPATIONS);
 const claimIntro = [
   {
     question:
-      "Welcome back <%= fullName %>, here are your protection plans. Which policy would you like to make a claim?",
+      "Welcome back <%= firstName %> <%= lastName %>, here are your protection plans. Which policy would you like to make a claim?",
     responseType: "string",
     id: "claimPolicyNo"
   }
