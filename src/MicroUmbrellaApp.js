@@ -15,11 +15,12 @@ import {
   DrawerNavigator,
   StackNavigator
 } from "react-navigation";
-// import OneSignal from "react-native-onesignal";
+import OneSignal from "react-native-onesignal";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Ionicon from "react-native-vector-icons/Ionicons";
 
 import AppStore from "../stores/AppStore";
+import { saveNewNotificationDevice } from "./parse/notificationDevice";
 import SplashScreen from "./screens/SplashScreen";
 import IntroScreen from "./screens/IntroScreen";
 import ChatScreenWrapper from "./screens/Chat";
@@ -262,22 +263,94 @@ let stackNavConfig = {
 //   stackNavConfig["initialRouteName"] = "Intro";
 // }
 
+const NotificationDevice = Parse.Object.extend("NotificationDevice");
+
 export default class MicroUmbrellaApp extends Component {
   props: any;
   state: { loading: boolean, currentUser: any };
 
   constructor(props: createAppOptionsType) {
     super(props);
-    this.state = { loading: true, currentUser: null };
+    this.state = {
+      loading: true,
+      currentUser: null,
+      notifDevice: null
+    };
+    this.onIds = this.onIds.bind(this);
+  }
+
+  runAfterInteractions(fn) {
+    return (...args) => {
+      InteractionManager.runAfterInteractions(() => {
+        fn(...args);
+      });
+    };
+  }
+
+  onIds(notifDevice) {
+    console.log("Device info: ", notifDevice);
+    this.setState({ notifDevice });
+  }
+
+  onReceived(notification) {
+    console.log("Notification received: ", notification);
+  }
+
+  onOpened(openResult) {
+    console.log("Message: ", openResult.notification.payload.body);
+    console.log("Data: ", openResult.notification.payload.additionalData);
+    console.log("isActive: ", openResult.notification.isAppInFocus);
+    console.log("openResult: ", openResult);
+  }
+
+  componentWillMount() {
+    OneSignal.addEventListener(
+      "received",
+      this.runAfterInteractions(this.onReceived)
+    );
+    OneSignal.addEventListener(
+      "opened",
+      this.runAfterInteractions(this.onOpened)
+    );
+    OneSignal.addEventListener("ids", this.runAfterInteractions(this.onIds));
+  }
+
+  componentWillUnmount() {
+    OneSignal.removeEventListener("received", this.onReceived);
+    OneSignal.removeEventListener("opened", this.onOpened);
+    OneSignal.removeEventListener("ids", this.onIds);
   }
 
   componentDidMount() {
-    // OneSignal.configure({});
-    Parse.User.currentAsync().then(currentUser => {
-      setTimeout(() => {
-        this.setState({ loading: false, currentUser });
-      }, SPLASH_LOAD_TIME);
+    InteractionManager.runAfterInteractions(() => {
+      OneSignal.configure({});
+      Parse.User.currentAsync().then(currentUser => {
+        setTimeout(() => {
+          this.setState({ loading: false, currentUser });
+        }, SPLASH_LOAD_TIME);
+      });
     });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { currentUser, notifDevice } = this.state;
+
+    if (
+      currentUser &&
+      notifDevice &&
+      (prevState.currentUser === null || prevState.notifDevice === null)
+    ) {
+      InteractionManager.runAfterInteractions(() => {
+        const { userId: notifUserId, pushToken: notifPushToken } = notifDevice;
+        const query = new Parse.Query(NotificationDevice);
+        query.equalTo("notifUserId", notifUserId);
+        query.first().then(notifDevice => {
+          if (!notifDevice) {
+            saveNewNotificationDevice(currentUser, notifUserId, notifPushToken);
+          }
+        });
+      });
+    }
   }
 
   render() {
