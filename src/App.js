@@ -9,6 +9,8 @@ import paClaimQuestions from "../data/paClaimQuestions";
 import travelClaimQuestions from "../data/travelClaimQuestions";
 import mobileClaimQuestions from "../data/mobileClaimQuestions";
 
+import validations from "./validations";
+
 const claimQuestionSets = {
   pa: paClaimQuestions,
   pa_mr: paClaimQuestions,
@@ -23,6 +25,7 @@ const appOptions = {
   questionSets,
   claimQuestionSets,
   colors,
+  validations,
   parseAppId: "microumbrella",
   parseServerURL: "https://api-dev.microumbrella.com/parse"
 };
