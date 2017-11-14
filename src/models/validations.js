@@ -245,7 +245,7 @@ export function validateAnswer(question, answer, answers) {
   let result = validateOneAnswer(responseTypes, answer, answers);
   if (result.isValid && question.responseLength && answer.length) {
     const { responseLength: maxLength } = question;
-    if (answer.length >= maxLength) {
+    if (answer.length > maxLength) {
       result = new ValidationResult(
         false,
         `Answer must be not longer than ${maxLength} characters`

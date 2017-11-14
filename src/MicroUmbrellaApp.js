@@ -15,6 +15,7 @@ import {
   DrawerNavigator,
   StackNavigator
 } from "react-navigation";
+// import OneSignal from "react-native-onesignal";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Ionicon from "react-native-vector-icons/Ionicons";
 
@@ -268,6 +269,7 @@ export default class MicroUmbrellaApp extends Component {
   }
 
   componentDidMount() {
+    // OneSignal.configure({});
     Parse.User.currentAsync().then(currentUser => {
       setTimeout(() => {
         this.setState({ loading: false, currentUser });
