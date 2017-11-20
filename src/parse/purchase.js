@@ -1,5 +1,7 @@
 // @flow
 import Parse from "parse/react-native";
+import moment from "moment";
+import getPolicyEndDate from "./policyEndDate";
 
 export function saveNewPurchase(
   policyTypeId: string,
@@ -36,12 +38,34 @@ export function saveNewPurchase(
   purchase.set("tmVerifyEnrolment", tmVerifyEnrolment);
   purchase.set("tmPaymentSuccessRes", tmPaymentSuccessRes);
 
+  const isPA =
+    policyTypeId === "pa" ||
+    policyTypeId === "pa_mr" ||
+    policyTypeId === "pa_wi";
+
+  if (isPA) {
+    const termMapping = {
+      1: 1,
+      2: 3,
+      3: 6,
+      4: 12
+    };
+    const { commencementDate, policyTermsId } = additionalAttributes;
+    const months = termMapping[policyTermsId];
+    const policyExpiryDate = moment(commencementDate)
+      .add(months, "months")
+      .toDate();
+    purchase.set("policyExpiryDate", policyExpiryDate);
+  } else if (policyTypeId === "mobile") {
+    const { commencementDate } = additionalAttributes;
+    const policyExpiryDate = moment(commencementDate)
+      .add(1, "years")
+      .toDate();
+    purchase.set("policyExpiryDate", policyExpiryDate);
+  }
+
   return purchase.save().then(purchase => {
-    if (
-      policyTypeId === "pa" ||
-      policyTypeId === "pa_mr" ||
-      policyTypeId === "pa_wi"
-    ) {
+    if (isPA) {
       const PurchaseAccident = Parse.Object.extend("PurchaseAccident");
       const {
         policyTermsId,
