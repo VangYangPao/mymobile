@@ -32,10 +32,12 @@ import { searchArticles } from "../models/zendesk";
 const AGENT_USER_ID = 0;
 const CUSTOMER_USER_ID = 1;
 
+const AGENT_AVATAR = require("../../images/eve-avatar.png");
+
 const AGENT_USER = {
   _id: AGENT_USER_ID,
   name: "Eve",
-  avatar: require("../../images/eve-avatar.png")
+  avatar: AGENT_AVATAR
 };
 const CUSTOMER_USER = {
   _id: CUSTOMER_USER_ID
@@ -167,10 +169,7 @@ export default class HelpScreen extends Component {
     if (props.messages.length > 0) return null;
     return (
       <View style={styles.footerContainer}>
-        <Image
-          style={styles.agentImage}
-          source={require("../../images/eve-avatar.jpg")}
-        />
+        <Image style={styles.agentImage} source={AGENT_AVATAR} />
         <Text style={styles.agentName}>EVE</Text>
         <Text style={styles.agentPosition}>Customer Support</Text>
         {this.state.composerText !== "" &&
