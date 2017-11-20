@@ -24,6 +24,7 @@ import Footer from "../components/Footer";
 import PolicyPrice from "../components/PolicyPrice";
 import CheckoutModal from "../components/CheckoutModal";
 import { extractPaRes } from "../utils";
+import MAPPING from "../../data/mappings";
 import {
   getTravelQuote,
   getAccidentQuote,
@@ -141,21 +142,6 @@ export default class ConfirmationScreen extends Component {
       totalPremium: null,
       acsRedirectionHTML: null
     };
-    this.paTerms = {
-      "1": 1,
-      "3": 2,
-      "6": 3,
-      "12": 4
-    };
-    this.paOptions = {
-      pa: 0,
-      pa_mr: 1,
-      pa_wi: 2
-    };
-    this.fieldMapping = {
-      idNumber: "ID Number",
-      idNumberType: "ID Number Type"
-    };
   }
 
   componentWillMount() {
@@ -188,8 +174,8 @@ export default class ConfirmationScreen extends Component {
         this.policy.id === "pa_wi")
     ) {
       const planid = form.planIndex;
-      const termid = this.paTerms[form.coverageDuration];
-      const optionid = this.paOptions[this.policy.id];
+      const termid = MAPPING.paTerms[form.coverageDuration];
+      const optionid = MAPPING.paOptions[this.policy.id];
       const commencementDate = new Date();
       promise = getAccidentQuote(planid, termid, optionid, commencementDate);
     } else if (this.policy && this.policy.id === "mobile") {
@@ -399,9 +385,9 @@ export default class ConfirmationScreen extends Component {
     ) {
       if (this.state.totalPremium) {
         const planid = form.planIndex;
-        const policytermid = this.paTerms[form.coverageDuration];
+        const policytermid = MAPPING.paTerms[form.coverageDuration];
         const occupationid = form.occupation;
-        const optionid = this.paOptions[this.policy.id];
+        const optionid = MAPPING.paOptions[this.policy.id];
         promise = purchaseAccidentPolicy(
           this.state.totalPremium,
           planid,
@@ -441,8 +427,8 @@ export default class ConfirmationScreen extends Component {
   }
 
   renderField(key: string, value: any) {
-    const label = this.fieldMapping[key]
-      ? this.fieldMapping[key]
+    const label = MAPPING.fieldMapping[key]
+      ? MAPPING.fieldMapping[key]
       : prettifyCamelCase(key);
     const isDate = moment.isDate(value);
     value = isDate ? moment(value).format("DD MMMM YYYY") : value;
