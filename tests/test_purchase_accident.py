@@ -13,61 +13,6 @@ from dateutil.relativedelta import relativedelta
 
 from mu_tests import MicroUmbrellaAppTest
 
-test_dir = os.path.dirname(os.path.realpath(__file__))
-root_dir = os.path.abspath(os.path.join(test_dir, os.pardir))
-
-current_cap = {}
-
-LOGIN_EMAIL = 'x@aa.com'
-LOGIN_PASSWORD = '1234abcd'
-
-if __name__ == '__main__':
-    build_type = sys.argv[1]
-
-    if (build_type != 'release' and build_type != 'debug'):
-        sys.exit()
-
-    apk_type = 'app-debug.apk'
-    if build_type == 'release':
-        apk_type = 'app-release.apk'
-
-    ipa_type = 'Debug-iphonesimulator'
-    if build_type == 'release':
-        ipa_type = 'Release-iphonesimulator'
-
-    android_app_path = os.path.join(
-        root_dir, 'android', 'app', 'build', 'outputs', 'apk', apk_type)
-    ios_app_path = os.path.join(root_dir, 'ios', 'build', 'Build',
-                                'Products', ipa_type,
-                                'Microsurance.app')
-
-    local_caps = {
-        # 'android': {
-        #     'platformName': 'Android',
-        #     'platformVersion': '7.0',
-        #     'deviceName': 'Redmi',
-        #     'app': android_app_path
-        # },
-        # 'android': {
-        #     'platformName': 'Android',
-        #     'platformVersion': '6.0',
-        #     'deviceName': 'Redmi',
-        #     'app': android_app_path
-        # },
-        'iPhone 5s': {
-            'platformName': 'iOS',
-            'platformVersion': '10.3',
-            'deviceName': 'iPhone 5s',
-            'app': ios_app_path
-        }
-    }
-
-    build_type = sys.argv[1]
-    LOCAL_TIMEOUT = 10
-    LOAD_TIME_MULTIPLY = 2
-    if build_type == 'debug':
-        LOAD_TIME_MULTIPLY = 1
-
 
 def get_birth_date(age):
     now = datetime.datetime.now()
@@ -87,8 +32,7 @@ PA_PLAN_MAPPING = {
 class PurchaseAccidentTests(MicroUmbrellaAppTest):
 
     def setUp(self):
-        self.driver = webdriver.Remote(
-            'http://localhost:4723/wd/hub', current_cap)
+        MicroUmbrellaAppTest.setUp(self)
 
     def test_purchase_accident_1(self):
         self.purchase_accident_policy('basic', 'pa', '1m', OCCUPATION)
@@ -118,9 +62,6 @@ class PurchaseAccidentTests(MicroUmbrellaAppTest):
             self, plan, option, duration,
             occupation):
         occupation_code, occupation_name = occupation
-        signin_el = self.poll_accessibility('intro__sign-in')
-        # signin_el = self.find_accessibility('intro__sign-in')
-        self.tap_on(signin_el)
         self.login_user()
         # sleep(2)
 
@@ -163,13 +104,3 @@ class PurchaseAccidentTests(MicroUmbrellaAppTest):
             'chat__suggestion-'+str(occupation_code)))
 
         self.do_checkout()
-
-
-if __name__ == '__main__':
-    for cap in local_caps:
-        current_cap = local_caps[cap]
-        logging.basicConfig(stream=sys.stderr)
-        logging.getLogger("PurchaseAccidentTests").setLevel(logging.DEBUG)
-        suite = unittest.TestLoader()\
-            .loadTestsFromTestCase(PurchaseAccidentTests)
-        unittest.TextTestRunner(verbosity=2).run(suite)

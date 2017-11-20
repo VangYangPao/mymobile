@@ -13,61 +13,6 @@ from dateutil.relativedelta import relativedelta
 
 from mu_tests import MicroUmbrellaAppTest
 
-test_dir = os.path.dirname(os.path.realpath(__file__))
-root_dir = os.path.abspath(os.path.join(test_dir, os.pardir))
-
-current_cap = {}
-
-LOGIN_EMAIL = 'x@aa.com'
-LOGIN_PASSWORD = '1234abcd'
-
-if __name__ == '__main__':
-    build_type = sys.argv[1]
-
-    if (build_type != 'release' and build_type != 'debug'):
-        sys.exit()
-
-    apk_type = 'app-debug.apk'
-    if build_type == 'release':
-        apk_type = 'app-release.apk'
-
-    ipa_type = 'Debug-iphonesimulator'
-    if build_type == 'release':
-        ipa_type = 'Release-iphonesimulator'
-
-    android_app_path = os.path.join(
-        root_dir, 'android', 'app', 'build', 'outputs', 'apk', apk_type)
-    ios_app_path = os.path.join(root_dir, 'ios', 'build', 'Build',
-                                'Products', ipa_type,
-                                'Microsurance.app')
-
-    local_caps = {
-        # 'android': {
-        #     'platformName': 'Android',
-        #     'platformVersion': '7.0',
-        #     'deviceName': 'Redmi',
-        #     'app': android_app_path
-        # },
-        # 'android': {
-        #     'platformName': 'Android',
-        #     'platformVersion': '6.0',
-        #     'deviceName': 'Redmi',
-        #     'app': android_app_path
-        # },
-        'iPhone 5s': {
-            'platformName': 'iOS',
-            'platformVersion': '10.3',
-            'deviceName': 'iPhone 5s',
-            'app': ios_app_path
-        }
-    }
-
-    build_type = sys.argv[1]
-    LOCAL_TIMEOUT = 10
-    LOAD_TIME_MULTIPLY = 2
-    if build_type == 'debug':
-        LOAD_TIME_MULTIPLY = 1
-
 MALE_OPTION = 1
 FEMALE_OPTION = 2
 
@@ -99,8 +44,7 @@ CHILD = {
 class PurchaseTravelTests(MicroUmbrellaAppTest):
 
     def setUp(self):
-        self.driver = webdriver.Remote(
-            'http://localhost:4723/wd/hub', current_cap)
+        MicroUmbrellaAppTest.setUp(self)
 
     def add_traveller(self, traveller):
         self.tap_on(self.poll_accessibility('purchase__add-traveller'))
@@ -208,9 +152,6 @@ class PurchaseTravelTests(MicroUmbrellaAppTest):
             self, travel_area,
             start_date, duration, plan, spouse=None, child=None):
         country_code, country_name = AREAS[travel_area]
-        signin_el = self.poll_accessibility('intro__sign-in')
-        # signin_el = self.find_accessibility('intro__sign-in')
-        self.tap_on(signin_el)
         self.login_user()
         # sleep(2)
 
@@ -221,7 +162,7 @@ class PurchaseTravelTests(MicroUmbrellaAppTest):
         self.tap_on(travel_policy_choice)
         sleep(0.5)
         back_btn = self.find_accessibility('nav__back-btn')
-        self.assertIsNotNone(back_btn)
+        self.assertIsNotNone(ba. ck_btn)
         purchase_btn = self.find_accessibility('policy__purchase-btn')
         self.tap_on(purchase_btn)
         # sleep(3)
@@ -265,13 +206,3 @@ class PurchaseTravelTests(MicroUmbrellaAppTest):
 
         sleep(4)
         self.do_checkout()
-
-
-if __name__ == '__main__':
-    for cap in local_caps:
-        current_cap = local_caps[cap]
-        logging.basicConfig(stream=sys.stderr)
-        logging.getLogger("PurchaseTravelTests").setLevel(logging.DEBUG)
-        suite = unittest.TestLoader()\
-            .loadTestsFromTestCase(PurchaseTravelTests)
-        unittest.TextTestRunner(verbosity=2).run(suite)

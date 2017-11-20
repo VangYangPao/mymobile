@@ -3,9 +3,9 @@ import moment from "moment";
 import Parse from "parse/react-native";
 const Purchase = Parse.Object.extend("Purchase");
 
-import { generateID } from "../src/utils";
-import { saveNewPurchase } from "../src/parse/purchase";
-import { saveNewClaim } from "../src/parse/claims";
+import { generateID } from "../microumbrella-core/src/utils";
+import { saveNewPurchase } from "../microumbrella-core/src/parse/purchase";
+import { saveNewClaim } from "../microumbrella-core/src/parse/claims";
 
 const policyholderIdType = 1;
 const policyholderIdNo = "12345";

@@ -163,7 +163,6 @@ dependencies {
     compile project(':react-native-onesignal')
     compile project(':react-native-fs')
     compile project(':react-native-file-opener')
-    compile project(':react-native-fetch-blob')
     compile project(':react-native-image-picker')
     compile project(':react-native-sound')
     compile project(':react-native-vector-icons')

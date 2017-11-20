@@ -13,11 +13,68 @@ LOGIN_PASSWORD = '1234abcd'
 
 THRESHOLD_SLEEP_TIME = 7
 
+current_cap = {}
+
+# if __name__ == '__main__':
+#     build_type = sys.argv[1]
+
+#     if (build_type != 'release' and build_type != 'debug'):
+#         sys.exit()
+
+#     apk_type = 'app-debug.apk'
+#     if build_type == 'release':
+#         apk_type = 'app-release.apk'
+
+#     ipa_type = 'Debug-iphonesimulator'
+#     if build_type == 'release':
+#         ipa_type = 'Release-iphonesimulator'
+
+#     android_app_path = os.path.join(
+#         root_dir, 'android', 'app', 'build', 'outputs', 'apk', apk_type)
+test_dir = os.path.dirname(os.path.realpath(__file__))
+root_dir = os.path.abspath(os.path.join(test_dir, os.pardir))
+ios_app_path = os.path.join(root_dir, 'ios', 'build', 'Build',
+                            'Products', 'Debug-iphonesimulator',
+                            'Microsurance.app')
+
+#     local_caps = {
+#         # 'android': {
+#         #     'platformName': 'Android',
+#         #     'platformVersion': '7.0',
+#         #     'deviceName': 'Redmi',
+#         #     'app': android_app_path
+#         # },
+#         # 'android': {
+#         #     'platformName': 'Android',
+#         #     'platformVersion': '6.0',
+#         #     'deviceName': 'Redmi',
+#         #     'app': android_app_path
+#         # },
+#         'iPhone 5s': {
+#             'platformName': 'iOS',
+#             'platformVersion': '10.3',
+#             'deviceName': 'iPhone 5s',
+#             'app': ios_app_path
+#         }
+#     }
+
+#     build_type = sys.argv[1]
+#     LOCAL_TIMEOUT = 10
+#     LOAD_TIME_MULTIPLY = 2
+#     if build_type == 'debug':
+#         LOAD_TIME_MULTIPLY = 1
+
 
 class MicroUmbrellaAppTest(unittest.TestCase):
 
-    def __init__(self, *args):
-        super().__init__(*args)
+    def setUp(self):
+        self.driver = webdriver.Remote(
+            'http://127.0.0.1:4723/wd/hub', {
+                'platformName': 'iOS',
+                'platformVersion': '10.3',
+                'deviceName': 'iPhone 5s',
+                'app': ios_app_path
+            })
 
     def tearDown(self):
         self.driver.quit()
@@ -147,6 +204,7 @@ class MicroUmbrellaAppTest(unittest.TestCase):
         self.tap_on(self.poll_accessibility('OK', 20))
 
     def login_user(self, email=LOGIN_EMAIL, password=LOGIN_PASSWORD):
+        self.tap_on(self.poll_accessibility('intro__sign-in'))
         login_btn = self.poll_accessibility('auth__login-btn')
         login_email_input = self.driver.find_elements_by_accessibility_id(
             'Email')[1]  # skip label
@@ -195,3 +253,12 @@ class MicroUmbrellaAppTest(unittest.TestCase):
         self.driver.set_value(signup_first_name_input, '1234abcd')
         self.driver.set_value(signup_last_name_input, '1234abcd')
         self.tap_on(signup_btn)
+
+# if __name__ == '__main__':
+#     for cap in local_caps:
+#         current_cap = local_caps[cap]
+#         logging.basicConfig(stream=sys.stderr)
+#         logging.getLogger("PurchasePhoneTests").setLevel(logging.DEBUG)
+#         suite = unittest.TestLoader()\
+#             .loadTestsFromTestCase(PurchasePhoneTests)
+#         unittest.TextTestRunner(verbosity=2).run(suite)
