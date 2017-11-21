@@ -1014,21 +1014,9 @@ table.MsoNormalTable
 
 <h1>Terms and Conditions</h1>
 
-<p style="margin-top: 12pt; margin-bottom: 12pt; background: white;"><span lang="EN-MY" style="font-family:Arial">This Terms and
-Conditions sets out microUmbrella.com’s policy when you access and use its
-mobile application and/or website. By
-accessing and using microUmbrella.com mobile application and/or website, you
-are deemed to have read, accepted, and agreed to be legally bound by the terms
-of this Terms and Conditions, regardless of whether you have registered as a
-user on microUmbrella.com <o:p></o:p></span></p>
+<p style="margin-top: 12pt; margin-bottom: 12pt; background: white;"><span lang="EN-MY" style="font-family:Arial">This Terms and Conditions sets out microUmbrella.com’s policy when you access and use its mobile application and/or website. By accessing and using microUmbrella.com mobile application and/or website, you are deemed to have read, accepted, and agreed to be legally bound by the terms of this Terms and Conditions, regardless of whether you have registered as a user on microUmbrella.com <o:p></o:p></span></p>
 
-<p style="margin-top: 12pt; margin-bottom: 12pt; background: white;"><span lang="EN-MY" style="font-family:Arial">microUmbrella.com
-reserves the right to amend this Terms and Conditions without prior
-notice.&nbsp;Any use of
-microUmbrella.com mobile application after such amendment shall be deemed acceptance of the amended Terms and
-Conditions in its entirety. If you do not agree to this Terms and
-Conditions, please immediately discontinue your access to, and use of, the mobile
-application and/or website.<o:p></o:p></span></p>
+<p style="margin-top: 12pt; margin-bottom: 12pt; background: white;"><span lang="EN-MY" style="font-family:Arial">microUmbrella.com reserves the right to amend this Terms and Conditions without prior notice.&nbsp;Any use of microUmbrella.com mobile application after such amendment shall be deemed acceptance of the amended Terms and Conditions in its entirety. If you do not agree to this Terms and Conditions, please immediately discontinue your access to, and use of, the mobile application and/or website.<o:p></o:p></span></p>
 
 <p class="MsoNormal" style="margin-top: 12pt; margin-bottom: 12pt; line-height: normal;"><b><span lang="EN-US" style="font-size:12.0pt;font-family:Arial">Disclaimer<o:p></o:p></span></b></p>
 
@@ -1178,12 +1166,7 @@ font-family:Arial"><o:p></o:p></span></p>
 
 <h1>Policy on Personal Data</h1>
 
-<p style="margin-top: 12pt; margin-bottom: 12pt; background: white;"><span lang="EN-MY" style="font-family:Arial">The Policy on
-Personal Data is part of the Terms and Conditions sets out microUmbrella.com’s
-policy when you access and use its mobile application. By accessing and using microUmbrella.com mobile application, you are
-deemed to have read, accepted, and agreed to be legally bound by the Personal
-Data policies, regardless of whether
-you have registered as a user on microUmbrella.com <o:p></o:p></span></p>
+<p style="margin-top: 12pt; margin-bottom: 12pt; background: white;"><span lang="EN-MY" style="font-family:Arial">The Policy on Personal Data is part of the Terms and Conditions sets out microUmbrella.com’s policy when you access and use its mobile application. By accessing and using microUmbrella.com mobile application, you are deemed to have read, accepted, and agreed to be legally bound by the Personal Data policies, regardless of whether you have registered as a user on microUmbrella.com <o:p></o:p></span></p>
 
 <p class="MsoNormal" style="margin-top: 12pt; margin-bottom: 12pt; line-height: normal;"><span lang="EN-US" style="font-size:
 12.0pt;font-family:Arial">You agree to be bound by Policy on Personal Data,

@@ -11,6 +11,8 @@ import mobileClaimQuestions from "../data/mobileClaimQuestions";
 
 import validations from "./validations";
 
+import termsOfUseHTML from "../documents/termsOfUse";
+
 const claimQuestionSets = {
   pa: paClaimQuestions,
   pa_mr: paClaimQuestions,
@@ -26,6 +28,7 @@ const appOptions = {
   claimQuestionSets,
   colors,
   validations,
+  termsOfUseHTML,
   parseAppId: "microumbrella",
   parseServerURL: "https://api-dev.microumbrella.com/parse"
 };
