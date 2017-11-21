@@ -11,7 +11,6 @@ import {
   ToastAndroid
 } from "react-native";
 import documentStyle from "../../documents/documentStyle";
-import termsOfUseHTML from "../../documents/termsOfUse";
 import Button from "../components/Button";
 import { Text } from "../components/defaultComponents";
 import AppStore from "../../stores/AppStore";
@@ -59,7 +58,7 @@ export default class TermsOfUse extends Component {
   }
 
   render() {
-    const html = documentStyle + termsOfUseHTML;
+    const html = documentStyle + AppStore.termsOfUseHTML;
     return (
       <View style={styles.container}>
         <WebView style={styles.webview} source={{ html }} />

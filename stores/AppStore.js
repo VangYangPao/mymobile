@@ -11,6 +11,8 @@ import travelClaimQuestions from "../data/travelClaimQuestions";
 import mobileClaimQuestions from "../data/mobileClaimQuestions";
 import { QUESTION_SETS } from "../data/questions";
 
+import termsOfUseHTML from "../documents/termsOfUse";
+
 const styles = StyleSheet.create({
   authBackgroundImage: {
     // flex: 1,
@@ -71,6 +73,8 @@ class AppStore {
     const questionSet = this.claimQuestionSets[policyType];
     this.questionSets.claim = QUESTION_SETS.claim.concat(questionSet);
   }
+
+  termsOfUseHTML = termsOfUseHTML;
 }
 
 singleton = new AppStore();
