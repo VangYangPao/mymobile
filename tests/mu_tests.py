@@ -34,7 +34,7 @@ current_cap = {}
 test_dir = os.path.dirname(os.path.realpath(__file__))
 root_dir = os.path.abspath(os.path.join(test_dir, os.pardir))
 ios_app_path = os.path.join(root_dir, 'ios', 'build', 'Build',
-                            'Products', 'Debug-iphonesimulator',
+                            'Products', 'Release-iphonesimulator',
                             'Microsurance.app')
 
 #     local_caps = {
