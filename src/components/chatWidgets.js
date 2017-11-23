@@ -209,7 +209,7 @@ export class MultipleImagePicker extends Component {
           onPress={this.handleFinishSelectImages}
           style={styles.confirmUpload}
         >
-          UPLOAD IMAGES
+          UPLOAD PHOTOS
         </Button>
         <Button
           onPress={this.handleSkipUpload}
@@ -278,6 +278,7 @@ export class ImageTable extends Component {
         const imageUri = this.state.images[r.id];
         return (
           <TouchableOpacity
+            accessibilityLabel={"chat__image-" + r.id}
             key={r.id}
             onPress={this.handlePress(r.id)}
             activeOpacity={0.6}
@@ -374,7 +375,7 @@ export class ClaimPolicyChoice extends Component {
     this.props.onSelectPolicy(policy);
   }
 
-  renderPolicy(policy, idx) {
+  renderPolicy({ item: policy }) {
     const policyTypeId = policy.get("policyTypeId");
     const { title: policyTypeTitle } = AppStore.policies.find(
       p => p.id === policyTypeId
@@ -384,9 +385,10 @@ export class ClaimPolicyChoice extends Component {
     const premium = policy.get("premium");
     return (
       <TouchableOpacity
+        accessibilityLabel={"claim__policy-" + policyId}
         onPress={() => this.handleSelectPolicy(policy)}
         disabled={this.state.disabled}
-        key={idx}
+        key={policyId}
       >
         <View
           style={[
@@ -479,7 +481,7 @@ export class ClaimPolicyChoice extends Component {
             { opacity: this.state.fadeAnim, top: this.state.topAnim }
           ]}
         >
-          {this.props.policies.map(this.renderPolicy)}
+          <FlatList data={this.props.policies} renderItem={this.renderPolicy} />
         </Animated.View>
       );
     }
@@ -515,6 +517,7 @@ export class ChoiceList extends Component {
         key={choice.value}
       >
         <TouchableHighlight
+          accessibilityLabel={"chat__choice-item-" + choice.value.toString()}
           style={[styles.choiceTouchable, choiceTouchableEnd]}
           onPress={() => this.handlePickChoice(choice)}
           activeOpacity={0.6}
