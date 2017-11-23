@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import sys
 import os
 import unittest
@@ -11,31 +12,39 @@ from calendar import month_name
 LOGIN_EMAIL = 'kendrick@microassure.com'
 LOGIN_PASSWORD = '1234abcd'
 
-THRESHOLD_SLEEP_TIME = 7
+THRESHOLD_SLEEP_TIME = 4
 
 current_cap = {}
 
-# if __name__ == '__main__':
-#     build_type = sys.argv[1]
+if os.environ.get('ENV') and os.environ.get('ENV') == 'dev':
+    build_type = os.environ.get('BUILD_TYPE')
 
-#     if (build_type != 'release' and build_type != 'debug'):
-#         sys.exit()
+    if (build_type != 'release' and build_type != 'debug'):
+        sys.exit()
 
-#     apk_type = 'app-debug.apk'
-#     if build_type == 'release':
-#         apk_type = 'app-release.apk'
+    apk_type = 'app-debug.apk'
+    if build_type == 'release':
+        apk_type = 'app-release.apk'
 
-#     ipa_type = 'Debug-iphonesimulator'
-#     if build_type == 'release':
-#         ipa_type = 'Release-iphonesimulator'
+    ipa_type = 'Debug-iphonesimulator'
+    if build_type == 'release':
+        ipa_type = 'Release-iphonesimulator'
 
-#     android_app_path = os.path.join(
-#         root_dir, 'android', 'app', 'build', 'outputs', 'apk', apk_type)
-test_dir = os.path.dirname(os.path.realpath(__file__))
-root_dir = os.path.abspath(os.path.join(test_dir, os.pardir))
-ios_app_path = os.path.join(root_dir, 'ios', 'build', 'Build',
-                            'Products', 'Release-iphonesimulator',
-                            'Microsurance.app')
+    test_dir = os.path.dirname(os.path.realpath(__file__))
+    root_dir = os.path.abspath(os.path.join(test_dir, os.pardir))
+
+    android_app_path = os.path.join(
+        root_dir, 'android', 'app', 'build', 'outputs', 'apk', apk_type)
+
+    ios_app_path = os.path.join(root_dir, 'ios', 'build', 'Build',
+                                'Products', ipa_type,
+                                'Microsurance.app')
+    current_cap = {
+        'platformName': 'iOS',
+        'platformVersion': '10.3',
+        'deviceName': 'iPhone 6',
+        'app': ios_app_path
+    }
 
 #     local_caps = {
 #         # 'android': {
@@ -58,23 +67,12 @@ ios_app_path = os.path.join(root_dir, 'ios', 'build', 'Build',
 #         }
 #     }
 
-#     build_type = sys.argv[1]
-#     LOCAL_TIMEOUT = 10
-#     LOAD_TIME_MULTIPLY = 2
-#     if build_type == 'debug':
-#         LOAD_TIME_MULTIPLY = 1
-
 
 class MicroUmbrellaAppTest(unittest.TestCase):
 
     def setUp(self):
         self.driver = webdriver.Remote(
-            'http://127.0.0.1:4723/wd/hub', {
-                'platformName': 'iOS',
-                'platformVersion': '10.3',
-                'deviceName': 'iPhone 5s',
-                'app': ios_app_path
-            })
+            'http://127.0.0.1:4723/wd/hub', current_cap)
 
     def tearDown(self):
         self.driver.quit()
@@ -204,6 +202,11 @@ class MicroUmbrellaAppTest(unittest.TestCase):
         self.tap_on(self.poll_accessibility('OK', 20))
 
     def login_user(self, email=LOGIN_EMAIL, password=LOGIN_PASSWORD):
+        sleep(4)
+        try:
+            self.tap_on(self.find_accessibility('Allow'))
+        except:
+            pass
         self.tap_on(self.poll_accessibility('intro__sign-in'))
         login_btn = self.poll_accessibility('auth__login-btn')
         login_email_input = self.driver.find_elements_by_accessibility_id(
@@ -223,6 +226,39 @@ class MicroUmbrellaAppTest(unittest.TestCase):
             choice_el = self.find_accessibility(
                 'purchase__policy-choice-'+policy)
             self.assertIsNotNone(choice_el)
+
+    def send_composer_message(self, message):
+        COMPOSER_PLACEHOLDER = 'Type your message here...'
+        SEND_BUTTON = 'Send'
+        composer = self.poll_accessibility(COMPOSER_PLACEHOLDER)
+        self.tap_on(composer)
+        self.driver.set_value(composer, message)
+        sleep(0.5)
+        self.tap_on(self.find_accessibility(SEND_BUTTON))
+
+    def upload_documents(self, *image_ids):
+        for i in range(len(image_ids)):
+            image_id = image_ids[i]
+            press_ok = i == 0
+            self.select_image(image_id, press_ok=press_ok)
+            sleep(1)
+        self.tap_on(self.find_accessibility('UPLOAD IMAGES'))
+
+    def select_image(self, image_id, press_ok=False):
+        self.tap_on(self.poll_accessibility('chat__image-'+image_id))
+        self.tap_on(self.poll_accessibility(u'Choose from Library…'))
+        if press_ok:
+            self.tap_on(self.poll_accessibility('OK'))
+        sleep(2)
+        # for i in range(100):
+        #     print(i)
+        #     self.driver.tap([(10, 10*i)])
+        # self.driver.tap([(10, 700)])
+        self.driver.tap([(10, 200)])
+        # self.tap_on(self.poll_accessibility('Point Reyes National Seashore'))
+        sleep(2)
+        self.driver.tap([(10, 200)])
+        # self.driver.tap([(10, 50)])
 
     def signup_user(self):
         sleep(1)
