@@ -1,4 +1,5 @@
 // @flow
+import moment from "moment";
 import INVALID_OCCUPATIONS from "../data/invalidOccupations";
 
 function validatePAOccupation(occupationId) {
@@ -18,6 +19,22 @@ function validatePAOccupation(occupationId) {
   };
 }
 
+function validatePhonePurchaseDate(date) {
+  date = moment(date);
+  const years = moment.utc().diff(date, "years");
+  if (years >= 1) {
+    return {
+      isValid: false,
+      errMessage: "Phone must be less than 1 year old"
+    };
+  }
+  return {
+    isValid: true,
+    errMessage: true
+  };
+}
+
 export default (validations = {
-  occupation: validatePAOccupation
+  occupation: validatePAOccupation,
+  purchaseDate: validatePhonePurchaseDate
 });

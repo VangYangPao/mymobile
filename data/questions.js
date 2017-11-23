@@ -97,7 +97,8 @@ export const QUESTION_SETS = {
     {
       question:
         "For the next steps, I will be asking you some questions to get you covered instantly. Please be patient with my questions. 😬",
-      responseType: null
+      responseType: null,
+      exclude: ["mobile"]
     },
     // {
     //   question: "May I know your full name?",
@@ -212,7 +213,7 @@ export const QUESTION_SETS = {
     },
     {
       question: "When did you buy it?",
-      responseType: ["date"],
+      responseType: ["date", "purchaseDate"],
       include: ["mobile"],
       pastOnly: true,
       id: "purchaseDate"
