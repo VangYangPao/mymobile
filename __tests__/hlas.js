@@ -21,10 +21,16 @@ import {
   generateNRIC,
   purchaseAccidentPolicy,
   purchasePhonePolicy
-} from "../src/hlas";
-import { saveNewPurchase } from "../src/parse/purchase";
-import { verifyEnrolment, doFull3DSTransaction } from "../src/telemoney";
-import type { PolicyHolder, PaymentDetails } from "../src/types/hlas";
+} from "../microumbrella-core/src/models/hlas";
+import { saveNewPurchase } from "../microumbrella-core/src/parse/purchase";
+import {
+  verifyEnrolment,
+  doFull3DSTransaction
+} from "../microumbrella-core/src/models/telemoney";
+import type {
+  PolicyHolder,
+  PaymentDetails
+} from "../microumbrella-core/src/types/hlas";
 
 import moment from "moment";
 
@@ -75,7 +81,7 @@ it("gets travel quote correctly", () => {
 });
 
 it("purchases phone protect correctly", () => {
-  const premium = 5;
+  const premium = 115;
   const PHONE_PRODUCT_PLAN_ID = 99;
   const PHONE_PRODUCT_OPTION_ID = 1;
   const idNumberType = 1;
@@ -106,7 +112,7 @@ it("purchases phone protect correctly", () => {
   const mobileDetails = {
     brandID: 1,
     modelID: 5,
-    purchaseDate: "2017-09-16",
+    purchaseDate: "2017-11-24",
     serialNo: "989753317723690",
     purchasePlaceID: 4
   };
@@ -123,7 +129,7 @@ it("purchases phone protect correctly", () => {
     expect(res.data.policyId).toMatch(/^PM/);
     expect(res.data.premium).toBe(premium);
     expect(res.data.planId).toBe(PHONE_PRODUCT_PLAN_ID);
-    expect(res.data.autoRenew).toBe(false);
+    expect(res.data.autoRenew).toBe(true);
     expect(res.data.policyholderIdType).toBe(idNumberType);
     expect(res.data.policyholderIdNo).toBe(nric);
     expect(res.data.optionId).toBe(PHONE_PRODUCT_OPTION_ID);
@@ -150,7 +156,7 @@ it("purchases phone protect correctly", () => {
     );
     expect(res.data.additionalAttributes).toHaveProperty(
       "commencementDate",
-      policyCommencementDate
+      moment(policyCommencementDate).format("YYYY-MM-DD")
     );
   });
 });
