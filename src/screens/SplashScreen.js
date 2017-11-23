@@ -42,8 +42,8 @@ const styles = StyleSheet.create({
   },
   appLogo: {
     height: 50,
-    width: windowWidth - windowWidth * containerPaddingHorizontal * 2,
-    marginBottom: 50
+    width: windowWidth - windowWidth * containerPaddingHorizontal * 2
+    // marginBottom: 50
   },
   backgroundImage: {
     position: "absolute",
