@@ -30,7 +30,8 @@
   [Fabric with:@[[Crashlytics class]]];
   
   self.oneSignal = [[RCTOneSignal alloc] initWithLaunchOptions:launchOptions
-                                                         appId:@"f33057ef-5bc4-4581-af40-9504d10e3d69"];
+                                                         appId:@"f33057ef-5bc4-4581-af40-9504d10e3d69"
+                                                  settings:@{kOSSettingsKeyAutoPrompt: @false}];
   
 //  [Mixpanel sharedInstanceWithToken:@"453d7c637ef74b357bc856da82999f5c"];
 //  

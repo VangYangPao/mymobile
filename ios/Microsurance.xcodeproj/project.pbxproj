@@ -358,6 +358,8 @@
 		3FA2DF3A1F61D88300A34E49 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Microsurance/Images.xcassets; sourceTree = "<group>"; };
 		3FA2DF681F61DCBF00A34E49 /* RNZendeskChatModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNZendeskChatModule.h; sourceTree = "<group>"; };
 		3FA2DF691F61DCBF00A34E49 /* RNZendeskChatModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNZendeskChatModule.m; sourceTree = "<group>"; };
+		3FCAC0741FC6D3BA00DD561A /* MicrosuranceUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicrosuranceUITests.swift; sourceTree = "<group>"; };
+		3FCAC0761FC6D3BA00DD561A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3FF0AD0C1FA3749D008F09E1 /* Lato_Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Lato_Bold.ttf; path = ../../../Downloads/Lato_Bold.ttf; sourceTree = "<group>"; };
 		3FF20B351FBA1D7C002D2113 /* Microsurance.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Microsurance.entitlements; path = Microsurance/Microsurance.entitlements; sourceTree = "<group>"; };
 		441C0C93F86B4A6B8D63A6C1 /* RCTOneSignal.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTOneSignal.xcodeproj; path = "../node_modules/react-native-onesignal/ios/RCTOneSignal.xcodeproj"; sourceTree = "<group>"; };
@@ -628,6 +630,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		3FCAC0731FC6D3BA00DD561A /* MicrosuranceUITests */ = {
+			isa = PBXGroup;
+			children = (
+				3FCAC0741FC6D3BA00DD561A /* MicrosuranceUITests.swift */,
+				3FCAC0761FC6D3BA00DD561A /* Info.plist */,
+			);
+			path = MicrosuranceUITests;
+			sourceTree = "<group>";
+		};
 		5E91572E1DD0AC6500FF2AA8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -703,6 +714,7 @@
 				13B07FAE1A68108700A75B9A /* Microsurance */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* MicrosuranceTests */,
+				3FCAC0731FC6D3BA00DD561A /* MicrosuranceUITests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				A0F852F93A8C4A0185A33EEE /* Resources */,
 				69BCE28A83C60C0AF36DA2F2 /* Pods */,
@@ -829,11 +841,13 @@
 		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0830;
 				LastUpgradeCheck = 610;
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
+						DevelopmentTeam = LBMCMHK6QN;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
@@ -1425,6 +1439,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = LBMCMHK6QN;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -1462,6 +1477,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = LBMCMHK6QN;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-spinkit/ios/**",

@@ -35,7 +35,7 @@
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
-            buildForTesting = "NO"
+            buildForTesting = "YES"
             buildForRunning = "NO"
             buildForProfiling = "NO"
             buildForArchiving = "NO"
@@ -45,6 +45,20 @@
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
                BuildableName = "MicrosuranceTests.xctest"
                BlueprintName = "MicrosuranceTests"
+               ReferencedContainer = "container:Microsurance.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "NO"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "3FCAC0711FC6D3BA00DD561A"
+               BuildableName = "MicrosuranceUITests.xctest"
+               BlueprintName = "MicrosuranceUITests"
                ReferencedContainer = "container:Microsurance.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
