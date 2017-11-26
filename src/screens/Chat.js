@@ -70,6 +70,7 @@ import Button from "../components/Button";
 import CHAT_STYLES from "../styles/Chat.styles";
 import { MESSAGE_LOAD_TIME as _MESSAGE_LOAD_TIME } from "react-native-dotenv";
 import { showAlert } from "../utils";
+import MAPPING from "../../data/mappings";
 
 // Enable playback in silence mode (iOS only)
 Sound.setCategory("Playback");
@@ -82,7 +83,7 @@ const CUSTOMER_USER_ID = 1;
 
 const AGENT_USER = {
   _id: AGENT_USER_ID,
-  name: "Carol",
+  name: "Eve",
   avatar: require("../../images/eve-avatar.png")
 };
 const CUSTOMER_USER = {
@@ -783,6 +784,10 @@ class ChatScreen extends Component {
           p => p.get("policyId") === this.state.answers.claimPolicyNo
         );
         checkAgainst = policy.get("policyTypeId");
+        if (checkAgainst === "pa") {
+          const optionId = policy.get("optionId");
+          checkAgainst = MAPPING.paOptionIdToName[optionId] || "pa";
+        }
         if (nextQuestion.id !== "accidentType") {
           checkAgainst = this.state.answers.accidentType;
         }

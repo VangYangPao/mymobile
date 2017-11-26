@@ -474,6 +474,7 @@ export class ClaimPolicyChoice extends Component {
         </View>
       );
     } else {
+      // extraData used to re-render FlatList
       content = (
         <Animated.View
           style={[
@@ -481,7 +482,11 @@ export class ClaimPolicyChoice extends Component {
             { opacity: this.state.fadeAnim, top: this.state.topAnim }
           ]}
         >
-          <FlatList data={this.props.policies} renderItem={this.renderPolicy} />
+          <FlatList
+            data={this.props.policies}
+            renderItem={this.renderPolicy}
+            extraData={this.state.disabled}
+          />
         </Animated.View>
       );
     }
@@ -767,7 +772,7 @@ export class TravellerTableInput extends Component {
           }}
           onPress={() => this.props.onSubmit(this.state.items)}
         >
-          SEND
+          {this.state.items.length ? "SEND" : "I'M TRAVELLING ALONE"}
         </Button>
       </View>
     );

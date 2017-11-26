@@ -5,6 +5,11 @@ export default (MAPPINGS = {
     "6": 3,
     "12": 4
   },
+  paOptionIdToName: {
+    0: "pa",
+    1: "pa_mr",
+    2: "pa_wi"
+  },
   paOptions: {
     pa: 0,
     pa_mr: 1,
