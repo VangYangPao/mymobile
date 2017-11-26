@@ -87,7 +87,7 @@ android {
     apply from: "../../node_modules/react-native/react.gradle"
 
     defaultConfig {
-        applicationId "com.microsurance"
+        applicationId "com.microumbrella.app"
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 1

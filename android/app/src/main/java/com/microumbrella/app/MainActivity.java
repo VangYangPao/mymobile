@@ -1,4 +1,4 @@
-package com.microsurance;
+package com.microumbrella.app;
 
 import com.facebook.react.ReactActivity;
 
