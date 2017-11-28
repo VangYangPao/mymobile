@@ -32,11 +32,11 @@ def get_birth_date(age):
     return birth_date
 
 SPOUSE = {
-    'dob': get_birth_date(30),
+    'DOB': get_birth_date(30),
     'relationship': SPOUSE_OPTION
 }
 CHILD = {
-    'dob': get_birth_date(1),
+    'DOB': get_birth_date(1),
     'relationship': CHILD_OPTION
 }
 
@@ -60,10 +60,11 @@ class PurchaseTravelTests(MicroUmbrellaAppTest):
         self.tap_on(nric_input)
         self.driver.set_value(nric_input, '999')
         self.hide_keyboard()
-        dob_input = self.find_accessibility('table__field-DOB')
-        self.tap_on(dob_input)
+        with open('source.txt', 'w') as f:
+            f.write(self.driver.page_source)
+        self.tap_on(self.find_accessibility('table__field-DOB'))
         sleep(2)
-        self.select_date(traveller['dob'])
+        self.select_date(traveller['DOB'])
         self.tap_on(self.poll_accessibility('table__field-gender'))
         self.tap_on(self.poll_accessibility(
             'picker__option-'+str(MALE_OPTION)))
@@ -78,74 +79,74 @@ class PurchaseTravelTests(MicroUmbrellaAppTest):
             start_date=create_date(2017, 12, 10),
             duration=17, plan='enhanced', spouse=SPOUSE)
 
-    def test_purchase_travel_applicant_2(self):
-        return self.purchase_travel_policy(
-            travel_area=3,
-            start_date=create_date(2017, 12, 10),
-            duration=61, plan='superior', spouse=SPOUSE)
+    # def test_purchase_travel_applicant_2(self):
+    #     return self.purchase_travel_policy(
+    #         travel_area=3,
+    #         start_date=create_date(2017, 12, 10),
+    #         duration=61, plan='superior', spouse=SPOUSE)
 
-    def test_purchase_travel_applicant_3(self):
-        return self.purchase_travel_policy(
-            travel_area=1,
-            start_date=create_date(2017, 12, 10),
-            duration=5, plan='basic', spouse=SPOUSE, child=CHILD)
+    # def test_purchase_travel_applicant_3(self):
+    #     return self.purchase_travel_policy(
+    #         travel_area=1,
+    #         start_date=create_date(2017, 12, 10),
+    #         duration=5, plan='basic', spouse=SPOUSE, child=CHILD)
 
-    def test_purchase_travel_applicant_4(self):
-        return self.purchase_travel_policy(
-            travel_area=3,
-            start_date=create_date(2017, 12, 10),
-            duration=61, plan='superior', spouse=SPOUSE)
+    # def test_purchase_travel_applicant_4(self):
+    #     return self.purchase_travel_policy(
+    #         travel_area=3,
+    #         start_date=create_date(2017, 12, 10),
+    #         duration=61, plan='superior', spouse=SPOUSE)
 
-    def test_purchase_travel_applicant_5(self):
-        return self.purchase_travel_policy(
-            travel_area=3,
-            start_date=create_date(2017, 12, 10),
-            duration=30, plan='basic', child=CHILD)
+    # def test_purchase_travel_applicant_5(self):
+    #     return self.purchase_travel_policy(
+    #         travel_area=3,
+    #         start_date=create_date(2017, 12, 10),
+    #         duration=30, plan='basic', child=CHILD)
 
-    def test_purchase_travel_applicant_6(self):
-        return self.purchase_travel_policy(
-            travel_area=2,
-            start_date=create_date(2017, 12, 10),
-            duration=9, plan='superior', spouse=SPOUSE, child=CHILD)
+    # def test_purchase_travel_applicant_6(self):
+    #     return self.purchase_travel_policy(
+    #         travel_area=2,
+    #         start_date=create_date(2017, 12, 10),
+    #         duration=9, plan='superior', spouse=SPOUSE, child=CHILD)
 
-    def test_purchase_travel_applicant_7(self):
-        return self.purchase_travel_policy(
-            travel_area=3,
-            start_date=create_date(2017, 12, 10),
-            duration=35, plan='basic')
+    # def test_purchase_travel_applicant_7(self):
+    #     return self.purchase_travel_policy(
+    #         travel_area=3,
+    #         start_date=create_date(2017, 12, 10),
+    #         duration=35, plan='basic')
 
-    def test_purchase_travel_applicant_8(self):
-        return self.purchase_travel_policy(
-            travel_area=1,
-            start_date=create_date(2017, 12, 10),
-            duration=24, plan='superior', spouse={
-                'dob': get_birth_date(75),
-                'relationship': SPOUSE_OPTION
-            })
+    # def test_purchase_travel_applicant_8(self):
+    #     return self.purchase_travel_policy(
+    #         travel_area=1,
+    #         start_date=create_date(2017, 12, 10),
+    #         duration=24, plan='superior', spouse={
+    #             'dob': get_birth_date(75),
+    #             'relationship': SPOUSE_OPTION
+    #         })
 
-    def test_purchase_travel_applicant_9(self):
-        return self.purchase_travel_policy(
-            travel_area=3,
-            start_date=create_date(2017, 12, 10),
-            duration=183, plan='superior')
+    # def test_purchase_travel_applicant_9(self):
+    #     return self.purchase_travel_policy(
+    #         travel_area=3,
+    #         start_date=create_date(2017, 12, 10),
+    #         duration=183, plan='superior')
 
-    def test_purchase_travel_applicant_10(self):
-        return self.purchase_travel_policy(
-            travel_area=2,
-            start_date=create_date(2017, 12, 10),
-            duration=6, plan='superior', child={
-                'dob': get_birth_date(0.1),
-                'relationship': CHILD_OPTION
-            })
+    # def test_purchase_travel_applicant_10(self):
+    #     return self.purchase_travel_policy(
+    #         travel_area=2,
+    #         start_date=create_date(2017, 12, 10),
+    #         duration=6, plan='superior', child={
+    #             'dob': get_birth_date(0.1),
+    #             'relationship': CHILD_OPTION
+    #         })
 
-    def test_purchase_travel_applicant_11(self):
-        return self.purchase_travel_policy(
-            travel_area=2,
-            start_date=create_date(2017, 12, 10),
-            duration=6, plan='superior', child={
-                'dob': get_birth_date(19),
-                'relationship': CHILD_OPTION
-            })
+    # def test_purchase_travel_applicant_11(self):
+    #     return self.purchase_travel_policy(
+    #         travel_area=2,
+    #         start_date=create_date(2017, 12, 10),
+    #         duration=6, plan='superior', child={
+    #             'dob': get_birth_date(19),
+    #             'relationship': CHILD_OPTION
+    #         })
 
     @timeout(4 * 60)
     def purchase_travel_policy(
@@ -155,14 +156,14 @@ class PurchaseTravelTests(MicroUmbrellaAppTest):
         self.login_user()
         # sleep(2)
 
-        menu_btn = self.poll_accessibility('nav__menu-btn')
-        self.assertIsNotNone(menu_btn)
+        # menu_btn = self.poll_accessibility('nav__menu-btn')
+        # self.assertIsNotNone(menu_btn)
         travel_policy_choice = self.poll_accessibility(
             'purchase__policy-choice-travel')
         self.tap_on(travel_policy_choice)
         sleep(0.5)
         back_btn = self.find_accessibility('nav__back-btn')
-        self.assertIsNotNone(ba. ck_btn)
+        self.assertIsNotNone(back_btn)
         purchase_btn = self.find_accessibility('policy__purchase-btn')
         self.tap_on(purchase_btn)
         # sleep(3)

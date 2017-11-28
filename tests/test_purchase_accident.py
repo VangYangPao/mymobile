@@ -65,8 +65,8 @@ class PurchaseAccidentTests(MicroUmbrellaAppTest):
         self.login_user()
         # sleep(2)
 
-        menu_btn = self.poll_accessibility('nav__menu-btn')
-        self.assertIsNotNone(menu_btn)
+        # menu_btn = self.poll_accessibility('nav__menu-btn')
+        # self.assertIsNotNone(menu_btn)
         travel_policy_choice = self.poll_accessibility(
             'purchase__policy-choice-'+option)
         self.tap_on(travel_policy_choice)

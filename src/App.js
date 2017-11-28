@@ -1,5 +1,5 @@
 import { AppRegistry } from "react-native";
-import createMicroUmbrellaApp from "../microumbrella-core";
+import createMicroUmbrellaApp from "microumbrella-core";
 import policies from "../data/policies";
 import coverages from "../data/coverage";
 import { QUESTION_SETS as questionSets } from "../data/questions";

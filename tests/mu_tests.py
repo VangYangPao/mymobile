@@ -202,12 +202,18 @@ class MicroUmbrellaAppTest(unittest.TestCase):
         self.tap_on(self.poll_accessibility('OK', 20))
 
     def login_user(self, email=LOGIN_EMAIL, password=LOGIN_PASSWORD):
-        sleep(4)
+        sleep(5)
         try:
             self.tap_on(self.find_accessibility('Allow'))
         except:
             pass
-        self.tap_on(self.poll_accessibility('intro__sign-in'))
+        sign_in_button = None
+        try:
+            sign_in_button = self.find_accessibility('intro__sign-in')
+        except NoSuchElementException:
+            # just skip login since there's no ability to login
+            return None
+        self.tap_on(sign_in_button)
         login_btn = self.poll_accessibility('auth__login-btn')
         login_email_input = self.driver.find_elements_by_accessibility_id(
             'Email')[1]  # skip label

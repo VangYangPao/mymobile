@@ -72,8 +72,10 @@ class ClaimTravelTests(MicroUmbrellaAppTest):
         self.tap_on(self.poll_accessibility('PROCEED'))
         self.tap_on(self.poll_accessibility('OK', 20))
 
+    def test_claim_death_1(self):
+        self.claim_death(False)
+
     def test_claim_death_2(self):
         self.claim_death(True)
 
-    # def test_claim_death_1(self):
-    #     self.claim_death(False)
+    # def test_claim_auto
