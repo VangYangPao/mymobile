@@ -191,11 +191,20 @@ class TravelPlanTab extends Component {
           </View>
         </TouchableOpacity>
         <Button
-          accessibilityLabel={"chat__select-plan_" + this.props.plan}
+          accessibilityLabel={"chat__select-plan_" + this.props.plan.legacyId}
           onPress={() => this.props.onSelectPlan(this.props.planIndex)}
           style={styles.selectPlanButton}
         >
-          SELECT PLAN
+          <Text
+            style={{
+              color: "white",
+              textAlign: "center",
+              fontSize: 16,
+              fontWeight: "500"
+            }}
+          >
+            SELECT {this.props.plan.title.toUpperCase()}
+          </Text>
         </Button>
       </Animated.View>
     );
@@ -205,6 +214,7 @@ class TravelPlanTab extends Component {
     if (!this.props.expanded) {
       return this.renderUnexpanded();
     }
+    const planId = this.props.plan.legacyId;
 
     const listSections = TRAVEL_BENEFITS.map(benefit => ({
       data: benefit.coverage.map(patchCoverageWithKey),
@@ -222,7 +232,7 @@ class TravelPlanTab extends Component {
           sections={listSections}
         />
         <Button
-          accessibilityLabel={"chat__select-plan_" + this.props.plan}
+          accessibilityLabel={"chat__select-plan_" + planId}
           onPress={() => this.props.onSelectPlan(this.props.planIndex)}
           style={styles.selectPlanButton}
         >
@@ -254,7 +264,7 @@ export default class TravelPlansView extends Component {
       tabRoutes[plan.title] = {
         screen: () => (
           <TravelPlanTab
-            plan={plan.legacyId}
+            plan={plan}
             onSelectPlan={this.props.onSelectPlan}
             onExpand={this.handleExpand}
             expanded={this.state.expanded}

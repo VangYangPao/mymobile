@@ -1271,7 +1271,7 @@ const styles = StyleSheet.create({
   },
   coverageDetailsContainer: {
     marginVertical: 5,
-    marginHorizontal: 15
+    marginLeft: 15
   },
   coverageRow: {
     flexDirection: "row",
