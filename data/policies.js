@@ -135,8 +135,8 @@ export default (policies = [
         title: "Premium Plan",
         premium: 17.87,
         coverage: {
-          accidentalDeath: 40000,
-          permanentDisablement: 40000
+          accidentalDeath: 100000,
+          permanentDisablement: 100000
         }
       }
     ],
