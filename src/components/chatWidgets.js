@@ -200,7 +200,7 @@ export class ImageTable extends Component {
         onPress={this.handlePress(column.id)}
       >
         <View style={[styles.imageSquare, styles.imageBorder, styles.addImage]}>
-          <Icon name="add" size={55} style={styles.addImageIcon} />
+          <Icon name="add" size={45} style={styles.addImageIcon} />
         </View>
       </TouchableOpacity>
     );
@@ -1223,8 +1223,8 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
   imageSquare: {
-    width: 60,
-    height: 60
+    width: 50,
+    height: 50
   },
   durationText: {
     marginBottom: 20,
