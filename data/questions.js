@@ -120,7 +120,7 @@ export const QUESTION_SETS = {
     // },
     {
       question:
-        "Nice to meet you <%= firstName %> <%= lastName %>! What's your Singaporean NRIC? Or if you're a non-Singaporean, what's your Passport number?",
+        "What's your Singaporean NRIC? Or if you're a non-Singaporean, what's your Passport number?",
       responseType: ["string", "nric"],
       responseLength: 15,
       id: "idNumber"
