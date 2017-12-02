@@ -205,7 +205,7 @@ class MicroUmbrellaAppTest(unittest.TestCase):
         sleep(5)
         try:
             self.tap_on(self.find_accessibility('Allow'))
-        except:
+        except NoSuchElementException:
             pass
         sign_in_button = None
         try:
