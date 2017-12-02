@@ -110,7 +110,6 @@ export default class PolicyDetails extends Component {
         })
         .catch(err => {
           this.setState({ loadingText: null });
-          console.error(err);
         });
     });
   }
@@ -139,13 +138,17 @@ export default class PolicyDetails extends Component {
     this.setState({ loadingText: "Cancelling policy..." });
     const { subPurchase } = this.state;
     const { policy: purchase } = this.props.navigation.state.params;
-    return saveNonRenewal(purchase, subPurchase).then(() => {
-      purchase.set("cancelled", true);
-      return purchase.save().then(() => {
+    return saveNonRenewal(purchase, subPurchase)
+      .then(() => {
+        purchase.set("cancelled", true);
+        return purchase.save().then(() => {
+          this.setState({ loadingText: null });
+          this.props.navigation.goBack();
+        });
+      })
+      .catch(err => {
         this.setState({ loadingText: null });
-        this.props.navigation.goBack();
       });
-    });
   }
 
   handleRenewChange(renewValue: boolean) {
@@ -261,7 +264,7 @@ export default class PolicyDetails extends Component {
         {policyMetadata.renewable ? (
           <View style={styles.detailRow}>
             <Text style={[styles.detailText, styles.detailLabel]}>
-              Auto renew policy
+              Auto-renew policy
             </Text>
             <Switch
               onValueChange={this.handleRenewChange}

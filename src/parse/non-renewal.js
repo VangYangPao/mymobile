@@ -13,8 +13,9 @@ export function saveNonRenewal(purchase: any, subPurchase: any) {
 
   const policyEndDate = getPolicyEndDate(purchase, subPurchase);
   // cancellation effective date is a day after end date
-  const cancellationEffectiveDate = moment(policyEndDate).add(1, "days");
-
+  const cancellationEffectiveDate = moment(policyEndDate)
+    .add(1, "days")
+    .toDate();
   nonRenewal.set("cancellationEffectiveDate", cancellationEffectiveDate);
   const user = purchase.get("user");
   nonRenewal.setACL(new Parse.ACL(user));
