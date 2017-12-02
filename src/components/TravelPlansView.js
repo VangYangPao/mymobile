@@ -5,7 +5,8 @@ import {
   TouchableOpacity,
   View,
   SectionList,
-  StyleSheet
+  StyleSheet,
+  Platform
 } from "react-native";
 import { PlansTabNavigator } from "../components/chatWidgets";
 
@@ -178,7 +179,7 @@ class TravelPlanTab extends Component {
       <Animated.View style={{ opacity: this.state.fadeAnim }}>
         <SectionList
           scrollEnabled={false}
-          removeClippedSubviews={false}
+          removeClippedSubviews={Platform.select({ ios: true, android: false })}
           ItemSeparatorComponent={itemSeparatorComponent}
           renderSectionHeader={this.renderSectionHeader}
           sections={listSections}

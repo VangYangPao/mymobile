@@ -173,7 +173,7 @@ class ChatScreen extends Component {
       policies: null,
       currentUser: null,
       idNumberType: "nric",
-      renderActionsPicker: false,
+      renderActionsPicker: true,
       composerText: "",
       keyboardHeight: 0,
       messages: [],
@@ -1169,7 +1169,7 @@ class ChatScreen extends Component {
     if (currentQuestion.id === "idNumber" && this.state.renderActionsPicker) {
       const choices = [
         { label: "NRIC/FIN", value: "nric" },
-        { label: "Passport", value: "passport" }
+        { label: "PASSPORT", value: "passport" }
       ];
       const onSelectChoice = ({ label, value }) => {
         if (value === "nric") {
@@ -1188,8 +1188,27 @@ class ChatScreen extends Component {
           renderActionsPicker: false
         });
       };
+
+      const suggestionListHeader = (
+        <View
+          style={{
+            borderColor: colors.softBorderLine,
+            borderBottomWidth: 1,
+            padding: 20,
+            backgroundColor: "white"
+          }}
+        >
+          <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+            Do you hold a Singaporean NRIC/FIN or a Passport?
+          </Text>
+        </View>
+      );
       return (
-        <SuggestionList items={choices} onSelectSuggestion={onSelectChoice} />
+        <SuggestionList
+          headerComponent={suggestionListHeader}
+          items={choices}
+          onSelectSuggestion={onSelectChoice}
+        />
       );
     }
     return null;
@@ -1308,7 +1327,7 @@ class ChatScreen extends Component {
     if (currentQuestion.id === "idNumber") {
       const mapping = {
         nric: "NRIC/FIN",
-        passport: "Passport"
+        passport: "PASSPORT"
       };
       const actionPickerIconType = this.state.renderActionsPicker
         ? "keyboard-arrow-up"

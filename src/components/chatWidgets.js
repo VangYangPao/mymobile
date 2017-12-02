@@ -979,7 +979,7 @@ export class SuggestionList extends Component {
     this.renderSuggestion = this.renderSuggestion.bind(this);
     this.state = {
       fadeAnim: new Animated.Value(0),
-      topAnim: new Animated.Value(50)
+      topAnim: new Animated.Value(100)
     };
   }
 
@@ -1045,10 +1045,16 @@ export class SuggestionList extends Component {
             opacity: this.state.fadeAnim
           }}
         >
+          {this.props.headerComponent || null}
           {scrollView}
         </Animated.View>
       ),
-      android: scrollView
+      android: (
+        <View>
+          {this.props.headerComponent || null}
+          {scrollView}
+        </View>
+      )
     });
   }
 }
