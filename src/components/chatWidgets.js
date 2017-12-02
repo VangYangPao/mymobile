@@ -40,6 +40,7 @@ import tabStyles from "../styles/TabBar.styles";
 
 const imageHeight = 150;
 const imageWidth = 100;
+const itemSeparatorComponent = () => <View style={styles.separator} />;
 
 export class MyDatePicker extends Component {
   constructor(props) {
@@ -144,91 +145,12 @@ export class CoverageDurationWidget extends Component {
   }
 }
 
-export class MultipleImagePicker extends Component {
-  constructor(props) {
-    super(props);
-    this.handlePress = this.handlePress.bind(this);
-    this.handleFinishSelectImages = this.handleFinishSelectImages.bind(this);
-    this.handleSkipUpload = this.handleSkipUpload.bind(this);
-    this.state = { images: [] };
-  }
-
-  handlePress() {
-    ImagePicker.showImagePicker(this.options, response => {
-      if (response.didCancel) {
-        console.log("User cancelled image picker");
-      } else if (response.error) {
-        console.log("ImagePicker Error: ", response.error);
-      } else {
-        this.setState({ images: this.state.images.concat(response.uri) });
-      }
-    });
-  }
-
-  handleFinishSelectImages() {
-    if (this.state.images < 1) {
-      Alert.alert("Must upload at least one image");
-      return;
-    }
-    this.props.onFinishSelectImages(this.state.images);
-  }
-
-  handleSkipUpload() {
-    this.props.onFinishSelectImages([]);
-  }
-
-  renderImage(imageUri, idx, images) {
-    return (
-      <Image
-        key={idx}
-        source={{ uri: imageUri }}
-        style={[
-          styles.pickedImage,
-          idx === images.length - 1 ? styles.lastImage : null
-        ]}
-        resizeMode="cover"
-      />
-    );
-  }
-
-  render() {
-    return (
-      <View style={styles.imageGalleryContainer}>
-        <Text style={styles.imageGalleryTitle}>
-          Press on the '+'{"\n"}to start adding images
-        </Text>
-        <ScrollView horizontal={true} style={styles.imageGallery}>
-          <TouchableOpacity activeOpacity={0.7} onPress={this.handlePress}>
-            <View style={[styles.pickedImage, styles.emptyImage]}>
-              <Icon name="add" size={55} style={styles.plusIcon} />
-            </View>
-          </TouchableOpacity>
-          {this.state.images.reverse().map(this.renderImage)}
-        </ScrollView>
-        <Button
-          onPress={this.handleFinishSelectImages}
-          style={styles.confirmUpload}
-        >
-          UPLOAD PHOTOS
-        </Button>
-        <Button
-          onPress={this.handleSkipUpload}
-          containerStyle={styles.skipUploadContainer}
-          style={styles.skipUpload}
-          textStyle={styles.skipUploadText}
-        >
-          SKIP UPLOAD
-        </Button>
-      </View>
-    );
-  }
-}
-
 export class ImageTable extends Component {
   constructor(props) {
     super(props);
     this.handlePress = this.handlePress.bind(this);
     this.handleFinishSelectImages = this.handleFinishSelectImages.bind(this);
+    this.renderRow = this.renderRow.bind(this);
     this.state = { images: {}, error: false };
     const { columns } = this.props;
     for (var i = 0; i < columns.length; i++) {
@@ -245,7 +167,11 @@ export class ImageTable extends Component {
           console.log("ImagePicker Error: ", response.error);
         } else {
           let newImages = Object.assign({}, this.state.images);
-          newImages[id] = response.uri;
+          if (!newImages[id]) {
+            newImages[id] = [];
+          }
+          console.log(newImages);
+          newImages[id].push(response.uri);
           this.setState({ images: newImages });
         }
       });
@@ -266,77 +192,74 @@ export class ImageTable extends Component {
     this.setState({ error: true });
   }
 
-  render() {
-    const { columns } = this.props;
-    let i,
-      j,
-      chunk = 2;
-    let rows = [];
-    for (i = 0, j = columns.length; i < j; i += chunk) {
-      const row = columns.slice(i, i + chunk);
-      const rowElements = row.map(r => {
-        const imageUri = this.state.images[r.id];
-        return (
-          <TouchableOpacity
-            accessibilityLabel={"chat__image-" + r.id}
-            key={r.id}
-            onPress={this.handlePress(r.id)}
-            activeOpacity={0.6}
-            style={{
-              flex: 0.5,
-              borderWidth: 1,
-              borderColor: colors.softBorderLine,
-              backgroundColor: "white"
-            }}
-          >
-            <View
-              style={{
-                flex: 1,
-                alignItems: "center",
-                justifyContent: "flex-end",
-                paddingHorizontal: 15,
-                paddingVertical: 12
-              }}
-            >
-              <Text style={{ flex: 1, textAlign: "center", marginBottom: 10 }}>
-                {r.label}
-              </Text>
-              {imageUri === null ? (
-                <Icon
-                  name="add"
-                  size={55}
-                  style={[styles.plusIcon, { color: colors.softBorderLine }]}
-                />
-              ) : (
-                <Image
-                  style={{ width: 70, height: 100, resizeMode: "cover" }}
-                  source={{ uri: imageUri }}
-                />
-              )}
-            </View>
-          </TouchableOpacity>
-        );
-      });
-      rows.push(
-        <View key={i} style={{ flexDirection: "row" }}>
-          {rowElements}
+  renderAddImage(column) {
+    return (
+      <TouchableOpacity
+        opacity={0.8}
+        accessibilityLabel={"chat__image-" + column.id}
+        onPress={this.handlePress(column.id)}
+      >
+        <View style={[styles.imageSquare, styles.imageBorder, styles.addImage]}>
+          <Icon name="add" size={55} style={styles.addImageIcon} />
         </View>
-      );
+      </TouchableOpacity>
+    );
+  }
+
+  renderRow({ item: column }) {
+    var imageURIs = this.state.images[column.id];
+    var images = [];
+    if (imageURIs) {
+      images = imageURIs
+        .slice()
+        .reverse()
+        .map((uri, idx) => (
+          <Image
+            key={idx}
+            resizeMode="cover"
+            source={{ uri }}
+            style={[styles.imageSquare, styles.imageBorder]}
+          />
+        ));
     }
+    return (
+      <View style={styles.imageTableRow}>
+        <Text>{column.label}</Text>
+        <ScrollView
+          contentContainerStyle={styles.imageRow}
+          horizontal={true}
+          showsHorizontalScrollIndicator={true}
+          overScrollMode="never"
+        >
+          {this.renderAddImage(column)}
+          {images}
+        </ScrollView>
+      </View>
+    );
+  }
+
+  render() {
     const minImages = Math.max(1, this.props.columns.length - 2);
     const responses = [
       { isValid: false, errMessage: `Must upload at least ${minImages} images` }
     ];
     return (
-      <View style={{ marginVertical: 25 }}>
-        {rows}
-        <Button
-          containerStyle={styles.noBorderRadius}
-          onPress={this.handleFinishSelectImages}
-          style={[styles.confirmUpload, styles.noBorderRadius]}
-        >
-          UPLOAD IMAGES
-        </Button>
+      <View style={styles.imageTableContainer}>
+        <View style={styles.imageTable}>
+          <FlatList
+            data={this.props.columns}
+            keyExtractor={item => item.id}
+            renderItem={this.renderRow}
+            ItemSeparatorComponent={itemSeparatorComponent}
+            extraData={this.state.images}
+          />
+          <Button
+            onPress={this.handleFinishSelectImages}
+            style={styles.confirmUpload}
+          >
+            UPLOAD IMAGES
+          </Button>
+        </View>
         {this.state.error ? <ErrorMessages responses={responses} /> : null}
       </View>
     );
@@ -483,6 +406,7 @@ export class ClaimPolicyChoice extends Component {
           ]}
         >
           <FlatList
+            keyExtractor={policy => policy.id}
             data={this.props.policies}
             renderItem={this.renderPolicy}
             extraData={this.state.disabled}
@@ -1095,7 +1019,6 @@ export class SuggestionList extends Component {
     let scrollView = null;
 
     if (this.props.items.length) {
-      const itemSeparatorComponent = () => <View style={styles.separator} />;
       scrollView = (
         <FlatList
           style={styles.suggestionListScrollView}
@@ -1266,6 +1189,43 @@ const multiInputPlaceholderSize = 16;
 const iconSize = 50;
 
 const styles = StyleSheet.create({
+  confirmUpload: {
+    height: 55,
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10
+  },
+  imageRow: {
+    marginTop: 10,
+    flexDirection: "row",
+    alignItems: "center"
+  },
+  addImageIcon: {
+    color: colors.borderLine
+  },
+  imageTableRow: {
+    marginHorizontal: 15,
+    marginVertical: 15
+  },
+  imageTableContainer: {
+    margin: 10
+  },
+  imageTable: {
+    borderRadius: 10,
+    backgroundColor: "white"
+  },
+  imageBorder: {
+    marginRight: 10,
+    borderWidth: 1,
+    borderColor: colors.softBorderLine,
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  imageSquare: {
+    width: 60,
+    height: 60
+  },
   durationText: {
     marginBottom: 20,
     fontSize: 17,
@@ -1345,6 +1305,8 @@ const styles = StyleSheet.create({
     // marginRight: 60
   },
   errMessageText: {
+    fontSize: 16,
+    fontWeight: "bold",
     color: colors.primaryText
   },
   errMessage: {
@@ -1495,9 +1457,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: colors.borderLine
-  },
-  plusIcon: {
-    color: "white"
   },
   pickedImage: {
     width: imageWidth,
