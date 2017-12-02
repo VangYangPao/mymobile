@@ -96,26 +96,44 @@ class TravelPlanTab extends Component {
     const { plan } = this.props;
     let sections = null;
     let benefitPayable = null;
+    // if (coverage.sections) {
+    //   sections = (
+    //     <View style={styles.sections}>
+    //       {coverage.sections.map(this.renderSection)}
+    //     </View>
+    //   );
+    // } else if (coverage.benefitPayable) {
+    //   benefitPayable = this.renderBenefitPayable(coverage.benefitPayable, plan);
+    // }
+    // const coverageStyle = {
+    //   padding: 15
+    // };
+    // const additionalStyle = coverage.sections ? {} : styles.section;
+    // return (
+    //   <View
+    //     key={coverage.title}
+    //     style={[coverageStyle, { justifyContent: "center" }]}
+    //   >
+    //     <Text style={styles.coverageTitle}>{coverage.title}</Text>
+    //     {sections}
+    //     {benefitPayable}
+    //   </View>
+    // );
     if (coverage.sections) {
-      sections = (
+      return (
         <View style={styles.sections}>
+          <Text style={styles.coverageTitle}>{coverage.title}</Text>
           {coverage.sections.map(this.renderSection)}
         </View>
       );
     } else if (coverage.benefitPayable) {
-      benefitPayable = this.renderBenefitPayable(coverage.benefitPayable, plan);
+      return (
+        <View key={coverage.title} style={styles.coverage}>
+          <Text style={{ color: colors.primaryText }}>{coverage.title}</Text>
+          {this.renderBenefitPayable(coverage.benefitPayable, plan)}
+        </View>
+      );
     }
-    const coverageStyle = {
-      padding: 15
-    };
-    const additionalStyle = coverage.sections ? {} : styles.section;
-    return (
-      <View key={coverage.title} style={[coverageStyle, styles.section]}>
-        <Text style={styles.coverageTitle}>{coverage.title}</Text>
-        {sections}
-        {benefitPayable}
-      </View>
-    );
   }
 
   renderSection(section: Section) {
@@ -258,7 +276,7 @@ const styles = StyleSheet.create({
     borderRadius: 0
   },
   sections: {
-    marginTop: 10
+    marginVertical: 15
   },
   benefitPayable: {
     flex: 0.4,
@@ -267,15 +285,26 @@ const styles = StyleSheet.create({
     alignItems: "center",
     color: colors.primaryText
   },
+  coverage: {
+    flex: 1,
+    padding: 15,
+    alignItems: "center",
+    justifyContent: "space-between",
+    flexDirection: "row"
+  },
   section: {
     flex: 1,
+    paddingHorizontal: 15,
     alignItems: "center",
     justifyContent: "space-between",
     flexDirection: "row"
   },
   coverageTitle: {
+    paddingHorizontal: 15,
+    marginBottom: 10,
+    fontSize: 15,
     color: colors.primaryText,
-    fontSize: 15
+    fontWeight: "bold"
   },
   separator: {
     borderBottomColor: colors.borderLine,
