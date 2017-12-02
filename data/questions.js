@@ -221,7 +221,7 @@ export const QUESTION_SETS = {
     {
       question: "What do you work as?",
       searchChoices: true,
-      responseType: ["number", "occupation"],
+      responseType: ["string", "occupation"],
       choices: ALL_OCCUPATIONS,
       include: ["pa", "pa_mr", "pa_wi"],
       id: "occupation",

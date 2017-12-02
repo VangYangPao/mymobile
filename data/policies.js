@@ -48,12 +48,12 @@ export default (policies = [
         id: 84,
         legacyId: "superior",
         title: "Superior Plan"
-      },
-      {
-        id: 85,
-        legacyId: "premium",
-        title: "Premium Plan"
       }
+      // {
+      //   id: 85,
+      //   legacyId: "premium",
+      //   title: "Premium Plan"
+      // }
     ],
     isTravelInsurance: true,
     from: "1 day",
