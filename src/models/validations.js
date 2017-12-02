@@ -159,10 +159,10 @@ function validateChoice(choice) {
 }
 
 function validateImei(s) {
-  if (s.length < 15) {
+  if (s.length !== 15) {
     return new ValidationResult(
       false,
-      "IMEI number must be at least 15-characters long"
+      "IMEI number must only be 15-characters long"
     );
   }
   return new ValidationResult(true, true);

@@ -150,7 +150,9 @@ export default function ChatScreenWrapper() {
   return wrapper;
 }
 
-const WINDOW_HEIGHT = Dimensions.get("window").height;
+const windowDimensions = Dimensions.get("window");
+const WINDOW_HEIGHT = windowDimensions.height;
+const WINDOW_WIDTH = windowDimensions.width;
 
 @observer
 class ChatScreen extends Component {
@@ -1453,8 +1455,8 @@ const styles = StyleSheet.create({
     paddingTop: Platform.select({ ios: -5, android: 0 })
   },
   messageImage: {
-    width: 250,
-    height: 250,
+    width: WINDOW_WIDTH * 0.8,
+    height: WINDOW_WIDTH * 0.8,
     marginTop: 10,
     alignSelf: "center",
     resizeMode: "contain"
