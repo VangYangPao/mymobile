@@ -107,12 +107,11 @@ export default class StatusScreen extends Component {
   }
 
   handleSharePolicies() {
-    const title = "Share my policies - microUmbrella";
+    const title = "Share my policies - MicroUmbrella";
     const code = generateID(6);
     const url = `https://microumbrella.com/share/${code}`;
     Share.share(
       {
-        message: `I have enjoyed microUmbrella's service and would like to share my Policy Information with you for safekeeping. To accept, use this code: ${code} or click ${url}.`,
         url,
         title
       },
@@ -256,7 +255,7 @@ export default class StatusScreen extends Component {
           emptySection = (
             <View key={section.key} style={styles.emptySection}>
               <Text style={styles.emptySectionTitle}>
-                You have not purchased any policies.
+                Oops… you have not purchased any!
               </Text>
               <Button
                 onPress={() =>
@@ -300,7 +299,7 @@ export default class StatusScreen extends Component {
           emptySection = (
             <View key={section.key} style={styles.emptySection}>
               <Text style={styles.emptySectionTitle}>
-                You have not purchased any policies.
+                Oops… you have not made any claim!
               </Text>
               <Button
                 onPress={() =>

@@ -139,7 +139,7 @@ export default function ChatScreenWrapper() {
       drawerIcon = "attach-money";
     }
     return {
-      title: isStartScreen ? "microUmbrella" : drawerLabel,
+      title: isStartScreen ? "MicroUmbrella" : drawerLabel,
       drawerLabel,
       drawerIcon: ({ tintColor }) => (
         <Icon name={drawerIcon} size={22} color={tintColor} />
@@ -300,7 +300,7 @@ class ChatScreen extends Component {
               type: "text",
               _id: 0,
               text:
-                "Hello, I'm Eve. Welcome to microUmbrella. I'll be your host and here are the protection plans that may interest you. 😄",
+                "Hello, I'm Eve. Welcome to MicroUmbrella. I'll be your host and here are the protection plans that may interest you. 😄",
               createdAt: new Date(),
               user: AGENT_USER
             }

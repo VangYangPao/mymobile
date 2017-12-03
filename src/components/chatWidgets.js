@@ -376,7 +376,7 @@ export class ClaimPolicyChoice extends Component {
       content = (
         <View style={styles.claimScreenContainer}>
           <Text style={styles.claimScreenText}>
-            No policies to claim, purchase one first!
+            No policies to claim.{"\n"}Shop for one today.
           </Text>
           <Button
             onPress={() =>

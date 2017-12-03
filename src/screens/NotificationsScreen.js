@@ -100,7 +100,7 @@ export default class NotificationsScreen extends Component {
             styles.emptyNotificationsSubtitle
           ]}
         >
-          Let's get you protected.
+          Check notifications for promotions updates, claim payment and more.
         </Text>
         <Button
           onPress={() =>
