@@ -112,6 +112,7 @@ export default class StatusScreen extends Component {
     const url = `https://microumbrella.com/share/${code}`;
     Share.share(
       {
+        message: `I have enjoyed MicroUmbrella's service and would like to share my Policy Information with you for safekeeping. To accept, use this code: ${code} or click ${url}.`,
         url,
         title
       },

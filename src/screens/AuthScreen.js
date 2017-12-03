@@ -130,14 +130,24 @@ const PhoneType = mysubtype(t.String, p => {
   }
 });
 
+const NameType = mysubtype(t.String, name => {
+  console.log(name, typeof name, !name);
+  if (!name) return "Name must not be empty";
+  const namePattern = /^([A-Za-z ,\.@/\(\)])+$/;
+  const match = name.match(namePattern);
+  if (!match) {
+    return "Name must only contain alphabets and these symbols: @, / and ()";
+  }
+});
+
 const NonEmptyStr = mysubtype(t.String, p => {
   if (!p) return "Full name must not be empty";
 });
 
 const UserSignUp = t.struct({
   email: EmailType,
-  firstName: NonEmptyStr,
-  lastName: NonEmptyStr,
+  firstName: NameType,
+  lastName: NameType,
   telephone: PhoneType,
   password: PasswordType,
   confirmPassword: ConfirmPasswordType
@@ -152,12 +162,10 @@ const userSignUpOptions = {
       autoCorrect: false
     },
     firstName: {
-      placeholderTextColor: "white",
-      error: "Name cannot be empty"
+      placeholderTextColor: "white"
     },
     lastName: {
-      placeholderTextColor: "white",
-      error: "Name cannot be empty"
+      placeholderTextColor: "white"
     },
     telephone: {
       placeholderTextColor: "white",
@@ -215,7 +223,7 @@ class SignUpScreen extends Component {
         <KeyboardAwareScrollView extraScrollHeight={75}>
           <View style={styles.container}>
             <View style={{ marginTop: 30, justifyContent: "center" }}>
-              <Text style={styles.signUpHeader}>Sign up for microUmbrella</Text>
+              <Text style={styles.signUpHeader}>Sign up for MicroUmbrella</Text>
             </View>
             <View style={{ flex: 0.1, justifyContent: "center" }}>
               <Form
