@@ -1154,10 +1154,16 @@ class ChatScreen extends Component {
     const currentQuestion = this.questions[currentQuestionIndex];
 
     if (currentQuestion.searchChoices) {
-      const fuse = new Fuse(
-        currentQuestion.choices,
-        currentQuestion.searchOptions
-      );
+      let choices = currentQuestion.choices;
+      if (
+        this.props.policy.id === "mobile" &&
+        this.state.answers.brandID &&
+        currentQuestion.id === "modelID"
+      ) {
+        const { brandID } = this.state.answers;
+        choices = currentQuestion.choices[brandID];
+      }
+      const fuse = new Fuse(choices, currentQuestion.searchOptions);
       const { composerText } = this.state;
       const matchedItems = fuse.search(composerText);
       return (
