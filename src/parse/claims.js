@@ -18,9 +18,9 @@ export function saveNewClaim(
     const imageProps = Object.keys(claimAnswer);
     answerKeys.push(imageProps);
     const imagePromises = imageProps.map(imageProp => {
-      const imageUri = claimAnswer[imageProp];
-      if (imageUri === null) return null;
-      return RNFS.readFile(imageUri, "base64");
+      const imageUris = claimAnswer[imageProp];
+      if (imageUris === null) return null;
+      return imageUris.map(uri => RNFS.readFile(uri, "base64"));
     });
     return Promise.all(imagePromises);
   });
@@ -28,21 +28,25 @@ export function saveNewClaim(
   return Promise.all(answerPromises).then((imageAnswers, answerIdx) => {
     let documents = [];
 
-    imageAnswers.forEach((imageBitmaps, answerIdx) => {
+    imageAnswers.forEach((imageSets, answerIdx) => {
       const answerProp = answersWithImages[answerIdx];
-      imageBitmaps.forEach((imageBase64, imageIdx) => {
-        const imageProp = answerKeys[answerIdx][imageIdx];
-        const currentFileName = claimAnswers[answerProp][imageProp];
-        if (currentFileName === null) return; // leave it as null
-        const fileExt = currentFileName.split(".").pop();
-        const filename = `${imageProp}.${fileExt}`;
-        const file = new Parse.File(filename, { base64: imageBase64 });
-        const document = {
-          file,
-          name: imageProp,
-          ext: fileExt
-        };
-        documents.push(document);
+      imageSets.forEach((imageBitmaps, imageSetIdx) => {
+        if (!imageBitmaps) return;
+        imageBitmaps.forEach((imageBase64, imageBitmapIdx) => {
+          const imageProp = answerKeys[answerIdx][imageSetIdx];
+          console.log(answerProp, imageProp);
+          const currentFileName = claimAnswers[answerProp][imageProp];
+          if (currentFileName === null) return; // leave it as null
+          const fileExt = currentFileName.split(".").pop();
+          const filename = `${imageProp}-${imageBitmapIdx + 1}.${fileExt}`;
+          const file = new Parse.File(filename, { base64: imageBase64 });
+          const document = {
+            file,
+            name: imageProp,
+            ext: fileExt
+          };
+          documents.push(document);
+        });
       });
       delete claimAnswers[answerProp];
     });

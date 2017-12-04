@@ -661,6 +661,7 @@ class ChatScreen extends Component {
           );
         })
         .catch(err => {
+          console.error(err);
           this.setState({ loadingSave: false });
           showAlert("Sorry, something went wrong with your claim.", () => {
             this.props.screenProps.rootNavigation.dispatch(
