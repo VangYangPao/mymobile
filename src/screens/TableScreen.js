@@ -68,9 +68,9 @@ export default class TableScreen extends Component {
       responseType.indexOf("datetime") !== -1
     ) {
       // const eighteenYearsAgo = moment(new Date()).subtract(18, "years");
-      const maxDate = field.pastOnly
-        ? value || moment(new Date()).format("YYYY-MM-DD")
-        : null;
+      const today = moment(new Date());
+      const todayStr = today.format("YYYY-MM-DD");
+      const maxDate = field.pastOnly ? value || today.toDate() : null;
       const minDate = field.futureOnly ? value : null;
       inputElement = (
         <TouchableOpacity
@@ -90,12 +90,12 @@ export default class TableScreen extends Component {
           </Text>
           <DatePicker
             ref={picker => (this.inputRefs[index] = picker)}
-            date={this.state.values[index] ? this.state.values[index] : maxDate}
+            date={this.state.values[index] || today.toDate()}
             mode="date"
             placeholder=""
             format="YYYY-MM-DD"
-            minDate={minDate}
-            maxDate={maxDate}
+            minDate={minDate || undefined}
+            maxDate={maxDate || undefined}
             confirmBtnText="Confirm"
             cancelBtnText="Cancel"
             showIcon={false}
