@@ -148,7 +148,7 @@ class TravelPlanTab extends Component {
   }
 
   renderBenefitPayable(benefitPayable: BenefitPayable, plan: TravelPlans) {
-    const coverageAmt = benefitPayable[plan];
+    const coverageAmt = benefitPayable[plan.legacyId];
     return <Text style={styles.benefitPayable}>{coverageAmt}</Text>;
   }
 

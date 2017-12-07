@@ -20,7 +20,8 @@ export function saveNewClaim(
     const imagePromises = imageProps.map(imageProp => {
       const imageUris = claimAnswer[imageProp];
       if (imageUris === null) return null;
-      return imageUris.map(uri => RNFS.readFile(uri, "base64"));
+      const bitmapPromises = imageUris.map(uri => RNFS.readFile(uri, "base64"));
+      return Promise.all(bitmapPromises);
     });
     return Promise.all(imagePromises);
   });
@@ -34,15 +35,16 @@ export function saveNewClaim(
         if (!imageBitmaps) return;
         imageBitmaps.forEach((imageBase64, imageBitmapIdx) => {
           const imageProp = answerKeys[answerIdx][imageSetIdx];
-          console.log(answerProp, imageProp);
-          const currentFileName = claimAnswers[answerProp][imageProp];
+          const currentFileName =
+            claimAnswers[answerProp][imageProp][imageBitmapIdx];
           if (currentFileName === null) return; // leave it as null
           const fileExt = currentFileName.split(".").pop();
-          const filename = `${imageProp}-${imageBitmapIdx + 1}.${fileExt}`;
+          const filename = `${imageProp}-${imageBitmapIdx + 1}`;
+          const filepath = `${filename}.${fileExt}`;
           const file = new Parse.File(filename, { base64: imageBase64 });
           const document = {
             file,
-            name: imageProp,
+            name: filename,
             ext: fileExt
           };
           documents.push(document);
@@ -50,6 +52,7 @@ export function saveNewClaim(
       });
       delete claimAnswers[answerProp];
     });
+    console.log(documents);
     const Claim = Parse.Object.extend("Claim");
     const claim = new Claim();
     const fields = [

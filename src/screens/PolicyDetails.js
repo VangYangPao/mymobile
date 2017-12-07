@@ -10,6 +10,7 @@ import {
   Switch
 } from "react-native";
 import Parse from "parse/react-native";
+import moment from "moment";
 
 import { Text } from "../components/defaultComponents";
 import Page from "../components/Page";
@@ -54,11 +55,12 @@ export default class PolicyDetails extends Component {
     this.handleSaveUpdates = this.handleSaveUpdates.bind(this);
     this.handleRenewChange = this.handleRenewChange.bind(this);
     this.renderDetailRow = this.renderDetailRow.bind(this);
+    const { policy } = this.props.navigation.state.params;
     this.state = {
       loadingSubPurchase: false,
       loadingText: null,
       subPurchase: null,
-      renewValue: false
+      renewValue: policy.get("autoRenew")
     };
   }
 
@@ -218,7 +220,14 @@ export default class PolicyDetails extends Component {
     const rows = [
       { label: "Policy no.", value: policy.get("policyId") },
       { label: "Policyholder name", value: fullName },
-      { label: "Purchase date", value: getDateStr(policy.get("createdAt")) }
+      {
+        label: "Purchase date",
+        value: moment(policy.get("createdAt")).format("DD-MM-YYYY")
+      },
+      {
+        label: "Policy expiry date",
+        value: moment(policy.get("policyExpiryDate")).format("DD-MM-YYYY")
+      }
     ];
     let bottomContent;
     if (this.state.loadingSubPurchase) {

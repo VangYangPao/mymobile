@@ -38,7 +38,7 @@ class AppStore {
   @observable
   authBackgroundImage = (
     <Image
-      source={require("../../images/background.png")}
+      source={require("../images/background.png")}
       style={styles.authBackgroundImage}
     />
   );
