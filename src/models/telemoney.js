@@ -1,6 +1,7 @@
 // @flow
 import { sha512 } from "js-sha512";
 import moment from "moment";
+import * as cheerio from "cheerio-without-node-native";
 
 import { objectToUrlParams, getObjectFromUrlParams } from "../utils";
 
@@ -67,6 +68,7 @@ export function verifyEnrolment(
   };
   // console.log(payload);
   const formData = generateFormData(payload);
+  console.log(payload);
 
   return (
     fetch(PAYMENT_PROCESS_URL, {
@@ -96,6 +98,7 @@ export function acsRedirection(
   const payload = { PaReq, TermUrl, MD };
   const params = objectToUrlParams(payload);
   const formData = generateFormData(payload);
+  console.log(payload);
   return fetch(acsUrl, {
     method: "POST",
     body: formData
@@ -128,6 +131,7 @@ export function performPaymentAuthRequest(
     validity,
     version: API_VERSION
   };
+  console.log(payload);
   const formData = generateFormData(payload);
   return (
     fetch(PAYMENT_PROCESS_URL, {
@@ -185,6 +189,7 @@ export function create3dsAuthorizationRequest(
     validity,
     version: API_VERSION
   };
+  console.log(payload);
   if (threeDSStatus !== "CNE") {
     payload["eci"] = eci;
     payload["cavv"] = encodeURIComponent(cavv);
@@ -246,14 +251,14 @@ export function doFull3DSTransaction(
       // .catch(err => {
       //   console.error("verify enrolment", err);
       // })
-      .then(renderACSUrl)
-      .then(PaRes => {
+      // .then(renderACSUrl)
+      .then(html => {
         console.log("acs redirected");
         // render html in webview
         // redirect to TermUrl
         // detect redirection, perform payment auth
-        // const $ = cheerio.load(html);
-        // const PaRes = $('input[name="PaRes"]').val();
+        const $ = cheerio.load(html);
+        const PaRes = $('input[name="PaRes"]').val();
         return performPaymentAuthRequest(ref, amt, PaRes);
       })
       // .catch(err => {
