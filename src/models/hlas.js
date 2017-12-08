@@ -21,7 +21,7 @@ import {
   verifyEnrolment,
   doFull3DSTransaction
 } from "./telemoney";
-import { objectToUrlParams } from "../utils";
+import { createPromiseRetry, objectToUrlParams } from "../utils";
 
 const HLAS_URL = "http://42.61.99.229:8080";
 const AGENT_CODE = "MIC00002"; // just to track microassurce account
@@ -73,9 +73,10 @@ function sendPOSTRequest(url, payload, errorResponse) {
 
 export function getPhoneProtectQuote() {
   const url = `${HLAS_URL}/api/Phone/GetPhoneProtectQuote`;
-  return fetch(url)
-    .then(res => res.json())
-    .catch(err => console.error(err));
+
+  return createPromiseRetry(() => {
+    return fetch(url).then(res => res.json());
+  })().catch(err => console.error(err));
 }
 
 export function purchasePhonePolicy(
@@ -96,92 +97,94 @@ export function purchasePhonePolicy(
   let commencementDate: string = moment(policyCommencementDate).format(
     "YYYY-MM-DD"
   );
-  return verifyApplicationPhone(
-    webAppID,
-    premium,
-    commencementDate,
-    mobileDetails,
-    policyHolder,
-    paymentDetails
-  )
-    .then(res => {
-      PASAppID = res.applciationNo;
-      console.log("verified application", PASAppID);
-      let count = 0;
-      return promiseRetry((retry: Function, number: number) => {
-        console.log("retry", ++count);
-        return verifyEnrolment(
-          transactionRef,
-          telemoneyCard,
-          paymentDetails.CardType,
-          premium.toFixed(2)
-        ).catch(retry);
-      }, RETRY_OPTIONS);
-    })
-    .then(res => {
-      verifyEnrolmentResponseObj = res;
-      verifyEnrolmentResponse = objectToUrlParams(verifyEnrolmentResponseObj);
-      return createPaymentTransactionPhone(
-        transactionRef,
-        webAppID,
-        PASAppID,
-        premium,
-        commencementDate,
-        mobileDetails,
-        policyHolder,
-        paymentDetails,
-        verifyEnrolmentResponse
-      );
-    })
-    .then(res => {
-      // const args = [
-      //   card,
-      //   paymentDetails.CardType,
-      //   premium,
-      //   verifyEnrolmentResponseObj
-      // ];
-      // return retryPromise(doFull3DSTransaction, args, 5, 2000);
-      return promiseRetry((retry: Function, number: number) => {
-        console.log("retry", number);
-        return doFull3DSTransaction(
-          telemoneyCard,
-          paymentDetails.CardType,
-          premium,
-          verifyEnrolmentResponseObj,
-          extractPaRes
-        ).catch(retry);
-      }, RETRY_OPTIONS);
-    })
-    .then(res => {
-      console.log("payment res", res);
-      paymentSuccessfulResponse = objectToUrlParams(res);
-      return updatePaymentTransactionPhone(
-        transactionRef,
-        webAppID,
-        PASAppID,
-        premium,
-        commencementDate,
-        mobileDetails,
-        policyHolder,
-        paymentDetails,
-        verifyEnrolmentResponse,
-        paymentSuccessfulResponse
-      );
-    })
-    .then(res => {
-      return submitApplicationPhone(
-        transactionRef,
-        webAppID,
-        PASAppID,
-        premium,
-        commencementDate,
-        mobileDetails,
-        policyHolder,
-        paymentDetails,
-        verifyEnrolmentResponse,
-        paymentSuccessfulResponse
-      );
-    });
+
+  const verifyApplicationPromise = () => {
+    return verifyApplicationPhone(
+      webAppID,
+      premium,
+      commencementDate,
+      mobileDetails,
+      policyHolder,
+      paymentDetails
+    );
+  };
+
+  const verifyEnrolmentPromise = res => {
+    PASAppID = res.applciationNo;
+    console.log("verified application", PASAppID);
+    let count = 0;
+    return verifyEnrolment(
+      transactionRef,
+      telemoneyCard,
+      paymentDetails.CardType,
+      premium.toFixed(2)
+    );
+  };
+
+  const createPaymentPromise = res => {
+    verifyEnrolmentResponseObj = res;
+    verifyEnrolmentResponse = objectToUrlParams(verifyEnrolmentResponseObj);
+    return createPaymentTransactionPhone(
+      transactionRef,
+      webAppID,
+      PASAppID,
+      premium,
+      commencementDate,
+      mobileDetails,
+      policyHolder,
+      paymentDetails,
+      verifyEnrolmentResponse
+    );
+  };
+
+  const do3DSTransactionPromise = res => {
+    return doFull3DSTransaction(
+      telemoneyCard,
+      paymentDetails.CardType,
+      premium,
+      verifyEnrolmentResponseObj,
+      extractPaRes
+    );
+  };
+
+  const updatePaymentPromise = res => {
+    console.log("payment res", res);
+    paymentSuccessfulResponse = objectToUrlParams(res);
+    return updatePaymentTransactionPhone(
+      transactionRef,
+      webAppID,
+      PASAppID,
+      premium,
+      commencementDate,
+      mobileDetails,
+      policyHolder,
+      paymentDetails,
+      verifyEnrolmentResponse,
+      paymentSuccessfulResponse
+    );
+  };
+
+  const submitApplicationPromise = res => {
+    return submitApplicationPhone(
+      transactionRef,
+      webAppID,
+      PASAppID,
+      premium,
+      commencementDate,
+      mobileDetails,
+      policyHolder,
+      paymentDetails,
+      verifyEnrolmentResponse,
+      paymentSuccessfulResponse
+    );
+  };
+
+  return createPromiseRetry(verifyApplicationPromise)()
+    .then(createPromiseRetry(verifyEnrolmentPromise))
+    .then(createPromiseRetry(createPaymentPromise))
+    .then(do3DSTransactionPromise)
+    .then(createPromiseRetry(updatePaymentPromise))
+    .then(createPromiseRetry(submitApplicationPromise));
 }
 
 export function verifyApplicationPhone(
@@ -420,25 +423,27 @@ export function getAccidentQuote(
   const paramStr = objectToUrlParams(payload);
   const path = "api/Accident/GetQuoteAccident";
   const url = `${HLAS_URL}/${path}?${paramStr}`;
-  return fetch(url, {
-    method: "GET",
-    headers: {
-      Accept: "application/json"
-    }
-  })
-    .then(response => {
-      // console.log(response.headers);
-      // console.log(response.status);
-      return response.json();
-    })
-    .then(response => {
-      if (!response.success) {
-        throw new Error(
-          "Error getting accident quote: " + JSON.stringify(response)
-        );
+  return createPromiseRetry(() => {
+    return fetch(url, {
+      method: "GET",
+      headers: {
+        Accept: "application/json"
       }
-      return response;
-    });
+    })
+      .then(response => {
+        // console.log(response.headers);
+        // console.log(response.status);
+        return response.json();
+      })
+      .then(response => {
+        if (!response.success) {
+          throw new Error(
+            "Error getting accident quote: " + JSON.stringify(response)
+          );
+        }
+        return response;
+      });
+  })();
 }
 
 function paymentDetailsToTelemoneyCard(form) {
@@ -478,95 +483,94 @@ export function purchaseAccidentPolicy(
     PolicyTermsID: policytermid,
     OptionsID: optionid
   };
-  return verifyApplicationAccident(
-    WebAppID,
-    premium,
-    commencementDate,
-    accidentDetails,
-    policyHolder,
-    paymentDetails
-  )
-    .then(res => {
-      PASAppID = res.applciationNo;
-      console.log("verified application", PASAppID);
 
-      let count = 0;
-      return promiseRetry((retry: Function, number: number) => {
-        console.log("retry", number);
-        return verifyEnrolment(
-          transactionRef,
-          telemoneyCard,
-          paymentDetails.CardType,
-          premium.toFixed(2)
-        ).catch(retry);
-      }, RETRY_OPTIONS);
-    })
-    .then(res => {
-      verifyEnrolmentResponseObj = res;
-      verifyEnrolmentResponse = objectToUrlParams(verifyEnrolmentResponseObj);
-      return createPaymentTransactionAccident(
-        transactionRef,
-        WebAppID,
-        PASAppID,
-        premium,
-        commencementDate,
-        accidentDetails,
-        policyHolder,
-        paymentDetails,
-        verifyEnrolmentResponse
-      );
-    })
-    .then(res => {
-      // const args = [
-      //   card,
-      //   paymentDetails.CardType,
-      //   premium,
-      //   verifyEnrolmentResponseObj
-      // ];
-      // return retryPromise(doFull3DSTransaction, args, 5, 2000);
-      let count = 0;
+  const verifyApplicationPromise = () => {
+    return verifyApplicationAccident(
+      WebAppID,
+      premium,
+      commencementDate,
+      accidentDetails,
+      policyHolder,
+      paymentDetails
+    );
+  };
 
-      return promiseRetry((retry: Function, number: number) => {
-        console.log("retry", number);
-        return doFull3DSTransaction(
-          telemoneyCard,
-          paymentDetails.CardType,
-          premium,
-          verifyEnrolmentResponseObj,
-          extractPaRes
-        ).catch(retry);
-      }, RETRY_OPTIONS);
-    })
-    .then(res => {
-      console.log("payment res", res);
-      paymentSuccessfulResponse = objectToUrlParams(res);
-      return updatePaymentTransactionAccident(
-        transactionRef,
-        WebAppID,
-        PASAppID,
-        premium,
-        commencementDate,
-        accidentDetails,
-        policyHolder,
-        paymentDetails,
-        verifyEnrolmentResponse,
-        paymentSuccessfulResponse
-      );
-    })
-    .then(res => {
-      return submitApplicationAccident(
-        transactionRef,
-        WebAppID,
-        PASAppID,
-        premium,
-        commencementDate,
-        accidentDetails,
-        policyHolder,
-        paymentDetails,
-        verifyEnrolmentResponse,
-        paymentSuccessfulResponse
-      );
-    });
+  const verifyEnrolmentPromise = res => {
+    PASAppID = res.applciationNo;
+    console.log("verified application", PASAppID);
+
+    return verifyEnrolment(
+      transactionRef,
+      telemoneyCard,
+      paymentDetails.CardType,
+      premium.toFixed(2)
+    );
+  };
+
+  const createPaymentPromise = res => {
+    verifyEnrolmentResponseObj = res;
+    verifyEnrolmentResponse = objectToUrlParams(verifyEnrolmentResponseObj);
+    return createPaymentTransactionAccident(
+      transactionRef,
+      WebAppID,
+      PASAppID,
+      premium,
+      commencementDate,
+      accidentDetails,
+      policyHolder,
+      paymentDetails,
+      verifyEnrolmentResponse
+    );
+  };
+
+  const do3DSTransactionPromise = res => {
+    return doFull3DSTransaction(
+      telemoneyCard,
+      paymentDetails.CardType,
+      premium,
+      verifyEnrolmentResponseObj,
+      extractPaRes
+    );
+  };
+
+  const updatePaymentPromise = res => {
+    console.log("payment res", res);
+    paymentSuccessfulResponse = objectToUrlParams(res);
+    return updatePaymentTransactionAccident(
+      transactionRef,
+      WebAppID,
+      PASAppID,
+      premium,
+      commencementDate,
+      accidentDetails,
+      policyHolder,
+      paymentDetails,
+      verifyEnrolmentResponse,
+      paymentSuccessfulResponse
+    );
+  };
+
+  const submitApplicationPromise = res => {
+    return submitApplicationAccident(
+      transactionRef,
+      WebAppID,
+      PASAppID,
+      premium,
+      commencementDate,
+      accidentDetails,
+      policyHolder,
+      paymentDetails,
+      verifyEnrolmentResponse,
+      paymentSuccessfulResponse
+    );
+  };
+
+  return createPromiseRetry(verifyApplicationPromise)()
+    .then(createPromiseRetry(verifyEnrolmentPromise))
+    .then(createPromiseRetry(createPaymentPromise))
+    .then(do3DSTransactionPromise)
+    .then(createPromiseRetry(updatePaymentPromise))
+    .then(createPromiseRetry(submitApplicationPromise));
 }
 
 export function verifyApplicationAccident(
@@ -981,24 +985,25 @@ export function getTravelQuote(
   });
   const path = "api/Travel/GetQuoteSingleTravel";
   const url = `${HLAS_URL}/${path}?${paramStr}`;
-  console.log(url);
-  return fetch(url, {
-    method: "GET",
-    headers: {
-      Accept: "application/json"
-    }
-  })
-    .then(response => {
-      // console.log(response.headers);
-      // console.log(response.status);
-      return response.json();
-    })
-    .then(response => {
-      if (!response.success) {
-        throw new Error("Error getting quote: " + JSON.stringify(response));
+  return createPromiseRetry(() => {
+    return fetch(url, {
+      method: "GET",
+      headers: {
+        Accept: "application/json"
       }
-      return response;
-    });
+    })
+      .then(response => {
+        // console.log(response.headers);
+        // console.log(response.status);
+        return response.json();
+      })
+      .then(response => {
+        if (!response.success) {
+          throw new Error("Error getting quote: " + JSON.stringify(response));
+        }
+        return response;
+      });
+  })().catch(err => console.error(err));
 }
 
 export function verifyApplicationTravelSingle(

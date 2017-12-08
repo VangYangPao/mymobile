@@ -2,6 +2,7 @@ import "react-native";
 import "isomorphic-fetch";
 import "isomorphic-form-data";
 import * as cheerio from "cheerio";
+import { createPromiseRetry } from "../src/utils";
 
 import {
   generateRef,
@@ -11,7 +12,9 @@ import {
   performPaymentAuthRequest,
   doFull3DSTransaction,
   tokenizeTransaction
-} from "microumbrella-core/src/models/telemoney";
+} from "../src/models/telemoney";
+
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 100000;
 
 const CARDS = {
   "2": {
@@ -124,14 +127,32 @@ it("does 3DS authorization correctly", () => {
   let paytype = 3;
   const ref = generateRef();
 
+  const p = () => {
+    return verifyEnrolment(generateRef(), CARDS[paytype], paytype, "11.00");
+  };
+
+  let promises = [];
+  let promise;
+  const start = new Date().getTime();
+
   for (let i = 0; i < 1; i++) {
     // const amt = Math.floor(Math.random() * 100) + 1;
-    return verifyEnrolment(ref, CARDS[paytype], paytype, "11.00")
-      .then(res => {
-        return doFull3DSTransaction(CARDS[paytype], paytype, 11, res);
-      })
-      .then(res => console.log(res));
+    (function(i) {
+      promise = new Promise(resolve => {
+        setTimeout(() => {
+          resolve(
+            createPromiseRetry(p)().then(res => {
+              return doFull3DSTransaction(CARDS[paytype], paytype, 11, res);
+            })
+          );
+        }, i);
+      });
+      promises.push(promise);
+    })(i);
   }
+  return Promise.all(promises).then(results => {
+    console.log(new Date().getTime() - start, results);
+  });
 });
 
 // it("does tokenization of transaction correctly", () => {

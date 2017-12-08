@@ -1,11 +1,28 @@
 // @flow
 import React, { Component } from "react";
 import { ToastAndroid, Alert, Platform } from "react-native";
+import promiseRetry from "promise-retry";
 
 export function objectToUrlParams(data: any): string {
   return Object.keys(data)
     .map(key => `${key}=${encodeURIComponent(data[key])}`)
     .join("&");
+}
+
+const PROMISE_RETRY_OPTIONS = {
+  retries: 5,
+  factor: 1.5,
+  minTimeout: 1000
+};
+
+export function createPromiseRetry(func) {
+  return (...args) => {
+    return promiseRetry((retry, number) => {
+      console.log(`${func.name} retry ${number}`);
+      const promise = func(...args);
+      return promise.catch(retry);
+    }, PROMISE_RETRY_OPTIONS); //.then(resolve, reject);
+  };
 }
 
 export function getObjectFromUrlParams(query) {

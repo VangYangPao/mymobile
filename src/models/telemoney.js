@@ -3,7 +3,11 @@ import { sha512 } from "js-sha512";
 import moment from "moment";
 import * as cheerio from "cheerio-without-node-native";
 
-import { objectToUrlParams, getObjectFromUrlParams } from "../utils";
+import {
+  createPromiseRetry,
+  objectToUrlParams,
+  getObjectFromUrlParams
+} from "../utils";
 
 const PAYMENT_PROCESS_URL =
   "https://test.wirecard.com.sg/easypay2/paymentprocess.do";
@@ -189,7 +193,6 @@ export function create3dsAuthorizationRequest(
     validity,
     version: API_VERSION
   };
-  console.log(payload);
   if (threeDSStatus !== "CNE") {
     payload["eci"] = eci;
     payload["cavv"] = encodeURIComponent(cavv);
@@ -224,60 +227,66 @@ export function doFull3DSTransaction(
   let ref: string;
   const amt = amtFloat.toFixed(2);
 
-  let promise;
-  if (verifyEnrolmentResponse) {
-    promise = new Promise(resolve => resolve(verifyEnrolmentResponse));
-  } else {
-    ref = generateRef();
-    promise = verifyEnrolment(ref, cardDetails, paytype, amt);
-  }
+  const verifyEnrolmentPromise = () => {
+    let promise;
+    if (verifyEnrolmentResponse) {
+      promise = new Promise(resolve => resolve(verifyEnrolmentResponse));
+    } else {
+      ref = generateRef();
+      promise = verifyEnrolment(ref, cardDetails, paytype, amt);
+    }
+    return promise;
+  };
+
+  const acsRedirectionPromise = res => {
+    console.log(res);
+    const {
+      Acsurl,
+      PaReq,
+      TM_RefNo
+    }: { Acsurl: string, PaReq: string, TM_RefNo: string } = res;
+    ref = TM_RefNo;
+    console.log("verified enrolment");
+    return acsRedirection(Acsurl, PaReq, "http://microumbrella.com/term", ref);
+  };
+
+  const paymentAuthPromise = html => {
+    console.log("acs redirected");
+    // render html in webview
+    // redirect to TermUrl
+    // detect redirection, perform payment auth
+    const $ = cheerio.load(html);
+    const PaRes = $('input[name="PaRes"]').val();
+    return performPaymentAuthRequest(ref, amt, PaRes);
+  };
+
+  const create3dsAuthPromise = res => {
+    const { TM_3DSStatus, TM_ECI, TM_CAVV, TM_XID } = res;
+    console.log("payment authenticated");
+    return create3dsAuthorizationRequest(
+      cardDetails,
+      ref,
+      paytype,
+      TM_3DSStatus,
+      amt,
+      TM_ECI,
+      TM_CAVV,
+      TM_XID
+    );
+  };
+
   return (
-    promise
-      .then(res => {
-        const {
-          Acsurl,
-          PaReq,
-          TM_RefNo
-        }: { Acsurl: string, PaReq: string, TM_RefNo: string } = res;
-        ref = TM_RefNo;
-        console.log("verified enrolment");
-        return acsRedirection(
-          Acsurl,
-          PaReq,
-          "http://microumbrella.com/term",
-          ref
-        );
-      })
+    createPromiseRetry(verifyEnrolmentPromise)()
+      .then(createPromiseRetry(acsRedirectionPromise))
       // .catch(err => {
       //   console.error("verify enrolment", err);
       // })
       // .then(renderACSUrl)
-      .then(html => {
-        console.log("acs redirected");
-        // render html in webview
-        // redirect to TermUrl
-        // detect redirection, perform payment auth
-        const $ = cheerio.load(html);
-        const PaRes = $('input[name="PaRes"]').val();
-        return performPaymentAuthRequest(ref, amt, PaRes);
-      })
+      .then(createPromiseRetry(paymentAuthPromise))
       // .catch(err => {
       //   console.error("payment authentication", err);
       // })
-      .then(res => {
-        const { TM_3DSStatus, TM_ECI, TM_CAVV, TM_XID } = res;
-        console.log("payment authenticated");
-        return create3dsAuthorizationRequest(
-          cardDetails,
-          ref,
-          paytype,
-          TM_3DSStatus,
-          amt,
-          TM_ECI,
-          TM_CAVV,
-          TM_XID
-        );
-      })
+      .then(createPromiseRetry(create3dsAuthPromise))
       // .catch(err => {
       //   console.error("3DS", err);
       // })

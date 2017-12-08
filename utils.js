@@ -2,6 +2,7 @@
 import React, { Component } from "react";
 import { ToastAndroid, Alert, Platform } from "react-native";
 import * as cheerio from "cheerio-without-node-native";
+import promiseRetry from "promise-retry";
 
 export function extractPaRes(html: string) {
   const $ = cheerio.load(html);
