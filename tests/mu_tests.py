@@ -150,7 +150,7 @@ class MicroUmbrellaAppTest(unittest.TestCase):
                     send_picker_keys(value)
                     break
 
-    def select_date(self, date):
+    def select_date(self, date, start_date=datetime.datetime.now()):
         datepicker = None
         while True:
             datepicker = self.driver.find_elements_by_class_name(
@@ -158,13 +158,12 @@ class MicroUmbrellaAppTest(unittest.TestCase):
             if len(datepicker) >= 3:
                 break
             sleep(1)
-        now = datetime.datetime.now()
         self.paginate_date_till_value(
-            datepicker[2], now.year, date.year)
+            datepicker[2], start_date.year, date.year)
         self.paginate_date_till_value(
-            datepicker[1], now.day, date.day)
+            datepicker[0], start_date.month, date.month, is_month=True)
         self.paginate_date_till_value(
-            datepicker[0], now.month, date.month, is_month=True)
+            datepicker[1], start_date.day, date.day)
         sleep(3)
         self.tap_on(self.find_accessibility('Confirm'))
 
