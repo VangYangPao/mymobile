@@ -15,6 +15,7 @@ import {
 import moment from "moment";
 import { NavigationActions } from "react-navigation";
 import promiseRetry from "promise-retry";
+import { Crashlytics } from "react-native-fabric";
 
 import type { PolicyHolder, PaymentDetails, MUTraveller } from "../types/hlas";
 import { Text } from "../components/defaultComponents";
@@ -181,11 +182,12 @@ export default class ConfirmationScreen extends Component {
     } else if (this.policy && this.policy.id === "mobile") {
       promise = getPhoneProtectQuote();
     }
-    promiseRetry((retry: Function, number: number) => {
-      if (promise) {
-        return promise.catch(retry);
-      }
-    }, RETRY_OPTIONS)
+    // promiseRetry((retry: Function, number: number) => {
+    //   if (promise) {
+    //     return promise.catch(retry);
+    //   }
+    // }, RETRY_OPTIONS)
+    promise
       .then(res => {
         // throw new Error("yolo");
         console.log(res);
@@ -193,6 +195,9 @@ export default class ConfirmationScreen extends Component {
       })
       .catch(err => {
         console.error(err);
+        Crashlytics.logException(err.stack);
+        Crashlytics.recordError(err.stack);
+
         const { currentUser } = this.props.navigation.state.params;
 
         this.props.screenProps.rootNavigation.dispatch(
@@ -286,6 +291,9 @@ export default class ConfirmationScreen extends Component {
       })
       .catch(err => {
         console.log(err);
+        Crashlytics.logException(err.stack);
+        Crashlytics.recordError(err.stack);
+
         const resetAction = NavigationActions.reset({
           index: 0,
           actions: [

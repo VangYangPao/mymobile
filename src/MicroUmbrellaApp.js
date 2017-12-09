@@ -43,7 +43,8 @@ import {
   createDrawerNavOptions,
   MENU_ICON_SIZE,
   MENU_ICON_PADDING_LEFT,
-  MENU_ICON_PADDING_RIGHT
+  MENU_ICON_PADDING_RIGHT,
+  navigateOnce
 } from "./navigations";
 import {
   ENV,
@@ -139,6 +140,9 @@ const BuyStackNavigator = StackNavigator(
     }
   }
 );
+BuyStackNavigator.router.getStateForAction = navigateOnce(
+  BuyStackNavigator.router.getStateForAction
+);
 
 const ClaimStackNavigator = StackNavigator(
   {
@@ -157,6 +161,9 @@ const ClaimStackNavigator = StackNavigator(
       isStartScreen: false
     }
   }
+);
+ClaimStackNavigator.router.getStateForAction = navigateOnce(
+  ClaimStackNavigator.router.getStateForAction
 );
 
 const StatusStackNavigator = StackNavigator(
@@ -186,6 +193,10 @@ const StatusStackNavigator = StackNavigator(
   }
 );
 
+StatusStackNavigator.router.getStateForAction = navigateOnce(
+  StatusStackNavigator.router.getStateForAction
+);
+
 class SettingsScreen extends Component {
   static navigationOptions = createDrawerNavOptions("Settings", "settings");
 
@@ -198,6 +209,9 @@ const HelpStackNavigator = StackNavigator({
     navigationOptions: backButtonNavOptions
   }
 });
+HelpStackNavigator.router.getStateForAction = navigateOnce(
+  HelpStackNavigator.router.getStateForAction
+);
 
 const NotificationsStackNavigator = StackNavigator({
   Notifications: {
@@ -205,6 +219,9 @@ const NotificationsStackNavigator = StackNavigator({
     navigationOptions: backButtonNavOptions
   }
 });
+NotificationsStackNavigator.router.getStateForAction = navigateOnce(
+  NotificationsStackNavigator.router.getStateForAction
+);
 
 const MyDrawerNavigator = DrawerNavigator(
   {

@@ -95,6 +95,7 @@ export class MyDatePicker extends Component {
           }
         }}
         onDateChange={this.onPickDate.bind(this)}
+        iconSource={require("../../images/date-icon.png")}
       />
     );
   }
@@ -156,11 +157,15 @@ export class ImageTable extends Component {
     for (var i = 0; i < columns.length; i++) {
       this.state.images[columns[i].id] = null;
     }
+    this.imagePickerOptions = {
+      noData: true,
+      storageOptions: {}
+    };
   }
 
   handlePress(id) {
     return () => {
-      ImagePicker.showImagePicker(this.options, response => {
+      ImagePicker.showImagePicker(this.imagePickerOptions, response => {
         if (response.didCancel) {
           console.log("User cancelled image picker");
         } else if (response.error) {
@@ -170,8 +175,12 @@ export class ImageTable extends Component {
           if (!newImages[id]) {
             newImages[id] = [];
           }
-          console.log(newImages);
-          newImages[id].push(response.uri);
+          // console.log(response);
+          const filepath = Platform.select({
+            ios: response.uri,
+            android: "file://" + response.path
+          });
+          newImages[id].push(filepath);
           this.setState({ images: newImages });
         }
       });

@@ -168,6 +168,8 @@ export default class CheckoutModal extends Component {
                 onChange={this.handleInputChange}
                 requiresName={true}
                 requiresCVC={true}
+                cardImageFront={require("../../images/card-front.png")}
+                cardImageBack={require("../../images/card-back.png")}
               />
             </View>
             <Button

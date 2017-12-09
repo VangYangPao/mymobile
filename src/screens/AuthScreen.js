@@ -21,6 +21,8 @@ import VectorDrawableView from "../components/VectorDrawableView";
 import Parse from "parse/react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import t from "tcomb-form-native";
+// import * as Crashlytics from "react-native-fabric";
+import { Answers, Crashlytics } from "react-native-fabric";
 const Form = t.form.Form;
 
 import AppStore from "../../stores/AppStore";
@@ -490,6 +492,7 @@ export default class AuthScreen extends Component {
         return user.save();
       })
       .then(user => {
+        Answers.logSignUp("Email", true);
         this.handleRedirectToPurchase(user);
       });
   }
@@ -497,11 +500,20 @@ export default class AuthScreen extends Component {
   handleLogin(form: { email: string, password: string }) {
     const { email, password } = form;
     return Parse.User.logIn(email, password).then(user => {
+      Answers.logLogin("Email", true);
       this.handleRedirectToPurchase(user);
     });
   }
 
+  setCrashlytics(user) {
+    Crashlytics.setUserName(user.get("email"));
+    Crashlytics.setUserEmail(user.get("email"));
+    Crashlytics.setUserIdentifier(user.id);
+    Crashlytics.setString("referralCode", user.get("referralCode"));
+  }
+
   handleRedirectToPurchase(currentUser: any) {
+    this.setCrashlytics(currentUser);
     let policy, subActions;
     const { params } = this.props.navigation.state;
     if (params && params.policy) {
