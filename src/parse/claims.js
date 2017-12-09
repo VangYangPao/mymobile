@@ -2,6 +2,7 @@
 
 import RNFS from "react-native-fs";
 import Parse from "parse/react-native";
+import { Answers } from "react-native-fabric";
 
 export function saveNewClaim(
   policyTypeId: string,
@@ -52,7 +53,6 @@ export function saveNewClaim(
       });
       delete claimAnswers[answerProp];
     });
-    console.log(documents);
     const Claim = Parse.Object.extend("Claim");
     const claim = new Claim();
     const fields = [
@@ -77,6 +77,7 @@ export function saveNewClaim(
     claim.set("policyTypeId", policyTypeId);
     claim.set("purchase", purchase);
     claim.set("documents", documents);
+    Answers.logCustom(JSON.stringify(documents));
 
     const { claimFromPolicyholder } = claimAnswers;
 

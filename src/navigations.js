@@ -26,30 +26,44 @@ export const MENU_ICON_PADDING_LEFT = 15;
 export const MENU_ICON_PADDING_RIGHT = 10;
 const WINDOW_WIDTH = Dimensions.get("window").width;
 
+export function navigateOnce(getStateForAction) {
+  return (action, state) => {
+    const { type, routeName } = action;
+    return state &&
+    type === NavigationActions.NAVIGATE &&
+    routeName === state.routes[state.routes.length - 1].routeName
+      ? null
+      : getStateForAction(action, state);
+  };
+}
+
+export function showChatScreenExitWarning(cb) {
+  Alert.alert(
+    "You have unsaved changes",
+    "Going back will delete messages in the chat",
+    [
+      {
+        text: "Go back",
+        style: "destructive",
+        onPress: cb
+      },
+      {
+        text: "Continue",
+        style: "cancel",
+        onPress: () => {}
+      }
+    ],
+    { cancelable: false }
+  );
+}
+
 export function renderBackButton(navigation: any) {
   const iconName = (Platform.OS === "ios" ? "ios" : "md") + "-arrow-back";
   const normalScreenGoBack = () => {
     navigation.dispatch(NavigationActions.back());
   };
-  const chattingScreenGoBack = () => {
-    Alert.alert(
-      "You have unsaved changes",
-      "Going back will delete messages in the chat",
-      [
-        {
-          text: "Go back",
-          style: "destructive",
-          onPress: normalScreenGoBack
-        },
-        {
-          text: "Continue",
-          style: "cancel",
-          onPress: () => {}
-        }
-      ],
-      { cancelable: false }
-    );
-  };
+  const chattingScreenGoBack = () =>
+    showChatScreenExitWarning(normalScreenGoBack);
   if (
     navigation.state.routeName === "Chat" &&
     navigation.state.params &&
