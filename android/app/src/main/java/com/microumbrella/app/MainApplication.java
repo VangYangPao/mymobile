@@ -3,6 +3,7 @@ package com.microumbrella.app;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.smixx.fabric.FabricPackage;
 import com.geektime.rnonesignalandroid.ReactNativeOneSignalPackage;
 import com.rnfs.RNFSPackage;
 import com.fileopener.FileOpenerPackage;
@@ -36,6 +37,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new FabricPackage(),
             new ReactNativeOneSignalPackage(),
             new RNFSPackage(),
             new FileOpenerPackage(),
