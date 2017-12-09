@@ -17,7 +17,8 @@ import {
   Keyboard,
   InteractionManager,
   ActivityIndicator,
-  Modal
+  Modal,
+  BackHandler
 } from "react-native";
 import {
   GiftedChat,
@@ -39,6 +40,7 @@ import Fuse from "fuse.js";
 import { template } from "lodash";
 import { NavigationActions } from "react-navigation";
 import Parse from "parse/react-native";
+import { Crashlytics } from "react-native-fabric";
 
 import { computed, isObservableArray } from "mobx";
 import { observer } from "mobx-react";
@@ -47,6 +49,7 @@ import { saveNewClaim } from "../parse/claims";
 import CheckoutModal from "../components/CheckoutModal";
 import OverlayModal from "../components/OverlayModal";
 import PolicyDetails from "./PolicyDetails";
+import { showChatScreenExitWarning } from "../navigations";
 import {
   MultiInput,
   MultipleImagePicker,
@@ -234,6 +237,7 @@ class ChatScreen extends Component {
     this.reaskQuestion = this.reaskQuestion.bind(this);
     this.sendNewMessage = this.sendNewMessage.bind(this);
     this.handleProceedButtonPress = this.handleProceedButtonPress.bind(this);
+    this.handleBackButtonPress = this.handleBackButtonPress.bind(this);
 
     this.concatMessageUpdater = message => {
       return prevState => {
@@ -309,6 +313,16 @@ class ChatScreen extends Component {
         () => setTimeout(renderPolicyChoice, POLICIES_FADE_IN_TIME)
       );
     }, MESSAGE_LOAD_TIME);
+  }
+
+  handleBackButtonPress() {
+    if (this.props.isStartScreen) {
+      return false;
+    }
+    const backAction = () =>
+      this.props.navigation.dispatch(NavigationActions.back());
+    showChatScreenExitWarning(backAction);
+    return true;
   }
 
   handleEditMessage(messageId: string) {
@@ -662,6 +676,9 @@ class ChatScreen extends Component {
         })
         .catch(err => {
           console.error(err);
+          Crashlytics.logException(err.stack);
+          Crashlytics.recordError(err.stack);
+
           this.setState({ loadingSave: false });
           showAlert("Sorry, something went wrong with your claim.", () => {
             this.props.screenProps.rootNavigation.dispatch(
@@ -673,6 +690,11 @@ class ChatScreen extends Component {
   }
 
   componentDidMount() {
+    BackHandler.addEventListener(
+      "hardwareBackPress",
+      this.handleBackButtonPress
+    );
+
     Parse.User
       .currentAsync()
       .then(currentUser => {
@@ -688,9 +710,14 @@ class ChatScreen extends Component {
             AppStore.fetchPurchases(Parse, currentUser)
               .find()
               .then(policies => {
-                this.setState({ loadingPolicies: false, policies });
+                // HACK: To re-render the GiftedChat messages
+                const messages = this.state.messages.slice();
+                messages[messages.length - 1].dirty = true;
+                this.setState({ loadingPolicies: false, policies, messages });
               })
               .catch(err => {
+                Crashlytics.logException(err.stack);
+                Crashlytics.recordError(err.stack);
                 this.setState({
                   loadingPolicies: false,
                   errLoadingPoliciesMsg: err
@@ -723,7 +750,11 @@ class ChatScreen extends Component {
           this.setState({ answering: false });
         }
       })
-      .catch(err => console.error(err));
+      .catch(err => {
+        console.error(err);
+        Crashlytics.logException(err.stack);
+        Crashlytics.recordError(err.stack);
+      });
 
     this.keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
@@ -738,6 +769,10 @@ class ChatScreen extends Component {
   componentWillUnmount() {
     this.keyboardDidShowListener.remove();
     this.keyboardDidHideListener.remove();
+    BackHandler.removeEventListener(
+      "hardwareBackPress",
+      this.handleBackButtonPress
+    );
   }
 
   _keyboardDidShow(e) {
