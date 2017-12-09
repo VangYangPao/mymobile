@@ -115,6 +115,7 @@ export default class TableScreen extends Component {
               values[index] = date;
               this.setState({ values });
             }}
+            iconSource={require("../../images/date-icon.png")}
           />
         </TouchableOpacity>
       );
