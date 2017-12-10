@@ -3,6 +3,7 @@ package com.microumbrella.app;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.appsee.reactnative.AppseeReactPackage;
 import com.smixx.fabric.FabricPackage;
 import com.geektime.rnonesignalandroid.ReactNativeOneSignalPackage;
 import com.rnfs.RNFSPackage;
@@ -37,6 +38,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new AppseeReactPackage(),
             new FabricPackage(),
             new ReactNativeOneSignalPackage(),
             new RNFSPackage(),

@@ -62,10 +62,12 @@
 		8F87055EF5FC4D92BC0986CE /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E97F22A96254686B1113A30 /* libRNVectorIcons.a */; };
 		92AB07F86F4F4486A6979B15 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A17D6963B4264CDD896BC294 /* SimpleLineIcons.ttf */; };
 		B1DAFECC2AC2E5345D912E18 /* libPods-Microsurance.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6894FC422D05E5532B3BC8BC /* libPods-Microsurance.a */; };
+		B70F8D03D32B4062B6B40EA5 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C2BA7C78843D4C26AFCE55CC /* libz.tbd */; };
 		CE4F8FACBB844A56948B34A7 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C53BF5BB57F144DFAB286280 /* EvilIcons.ttf */; };
 		CEDA61824C0B4CC49356BCD3 /* libRNFileOpener.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E8DFABBD2D5D44C8A6866CFD /* libRNFileOpener.a */; };
 		DDF5132EA03B44B083DF05C5 /* libRCTOneSignal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A84A572B524647C497DCAF43 /* libRCTOneSignal.a */; };
 		EAF77E8861684225831708B9 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6D9E0CAC64F64BE9A82AAD4F /* MaterialCommunityIcons.ttf */; };
+		F1B7384332814E71A8EBA590 /* libRNAppsee.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BAF774C3E1EE4CB8B5FF25FE /* libRNAppsee.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -258,6 +260,13 @@
 			remoteGlobalIDString = 5DBEB1501B18CEA900B34395;
 			remoteInfo = RNVectorIcons;
 		};
+		3F42A34D1FDDDD66000F92F5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2555A9A495694C2DA43F3950 /* RNAppsee.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNAppsee;
+		};
 		3F88B5AF1F6097D3000A4EFE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BE9200FBF7F14AA6A190F7E4 /* RNFileOpener.xcodeproj */;
@@ -357,6 +366,7 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Microsurance/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Microsurance/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
+		2555A9A495694C2DA43F3950 /* RNAppsee.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNAppsee.xcodeproj; path = "../node_modules/react-native-appsee/ios/RNAppsee.xcodeproj"; sourceTree = "<group>"; };
 		26EEA7131B3C4C4C9B28E87C /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* Microsurance-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Microsurance-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* Microsurance-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Microsurance-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -399,8 +409,10 @@
 		A84A572B524647C497DCAF43 /* libRCTOneSignal.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTOneSignal.a; sourceTree = "<group>"; };
 		AC883382BA9C47A69E3330A3 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		AD7312CFCBC04F76AA556D73 /* libRNSpinkit.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNSpinkit.a; sourceTree = "<group>"; };
+		BAF774C3E1EE4CB8B5FF25FE /* libRNAppsee.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNAppsee.a; sourceTree = "<group>"; };
 		BE9200FBF7F14AA6A190F7E4 /* RNFileOpener.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFileOpener.xcodeproj; path = "../node_modules/react-native-file-opener/ios/RNFileOpener.xcodeproj"; sourceTree = "<group>"; };
 		C120EEE839DC417C9C933705 /* RNFS.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFS.xcodeproj; path = "../node_modules/react-native-fs/RNFS.xcodeproj"; sourceTree = "<group>"; };
+		C2BA7C78843D4C26AFCE55CC /* libz.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		C53BF5BB57F144DFAB286280 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		CEB51F606D0E4A60B3CC7EAA /* libRNImagePicker.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNImagePicker.a; sourceTree = "<group>"; };
 		DEBAFAAA817259C622761D6A /* Pods-Microsurance.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Microsurance.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Microsurance/Pods-Microsurance.debug.xcconfig"; sourceTree = "<group>"; };
@@ -446,6 +458,8 @@
 				4E8FE7FE56474951B29E7706 /* libRNFS.a in Frameworks */,
 				DDF5132EA03B44B083DF05C5 /* libRCTOneSignal.a in Frameworks */,
 				7BE20A1CA3B6416FB559C1C9 /* libSMXCrashlytics.a in Frameworks */,
+				F1B7384332814E71A8EBA590 /* libRNAppsee.a in Frameworks */,
+				B70F8D03D32B4062B6B40EA5 /* libz.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -586,6 +600,7 @@
 			isa = PBXGroup;
 			children = (
 				6894FC422D05E5532B3BC8BC /* libPods-Microsurance.a */,
+				C2BA7C78843D4C26AFCE55CC /* libz.tbd */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -619,6 +634,14 @@
 			isa = PBXGroup;
 			children = (
 				3F4102031EFF268D001B4303 /* libRNImagePicker.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3F42A3301FDDDD66000F92F5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3F42A34E1FDDDD66000F92F5 /* libRNAppsee.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -715,6 +738,7 @@
 				C120EEE839DC417C9C933705 /* RNFS.xcodeproj */,
 				441C0C93F86B4A6B8D63A6C1 /* RCTOneSignal.xcodeproj */,
 				79692138273748879C9C160E /* SMXCrashlytics.xcodeproj */,
+				2555A9A495694C2DA43F3950 /* RNAppsee.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -962,6 +986,10 @@
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
 				},
 				{
+					ProductGroup = 3F42A3301FDDDD66000F92F5 /* Products */;
+					ProjectRef = 2555A9A495694C2DA43F3950 /* RNAppsee.xcodeproj */;
+				},
+				{
 					ProductGroup = 3F88B5901F6097D3000A4EFE /* Products */;
 					ProjectRef = BE9200FBF7F14AA6A190F7E4 /* RNFileOpener.xcodeproj */;
 				},
@@ -1174,6 +1202,13 @@
 			fileType = archive.ar;
 			path = libRNVectorIcons.a;
 			remoteRef = 3F41020B1EFF268D001B4303 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		3F42A34E1FDDDD66000F92F5 /* libRNAppsee.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNAppsee.a;
+			remoteRef = 3F42A34D1FDDDD66000F92F5 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		3F88B5B01F6097D3000A4EFE /* libRNFileOpener.a */ = {
@@ -1502,12 +1537,14 @@
 					"$(SRCROOT)/../node_modules/react-native-fs/**",
 					"$(SRCROOT)/../node_modules/react-native-onesignal/ios/RCTOneSignal/**",
 					"$(SRCROOT)/../node_modules/react-native-fabric/ios/SMXCrashlytics",
+					"$(SRCROOT)/../node_modules/react-native-appsee/ios",
 				);
 				INFOPLIST_FILE = MicrosuranceTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
@@ -1538,12 +1575,14 @@
 					"$(SRCROOT)/../node_modules/react-native-fs/**",
 					"$(SRCROOT)/../node_modules/react-native-onesignal/ios/RCTOneSignal/**",
 					"$(SRCROOT)/../node_modules/react-native-fabric/ios/SMXCrashlytics",
+					"$(SRCROOT)/../node_modules/react-native-appsee/ios",
 				);
 				INFOPLIST_FILE = MicrosuranceTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
@@ -1584,6 +1623,7 @@
 					"$(SRCROOT)/../node_modules/react-native-onesignal/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-onesignal/ios/RCTOneSignal/**",
 					"$(SRCROOT)/../node_modules/react-native-fabric/ios/SMXCrashlytics",
+					"$(SRCROOT)/../node_modules/react-native-appsee/ios",
 				);
 				INFOPLIST_FILE = Microsurance/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -1629,6 +1669,7 @@
 					"$(SRCROOT)/../node_modules/react-native-onesignal/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-onesignal/ios/RCTOneSignal/**",
 					"$(SRCROOT)/../node_modules/react-native-fabric/ios/SMXCrashlytics",
+					"$(SRCROOT)/../node_modules/react-native-appsee/ios",
 				);
 				INFOPLIST_FILE = Microsurance/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -1671,11 +1712,13 @@
 					"$(SRCROOT)/../node_modules/react-native-fs/**",
 					"$(SRCROOT)/../node_modules/react-native-onesignal/ios/RCTOneSignal/**",
 					"$(SRCROOT)/../node_modules/react-native-fabric/ios/SMXCrashlytics",
+					"$(SRCROOT)/../node_modules/react-native-appsee/ios",
 				);
 				INFOPLIST_FILE = "Microsurance-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
@@ -1715,11 +1758,13 @@
 					"$(SRCROOT)/../node_modules/react-native-fs/**",
 					"$(SRCROOT)/../node_modules/react-native-onesignal/ios/RCTOneSignal/**",
 					"$(SRCROOT)/../node_modules/react-native-fabric/ios/SMXCrashlytics",
+					"$(SRCROOT)/../node_modules/react-native-appsee/ios",
 				);
 				INFOPLIST_FILE = "Microsurance-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
@@ -1752,6 +1797,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.Microsurance-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1776,6 +1822,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
