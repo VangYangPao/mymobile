@@ -21,9 +21,19 @@ const menuIconSizes = {
   3: 35
 };
 
-export const MENU_ICON_SIZE = menuIconSizes[PixelRatio.get()];
-export const MENU_ICON_PADDING_LEFT = 15;
-export const MENU_ICON_PADDING_RIGHT = 10;
+const layoutPixelSize = PixelRatio.getPixelSizeForLayoutSize(PixelRatio.get());
+export const MENU_ICON_SIZE =
+  layoutPixelSize *
+  Platform.select({
+    android: 3.3,
+    ios: 7
+  });
+export const MENU_ICON_PADDING_LEFT =
+  layoutPixelSize *
+  Platform.select({
+    android: 2,
+    ios: 4
+  });
 const WINDOW_WIDTH = Dimensions.get("window").width;
 
 export function navigateOnce(getStateForAction) {
@@ -125,19 +135,6 @@ export const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.primaryAccent
   },
-  backgroundImage: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    bottom: 0,
-    right: 0,
-    width: null,
-    height: null,
-    resizeMode: "cover"
-  },
-  homeHeader: {
-    backgroundColor: "transparent"
-  },
   header: {
     height: 58,
     backgroundColor: "white"
@@ -149,22 +146,15 @@ export const styles = StyleSheet.create({
         paddingRight: 0
       },
       android: {
-        paddingRight:
-          MENU_ICON_SIZE + MENU_ICON_PADDING_LEFT + MENU_ICON_PADDING_RIGHT
+        paddingRight: MENU_ICON_SIZE + MENU_ICON_PADDING_LEFT
       }
     }),
     fontFamily: "Lato",
     color: colors.primaryText
   },
-  homeHeaderMenuIcon: {
-    paddingLeft: MENU_ICON_PADDING_LEFT,
-    paddingRight: MENU_ICON_PADDING_RIGHT,
-    color: "white"
-  },
   headerMenuIcon: {
     alignSelf: "flex-start",
     paddingLeft: MENU_ICON_PADDING_LEFT,
-    paddingRight: MENU_ICON_PADDING_RIGHT,
     color: colors.primaryText
   },
   planHeaderTitle: {}
