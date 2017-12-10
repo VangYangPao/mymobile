@@ -18,6 +18,7 @@ import {
 import OneSignal from "react-native-onesignal";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Ionicon from "react-native-vector-icons/Ionicons";
+import Appsee from "react-native-appsee";
 
 import AppStore from "../stores/AppStore";
 import { saveNewNotificationDevice } from "./parse/notificationDevice";
@@ -44,7 +45,8 @@ import {
   MENU_ICON_SIZE,
   MENU_ICON_PADDING_LEFT,
   MENU_ICON_PADDING_RIGHT,
-  navigateOnce
+  navigateOnce,
+  headerContainer
 } from "./navigations";
 import {
   ENV,
@@ -79,16 +81,16 @@ const BuyStackNavigator = StackNavigator(
           headerTitleStyle.fontFamily = "Comfortaa-Bold";
         }
 
-        if (Platform.OS === "android") {
-          if (params.isStartScreen) {
-            // weird limitation
-            headerTitleStyle.paddingRight = 0;
-          }
-          if (params.currentUser) {
-            headerTitleStyle.paddingRight =
-              MENU_ICON_SIZE + MENU_ICON_PADDING_RIGHT;
-          }
-        }
+        // if (Platform.OS === "android") {
+        //   if (params.isStartScreen) {
+        //     // weird limitation
+        //     headerTitleStyle.paddingRight = 0;
+        //   }
+        //   if (params.currentUser) {
+        //     headerTitleStyle.paddingRight =
+        //       MENU_ICON_SIZE + MENU_ICON_PADDING_RIGHT;
+        //   }
+        // }
 
         if (
           params &&
@@ -100,11 +102,12 @@ const BuyStackNavigator = StackNavigator(
         } else if (params && params.currentUser) {
           button = renderBackButton(navigation);
         } else {
-          button = null;
+          button = headerContainer;
         }
         return {
           headerTitleStyle,
           headerStyle: styles.header,
+          headerRight: headerContainer,
           headerLeft: button
         };
       }
@@ -151,7 +154,8 @@ const ClaimStackNavigator = StackNavigator(
       navigationOptions: ({ navigation }) => ({
         headerStyle: styles.header,
         headerTitleStyle: styles.headerTitle,
-        headerLeft: renderMenuButton(navigation)
+        headerLeft: renderMenuButton(navigation),
+        headerRight: headerContainer
       })
     }
   },
@@ -174,6 +178,7 @@ const StatusStackNavigator = StackNavigator(
         headerStyle: styles.header,
         headerTitleStyle: styles.headerTitle,
         headerLeft: renderMenuButton(navigation),
+        headerRight: headerContainer,
         drawerLabel: "My Policies & Status",
         drawerIcon: ({ tintColor }) => (
           <Icon name={"book"} size={22} color={tintColor} />
@@ -340,6 +345,7 @@ export default class MicroUmbrellaApp extends Component {
 
   componentDidMount() {
     InteractionManager.runAfterInteractions(() => {
+      Appsee.start("ef742ddea5f2473d8be211c148216f20");
       OneSignal.configure({});
       Parse.User.currentAsync().then(currentUser => {
         setTimeout(() => {

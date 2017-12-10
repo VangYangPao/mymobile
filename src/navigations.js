@@ -16,12 +16,9 @@ import Ionicon from "react-native-vector-icons/Ionicons";
 import AppStore from "../stores/AppStore";
 const colors = AppStore.colors;
 
-const menuIconSizes = {
-  2: 30,
-  3: 35
-};
+const pixelRatio = PixelRatio.get();
+const layoutPixelSize = PixelRatio.getPixelSizeForLayoutSize(pixelRatio);
 
-const layoutPixelSize = PixelRatio.getPixelSizeForLayoutSize(PixelRatio.get());
 export const MENU_ICON_SIZE =
   layoutPixelSize *
   Platform.select({
@@ -35,6 +32,42 @@ export const MENU_ICON_PADDING_LEFT =
     ios: 4
   });
 const WINDOW_WIDTH = Dimensions.get("window").width;
+
+export const styles = StyleSheet.create({
+  emptyView: { flex: 1 },
+  navigatorContainer: {
+    flex: 1,
+    backgroundColor: colors.primaryAccent
+  },
+  header: {
+    height: 58,
+    backgroundColor: "white",
+    flexDirection: "row"
+  },
+  headerTitle: {
+    textAlign: "center",
+    alignSelf: "center",
+    ...Platform.select({
+      ios: {
+        paddingRight: 0
+      }
+    }),
+    fontFamily: "Lato",
+    color: colors.primaryText
+  },
+  headerLeftIconContainer: {
+    flex: 1,
+    justifyContent: "center",
+    paddingLeft: MENU_ICON_PADDING_LEFT
+  },
+  headerLeftIcon: {
+    alignSelf: "flex-start",
+    color: colors.primaryText
+  },
+  planHeaderTitle: {}
+});
+
+export const headerContainer = <View style={styles.emptyView} />;
 
 export function navigateOnce(getStateForAction) {
   return (action, state) => {
@@ -84,36 +117,44 @@ export function renderBackButton(navigation: any) {
     handleGoBack = normalScreenGoBack;
   }
   return (
-    <TouchableOpacity accessibilityLabel="nav__back-btn" onPress={handleGoBack}>
-      <Ionicon
-        name={iconName}
-        size={MENU_ICON_SIZE}
-        style={styles.headerMenuIcon}
-      />
-    </TouchableOpacity>
+    <View style={styles.headerLeftIconContainer}>
+      <TouchableOpacity
+        accessibilityLabel="nav__back-btn"
+        onPress={handleGoBack}
+      >
+        <Ionicon
+          name={iconName}
+          size={MENU_ICON_SIZE}
+          style={styles.headerLeftIcon}
+        />
+      </TouchableOpacity>
+    </View>
   );
 }
 
 export function renderMenuButton(
   navigation,
-  iconStyle = styles.headerMenuIcon
+  iconStyle = styles.headerLeftIcon
 ) {
   return (
-    <TouchableOpacity
-      accessibilityLabel="nav__menu-btn"
-      onPress={() => {
-        navigation.navigate("DrawerOpen");
-      }}
-    >
-      <Icon name="menu" size={MENU_ICON_SIZE} style={iconStyle} />
-    </TouchableOpacity>
+    <View style={styles.headerLeftIconContainer}>
+      <TouchableOpacity
+        accessibilityLabel="nav__menu-btn"
+        onPress={() => {
+          navigation.navigate("DrawerOpen");
+        }}
+      >
+        <Icon name="menu" size={MENU_ICON_SIZE} style={iconStyle} />
+      </TouchableOpacity>
+    </View>
   );
 }
 
 export const backButtonNavOptions = ({ navigation }) => {
   let options = {
     headerTitleStyle: [styles.headerTitle, styles.planHeaderTitle],
-    headerLeft: renderBackButton(navigation)
+    headerLeft: renderBackButton(navigation),
+    headerRight: headerContainer
   };
   if (Platform.OS === "ios") {
     options.headerStyle = styles.header;
@@ -129,33 +170,3 @@ export function createDrawerNavOptions(drawerLabel, iconName) {
     )
   };
 }
-
-export const styles = StyleSheet.create({
-  navigatorContainer: {
-    flex: 1,
-    backgroundColor: colors.primaryAccent
-  },
-  header: {
-    height: 58,
-    backgroundColor: "white"
-  },
-  headerTitle: {
-    alignSelf: "center",
-    ...Platform.select({
-      ios: {
-        paddingRight: 0
-      },
-      android: {
-        paddingRight: MENU_ICON_SIZE + MENU_ICON_PADDING_LEFT
-      }
-    }),
-    fontFamily: "Lato",
-    color: colors.primaryText
-  },
-  headerMenuIcon: {
-    alignSelf: "flex-start",
-    paddingLeft: MENU_ICON_PADDING_LEFT,
-    color: colors.primaryText
-  },
-  planHeaderTitle: {}
-});
