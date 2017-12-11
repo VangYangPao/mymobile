@@ -491,7 +491,14 @@ export default class ConfirmationScreen extends Component {
           {pageContent}
         </View>
         <Footer
-          onPress={() => this.setState({ renderCheckoutModal: true })}
+          onPress={() => {
+            if (
+              !this.state.loading &&
+              typeof this.state.totalPremium === "number"
+            ) {
+              this.setState({ renderCheckoutModal: true });
+            }
+          }}
           text="ENTER BILLING DETAILS"
         />
       </View>
