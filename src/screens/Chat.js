@@ -676,8 +676,8 @@ class ChatScreen extends Component {
         })
         .catch(err => {
           console.error(err);
-          Crashlytics.logException(err.stack);
-          Crashlytics.recordError(err.stack);
+          Crashlytics.logException(err.message + ": " + err.stack);
+          Crashlytics.recordError(err.message + ": " + err.stack);
 
           this.setState({ loadingSave: false });
           showAlert("Sorry, something went wrong with your claim.", () => {
@@ -716,8 +716,8 @@ class ChatScreen extends Component {
                 this.setState({ loadingPolicies: false, policies, messages });
               })
               .catch(err => {
-                Crashlytics.logException(err.stack);
-                Crashlytics.recordError(err.stack);
+                Crashlytics.logException(err.message + ": " + err.stack);
+                Crashlytics.recordError(rr.message + ": " + err.stack);
                 this.setState({
                   loadingPolicies: false,
                   errLoadingPoliciesMsg: err
@@ -752,8 +752,8 @@ class ChatScreen extends Component {
       })
       .catch(err => {
         console.error(err);
-        Crashlytics.logException(err.stack);
-        Crashlytics.recordError(err.stack);
+        Crashlytics.logException(err.message + ": " + err.stack);
+        Crashlytics.recordError(err.message + ": " + err.stack);
       });
 
     this.keyboardDidShowListener = Keyboard.addListener(

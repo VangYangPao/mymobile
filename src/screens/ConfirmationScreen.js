@@ -195,8 +195,8 @@ export default class ConfirmationScreen extends Component {
       })
       .catch(err => {
         console.error(err);
-        Crashlytics.logException(err.stack);
-        Crashlytics.recordError(err.stack);
+        Crashlytics.logException(err.message + ": " + err.stack);
+        Crashlytics.recordError(err.message + ": " + err.stack);
 
         const { currentUser } = this.props.navigation.state.params;
 
@@ -291,8 +291,8 @@ export default class ConfirmationScreen extends Component {
       })
       .catch(err => {
         console.log(err);
-        Crashlytics.logException(err.stack);
-        Crashlytics.recordError(err.stack);
+        Crashlytics.logException(err.message + ": " + err.stack);
+        Crashlytics.recordError(err.message + ": " + err.stack);
 
         const resetAction = NavigationActions.reset({
           index: 0,

@@ -14,23 +14,26 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import Ionicon from "react-native-vector-icons/Ionicons";
 
 import AppStore from "../stores/AppStore";
+import { normalize, normalizeFont } from "./utils";
 const colors = AppStore.colors;
 
 const pixelRatio = PixelRatio.get();
 const layoutPixelSize = PixelRatio.getPixelSizeForLayoutSize(pixelRatio);
 
-export const MENU_ICON_SIZE =
-  layoutPixelSize *
-  Platform.select({
-    android: 3.3,
-    ios: 7
-  });
-export const MENU_ICON_PADDING_LEFT =
-  layoutPixelSize *
-  Platform.select({
-    android: 2,
-    ios: 4
-  });
+// export const MENU_ICON_SIZE =
+//   layoutPixelSize *
+//   Platform.select({
+//     android: 3.3,
+//     ios: 7
+//   });
+export const MENU_ICON_SIZE = normalize(30);
+// export const MENU_ICON_PADDING_LEFT =
+//   layoutPixelSize *
+//   Platform.select({
+//     android: 2,
+//     ios: 4
+//   });
+export const MENU_ICON_PADDING_LEFT = normalize(12);
 const WINDOW_WIDTH = Dimensions.get("window").width;
 
 export const styles = StyleSheet.create({
@@ -53,7 +56,8 @@ export const styles = StyleSheet.create({
       }
     }),
     fontFamily: "Lato",
-    color: colors.primaryText
+    color: colors.primaryText,
+    fontSize: normalizeFont(2.5)
   },
   headerLeftIconContainer: {
     flex: 1,

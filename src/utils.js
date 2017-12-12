@@ -1,12 +1,45 @@
 // @flow
 import React, { Component } from "react";
-import { ToastAndroid, Alert, Platform } from "react-native";
+import {
+  ToastAndroid,
+  Alert,
+  Platform,
+  PixelRatio,
+  Dimensions
+} from "react-native";
 import promiseRetry from "promise-retry";
 
 export function objectToUrlParams(data: any): string {
   return Object.keys(data)
     .map(key => `${key}=${encodeURIComponent(data[key])}`)
     .join("&");
+}
+
+let pixelRatio = PixelRatio.get();
+let windowDimensions = Dimensions.get("window");
+
+export function normalize(size) {
+  switch (true) {
+    case pixelRatio < 1.4:
+      return size * 0.8;
+      break;
+    case pixelRatio < 2.4:
+      return size * 1.15;
+      break;
+    case pixelRatio < 3.4:
+      return size * 1.35;
+      break;
+    default:
+      return size * 1.5;
+  }
+}
+
+export function normalizeFont(size) {
+  const { height, width } = windowDimensions;
+  if (pixelRatio < 1.4) {
+    return Math.sqrt(height * height + width * width) * (size / 175);
+  }
+  return Math.sqrt(height * height + width * width) * (size / 100);
 }
 
 const PROMISE_RETRY_OPTIONS = {
