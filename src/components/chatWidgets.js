@@ -180,7 +180,8 @@ export class ImageTable extends Component {
             ios: response.uri,
             android: "file://" + response.path
           });
-          newImages[id].push(filepath);
+          const imageIndex = newImages[id].push(filepath);
+          // return saveDocument(id, imageIndex, filePath);
           this.setState({ images: newImages });
         }
       });

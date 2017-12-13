@@ -4,6 +4,27 @@ import RNFS from "react-native-fs";
 import Parse from "parse/react-native";
 import { Answers } from "react-native-fabric";
 
+export function saveDocument(imageProp, imageIndex, uri) {
+  return RNFS.readFile(uri, "base64")
+    .then(base64 => {
+      const fileExt = uri.split(".").pop();
+      const filename = `${imageProp}-${imageIndex}`;
+      const filepath = `${filename}.${fileExt}`;
+      const file = new Parse.File(filename, { base64: imageBase64 });
+      return {
+        file,
+        name: filename,
+        ext: fileExt
+      };
+    })
+    .then(doc => {
+      return doc.file.save().then(file => {
+        const { name, ext } = doc;
+        return { name, ext, file };
+      });
+    });
+}
+
 export function saveNewClaim(
   policyTypeId: string,
   claimAnswers: any,
