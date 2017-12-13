@@ -3,13 +3,25 @@ jest.mock("parse/react-native", () => {
   return ParseNode;
 });
 
+jest.mock("react-native-fabric", () => {
+  return {
+    Crashlytics: {
+      crash: () => {}
+    },
+    Answers: {
+      logCustom: () => {},
+      logContentView: () => {}
+    }
+  };
+});
+
 jest.mock("react-native-fs", () => {
   var fs = require("fs");
   var path = require("path");
 
   const readFile = () => {
     return new Promise((resolve, reject) => {
-      const fpath = path.join(process.cwd(), "images", "mom.png");
+      const fpath = path.join(process.cwd(), "images", "Singapore.jpg");
       fs.readFile(fpath, (err, bitmap) => {
         if (err) reject(err);
         const imageBase64 = new Buffer(bitmap).toString("base64");
@@ -17,8 +29,9 @@ jest.mock("react-native-fs", () => {
       });
     });
   };
+  const crash = () => {};
 
-  return { readFile };
+  return { readFile, crash };
 });
 
 import Parse from "parse/react-native";

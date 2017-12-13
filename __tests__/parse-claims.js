@@ -5,7 +5,7 @@ import Parse from "parse/react-native";
 
 import { saveNewClaim } from "../src/parse/claims";
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
 it("makes claim successfully", () => {
   const policyTypeId = "pa";
@@ -29,11 +29,11 @@ it("makes claim successfully", () => {
     claimantEmail: "ken@micro.com",
     claimantAddress: "Midview City",
     images: {
-      policeReport: "123.jpg",
-      medicalReceipt: "234.png"
+      policeReport: ["123.jpg", "abc.jpg", "def.jpg", "ghi.jpg", "jkl.jpg"],
+      medicalReceipt: ["234.png", "abc.jpg", "def.jpg", "ghi.jpg", "jkl.jpg"]
     },
     travelImages: {
-      policeReport: "123.jpg"
+      policeReport: ["123.jpg"]
     },
     nonProp: "123"
   };
@@ -44,6 +44,7 @@ it("makes claim successfully", () => {
   const noOfKeys = Object.keys(answers).length - imageProps.length;
   expect.assertions(assertions + noOfKeys);
   const Purchase = Parse.Object.extend("Purchase");
+  let startTime;
   return Parse.User
     .logIn("x@aa.com", "1234abcd")
     .then(_currentUser => {
@@ -52,6 +53,7 @@ it("makes claim successfully", () => {
       return query.first();
     })
     .then(purchase => {
+      startTime = new Date().getTime();
       return saveNewClaim(
         policyTypeId,
         answers,
@@ -61,6 +63,8 @@ it("makes claim successfully", () => {
       );
     })
     .then(claim => {
+      const endTime = new Date().getTime();
+      console.log("time taken", endTime - startTime);
       expect(claim).toHaveProperty("className", "Claim");
       expect(claim).toHaveProperty("_objCount");
       expect(claim).toHaveProperty("id");
