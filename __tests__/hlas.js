@@ -30,130 +30,130 @@ import moment from "moment";
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
-it("gets phone protect quote correctly", () => {
-  expect.assertions(2);
-  return getPhoneProtectQuote().then(res => {
-    expect(res).toHaveProperty("data");
-    expect(res).toHaveProperty("success", true);
-  });
-});
-
-it("gets accident quote correctly", () => {
-  const planid = 100;
-  const policytermid = 1;
-  const optionid = 1;
-  const commencementDate = new Date();
-  expect.assertions(2);
-  return getAccidentQuote(
-    planid,
-    policytermid,
-    optionid,
-    commencementDate
-  ).then(res => {
-    expect(res).toHaveProperty("data");
-    expect(res).toHaveProperty("success", true);
-  });
-});
-
-it("gets travel quote correctly", () => {
-  const countryid = 1;
-  const tripDurationInDays = 2;
-  const planid = 1;
-  const hasSpouse = true;
-  const hasChildren = false;
-  expect.assertions(2);
-  return getTravelQuote(
-    countryid,
-    tripDurationInDays,
-    planid,
-    hasSpouse,
-    hasChildren
-  ).then(res => {
-    expect(res).toHaveProperty("data");
-    expect(res).toHaveProperty("success", true);
-  });
-});
-
-// it("purchases phone protect correctly", () => {
-//   const premium = 115;
-//   const PHONE_PRODUCT_PLAN_ID = 99;
-//   const PHONE_PRODUCT_OPTION_ID = 1;
-//   const idNumberType = 1;
-//   const nric = generateNRIC();
-//   const policyHolder: PolicyHolder = {
-//     Surname: "test",
-//     GivenName: "test",
-//     IDNumber: nric,
-//     IDNumberType: idNumberType,
-//     DateOfBirth: "1988-07-22",
-//     GenderID: 1,
-//     MobileTelephone: "91234567",
-//     Email: "guanhao3797@gmail.com",
-//     UnitNumber: "11",
-//     BlockHouseNumber: "11",
-//     BuildingName: "sample string 12",
-//     StreetName: "sample string 13",
-//     PostalCode: "089057"
-//   };
-//   const paymentDetails: PaymentDetails = {
-//     NameOnCard: "Chan",
-//     CardNumber: "4005550000000001",
-//     CardType: 3,
-//     CardSecurityCode: "602",
-//     CardExpiryYear: 2021,
-//     CardExpiryMonth: 1
-//   };
-//   const mobileDetails = {
-//     brandID: 1,
-//     modelID: 5,
-//     purchaseDate: "2017-11-24",
-//     serialNo: "989753317723690",
-//     purchasePlaceID: 4
-//   };
-//   const policyCommencementDate = new Date();
-//   expect.assertions(18);
-//   return purchasePhonePolicy(
-//     premium,
-//     policyCommencementDate,
-//     mobileDetails,
-//     policyHolder,
-//     paymentDetails
-//   ).then(res => {
-//     expect(res.success).toBe(true);
-//     expect(res.data.policyId).toMatch(/^PM/);
-//     expect(res.data.premium).toBe(premium);
-//     expect(res.data.planId).toBe(PHONE_PRODUCT_PLAN_ID);
-//     expect(res.data.autoRenew).toBe(true);
-//     expect(res.data.policyholderIdType).toBe(idNumberType);
-//     expect(res.data.policyholderIdNo).toBe(nric);
-//     expect(res.data.optionId).toBe(PHONE_PRODUCT_OPTION_ID);
-//     expect(res.data.tmTxnRef).toMatch(/^WT\d+/);
-//     expect(res.data.tmVerifyEnrolment).toMatch(/^TM_MCode=/);
-//     expect(res.data.tmPaymentSuccessRes).toMatch(/^TM_MCode=/);
-//     expect(res.data).toHaveProperty("additionalAttributes");
-//     expect(res.data.additionalAttributes).toHaveProperty("commencementDate");
-//     expect(res.data.additionalAttributes).toHaveProperty(
-//       "serialNo",
-//       mobileDetails.serialNo
-//     );
-//     expect(res.data.additionalAttributes).toHaveProperty(
-//       "brandId",
-//       mobileDetails.brandID
-//     );
-//     expect(res.data.additionalAttributes).toHaveProperty(
-//       "modelId",
-//       mobileDetails.modelID
-//     );
-//     expect(res.data.additionalAttributes).toHaveProperty(
-//       "purchasePlaceId",
-//       mobileDetails.purchasePlaceID
-//     );
-//     expect(res.data.additionalAttributes).toHaveProperty(
-//       "commencementDate",
-//       moment(policyCommencementDate).format("YYYY-MM-DD")
-//     );
+// it("gets phone protect quote correctly", () => {
+//   expect.assertions(2);
+//   return getPhoneProtectQuote().then(res => {
+//     expect(res).toHaveProperty("data");
+//     expect(res).toHaveProperty("success", true);
 //   });
 // });
+
+// it("gets accident quote correctly", () => {
+//   const planid = 100;
+//   const policytermid = 1;
+//   const optionid = 1;
+//   const commencementDate = new Date();
+//   expect.assertions(2);
+//   return getAccidentQuote(
+//     planid,
+//     policytermid,
+//     optionid,
+//     commencementDate
+//   ).then(res => {
+//     expect(res).toHaveProperty("data");
+//     expect(res).toHaveProperty("success", true);
+//   });
+// });
+
+// it("gets travel quote correctly", () => {
+//   const countryid = 1;
+//   const tripDurationInDays = 2;
+//   const planid = 1;
+//   const hasSpouse = true;
+//   const hasChildren = false;
+//   expect.assertions(2);
+//   return getTravelQuote(
+//     countryid,
+//     tripDurationInDays,
+//     planid,
+//     hasSpouse,
+//     hasChildren
+//   ).then(res => {
+//     expect(res).toHaveProperty("data");
+//     expect(res).toHaveProperty("success", true);
+//   });
+// });
+
+it("purchases phone protect correctly", () => {
+  const premium = 115;
+  const PHONE_PRODUCT_PLAN_ID = 99;
+  const PHONE_PRODUCT_OPTION_ID = 1;
+  const idNumberType = 1;
+  const nric = generateNRIC();
+  const policyHolder: PolicyHolder = {
+    Surname: "test",
+    GivenName: "test",
+    IDNumber: nric,
+    IDNumberType: idNumberType,
+    DateOfBirth: "1988-07-22",
+    GenderID: 1,
+    MobileTelephone: "91234567",
+    Email: "guanhao3797@gmail.com",
+    UnitNumber: "11",
+    BlockHouseNumber: "11",
+    BuildingName: "sample string 12",
+    StreetName: "sample string 13",
+    PostalCode: "089057"
+  };
+  const paymentDetails: PaymentDetails = {
+    NameOnCard: "Chan",
+    CardNumber: "4005550000000001",
+    CardType: 3,
+    CardSecurityCode: "602",
+    CardExpiryYear: 2021,
+    CardExpiryMonth: 1
+  };
+  const mobileDetails = {
+    brandID: 1,
+    modelID: 5,
+    purchaseDate: "2017-11-24",
+    serialNo: "989753317723690",
+    purchasePlaceID: 4
+  };
+  const policyCommencementDate = new Date();
+  expect.assertions(18);
+  return purchasePhonePolicy(
+    premium,
+    policyCommencementDate,
+    mobileDetails,
+    policyHolder,
+    paymentDetails
+  ).then(res => {
+    expect(res.success).toBe(true);
+    expect(res.data.policyId).toMatch(/^PM/);
+    expect(res.data.premium).toBe(premium);
+    expect(res.data.planId).toBe(PHONE_PRODUCT_PLAN_ID);
+    expect(res.data.autoRenew).toBe(true);
+    expect(res.data.policyholderIdType).toBe(idNumberType);
+    expect(res.data.policyholderIdNo).toBe(nric);
+    expect(res.data.optionId).toBe(PHONE_PRODUCT_OPTION_ID);
+    expect(res.data.tmTxnRef).toMatch(/^WT\d+/);
+    expect(res.data.tmVerifyEnrolment).toMatch(/^TM_MCode=/);
+    expect(res.data.tmPaymentSuccessRes).toMatch(/^TM_MCode=/);
+    expect(res.data).toHaveProperty("additionalAttributes");
+    expect(res.data.additionalAttributes).toHaveProperty("commencementDate");
+    expect(res.data.additionalAttributes).toHaveProperty(
+      "serialNo",
+      mobileDetails.serialNo
+    );
+    expect(res.data.additionalAttributes).toHaveProperty(
+      "brandId",
+      mobileDetails.brandID
+    );
+    expect(res.data.additionalAttributes).toHaveProperty(
+      "modelId",
+      mobileDetails.modelID
+    );
+    expect(res.data.additionalAttributes).toHaveProperty(
+      "purchasePlaceId",
+      mobileDetails.purchasePlaceID
+    );
+    expect(res.data.additionalAttributes).toHaveProperty(
+      "commencementDate",
+      moment(policyCommencementDate).format("YYYY-MM-DD")
+    );
+  });
+});
 
 // it("purchases pa vanilla correctly", () => {
 //   const premium = 17;

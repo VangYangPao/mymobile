@@ -25,7 +25,7 @@ export function generateRef() {
 export function generateValidity() {
   const now = new Date();
   const fiveMinsLater = new Date(now.getTime() + 5 * 60000);
-  return moment(fiveMinsLater).format("YYYY-MM-DD-HH:mm:SS");
+  return moment(fiveMinsLater).format("YYYY-MM-DD-HH:mm:ss");
 }
 
 function generateFormData(payload) {

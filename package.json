@@ -7,6 +7,7 @@
         "test": "jest"
     },
     "dependencies": {
+        "cheerio": "^1.0.0-rc.2",
         "exceljs": "^0.6.2",
         "fuse.js": "^3.0.5",
         "js-sha512": "^0.4.0",
@@ -36,7 +37,7 @@
         "react-native-vectordrawable-android": "https://github.com/mavenave/react-native-vectordrawable-android/tarball/master",
         "react-native-viewpager": "^0.2.13",
         "react-native-zendesk-chat": "^0.2.1",
-        "react-navigation": "^1.0.0-beta.13",
+        "react-navigation": "^1.0.0-beta.21",
         "request": "^2.83.0",
         "ssh2-sftp-client": "^2.0.1",
         "tcomb-form-native": "^0.6.8",
