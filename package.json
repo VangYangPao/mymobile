@@ -15,6 +15,7 @@
         "react": "16.0.0-alpha.6",
         "react-native": "0.44.0",
         "react-native-appsee": "^2.3.64",
+        "react-native-device-info": "^0.13.0",
         "react-native-fabric": "^0.5.1",
         "react-native-modal-picker": "https://github.com/mavenave/react-native-modal-picker/tarball/master",
         "react-native-onesignal": "^3.0.7",
