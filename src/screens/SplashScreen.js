@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Dimensions, View, StyleSheet, Image, StatusBar } from "react-native";
+import { Dimensions, View, StyleSheet, Image } from "react-native";
 import VectorDrawableView from "../components/VectorDrawableView";
 
 import AppStore from "../../stores/AppStore";
@@ -13,10 +13,6 @@ export default class SplashScreen extends Component {
           style={styles.backgroundImage}
           source={require("../../images/background.png")}
         />*/}
-        <StatusBar
-          backgroundColor={colors.primaryAccent}
-          barStyle="light-content"
-        />
         <View>
           <Image
             resizeMode="contain"

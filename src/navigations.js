@@ -37,6 +37,7 @@ export const MENU_ICON_PADDING_LEFT = normalize(12);
 const WINDOW_WIDTH = Dimensions.get("window").width;
 
 export const styles = StyleSheet.create({
+  safeAreaView: { flex: 1, backgroundColor: "white" },
   emptyView: { flex: 1 },
   navigatorContainer: {
     flex: 1,

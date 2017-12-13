@@ -8,17 +8,20 @@ import {
   Image,
   InteractionManager,
   Dimensions,
-  Platform
+  Platform,
+  StatusBar
 } from "react-native";
 import {
   NavigationActions,
   DrawerNavigator,
-  StackNavigator
+  StackNavigator,
+  SafeAreaView
 } from "react-navigation";
 import OneSignal from "react-native-onesignal";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Ionicon from "react-native-vector-icons/Ionicons";
 import Appsee from "react-native-appsee";
+import DeviceInfo from "react-native-device-info";
 
 import AppStore from "../stores/AppStore";
 import { saveNewNotificationDevice } from "./parse/notificationDevice";
@@ -287,6 +290,24 @@ let stackNavConfig = {
 
 const NotificationDevice = Parse.Object.extend("NotificationDevice");
 
+const ModelIphoneX = "iPhone X";
+const isiPhoneX = DeviceInfo.getModel() === ModelIphoneX;
+const STATUSBAR_HEIGHT_IOS = DeviceInfo.getModel() === ModelIphoneX ? 30 : 20;
+const STATUSBAR_HEIGHT =
+  Platform.OS === "ios" ? STATUSBAR_HEIGHT_IOS : StatusBar.currentHeight;
+
+const barStyles = StyleSheet.create({
+  statusBar: {
+    height: STATUSBAR_HEIGHT
+  }
+});
+
+const MyStatusBar = ({ backgroundColor, ...props }) => (
+  <View style={[barStyles.statusBar, { backgroundColor }]}>
+    <StatusBar translucent backgroundColor={backgroundColor} {...props} />
+  </View>
+);
+
 export default class MicroUmbrellaApp extends Component {
   props: any;
   state: { loading: boolean, currentUser: any };
@@ -400,14 +421,47 @@ export default class MicroUmbrellaApp extends Component {
       Help: { screen: HelpStackNavigator }
     };
     let config = Object.assign({}, stackNavConfig);
+
+    let statusBar;
     if (this.state.loading) {
       config.initialRouteName = "Splash";
+      statusBar = (
+        <StatusBar
+          backgroundColor={colors.primaryAccent}
+          barStyle="light-content"
+        />
+      );
     } else if (this.state.currentUser) {
       config.initialRouteName = "Drawer";
+      statusBar = <StatusBar backgroundColor="white" barStyle="dark-content" />;
     } else {
       config.initialRouteName = "Intro";
+      statusBar = <StatusBar backgroundColor="white" barStyle="dark-content" />;
     }
     const MyStackNavigator = StackNavigator(stackNavigatorScreens, config);
-    return <MyStackNavigator />;
+
+    let ViewComponent = props => (
+      <View style={styles.emptyView}>{props.children}</View>
+    );
+
+    if (Platform.OS === "ios") {
+      if (isiPhoneX) {
+        ViewComponent = props => (
+          <SafeAreaView
+            forceInset={{ vertical: "never" }}
+            style={styles.safeAreaView}
+          >
+            {props.children}
+          </SafeAreaView>
+        );
+      }
+    }
+
+    return (
+      <ViewComponent>
+        {statusBar}
+        <MyStackNavigator />
+      </ViewComponent>
+    );
   }
 }
