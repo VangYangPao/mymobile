@@ -426,21 +426,17 @@ export default class MicroUmbrellaApp extends Component {
     if (this.state.loading) {
       config.initialRouteName = "Splash";
       statusBar = (
-        <MyStatusBar
+        <StatusBar
           backgroundColor={colors.primaryAccent}
           barStyle="light-content"
         />
       );
     } else if (this.state.currentUser) {
       config.initialRouteName = "Drawer";
-      statusBar = (
-        <MyStatusBar backgroundColor="white" barStyle="dark-content" />
-      );
+      statusBar = <StatusBar backgroundColor="white" barStyle="dark-content" />;
     } else {
       config.initialRouteName = "Intro";
-      statusBar = (
-        <MyStatusBar backgroundColor="white" barStyle="dark-content" />
-      );
+      statusBar = <StatusBar backgroundColor="white" barStyle="dark-content" />;
     }
     const MyStackNavigator = StackNavigator(stackNavigatorScreens, config);
 
