@@ -700,12 +700,13 @@ class ChatScreen extends Component {
       .then(currentUser => {
         if (currentUser) {
           let answers = Object.assign({}, this.state.answers);
+          const { policy, isStartScreen, questionSet } = this.props;
           answers.firstName = currentUser.get("firstName");
           answers.lastName = currentUser.get("lastName");
           answers.email = currentUser.get("email");
+          answers.policy = policy;
           const fullName = answers.firstName + " " + answers.lastName;
           this.setState({ currentUser, answers });
-          const { policy, isStartScreen, questionSet } = this.props;
           if (this.props.questionSet === "claim") {
             AppStore.fetchPurchases(Parse, currentUser)
               .find()
@@ -998,32 +999,38 @@ class ChatScreen extends Component {
         ) {
           answer = parseFloat(answer);
         }
-        let result = validateAnswer(lastQuestion, answer, this.state.answers);
+        let validatePromise = validateAnswer(
+          lastQuestion,
+          answer,
+          this.state.answers
+        );
 
-        if (Array.isArray(result)) {
-          const isValid = result.every(r => r.isValid);
-          result = { isValid };
-        }
-
-        if (result.isValid) {
-          let newAnswer = {};
-          if (lastMessage.multi) {
-            answer.forEach(input => {
-              newAnswer[input.id] = input.value;
-            });
-          } else {
-            newAnswer[lastQuestion.id] =
-              lastMessage.value !== undefined
-                ? lastMessage.value
-                : lastMessage.text;
+        validatePromise.then(result => {
+          if (Array.isArray(result)) {
+            const isValid = result.every(r => r.isValid);
+            result = { isValid };
           }
-          const answers = Object.assign(this.state.answers, newAnswer);
-          /// setState here
-          this.setState({ answers }, this.askNextQuestion);
-        } else {
-          this.reaskQuestion(result.errMessage);
-          return;
-        }
+
+          if (result.isValid) {
+            let newAnswer = {};
+            if (lastMessage.multi) {
+              answer.forEach(input => {
+                newAnswer[input.id] = input.value;
+              });
+            } else {
+              newAnswer[lastQuestion.id] =
+                lastMessage.value !== undefined
+                  ? lastMessage.value
+                  : lastMessage.text;
+            }
+            const answers = Object.assign(this.state.answers, newAnswer);
+            /// setState here
+            this.setState({ answers }, this.askNextQuestion);
+          } else {
+            this.reaskQuestion(result.errMessage);
+            return;
+          }
+        });
       }
     }
   }
@@ -1219,10 +1226,14 @@ class ChatScreen extends Component {
         if (value === "nric") {
           this.questions[currentQuestionIndex].responseType = [
             "string",
+            "purchaseIdNumber",
             "nric"
           ];
         } else if (value === "passport") {
-          this.questions[currentQuestionIndex].responseType = ["string"];
+          this.questions[currentQuestionIndex].responseType = [
+            "string",
+            "purchaseIdNumber"
+          ];
         }
         let answers = Object.assign(this.state.answers);
         answers.idNumberType = value;

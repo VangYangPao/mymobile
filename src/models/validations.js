@@ -205,13 +205,26 @@ export function validateOneAnswer(
   answer: Object,
   answers: Array<Object>
 ) {
-  var validateFunc;
-  for (var i = 0; i < responseTypes.length; i++) {
-    validateFunc = TypeValidators[responseTypes[i]];
-    const response = validateFunc(answer, answers);
-    if (!response.isValid) return response;
-  }
-  return new ValidationResult(true, true);
+  const promises = responseTypes.map((responseType, idx) => {
+    validateFunc = TypeValidators[responseTypes[idx]];
+    const result = validateFunc(answer, answers);
+    if (typeof result.then === "function") {
+      return result;
+    }
+    return new Promise((resolve, reject) => {
+      resolve(result);
+    });
+  });
+
+  return Promise.all(promises)
+    .then(results => {
+      for (let i = 0; i < results.length; i++) {
+        const result = results[i];
+        if (!result.isValid) return result;
+      }
+      return new ValidationResult(true, true);
+    })
+    .catch(err => console.log(err));
 }
 
 export function validateAnswer(question, answer, answers) {
@@ -245,15 +258,16 @@ export function validateAnswer(question, answer, answers) {
   //   // const collatedErrMessage = responses.map(r => r.errMessage).join(" ");
   //   // return new ValidationResult(false, collatedErrMessage);
   // }
-  let result = validateOneAnswer(responseTypes, answer, answers);
-  if (result.isValid && question.responseLength && answer.length) {
-    const { responseLength: maxLength } = question;
-    if (answer.length > maxLength) {
-      result = new ValidationResult(
-        false,
-        `Answer must be not longer than ${maxLength} characters`
-      );
+  return validateOneAnswer(responseTypes, answer, answers).then(result => {
+    if (result.isValid && question.responseLength && answer.length) {
+      const { responseLength: maxLength } = question;
+      if (answer.length > maxLength) {
+        result = new ValidationResult(
+          false,
+          `Answer must be not longer than ${maxLength} characters`
+        );
+      }
     }
-  }
-  return result;
+    return result;
+  });
 }
