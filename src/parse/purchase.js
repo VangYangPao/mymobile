@@ -72,10 +72,13 @@ export function saveNewPurchase(
         commencementDate,
         occupationId
       } = additionalAttributes;
+      const startofCommencementDate = moment(commencementDate)
+        .startOf("day")
+        .toDate();
       const purchaseAccident = new PurchaseAccident();
       purchaseAccident.setACL(new Parse.ACL(user));
       purchaseAccident.set("policyTermsId", policyTermsId);
-      purchaseAccident.set("commencementDate", commencementDate);
+      purchaseAccident.set("commencementDate", startofCommencementDate);
       purchaseAccident.set("occupationId", occupationId);
       purchaseAccident.set("purchaseId", purchase);
       return purchaseAccident.save();
@@ -99,9 +102,19 @@ export function saveNewPurchase(
       return purchaseTravel.save();
     } else if (policyTypeId === "mobile") {
       const PurchasePhone = Parse.Object.extend("PurchasePhone");
-      const { serialNo, brandId, modelId, purchaseDate } = additionalAttributes;
+      const {
+        serialNo,
+        brandId,
+        modelId,
+        purchaseDate,
+        commencementDate
+      } = additionalAttributes;
+      const startofCommencementDate = moment(commencementDate)
+        .startOf("day")
+        .toDate();
       const purchasePhone = new PurchasePhone();
       purchasePhone.setACL(new Parse.ACL(user));
+      purchasePhone.set("commencementDate", startofCommencementDate);
       purchasePhone.set("serialNo", serialNo);
       purchasePhone.set("brandId", brandId);
       purchasePhone.set("modelId", modelId);
