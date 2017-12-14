@@ -213,6 +213,7 @@ class MicroUmbrellaAppTest(unittest.TestCase):
             # just skip login since there's no ability to login
             return None
         self.tap_on(sign_in_button)
+        sleep(2)
         login_btn = self.poll_accessibility('auth__login-btn')
         login_email_input = self.driver.find_elements_by_accessibility_id(
             'Email')[1]  # skip label

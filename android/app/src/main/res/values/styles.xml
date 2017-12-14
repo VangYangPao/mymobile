@@ -4,6 +4,7 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="android:datePickerDialogTheme">@style/Dialog.Theme</item>
+        <item name="android:statusBarColor">@color/primary_text</item>
     </style>
 
     <style name="ClockTimePickerStyle" parent="Theme.AppCompat.Light.Dialog">
