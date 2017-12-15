@@ -522,7 +522,8 @@ class ChatScreen extends Component {
   handleFinishImageTable(images) {
     const { currentQuestionIndex } = this.state;
     const currentQuestionId = this.questions[currentQuestionIndex].id;
-    const imageLen = Object.keys(images).length;
+    // const imageLen = Object.keys(images).length;
+    const imageLen = images.length;
     const s = imageLen > 1 ? "s" : "";
     this.setState(
       this.concatMessageUpdater({
