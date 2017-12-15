@@ -179,7 +179,7 @@ export function purchasePhonePolicy(
     );
   };
 
-  return createPromiseRetry(verifyApplicationPromise)()
+  return verifyApplicationPromise()
     .then(createPromiseRetry(verifyEnrolmentPromise))
     .then(createPromiseRetry(createPaymentPromise))
     .then(do3DSTransactionPromise)
@@ -476,6 +476,8 @@ export function purchaseAccidentPolicy(
   const telemoneyCard = paymentDetailsToTelemoneyCard(paymentDetails);
   const tomorrow = moment(new Date()).add(1, "days");
   const commencementDate = tomorrow.format("YYYY-MM-DD");
+  // const today = moment(new Date())
+  // const commencementDate = today.format('YYYY-MM-DD')
 
   const accidentDetails = {
     ProductPlanID: planid,
@@ -565,7 +567,7 @@ export function purchaseAccidentPolicy(
     );
   };
 
-  return createPromiseRetry(verifyApplicationPromise)()
+  return verifyApplicationPromise()
     .then(createPromiseRetry(verifyEnrolmentPromise))
     .then(createPromiseRetry(createPaymentPromise))
     .then(do3DSTransactionPromise)

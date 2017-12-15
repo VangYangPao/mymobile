@@ -1,6 +1,12 @@
 // @flow
 import React, { Component } from "react";
-import { View, Image, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  View,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  StatusBar
+} from "react-native";
 import { DrawerItems, NavigationActions } from "react-navigation";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Parse from "parse/react-native";

@@ -37,6 +37,7 @@ import { getDateStr, addCommas, showAlert } from "../utils";
 import Button from "./Button";
 import { validateOneAnswer, ValidationResult } from "../models/validations";
 import tabStyles from "../styles/TabBar.styles";
+import { saveNewDocument } from "../parse/claims";
 
 const imageHeight = 150;
 const imageWidth = 100;
@@ -152,7 +153,8 @@ export class ImageTable extends Component {
     this.handlePress = this.handlePress.bind(this);
     this.handleFinishSelectImages = this.handleFinishSelectImages.bind(this);
     this.renderRow = this.renderRow.bind(this);
-    this.state = { images: {}, error: false };
+    this.renderImage = this.renderImage.bind(this);
+    this.state = { images: {}, parseFiles: [], error: false };
     const { columns } = this.props;
     for (var i = 0; i < columns.length; i++) {
       this.state.images[columns[i].id] = null;
@@ -180,8 +182,16 @@ export class ImageTable extends Component {
             ios: response.uri,
             android: "file://" + response.path
           });
-          newImages[id].push(filepath);
+          const imageLen = newImages[id].push(null);
           this.setState({ images: newImages });
+          const imageIndex = imageLen - 1;
+          saveNewDocument(id, imageIndex, filepath).then(imageFile => {
+            let loadedNewImages = JSON.parse(JSON.stringify(newImages));
+            loadedNewImages[id][imageIndex] = filepath;
+            const parseFiles = this.state.parseFiles.slice().concat(imageFile);
+            this.setState({ images: loadedNewImages, parseFiles });
+          });
+          // this.setState({ images: newImages });
         }
       });
     };
@@ -195,7 +205,7 @@ export class ImageTable extends Component {
     // n-2 images sent
     if (numberOfNonNullImageURI >= Math.max(imageURILen - 2, 0)) {
       this.setState({ error: false });
-      this.props.onFinishSelectImages(this.state.images);
+      this.props.onFinishSelectImages(this.state.parseFiles);
       return;
     }
     this.setState({ error: true });
@@ -215,21 +225,33 @@ export class ImageTable extends Component {
     );
   }
 
+  renderImage(uri, idx) {
+    if (uri === null) {
+      return (
+        <View key={idx} style={[styles.imageSquare, styles.imageBorder]}>
+          <ActivityIndicator color="black" size="small" />
+        </View>
+      );
+    }
+    return (
+      <Image
+        key={idx}
+        resizeMode="cover"
+        source={{ uri }}
+        style={[styles.imageSquare, styles.imageBorder]}
+      />
+    );
+  }
+
   renderRow({ item: column }) {
     var imageURIs = this.state.images[column.id];
+    console.log("render row", column.id);
     var images = [];
     if (imageURIs) {
       images = imageURIs
         .slice()
         .reverse()
-        .map((uri, idx) => (
-          <Image
-            key={idx}
-            resizeMode="cover"
-            source={{ uri }}
-            style={[styles.imageSquare, styles.imageBorder]}
-          />
-        ));
+        .map(this.renderImage);
     }
     return (
       <View style={styles.imageTableRow}>

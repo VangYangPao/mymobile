@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   Dimensions,
   Platform,
-  PixelRatio
+  PixelRatio,
+  StatusBar
 } from "react-native";
 import { NavigationActions } from "react-navigation";
 import Icon from "react-native-vector-icons/MaterialIcons";

@@ -42,6 +42,24 @@ export function normalizeFont(size) {
   return Math.sqrt(height * height + width * width) * (size / 100);
 }
 
+export function getMimeType(fileExt) {
+  const DEFAULT_MIMETYPE = "image/jpeg";
+  const mimetypeMap = {
+    "image/gif": ["gif"],
+    "image/jpeg": ["jpeg", "jpg", "jpe"],
+    "image/png": ["png"]
+  };
+  const mimetypes = Object.keys(mimetypeMap);
+  for (let i = 0; i < mimetypes.length; i++) {
+    const mimetype = mimetypes[i];
+    const fileExtensions = mimetypeMap[mimetype];
+    if (fileExtensions.indexOf(fileExt) !== -1) {
+      return mimetype;
+    }
+  }
+  return DEFAULT_MIMETYPE;
+}
+
 const PROMISE_RETRY_OPTIONS = {
   retries: 5,
   factor: 1.5,
