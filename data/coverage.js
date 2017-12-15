@@ -4,7 +4,7 @@ export default (coverageItems = {
     title: "Accidental Death",
     icon: "ic_accidental_death",
     description:
-      "The amount of beneﬁt will be paid to your beneﬁciary, when you sustained injury (caused by accidental, unforeseen or unexpected event) which results in death."
+      "The amount of beneﬁt will be paid to  your beneﬁciary, when you sustained injury (caused by accidental, unforeseen or unexpected event) which results in death."
   },
   permanentDisablement: {
     title: "Permanent Disablement",
@@ -12,14 +12,14 @@ export default (coverageItems = {
     title: "Accidental Permanent Disability",
     icon: "ic_permanent_disability",
     description:
-      "The amount of beneﬁt will be paid to you, when you sustained injury (caused by accidental, unforeseen or unexpected event) which results in loss of ability to perform any occupation or business, for a continuous period of 12 months. This includes the loss of use of one limb, one eye, suffered third degree burn. "
+      "The amount of beneﬁt will be paid to you, when you sustained disability injury (i.e. the loss of use of any limb, eye, ear, speech or third degree burn) caused by accidental, unforeseen or unexpected event)that lasts for which results in loss of ability to perform any occupation or business, for a a continuous period of 12 months. This includes the loss of use of one limb, one eye, suffered third degree burn."
   },
   medicalReimbursement: {
     shortTitle: "Medical Reimbursement",
     title: "Medical Reimbursement (Medical Benefit)",
     icon: "ic_medical_reimbursement",
     description:
-      "The amount of reimbursement will be paid to you, when you sustained injury (caused by accidental, unforeseen or unexpected event) and you sought medical treatments from licensed Chinese physician/chiropractor or licensed medical practitioner"
+      "The amount of reimbursement will be paid to you, when you sustained injury (caused by accidental, unforeseen or unexpected event) and you sought medical treatments from registered medical practitioner or licensed Chinese physician/chiropractor or licensed medical practitioner.  "
   },
   weeklyIndemnity: {
     shortTitle: "Weekly Indemnity",
@@ -33,35 +33,35 @@ export default (coverageItems = {
     icon: "ic_weekly_indemnity"
   },
   mrFoodPoisoning: {
-    title: "Medical Reimbursement (Food Poisoning)",
+    title: "Food Poisoning Medical Reimbursement",
     icon: "ic_food_poisoning",
     description:
-      "The amount of reimbursement will be paid to you, when you sustained food poisoning (caused by accidental, unforeseen or unexpected event) and you sought medical treatments from licensed Chinese physician/chiropractor or licensed medical practitioner. "
+      "The amount of reimbursement will be paid to you, when you sustained food poisoning (caused by accidental, unforeseen or unexpected event) and you sought medical treatments from licensed Chinese physician/chiropractor or licensed medical practitioner.  "
   },
   mrMosquitoBite: {
-    title: "Medical Reimbursement (Mosquito Bite)",
+    title: "Mosquito Bite Medical Reimbursement",
     icon: "ic_food_poisoning",
     description:
-      "The amount of reimbursement will be paid to you, when you sustained mosquito bite (caused by accidental, unforeseen or unexpected event) and you sought medical treatments from licensed Chinese physician/chiropractor or licensed medical practitioner."
+      "The amount of reimbursement will be paid to you, when you sustained mosquito bite (caused by accidental, unforeseen or unexpected event) and you sought medical treatments from licensed Chinese physician/chiropractor or licensed medical practitioner. "
   },
-  cashlessMedicalBenefit: {
-    title: "Cashless Medical Benefit",
-    icon: "ic_cashless_coverage",
-    description:
-      "There shall be no deposit guarantee on your behalf, or no immediate hospital bills settlement (upon discharge) with any clinic or hospital."
-  },
+  // cashlessMedicalBenefit: {
+  //   title: "Cashless Medical Benefit",
+  //   icon: "ic_cashless_coverage",
+  //   description:
+  //     "There shall be no deposit guarantee on your behalf, or no immediate hospital bills settlement (upon discharge) with any clinic or hospital."
+  // },
 
-  naturalDisaster: {
-    title: "Natural Disaster",
-    icon: "ic_natural_disaster",
-    description:
-      "There shall be no compensation or benefit payable, if the injury is caused by natural disaster (for example flood, volcanic eruption, fire, earthquake)."
-  },
-  warOrTerrorism: {
-    title: "War or Terrorism",
+  // naturalDisaster: {
+  //   title: "Natural Disaster",
+  //   icon: "ic_natural_disaster",
+  //   description:
+  //     "There shall be no compensation or benefit payable, if the injury is caused by natural disaster (for example flood, volcanic eruption, fire, earthquake)."
+  // },
+  war: {
+    title: "War",
     icon: "ic_war_terrorism",
     description:
-      "There shall be no compensation or benefit payable, if the injury is caused by any form of war, riot, or any form of terrorist attacks."
+      "There shall be no compensation or benefit payable, if the injury is caused by any form of biological weapon, chemical agent, or nuclear device. form of war, riot, or any form of terrorist attacks."
   },
   // "Mental Disorder"
   mentalDisorder: {
@@ -87,10 +87,10 @@ export default (coverageItems = {
     icon: "ic_pregnancy"
   },
   suicide: {
-    title: "Suicide or Self-inflicted Injury",
+    title: "Self-inflicted Injury or Suicide",
     icon: "ic_suicide",
     description:
-      "There shall be no compensation or benefit payable, if the injury is caused by any form of self-destruction."
+      "There shall be no compensation or benefit payable, if the injury is caused by any form of injury or death caused by self-intention. self-destruction."
   },
   dangerousSports: {
     title: "Dangerous Sports",
@@ -102,20 +102,20 @@ export default (coverageItems = {
     title: "Pre-Existing Conditions",
     icon: "ic_preexisting_conditions",
     description:
-      "There shall be no compensation or benefit payable, if the injury or illness existed before the effective date of coverage (for example cancer, hepatitis, arthritis, diabetes)."
+      "There shall be no compensation or benefit payable, if the injury, disease  or illness existed before the effective date of coverage commences (e.g. for example cancer, hepatitis, arthritis, diabetes)."
   },
   // Phone Protect360
   phoneDamage: {
     title: "Damage",
     icon: "ic_phone_crack",
     description:
-      "This covers your mobile phone from physical damage or failure to operate correctly, solely caused by accident or self-carelessness. You shall enjoy door-to-door phone repair service or phone replacement."
+      "This covers your mobile phone from physical damage or failure to operate correctly, solely caused by accident or self-carelessness. . You shall enjoy door-to-door phone repair service or phone replacement."
   },
   phoneWet: {
     title: "Water",
     icon: "ic_phone_wet",
     description:
-      "This covers your mobile phone from water damage or black screen error, solely caused by accident or self-carelessness. You shall enjoy door-to-door phone repair service or phone replacement."
+      "This covers your mobile phone from any form of water damage (i.e.  or black screen error). , solely caused by accident or self-carelessness. You shall enjoy door-to-door phone repair service or phone replacement."
   },
   phoneCosmetic: {
     title: "Cosmetic",
@@ -127,7 +127,13 @@ export default (coverageItems = {
     title: "Wear and Tear",
     icon: "ic_phone_wear_tear",
     description:
-      "There shall be no repair service or phone replacement, if your mobile phone sustained gradual deterioration, normal aging, or phone model became obsolete."
+      "There shall be no repair service or phone replacement, if your mobile phone sustained gradual deterioration, normal aging, or your phone model became has become obsolete. "
+  },
+  lossTheftOrDamaged: {
+    title: "Loss, Theft or Damaged",
+    icon: "ic_phone_wear_tear",
+    description:
+      "There shall be no phone replacement or compensation, if your mobile phone is stolen, lost, or if your phone is damaged due to your willful action."
   },
   selfInflicted: {
     title: "Self-inflicted",
@@ -158,7 +164,7 @@ export default (coverageItems = {
     title: "Emergency medical evacuation",
     icon: "ic_emergency_evacuation",
     description:
-      "In the event of injury or sickness while travelling out of Singapore, your medical condition is severe or deteriorating, you will be immediately transported to a location for medical treatment, at no cost to you."
+      "In the event of injury or sickness while travelling out of Singapore, your medical condition is deemed severe or deteriorating, you will be immediately transported to a location for medical treatment, at no cost to you."
   },
   overseasCashBenefit: {
     title: "Overseas Cash Benefit",
@@ -170,31 +176,31 @@ export default (coverageItems = {
     title: "Hospital Cash Benefit in Singapore",
     icon: "ic_emergency_evacuation",
     description:
-      "The amount of beneﬁt will be paid to you, while travelling overseas you sustained injury or sickness, and you sought first-time medical treatments or follow-up treatments when you returned to Singapore, which results in you being confined in a hospital for more than 24 hours (1 day)."
+      "The amount of beneﬁt will be paid to you, while travelling overseas you sustained injury or sickness, and you sought first-time medical treatments or follow-up treatments when you returned to Singapore, which results in you being confined in a hospital for more than 24 hours. (1 day)."
   },
   overseasAccidentalDeath: {
     title: "Accidental Death",
     icon: "ic_overseas_accidental_death",
     description:
-      "The amount of beneﬁt will be paid to your beneﬁciary, while travelling overseas you sustained injury (caused by accidental, unforeseen or unexpected event) which results in death."
+      "The amount of beneﬁt will be paid to  your beneﬁciary, while travelling overseas you sustained injury (caused by accidental, unforeseen or unexpected event) which results in death."
   },
   overseasPermanentDisablement: {
     title: "Permanent Disablement",
     icon: "ic_overseas_permanent_disablement",
     description:
-      "The amount of beneﬁt will be paid to you, while travelling overseas you sustained injury (caused by accidental, unforeseen or unexpected event) which results in loss of ability to perform any occupation or business, for a continuous period of 12 months. This includes the loss of use of one limb, one eye, suffered third degree burn."
+      "The amount of beneﬁt will be paid to you, while travelling overseas you sustained disability (i.e. the loss of use of any limb, eye, ear, speech or third degree burn) that lasts for a continuous period of 12 months. "
   },
   lossOfBaggage: {
     title: "Loss of Baggage and Personal Effects",
     icon: "ic_baggage_loss",
     description:
-      "The amount of beneﬁt will be paid to you, while travelling overseas you suffered loss or damage to your baggage/personal effects"
+      "The amount of beneﬁt will be paid to you, while travelling overseas you suffered loss or damage to your baggage/personal effects."
   },
   lossOfMoney: {
     title: "Loss of Money",
     icon: "ic_baggage_loss",
     description:
-      "The amount of benefit will be paid to you, while travelling overseas you suffered loss of money due to thief, burglary or robbery. "
+      "The amount of benefit will be paid to you, while travelling overseas you suffered loss of money due to theft, burglary or robbery. "
   },
   delayedBaggage: {
     title: "Delayed Baggage",
@@ -203,28 +209,28 @@ export default (coverageItems = {
       "In the event that your checked-in baggage is delayed by the carrier and not returned to your possession, you will be paid S$100 for every 6 hours delay. "
   },
   travelCancellation: {
-    title: "Travel Cancellation or Postponement",
+    title: "Travel Cancellation and Travel Postponement",
     icon: "ic_flight_delay",
     description:
-      "The amount of benefit will be paid to you, before travelling overseas, you suffered loss of deposit (or charges paid in advance) in the event of unavoidable cancellation or travel postponement of the whole trip due to (i) death/serious injury/serious sickness to you, or to your travel companion, or to your immediate family member (ii) serious damage to your home caused by natural disaster or burglary (iii) the issuance of Travel Alert for the planned destination "
+      "The amount of benefit will be paid to you, before travelling overseas, you suffered loss of deposit (or charges paid in advance) in the event of unavoidable cancellation or travel postponement of the whole trip due to (i) death/serious injury/serious sickness to you, or to your travel companion, or to your immediate family member (ii) serious damage to your home caused by natural disaster or burglary (iii) the issuance of Travel Alert for the planned destination."
   },
   tripCurtailment: {
-    title: "Trip Curtailment",
+    title: "Trip Curtailment (Shortening)",
     icon: "ic_flight_delay",
     description:
-      "The amount of benefit will be paid to you, while travelling overseas, you suffered loss of unused portion of paid tour fares, or paid transportation costs, or paid accommodation costs in the event of unavoidable shortening of the whole trip due to (i) death/serious injury/serious sickness to you, or to your travel companion, or to your immediate family member (ii) serious damage to your home caused by natural disaster or burglary (iii) the issuance of Travel Alert for the planned destination. "
+      "The amount of benefit will be paid to you, while travelling overseas, you suffered loss of unused portion of paid tour fares, or paid transportation costs, or paid accommodation costs in the event of unavoidable shortening of the whole trip due to (i) death/serious injury/serious sickness to you, or to your travel companion, or to your immediate family member (ii) serious damage to your home caused by natural disaster or burglary (iii) the issuance of Travel Alert for the planned destination (iv) delay in departure/arrival due to weather conditions, strike, mechanical breakdown. "
   },
   travelDelay: {
     title: "Travel Delay",
     icon: "ic_flight_delay",
     description:
-      "In the event that the carrier that you have arranged to travel is delayed, you will be paid S$100 for every 6 hours delay. "
+      "In the event that the carrier that you have arranged to travel is delayed, you will be paid S$100 for every continuous 6 hours delay. "
   },
   flightDiversion: {
     title: "Flight Diversion",
     icon: "ic_flight_delay",
     description:
-      "Airline arranged to travel has diverted the scheduled flight due to bad weather and medical emergency of a passenger, you will be paid S$100 for every 6 hours delay. "
+      "In the event of that youarranged tr scheduled o travel has diverted the scheduled fflight had been diverted due to bad weather, or  and medical emergency of a passenger, you will be paid S$100 for every continuous 6 hours delay. "
   },
   insolvencyOfTravelAgency: {
     title: "Insolvency of Travel Agency",

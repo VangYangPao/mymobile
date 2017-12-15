@@ -1,13 +1,14 @@
 import OCCUPATIONS from "./occupations";
 
 const notCovered = [
-  "cashlessMedicalBenefit",
-  "naturalDisaster",
-  "warOrTerrorism",
+  // "cashlessMedicalBenefit",
+  // "naturalDisaster",
+  "war",
   "mentalDisorder",
   "unlawfulAction",
   "influenceOfDrugOrAlcohol",
   "suicide",
+  "dangerousSports",
   "preExistingConditions"
 ];
 
@@ -280,7 +281,7 @@ export default (policies = [
       }
     ],
     covered: ["phoneDamage", "phoneWet"],
-    notCovered: ["phoneCosmetic", "phoneWearTear", "selfInflicted"],
+    notCovered: ["phoneCosmetic", "phoneWearTear", "lossTheftOrDamaged"],
     subclassName: "PurchasePhone",
     endorsementFields: [],
     renewable: true
