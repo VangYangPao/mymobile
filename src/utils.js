@@ -19,27 +19,33 @@ let pixelRatio = PixelRatio.get();
 let windowDimensions = Dimensions.get("window");
 
 export function normalize(size) {
+  let normalized;
   switch (true) {
     case pixelRatio < 1.4:
-      return size * 0.8;
+      normalized = size * 0.8;
       break;
     case pixelRatio < 2.4:
-      return size * 1.15;
+      normalized = size * 1.15;
       break;
     case pixelRatio < 3.4:
-      return size * 1.35;
+      normalized = size * 1.35;
       break;
     default:
-      return size * 1.5;
+      normalized = size * 1.5;
   }
+  return PixelRatio.roundToNearestPixel(normalized);
 }
 
 export function normalizeFont(size) {
   const { height, width } = windowDimensions;
   if (pixelRatio < 1.4) {
-    return Math.sqrt(height * height + width * width) * (size / 175);
+    return PixelRatio.roundToNearestPixel(
+      Math.sqrt(height * height + width * width) * (size / 175)
+    );
   }
-  return Math.sqrt(height * height + width * width) * (size / 100);
+  return PixelRatio.roundToNearestPixel(
+    Math.sqrt(height * height + width * width) * (size / 100)
+  );
 }
 
 export function getMimeType(fileExt) {
