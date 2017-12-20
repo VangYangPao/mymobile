@@ -1,12 +1,20 @@
 // @flow
 import React, { Component } from "react";
-import { StyleSheet, TouchableOpacity, View, ScrollView } from "react-native";
+import {
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  ScrollView
+} from "react-native";
 import Ionicon from "react-native-vector-icons/Ionicons";
 import VectorDrawableView from "./VectorDrawableView";
 
 import AppStore from "../../stores/AppStore";
 const colors = AppStore.colors;
 import { Text } from "./defaultComponents";
+
+const itemSeparatorComponent = () => <View style={styles.separator} />;
 
 export default class Coverage extends Component {
   static navigationOptions = { title: "Coverage" };
@@ -41,7 +49,14 @@ export default class Coverage extends Component {
     return (
       <View style={styles.coverages}>
         <Text style={[styles.title, styles.notCoveredTitle]}>Not Covered</Text>
-        {notCoveredItems.map((...params) => this.renderItem(false, ...params))}
+        <FlatList
+          removeClippedSubviews={false}
+          keyExtractor={(item, idx) => idx}
+          renderItem={({ item, index }) =>
+            this.renderItem(false, item, index, notCoveredItems)}
+          ItemSeparatorComponent={itemSeparatorComponent}
+          data={notCoveredItems}
+        />
       </View>
     );
   }
@@ -58,9 +73,14 @@ export default class Coverage extends Component {
           <View style={styles.container}>
             <View style={styles.coverages}>
               <Text style={[styles.title, styles.pageTitle]}>COVERED</Text>
-              {coveredItems.map((...params) =>
-                this.renderItem(true, ...params)
-              )}
+              <FlatList
+                removeClippedSubviews={false}
+                keyExtractor={(item, idx) => idx}
+                renderItem={({ item, index }) =>
+                  this.renderItem(true, item, index, coveredItems)}
+                ItemSeparatorComponent={itemSeparatorComponent}
+                data={coveredItems}
+              />
             </View>
             <TouchableOpacity onPress={() => this.setState({ expanded: true })}>
               <Text style={styles.notCoveredOpenerText}>
@@ -78,6 +98,10 @@ export default class Coverage extends Component {
 const containerSize = 75;
 
 const styles = StyleSheet.create({
+  separator: {
+    borderBottomColor: colors.softBorderLine,
+    borderBottomWidth: 1.5
+  },
   notCoveredOpenerText: {
     alignSelf: "center",
     color: colors.borderLine,
@@ -132,8 +156,8 @@ const styles = StyleSheet.create({
   },
   item: {
     alignItems: "center",
-    borderBottomWidth: 1.5,
-    borderBottomColor: colors.softBorderLine,
+    // borderBottomWidth: 1.5,
+    // borderBottomColor: colors.softBorderLine,
     paddingVertical: 15
   },
   container: {
@@ -142,7 +166,12 @@ const styles = StyleSheet.create({
     paddingTop: 17,
     elevation: 4,
     borderRadius: 3,
-    backgroundColor: "white"
+    backgroundColor: "white",
+    elevation: 4,
+    shadowColor: colors.borderLine,
+    shadowOffset: { width: 0, height: 3.5 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2
   },
   scrollView: {
     flex: 1
