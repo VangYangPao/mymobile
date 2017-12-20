@@ -279,6 +279,26 @@ export default (travelClaimQuestions = [
     condition: "this.state.answers.hasOtherInsuranceCoverage"
   },
   {
+    question: "Please fill in the details below for us to payout claims to you",
+    responseType: ["string", "string", "string", "string", "string", "string"],
+    id: [
+      "accountHolderName",
+      "bankName",
+      "bankAccountNo",
+      "bankCode",
+      "branchCode",
+      "swiftCode"
+    ],
+    labels: [
+      "Full name",
+      "Bank name",
+      "Account no.",
+      "Bank code",
+      "Branch code",
+      "Swift code"
+    ]
+  },
+  {
     question:
       "We are almost done to get your claim paid fast. I need your help to snap or upload some supporting documents. Do your best to snap or upload the right images for each box",
     responseType: "imageTable",
