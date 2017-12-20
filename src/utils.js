@@ -99,7 +99,7 @@ function pad(num, size) {
 
 export function getDateStr(datetime: Date) {
   const day = datetime.getDate();
-  const month = datetime.getMonth();
+  const month = datetime.getMonth() + 1;
   const year = datetime.getFullYear();
   let hour = datetime.getHours();
   const minute = datetime.getMinutes();
