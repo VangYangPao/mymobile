@@ -37,7 +37,7 @@ export const MENU_ICON_SIZE = normalize(30);
 export const MENU_ICON_PADDING_LEFT = normalize(12);
 const WINDOW_WIDTH = Dimensions.get("window").width;
 
-export const styles = StyleSheet.create({
+export const navigationStyles = StyleSheet.create({
   safeAreaView: { flex: 1, backgroundColor: "white" },
   emptyView: { flex: 1 },
   navigatorContainer: {
@@ -73,7 +73,7 @@ export const styles = StyleSheet.create({
   planHeaderTitle: {}
 });
 
-export const headerContainer = <View style={styles.emptyView} />;
+export const headerContainer = <View style={navigationStyles.emptyView} />;
 
 export function navigateOnce(getStateForAction) {
   return (action, state) => {
@@ -123,7 +123,7 @@ export function renderBackButton(navigation: any) {
     handleGoBack = normalScreenGoBack;
   }
   return (
-    <View style={styles.headerLeftIconContainer}>
+    <View style={navigationStyles.headerLeftIconContainer}>
       <TouchableOpacity
         accessibilityLabel="nav__back-btn"
         onPress={handleGoBack}
@@ -131,7 +131,7 @@ export function renderBackButton(navigation: any) {
         <Ionicon
           name={iconName}
           size={MENU_ICON_SIZE}
-          style={styles.headerLeftIcon}
+          style={navigationStyles.headerLeftIcon}
         />
       </TouchableOpacity>
     </View>
@@ -140,10 +140,10 @@ export function renderBackButton(navigation: any) {
 
 export function renderMenuButton(
   navigation,
-  iconStyle = styles.headerLeftIcon
+  iconStyle = navigationStyles.headerLeftIcon
 ) {
   return (
-    <View style={styles.headerLeftIconContainer}>
+    <View style={navigationStyles.headerLeftIconContainer}>
       <TouchableOpacity
         accessibilityLabel="nav__menu-btn"
         onPress={() => {
@@ -158,12 +158,15 @@ export function renderMenuButton(
 
 export const backButtonNavOptions = ({ navigation }) => {
   let options = {
-    headerTitleStyle: [styles.headerTitle, styles.planHeaderTitle],
+    headerTitleStyle: [
+      navigationStyles.headerTitle,
+      navigationStyles.planHeaderTitle
+    ],
     headerLeft: renderBackButton(navigation),
     headerRight: headerContainer
   };
   if (Platform.OS === "ios") {
-    options.headerStyle = styles.header;
+    options.headerStyle = navigationStyles.header;
   }
   return options;
 };

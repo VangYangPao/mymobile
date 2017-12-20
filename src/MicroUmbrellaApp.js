@@ -40,7 +40,7 @@ import DrawerContent from "./components/DrawerContent";
 import PolicyDetailsScreen from "./screens/PolicyDetails";
 import ACSScreen from "./screens/ACSScreen";
 import {
-  styles,
+  navigationStyles,
   backButtonNavOptions,
   renderBackButton,
   renderMenuButton,
@@ -77,7 +77,7 @@ const BuyStackNavigator = StackNavigator(
 
         const headerTitleStyle = Object.assign(
           {},
-          StyleSheet.flatten(styles.headerTitle)
+          StyleSheet.flatten(navigationStyles.headerTitle)
         );
 
         if (params.isStartScreen) {
@@ -109,7 +109,7 @@ const BuyStackNavigator = StackNavigator(
         }
         return {
           headerTitleStyle,
-          headerStyle: styles.header,
+          headerStyle: navigationStyles.header,
           headerRight: headerContainer,
           headerLeft: button
         };
@@ -155,8 +155,8 @@ const ClaimStackNavigator = StackNavigator(
     Claim: {
       screen: new ChatScreenWrapper(),
       navigationOptions: ({ navigation }) => ({
-        headerStyle: styles.header,
-        headerTitleStyle: styles.headerTitle,
+        headerStyle: navigationStyles.header,
+        headerTitleStyle: navigationStyles.headerTitle,
         headerLeft: renderMenuButton(navigation),
         headerRight: headerContainer
       })
@@ -178,8 +178,8 @@ const StatusStackNavigator = StackNavigator(
     Status: {
       screen: StatusScreen,
       navigationOptions: ({ navigation }) => ({
-        headerStyle: styles.header,
-        headerTitleStyle: styles.headerTitle,
+        headerStyle: navigationStyles.header,
+        headerTitleStyle: navigationStyles.headerTitle,
         headerLeft: renderMenuButton(navigation),
         headerRight: headerContainer,
         drawerLabel: "My Policies & Status",
@@ -441,7 +441,7 @@ export default class MicroUmbrellaApp extends Component {
     const MyStackNavigator = StackNavigator(stackNavigatorScreens, config);
 
     let ViewComponent = props => (
-      <View style={styles.emptyView}>{props.children}</View>
+      <View style={navigationStyles.emptyView}>{props.children}</View>
     );
 
     if (Platform.OS === "ios") {
@@ -449,7 +449,7 @@ export default class MicroUmbrellaApp extends Component {
         ViewComponent = props => (
           <SafeAreaView
             forceInset={{ vertical: "never" }}
-            style={styles.safeAreaView}
+            style={navigationStyles.safeAreaView}
           >
             {props.children}
           </SafeAreaView>

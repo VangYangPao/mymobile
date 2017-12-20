@@ -12,15 +12,18 @@ import {
   ToastAndroid,
   Platform,
   ActivityIndicator,
-  Keyboard
+  Keyboard,
+  StatusBar
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import Ionicon from "react-native-vector-icons/Ionicons";
 import { CreditCardInput } from "react-native-credit-card-input";
 
 import { Text } from "./defaultComponents";
 import AppStore from "../../stores/AppStore";
 const colors = AppStore.colors;
 import Button from "./Button";
+import { MENU_ICON_SIZE, navigationStyles } from "../navigations";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -140,9 +143,11 @@ export default class CheckoutModal extends Component {
         accessibilityLabel: "purchase__cvc-input"
       },
       name: {
-        accessibilityLabel: "purchase__card-name-input"
+        accessibilityLabel: "purchase__card-name-input",
+        autoCapitalize: "words"
       }
     };
+    const iconName = (Platform.OS === "ios" ? "ios" : "md") + "-arrow-back";
 
     return (
       <Modal
@@ -154,13 +159,27 @@ export default class CheckoutModal extends Component {
         <View style={styles.modalContainer}>
           <View style={styles.modalContentContainer}>
             <View style={styles.checkoutHeader}>
+              <TouchableOpacity onPress={this.props.onClose}>
+                <Ionicon
+                  name={iconName}
+                  size={MENU_ICON_SIZE}
+                  style={navigationStyles.headerLeftIcon}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                accessibilityLabel="purchase__confirm-purchase-btn"
+                onPress={this.handleCheckout}
+              >
+                <Text style={styles.checkoutButton}>SAVE</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.checkoutContent}>
               <Text style={styles.checkoutTitle}>
                 Enter your credit card details
               </Text>
-            </View>
-            <View style={styles.checkoutContent}>
               <CreditCardInput
                 ref={c => (this.creditCardInput = c)}
+                cardScale={0.75}
                 inputContainerStyle={styles.inputContainerStyle}
                 invalidColor={colors.errorRed}
                 additionalInputStyles={additionalInputStyles}
@@ -172,14 +191,14 @@ export default class CheckoutModal extends Component {
                 cardImageBack={require("../../images/card-back.png")}
               />
             </View>
-            <Button
+            {/*<Button
               accessibilityLabel="purchase__confirm-purchase-btn"
               containerStyle={styles.noBorderRadius}
               style={styles.noBorderRadius}
               onPress={this.handleCheckout}
             >
               {btnText}
-            </Button>
+            </Button>*/}
             {this.props.purchasing ? purchaseLoadingView : null}
           </View>
         </View>
@@ -189,6 +208,11 @@ export default class CheckoutModal extends Component {
 }
 
 const styles = StyleSheet.create({
+  checkoutButton: {
+    color: colors.primaryAccent,
+    fontWeight: "500",
+    fontSize: 18
+  },
   purchaseLoadingText: {
     marginTop: 20,
     color: "white",
@@ -214,17 +238,21 @@ const styles = StyleSheet.create({
   },
   closeIcon: {},
   checkoutContent: {
-    paddingVertical: 20
+    paddingTop: 5,
+    paddingBottom: 30
   },
   checkoutHeader: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 25,
+    justifyContent: "space-between",
+    paddingTop: 25,
+    paddingBottom: 5,
+    paddingHorizontal: 20,
     backgroundColor: colors.softBorderLine
   },
   checkoutTitle: {
     alignSelf: "center",
+    marginVertical: 10,
     color: colors.primaryText,
     fontSize: 20,
     fontWeight: "500",
