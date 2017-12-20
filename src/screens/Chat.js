@@ -68,7 +68,7 @@ import TravelPlansView from "../components/TravelPlansView";
 import { Text } from "../components/defaultComponents";
 import PolicyChoice from "../components/PolicyChoice";
 const colors = AppStore.colors;
-import { validateAnswer } from "../models/validations";
+import { validateAnswer, ValidationResult } from "../models/validations";
 import Button from "../components/Button";
 import CHAT_STYLES from "../styles/Chat.styles";
 import { MESSAGE_LOAD_TIME as _MESSAGE_LOAD_TIME } from "react-native-dotenv";
@@ -878,7 +878,7 @@ class ChatScreen extends Component {
     const transformOldWidgets = inputs => {
       return inputs.map(input => ({
         label: input.label,
-        responseType: "string",
+        responseType: input.type,
         id: input.id
       }));
     };
@@ -1000,18 +1000,22 @@ class ChatScreen extends Component {
         ) {
           answer = parseFloat(answer);
         }
-        let validatePromise = validateAnswer(
-          lastQuestion,
-          answer,
-          this.state.answers
-        );
+
+        let validatePromise;
+        if (lastMessage.multi) {
+          validatePromise = new Promise((resolve, reject) =>
+            resolve(new ValidationResult(true, true))
+          );
+        } else {
+          validatePromise = validateAnswer(
+            lastQuestion,
+            answer,
+            this.state.answers
+          );
+        }
 
         validatePromise.then(result => {
-          if (Array.isArray(result)) {
-            const isValid = result.every(r => r.isValid);
-            result = { isValid };
-          }
-
+          console.log(result, result.isValid);
           if (result.isValid) {
             let newAnswer = {};
             if (lastMessage.multi) {
@@ -1338,6 +1342,19 @@ class ChatScreen extends Component {
           mode={pickerMode}
           onPickDate={this.handlePickDate}
           TouchableComponent={TouchableComponent}
+          customStyles={{
+            // dateTouch: { flex: 1 },
+            dateIcon: {
+              position: "absolute",
+              left: 15,
+              top: 5,
+              marginLeft: 0
+            },
+            dateInput: { borderWidth: 0, marginLeft: 36 },
+            btnTextConfirm: {
+              color: colors.primaryAccent
+            }
+          }}
         />
       );
     }

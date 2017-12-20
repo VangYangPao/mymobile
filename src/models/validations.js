@@ -234,30 +234,6 @@ export function validateAnswer(question, answer, answers) {
       ? question.responseType.slice()
       : question.responseType
   );
-  // if (Array.isArray(question.id)) {
-  //   const responses = answer.map((subAnswer, idx) => {
-  //     const responseType = responseTypes[idx];
-  //     const response = validateOneAnswer(
-  //       responseTypes,
-  //       subAnswer.value,
-  //       answers
-  //     );
-  //     // customize abit for string..
-  //     // rest use written type names
-  //     if (responseType === "string" && !response.isValid) {
-  //       response.errMessage = `${subAnswer.label} cannot be empty.`;
-  //     } else {
-  //       response.errMessage = `${subAnswer.label} is not a valid ${responseType}.`;
-  //     }
-  //     return response;
-  //   });
-  //   return responses;
-  //   // const allLegit = responses.every(r => r.isValid);
-  //   // if (allLegit) return new ValidationResult(true, true);
-  //   // // collate the messages together
-  //   // const collatedErrMessage = responses.map(r => r.errMessage).join(" ");
-  //   // return new ValidationResult(false, collatedErrMessage);
-  // }
   return validateOneAnswer(responseTypes, answer, answers).then(result => {
     if (result.isValid && question.responseLength && answer.length) {
       const { responseLength: maxLength } = question;

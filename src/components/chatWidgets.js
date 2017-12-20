@@ -72,7 +72,8 @@ export class MyDatePicker extends Component {
     const placeholder = "SELECT DATE";
     return (
       <DatePicker
-        style={{ flex: 1, paddingHorizontal: 10 }}
+        ref={this.props.datepickerRef}
+        style={{ flex: 1, paddingBottom: 20 }}
         date={this.state.date}
         mode={mode}
         placeholder={placeholder}
@@ -81,20 +82,7 @@ export class MyDatePicker extends Component {
         minDate={minDate}
         confirmBtnText="Confirm"
         cancelBtnText="Cancel"
-        customStyles={{
-          dateIcon: {
-            position: "absolute",
-            left: 0,
-            top: 4,
-            marginLeft: 0
-          },
-          dateInput: {
-            marginLeft: 36
-          },
-          btnTextConfirm: {
-            color: colors.primaryAccent
-          }
-        }}
+        customStyles={this.props.customStyles}
         onDateChange={this.onPickDate.bind(this)}
         iconSource={require("../../images/date-icon.png")}
       />
@@ -758,6 +746,7 @@ export class MultiInput extends Component {
     this.renderInput = this.renderInput.bind(this);
     this.handlePickDate = this.handlePickDate.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.inputRefs = [];
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -817,22 +806,25 @@ export class MultiInput extends Component {
       }
       return { isValid: true, errMessage: true };
     });
-    const responses = inputs.map((input, idx) => {
-      const validationResponse = validationResponses[idx];
-      const lenResponse = lenResponses[idx];
-      if (!validationResponse.isValid) {
+
+    Promise.all(validationResponses).then(validationResponses => {
+      const responses = inputs.map((input, idx) => {
+        const validationResponse = validationResponses[idx];
+        const lenResponse = lenResponses[idx];
+        if (!validationResponse.isValid) {
+          return validationResponse;
+        } else if (!lenResponse.isValid) {
+          return lenResponse;
+        }
         return validationResponse;
-      } else if (!lenResponse.isValid) {
-        return lenResponse;
+      });
+      const allLegit = responses.every(r => r.isValid);
+      if (allLegit) {
+        this.props.onSubmit(inputs);
+        return;
       }
-      return validationResponse;
+      this.setState({ responses });
     });
-    const allLegit = responses.every(r => r.isValid);
-    if (allLegit) {
-      this.props.onSubmit(inputs);
-      return;
-    }
-    this.setState({ responses });
   }
 
   renderInput(input, index, inputs) {
@@ -849,20 +841,30 @@ export class MultiInput extends Component {
       responseTypes.indexOf("datetime") !== -1
     ) {
       inputElement = (
-        <View
-          style={{
-            alignItems: "center",
-            padding: 5
-          }}
-        >
-          <Text style={{ marginBottom: 5, color: colors.borderLine }}>
-            {input.label}
-          </Text>
-          <MyDatePicker
-            mode={input.responseType}
-            onPickDate={this.handlePickDate(index)}
-          />
-        </View>
+        <TouchableOpacity onPress={() => this.inputRefs[index].onPressDate()}>
+          <View style={styles.dateInputContainer}>
+            <Text style={styles.dateInputPlaceholder}>{input.label}</Text>
+            <MyDatePicker
+              datepickerRef={picker => (this.inputRefs[index] = picker)}
+              mode={input.responseType}
+              onPickDate={this.handlePickDate(index)}
+              customStyles={{
+                dateTouchBody: {
+                  width: 200,
+                  marginBottom: -20
+                },
+                dateIcon: {
+                  position: "absolute",
+                  left: 0
+                },
+                dateInput: { borderWidth: 0, marginLeft: 36 },
+                btnTextConfirm: {
+                  color: colors.primaryAccent
+                }
+              }}
+            />
+          </View>
+        </TouchableOpacity>
       );
     } else if (responseTypes.indexOf("choice") !== -1) {
       const data = input.choices.map(choice => ({
@@ -965,7 +967,11 @@ export class MultiInput extends Component {
         );
       });
     } else {
-      inputContainer = <View>{this.props.columns.map(this.renderInput)}</View>;
+      inputContainer = (
+        <View style={{ flex: 1 }}>
+          {this.props.columns.map(this.renderInput)}
+        </View>
+      );
     }
 
     if (!this.props.submitButtonComponent) {
@@ -1226,6 +1232,15 @@ const multiInputPlaceholderSize = 16;
 const iconSize = 50;
 
 const styles = StyleSheet.create({
+  dateInputContainer: {
+    flex: 1,
+    padding: 10
+  },
+  dateInputPlaceholder: {
+    fontSize: 15,
+    marginBottom: 5,
+    color: colors.borderLine
+  },
   confirmUpload: {
     height: 55,
     borderTopLeftRadius: 0,
@@ -1344,12 +1359,13 @@ const styles = StyleSheet.create({
   errMessageText: {
     fontSize: 16,
     fontWeight: "bold",
-    color: colors.primaryText
+    color: colors.primaryText,
+    textAlign: "center"
   },
   errMessage: {
     marginTop: 10,
     padding: 15,
-    borderRadius: 5,
+    borderRadius: 0,
     backgroundColor: "#FFCDD2"
   },
   suggestionListContainer: {
