@@ -62,8 +62,10 @@ const redirectToStatus = currentUser =>
       NavigationActions.navigate({
         routeName: "Drawer",
         action: NavigationActions.navigate({
-          currentUser,
-          routeName: "MyPolicies"
+          routeName: "MyPolicies",
+          params: {
+            currentUser
+          }
         })
       })
     ]

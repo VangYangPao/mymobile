@@ -643,6 +643,7 @@ class ChatScreen extends Component {
       const purchase = this.state.policies.find(
         p => p.get("policyId") === this.state.answers.claimPolicyNo
       );
+      const { currentUser } = this.state;
       const policyTypeId = purchase.get("policyTypeId");
       const navigateToPoliciesAction = NavigationActions.reset({
         key: null,
@@ -651,7 +652,10 @@ class ChatScreen extends Component {
           NavigationActions.navigate({
             routeName: "Drawer",
             action: NavigationActions.navigate({
-              routeName: "MyPolicies"
+              routeName: "MyPolicies",
+              params: {
+                currentUser
+              }
             })
           })
         ]
@@ -1015,7 +1019,6 @@ class ChatScreen extends Component {
         }
 
         validatePromise.then(result => {
-          console.log(result, result.isValid);
           if (result.isValid) {
             let newAnswer = {};
             if (lastMessage.multi) {
