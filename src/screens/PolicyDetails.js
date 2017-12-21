@@ -139,12 +139,16 @@ export default class PolicyDetails extends Component {
   handleCancelPolicy() {
     this.setState({ loadingText: "Cancelling policy..." });
     const { subPurchase } = this.state;
-    const { policy: purchase } = this.props.navigation.state.params;
+    const {
+      policy: purchase,
+      onCancelPolicy
+    } = this.props.navigation.state.params;
     return saveNonRenewal(purchase, subPurchase)
       .then(() => {
         purchase.set("cancelled", true);
         return purchase.save().then(() => {
           this.setState({ loadingText: null });
+          onCancelPolicy(purchase.get("policyId"));
           this.props.navigation.goBack();
         });
       })

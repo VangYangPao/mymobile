@@ -43,6 +43,7 @@ export default class StatusScreen extends Component {
   constructor(props: any) {
     super(props);
     this.renderSectionHeader = this.renderSectionHeader.bind(this);
+    this.handleCancelPolicy = this.handleCancelPolicy.bind(this);
     this.state = {
       policiesLoaded: false,
       errPoliciesLoad: null,
@@ -120,6 +121,14 @@ export default class StatusScreen extends Component {
     );
   }
 
+  handleCancelPolicy(policyId) {
+    const { policies } = this.state;
+    const newPolicies = policies.filter(
+      policy => policy.get("policyId") !== policyId
+    );
+    this.setState({ policies: newPolicies });
+  }
+
   renderItem(
     section: string,
     length: number,
@@ -171,7 +180,8 @@ export default class StatusScreen extends Component {
     const navigateToPolicyDetails = () =>
       this.props.navigation.navigate("PolicyDetails", {
         policy: item,
-        policyMetadata
+        policyMetadata,
+        onCancelPolicy: this.handleCancelPolicy
       });
     const itemContent = (
       <View style={styles.policy}>
