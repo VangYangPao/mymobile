@@ -320,6 +320,30 @@ export default class MicroUmbrellaApp extends Component {
       notifDevice: null
     };
     this.onIds = this.onIds.bind(this);
+    this.handleReceiveAppOptions = this.handleReceiveAppOptions.bind(this);
+
+    this.stackNavigatorScreens = {
+      Splash: {
+        screen: SplashScreen
+      },
+      Intro: {
+        screen: IntroScreen
+      },
+      TermsOfUse: {
+        screen: TermsOfUse
+      },
+      Profile: {
+        screen: StackNavigator({
+          Profile: {
+            screen: TableScreen
+          }
+        })
+      },
+      Drawer: {
+        screen: wrapScreen(MyDrawerNavigator)
+      },
+      Help: { screen: HelpStackNavigator }
+    };
   }
 
   runAfterInteractions(fn) {
@@ -365,14 +389,17 @@ export default class MicroUmbrellaApp extends Component {
   }
 
   componentDidMount() {
-    InteractionManager.runAfterInteractions(() => {
-      Appsee.start("ef742ddea5f2473d8be211c148216f20");
-      OneSignal.configure({});
-      Parse.User.currentAsync().then(currentUser => {
-        setTimeout(() => {
-          this.setState({ loading: false, currentUser });
-        }, SPLASH_LOAD_TIME);
+    // appOptions is async function
+    let appOptionsPromise;
+    if (typeof this.props.appOptions === "function") {
+      appOptionsPromise = this.props.appOptions();
+    } else {
+      appOptionsPromise = new Promise((resolve, reject) => {
+        resolve(this.props.appOptions);
       });
+    }
+    InteractionManager.runAfterInteractions(() => {
+      appOptionsPromise.then(this.handleReceiveAppOptions);
     });
   }
 
@@ -397,31 +424,27 @@ export default class MicroUmbrellaApp extends Component {
     }
   }
 
-  render() {
-    const stackNavigatorScreens = {
-      Splash: {
-        screen: SplashScreen
-      },
-      Intro: {
-        screen: AppStore.introScreen
-      },
-      TermsOfUse: {
-        screen: TermsOfUse
-      },
-      Profile: {
-        screen: StackNavigator({
-          Profile: {
-            screen: TableScreen
-          }
-        })
-      },
-      Drawer: {
-        screen: wrapScreen(MyDrawerNavigator)
-      },
-      Help: { screen: HelpStackNavigator }
-    };
-    let config = Object.assign({}, stackNavConfig);
+  handleReceiveAppOptions(appOptions) {
+    for (var i in appOptions) {
+      if (typeof appOptions[i] !== "undefined") {
+        AppStore[i] = appOptions[i];
+      }
+    }
+    Parse.initialize(AppStore.parseAppId);
+    Parse.serverURL = AppStore.parseServerURL;
+    AppStore.Parse = Parse;
 
+    Appsee.start(AppStore.appseeId);
+    OneSignal.configure({});
+    Parse.User.currentAsync().then(currentUser => {
+      setTimeout(() => {
+        this.setState({ loading: false, currentUser });
+      }, SPLASH_LOAD_TIME);
+    });
+  }
+
+  render() {
+    let config = Object.assign({}, stackNavConfig);
     let statusBar;
     if (this.state.loading) {
       config.initialRouteName = "Splash";
@@ -438,7 +461,7 @@ export default class MicroUmbrellaApp extends Component {
       config.initialRouteName = "Intro";
       statusBar = <StatusBar backgroundColor="white" barStyle="dark-content" />;
     }
-    const MyStackNavigator = StackNavigator(stackNavigatorScreens, config);
+    const MyStackNavigator = StackNavigator(this.stackNavigatorScreens, config);
 
     let ViewComponent = props => (
       <View style={navigationStyles.emptyView}>{props.children}</View>
