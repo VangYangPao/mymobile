@@ -1,38 +1,30 @@
+import React, { Component } from "react";
 import { AppRegistry } from "react-native";
-import createMicroUmbrellaApp from "microumbrella-core";
-import policies from "../data/policies";
-import coverages from "../data/coverage";
-import { QUESTION_SETS as questionSets } from "../data/questions";
-import colors from "./styles/colors";
+import { MicroUmbrellaApp, getCountryCode } from "microumbrella-core";
+import SG_APP_OPTIONS from "./SGApp";
+import MY_APP_OPTIONS from "./MYApp";
 
-import paClaimQuestions from "../data/paClaimQuestions";
-import travelClaimQuestions from "../data/travelClaimQuestions";
-import mobileClaimQuestions from "../data/mobileClaimQuestions";
-
-import validations from "./validations";
-
-import termsOfUseHTML from "../documents/termsOfUse";
-
-const claimQuestionSets = {
-  pa: paClaimQuestions,
-  pa_mr: paClaimQuestions,
-  pa_wi: paClaimQuestions,
-  travel: travelClaimQuestions,
-  mobile: mobileClaimQuestions
+const appMapping = {
+  SG: SG_APP_OPTIONS,
+  MY: MY_APP_OPTIONS
 };
 
-const appOptions = {
-  policies,
-  coverages,
-  questionSets,
-  claimQuestionSets,
-  colors,
-  validations,
-  termsOfUseHTML,
-  parseAppId: "microumbrella",
-  parseServerURL: "https://api-dev.microumbrella.com/parse"
-};
+const DEFAULT_COUNTRY_CODE = "SG";
 
-AppRegistry.registerComponent("Microsurance", () =>
-  createMicroUmbrellaApp(appOptions)
-);
+function getAppOptions() {
+  return getCountryCode()
+    .then(countryCode => {
+      let appOptions = appMapping[countryCode];
+      if (!appOptions) {
+        appOptions = appMapping[DEFAULT_COUNTRY_CODE];
+      }
+      return appOptions;
+    })
+    .catch(err => {
+      console.error(err);
+    });
+}
+
+const App = () => <MicroUmbrellaApp appOptions={getAppOptions} />;
+
+AppRegistry.registerComponent("Microsurance", () => App);
