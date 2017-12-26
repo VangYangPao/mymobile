@@ -142,7 +142,12 @@ export class ImageTable extends Component {
     this.handleFinishSelectImages = this.handleFinishSelectImages.bind(this);
     this.renderRow = this.renderRow.bind(this);
     this.renderImage = this.renderImage.bind(this);
-    this.state = { images: {}, parseFiles: [], error: false };
+    this.state = {
+      loadingImage: false,
+      images: {},
+      parseFiles: [],
+      error: false
+    };
     const { columns } = this.props;
     for (var i = 0; i < columns.length; i++) {
       this.state.images[columns[i].id] = null;
@@ -155,6 +160,8 @@ export class ImageTable extends Component {
 
   handlePress(id) {
     return () => {
+      if (this.state.loadingImage) return;
+      this.setState({ loadingImage: true });
       ImagePicker.showImagePicker(this.imagePickerOptions, response => {
         if (response.didCancel) {
           console.log("User cancelled image picker");
@@ -173,12 +180,22 @@ export class ImageTable extends Component {
           const imageLen = newImages[id].push(null);
           this.setState({ images: newImages });
           const imageIndex = imageLen - 1;
-          saveNewDocument(id, imageIndex, filepath).then(imageFile => {
-            let loadedNewImages = JSON.parse(JSON.stringify(newImages));
-            loadedNewImages[id][imageIndex] = filepath;
-            const parseFiles = this.state.parseFiles.slice().concat(imageFile);
-            this.setState({ images: loadedNewImages, parseFiles });
-          });
+          saveNewDocument(id, imageIndex, filepath)
+            .then(imageFile => {
+              let loadedNewImages = JSON.parse(JSON.stringify(newImages));
+              loadedNewImages[id][imageIndex] = filepath;
+              const parseFiles = this.state.parseFiles
+                .slice()
+                .concat(imageFile);
+              this.setState({
+                loadingImage: false,
+                images: loadedNewImages,
+                parseFiles
+              });
+            })
+            .catch(err => {
+              console.error(err);
+            });
           // this.setState({ images: newImages });
         }
       });
@@ -186,6 +203,11 @@ export class ImageTable extends Component {
   }
 
   handleFinishSelectImages() {
+    if (this.state.loadingImage) {
+      showAlert("Please wait, image is loading");
+      return;
+    }
+
     const keys = Object.keys(this.state.images);
     const imageURIs = keys.map(key => this.state.images[key]);
     const imageURILen = imageURIs.length;
@@ -233,7 +255,6 @@ export class ImageTable extends Component {
 
   renderRow({ item: column }) {
     var imageURIs = this.state.images[column.id];
-    console.log("render row", column.id);
     var images = [];
     if (imageURIs) {
       images = imageURIs

@@ -12,8 +12,7 @@ export function saveNewDocument(imageProp, imageIndex, uri) {
       const mimetype = getMimeType(fileExt);
       const filename = `${imageProp}-${imageIndex + 1}`;
       const filepath = `${filename}.${fileExt}`;
-      const file = new Parse.File(filename, { base64: imageBase64 }, mimetype);
-      console.log(fileExt, filename, filepath, file);
+      const file = new Parse.File(filepath, { base64: imageBase64 }, mimetype);
       return {
         file,
         name: filename,
