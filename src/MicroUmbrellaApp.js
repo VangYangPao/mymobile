@@ -437,9 +437,7 @@ export default class MicroUmbrellaApp extends Component {
     Appsee.start(AppStore.appseeId);
     OneSignal.configure({});
     Parse.User.currentAsync().then(currentUser => {
-      setTimeout(() => {
-        this.setState({ loading: false, currentUser });
-      }, SPLASH_LOAD_TIME);
+      this.setState({ loading: false, currentUser });
     });
   }
 
