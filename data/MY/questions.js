@@ -185,7 +185,7 @@ export const QUESTION_SETS = {
       responseType: ["string", "imei"],
       id: "serialNo",
       include: ["mobile"],
-      image: require("../images/imei-guide.png")
+      image: require("../../images/imei-guide.png")
     },
     {
       question: "What brand is your phone?",

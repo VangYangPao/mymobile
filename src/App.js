@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { AppRegistry } from "react-native";
 import { MicroUmbrellaApp, getCountryCode } from "microumbrella-core";
-import SG_APP_OPTIONS from "./SGApp";
-import MY_APP_OPTIONS from "./MYApp";
+import SG_APP_OPTIONS from "./SG/options";
+import MY_APP_OPTIONS from "./MY/options";
 
 const appMapping = {
   SG: SG_APP_OPTIONS,

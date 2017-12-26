@@ -1,16 +1,15 @@
-import { AppRegistry } from "react-native";
-import policies from "../data/policies";
-import coverages from "../data/coverage";
-import { QUESTION_SETS as questionSets } from "../data/questions";
-import colors from "./styles/colors";
+import policies from "../../data/MY/policies";
+import coverages from "../../data/MY/coverage";
+import { QUESTION_SETS as questionSets } from "../../data/MY/questions";
+import colors from "./colors";
 
-import paClaimQuestions from "../data/paClaimQuestions";
-import travelClaimQuestions from "../data/travelClaimQuestions";
-import mobileClaimQuestions from "../data/mobileClaimQuestions";
+import paClaimQuestions from "../../data/MY/paClaimQuestions";
+import travelClaimQuestions from "../../data/MY/travelClaimQuestions";
+import mobileClaimQuestions from "../../data/MY/mobileClaimQuestions";
 
 import validations from "./validations";
 
-import termsOfUseHTML from "../documents/termsOfUse";
+import termsOfUseHTML from "../../documents/MY/termsOfUse";
 
 const claimQuestionSets = {
   pa: paClaimQuestions,
@@ -21,6 +20,7 @@ const claimQuestionSets = {
 };
 
 export default (appOptions = {
+  countryCode: "MY",
   policies,
   coverages,
   questionSets,

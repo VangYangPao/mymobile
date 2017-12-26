@@ -17,6 +17,17 @@
         <item name="colorControlNormal">@color/primary_text</item>
     </style>
 
+    <style name="DefaultExplainingPermissionsTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <!-- Used for the buttons -->
+        <item name="colorAccent">@color/primary_orange</item>
+
+        <!-- Used for the title and text -->
+        <item name="android:textColorPrimary">@color/primary_text</item>
+
+        <!-- Used for the background -->
+        <item name="android:background">@color/white</item>
+    </style>
+
     <style name="Dialog.Theme" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorAccent">@color/primary_orange</item>
         <item name="android:textColorPrimary">@color/primary_text</item>

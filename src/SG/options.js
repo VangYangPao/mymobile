@@ -1,16 +1,15 @@
-import createMicroUmbrellaApp from "microumbrella-core";
-import policies from "../data/policies";
-import coverages from "../data/coverage";
-import { QUESTION_SETS as questionSets } from "../data/questions";
-import colors from "./styles/colors";
+import policies from "../../data/SG/policies";
+import coverages from "../../data/SG/coverage";
+import { QUESTION_SETS as questionSets } from "../../data/SG/questions";
+import colors from "./colors";
 
-import paClaimQuestions from "../data/paClaimQuestions";
-import travelClaimQuestions from "../data/travelClaimQuestions";
-import mobileClaimQuestions from "../data/mobileClaimQuestions";
+import paClaimQuestions from "../../data/SG/paClaimQuestions";
+import travelClaimQuestions from "../../data/SG/travelClaimQuestions";
+import mobileClaimQuestions from "../../data/SG/mobileClaimQuestions";
 
 import validations from "./validations";
 
-import termsOfUseHTML from "../documents/termsOfUse";
+import termsOfUseHTML from "../../documents/SG/termsOfUse";
 
 const claimQuestionSets = {
   pa: paClaimQuestions,
@@ -21,6 +20,7 @@ const claimQuestionSets = {
 };
 
 export default (appOptions = {
+  countryCode: "SG",
   policies,
   coverages,
   questionSets,

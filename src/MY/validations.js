@@ -1,6 +1,6 @@
 // @flow
 import moment from "moment";
-import INVALID_OCCUPATIONS from "../data/invalidOccupations";
+import INVALID_OCCUPATIONS from "../../data/SG/invalidOccupations";
 
 import AppStore from "microumbrella-core/stores/AppStore";
 
