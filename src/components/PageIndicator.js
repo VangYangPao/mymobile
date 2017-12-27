@@ -98,6 +98,7 @@ var DefaultViewPageIndicator = React.createClass({
         })
       ]
     });
+    console.log(this.props.screenProps);
     this.props.screenProps.rootNavigation.dispatch(resetToAuthAction);
   },
 

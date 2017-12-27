@@ -2,6 +2,7 @@ import React from "react";
 import { StyleSheet, Image } from "react-native";
 import { observable, computed, asStructure } from "mobx";
 import colors from "../src/styles/colors";
+import { baseValidations } from "../src/models/base-validations";
 import policies from "../data/policies";
 import coverages from "../data/coverage";
 import type { Policy, Coverage } from "../src/types/policy";
@@ -34,7 +35,7 @@ class AppStore {
   policies: Array<Policy> = policies;
   coverages: { [string]: Coverage } = coverages;
 
-  @observable introScreen = () => {};
+  @observable stackNavigatorScreens = {};
   @observable
   authBackgroundImage = (
     <Image
@@ -45,7 +46,7 @@ class AppStore {
 
   @observable messages = [];
 
-  validations = {};
+  validations = baseValidations;
 
   questionSets = {
     buy: QUESTION_SETS.buy,

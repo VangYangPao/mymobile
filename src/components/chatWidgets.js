@@ -35,7 +35,8 @@ import RangeSlider from "./RangeSlider";
 import { Text } from "./defaultComponents";
 import { getDateStr, addCommas, showAlert } from "../utils";
 import Button from "./Button";
-import { validateOneAnswer, ValidationResult } from "../models/validations";
+import { ValidationResult } from "../models/base-validations";
+import { validateOneAnswer } from "../models/validations";
 import tabStyles from "../styles/TabBar.styles";
 import { saveNewDocument } from "../parse/claims";
 
@@ -163,10 +164,13 @@ export class ImageTable extends Component {
       if (this.state.loadingImage) return;
       this.setState({ loadingImage: true });
       ImagePicker.showImagePicker(this.imagePickerOptions, response => {
-        if (response.didCancel) {
-          console.log("User cancelled image picker");
-        } else if (response.error) {
-          console.log("ImagePicker Error: ", response.error);
+        if (response.didCancel || response.error) {
+          if (response.didCancel) {
+            console.log("User cancelled image picker");
+          } else if (response.error) {
+            console.error(response.error);
+          }
+          this.setState({ loadingImage: false });
         } else {
           let newImages = Object.assign({}, this.state.images);
           if (!newImages[id]) {

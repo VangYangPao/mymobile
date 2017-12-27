@@ -1,6 +1,7 @@
 // @flow
 import React, { Component } from "react";
 import type { Node as ReactNode } from "react";
+import { observer } from "mobx-react";
 import {
   StyleSheet,
   View,
@@ -25,8 +26,8 @@ import DeviceInfo from "react-native-device-info";
 
 import AppStore from "../stores/AppStore";
 import { saveNewNotificationDevice } from "./parse/notificationDevice";
-import SplashScreen from "./screens/SplashScreen";
-import IntroScreen from "./screens/IntroScreen";
+import DefaultSplashScreen from "./screens/SplashScreen";
+import DefaultIntroScreen from "./screens/IntroScreen";
 import ChatScreenWrapper from "./screens/Chat";
 import PolicyScreen from "./screens/PolicyScreen";
 import ConfirmationScreen from "./screens/ConfirmationScreen";
@@ -308,6 +309,7 @@ const MyStatusBar = ({ backgroundColor, ...props }) => (
   </View>
 );
 
+@observer
 export default class MicroUmbrellaApp extends Component {
   props: any;
   state: { loading: boolean, currentUser: any };
@@ -324,10 +326,15 @@ export default class MicroUmbrellaApp extends Component {
 
     this.stackNavigatorScreens = {
       Splash: {
-        screen: SplashScreen
+        screen: DefaultSplashScreen
       },
       Intro: {
-        screen: IntroScreen
+        screen: ({ navigation }) => (
+          <DefaultIntroScreen
+            navigation={navigation}
+            screenProps={{ rootNavigation: navigation }}
+          />
+        )
       },
       TermsOfUse: {
         screen: TermsOfUse
@@ -425,7 +432,23 @@ export default class MicroUmbrellaApp extends Component {
   }
 
   handleReceiveAppOptions(appOptions) {
-    for (var i in appOptions) {
+    if (appOptions.validations !== undefined) {
+      for (responseType in appOptions.validations) {
+        AppStore.validations[responseType] =
+          appOptions.validations[responseType];
+      }
+    }
+    delete appOptions.validations;
+
+    if (appOptions.screens !== undefined) {
+      for (let screenName in appOptions.screens) {
+        let screen = appOptions.screens[screenName];
+        AppStore.stackNavigatorScreens[screenName] = { screen };
+      }
+      delete appOptions.screens;
+    }
+
+    for (let i in appOptions) {
       if (typeof appOptions[i] !== "undefined") {
         AppStore[i] = appOptions[i];
       }
@@ -452,12 +475,16 @@ export default class MicroUmbrellaApp extends Component {
           barStyle="light-content"
         />
       );
-    } else if (this.state.currentUser) {
-      config.initialRouteName = "Drawer";
-      statusBar = <StatusBar backgroundColor="white" barStyle="dark-content" />;
     } else {
-      config.initialRouteName = "Intro";
-      statusBar = <StatusBar backgroundColor="white" barStyle="dark-content" />;
+      if (this.state.currentUser) {
+        config.initialRouteName = "Drawer";
+      } else {
+        config.initialRouteName = "Intro";
+      }
+      statusBar = Platform.select({
+        ios: <StatusBar backgroundColor="white" barStyle="dark-content" />,
+        android: null
+      });
     }
     const MyStackNavigator = StackNavigator(this.stackNavigatorScreens, config);
 
