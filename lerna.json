@@ -1,0 +1,8 @@
+{
+  "lerna": "2.5.1",
+  "packages": [
+    "microumbrella-core",
+    "microumbrella-app"
+  ],
+  "version": "0.0.0"
+}
