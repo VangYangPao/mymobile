@@ -21,10 +21,8 @@ import {
   generateNRIC,
   purchaseAccidentPolicy,
   purchasePhonePolicy
-} from "../src/models/hlas";
-import { saveNewPurchase } from "../src/parse/purchase";
-import { verifyEnrolment, doFull3DSTransaction } from "../src/models/telemoney";
-import type { PolicyHolder, PaymentDetails } from "../src/types/hlas";
+} from "../microumbrella-core/src/models/hlas";
+import { saveNewPurchase } from "../microumbrella-core/src/parse/purchase";
 
 import moment from "moment";
 

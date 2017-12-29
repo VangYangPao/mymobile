@@ -1,9 +1,9 @@
 // @flow
 import "./mocks";
-import { generateID } from "../src/utils";
+import { generateID } from "microumbrella-core/src/utils";
 import Parse from "parse/react-native";
 
-import { saveNewClaim } from "../src/parse/claims";
+import { saveNewClaim } from "microumbrella-core/src/parse/claims";
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 

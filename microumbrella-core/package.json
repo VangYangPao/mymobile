@@ -1,5 +1,5 @@
 {
-    "name": "microumbrella-core",
+    "name": "MicroUmbrella",
     "version": "0.0.1",
     "private": true,
     "scripts": {
@@ -13,6 +13,10 @@
         "js-sha512": "^0.4.0",
         "mobx": "^3.3.1",
         "node-xlsx": "^0.11.0",
+        "babel-preset-react-native-stage-0": "^1.0.1",
+        "exceljs": "^0.6.2",
+        "microumbrella-core": "file:microumbrella-core",
+        "mobx-react": "^4.3.3",
         "parse": "^1.10.0",
         "promise-retry": "^1.1.1",
         "react": "16.0.0-alpha.6",
@@ -40,7 +44,6 @@
         "react-navigation": "^1.0.0-beta.21",
         "request": "^2.83.0",
         "ssh2-sftp-client": "^2.0.1",
-        "tcomb-form-native": "^0.6.8",
         "uuid": "^3.1.0"
     },
     "devDependencies": {
