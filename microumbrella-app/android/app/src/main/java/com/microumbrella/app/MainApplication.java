@@ -8,7 +8,6 @@ import com.appsee.reactnative.AppseeReactPackage;
 import com.smixx.fabric.FabricPackage;
 import com.geektime.rnonesignalandroid.ReactNativeOneSignalPackage;
 import com.rnfs.RNFSPackage;
-import com.fileopener.FileOpenerPackage;
 import com.imagepicker.ImagePickerPackage;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
@@ -44,7 +43,6 @@ public class MainApplication extends Application implements ReactApplication {
             new FabricPackage(),
             new ReactNativeOneSignalPackage(),
             new RNFSPackage(),
-            new FileOpenerPackage(),
             new ImagePickerPackage(),
             new RNSoundPackage(),
             new VectorIconsPackage(),

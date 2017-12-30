@@ -51,6 +51,7 @@
 		3FA2DF6A1F61DCBF00A34E49 /* RNZendeskChatModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FA2DF691F61DCBF00A34E49 /* RNZendeskChatModule.m */; };
 		3FF0AD0D1FA3749D008F09E1 /* Lato_Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3FF0AD0C1FA3749D008F09E1 /* Lato_Bold.ttf */; };
 		4D2B225A568248F5AA8E5FC1 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5A05141396E742339933A7DE /* Zocial.ttf */; };
+		4E78FB2A541843B7BF93543B /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 207CDF96078146298C3D938C /* Feather.ttf */; };
 		4E8FE7FE56474951B29E7706 /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91968238E613443387457D28 /* libRNFS.a */; };
 		5C455B84CB9F4D31900CAF43 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5D78ED3977AD4FCABA1EB9D3 /* Ionicons.ttf */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
@@ -65,7 +66,6 @@
 		B1DAFECC2AC2E5345D912E18 /* libPods-Microsurance.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6894FC422D05E5532B3BC8BC /* libPods-Microsurance.a */; };
 		B70F8D03D32B4062B6B40EA5 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C2BA7C78843D4C26AFCE55CC /* libz.tbd */; };
 		CE4F8FACBB844A56948B34A7 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C53BF5BB57F144DFAB286280 /* EvilIcons.ttf */; };
-		CEDA61824C0B4CC49356BCD3 /* libRNFileOpener.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E8DFABBD2D5D44C8A6866CFD /* libRNFileOpener.a */; };
 		DDF5132EA03B44B083DF05C5 /* libRCTOneSignal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A84A572B524647C497DCAF43 /* libRCTOneSignal.a */; };
 		EAF77E8861684225831708B9 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6D9E0CAC64F64BE9A82AAD4F /* MaterialCommunityIcons.ttf */; };
 		F1B7384332814E71A8EBA590 /* libRNAppsee.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BAF774C3E1EE4CB8B5FF25FE /* libRNAppsee.a */; };
@@ -282,13 +282,6 @@
 			remoteGlobalIDString = E72EC1401F7ABB5A0001BC90;
 			remoteInfo = "RNDeviceInfo-tvOS";
 		};
-		3F88B5AF1F6097D3000A4EFE /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BE9200FBF7F14AA6A190F7E4 /* RNFileOpener.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = DB8F70EF1CD3047700E71D6D;
-			remoteInfo = RNFileOpener;
-		};
 		3F88B5B51F6097D3000A4EFE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 540133F9A6C04693A58504EB /* RNSpinkit.xcodeproj */;
@@ -381,6 +374,7 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Microsurance/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Microsurance/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
+		207CDF96078146298C3D938C /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		2555A9A495694C2DA43F3950 /* RNAppsee.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNAppsee.xcodeproj; path = "../node_modules/react-native-appsee/ios/RNAppsee.xcodeproj"; sourceTree = "<group>"; };
 		26EEA7131B3C4C4C9B28E87C /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* Microsurance-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Microsurance-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -401,7 +395,7 @@
 		3FA2DF691F61DCBF00A34E49 /* RNZendeskChatModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNZendeskChatModule.m; sourceTree = "<group>"; };
 		3FCAC0741FC6D3BA00DD561A /* MicrosuranceUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicrosuranceUITests.swift; sourceTree = "<group>"; };
 		3FCAC0761FC6D3BA00DD561A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		3FF0AD0C1FA3749D008F09E1 /* Lato_Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Lato_Bold.ttf; path = ../../../Downloads/Lato_Bold.ttf; sourceTree = "<group>"; };
+		3FF0AD0C1FA3749D008F09E1 /* Lato_Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Lato_Bold.ttf; path = ../android/app/src/main/assets/fonts/Lato_Bold.ttf; sourceTree = "<group>"; };
 		3FF20B351FBA1D7C002D2113 /* Microsurance.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Microsurance.entitlements; path = Microsurance/Microsurance.entitlements; sourceTree = "<group>"; };
 		441C0C93F86B4A6B8D63A6C1 /* RCTOneSignal.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTOneSignal.xcodeproj; path = "../node_modules/react-native-onesignal/ios/RCTOneSignal.xcodeproj"; sourceTree = "<group>"; };
 		45DEFEFB1BC14CA7B6E42C2A /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
@@ -426,7 +420,6 @@
 		AD7312CFCBC04F76AA556D73 /* libRNSpinkit.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNSpinkit.a; sourceTree = "<group>"; };
 		B75B2D65535E499CBE398E06 /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNDeviceInfo.xcodeproj; path = "../node_modules/react-native-device-info/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; };
 		BAF774C3E1EE4CB8B5FF25FE /* libRNAppsee.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNAppsee.a; sourceTree = "<group>"; };
-		BE9200FBF7F14AA6A190F7E4 /* RNFileOpener.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFileOpener.xcodeproj; path = "../node_modules/react-native-file-opener/ios/RNFileOpener.xcodeproj"; sourceTree = "<group>"; };
 		C120EEE839DC417C9C933705 /* RNFS.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFS.xcodeproj; path = "../node_modules/react-native-fs/RNFS.xcodeproj"; sourceTree = "<group>"; };
 		C2BA7C78843D4C26AFCE55CC /* libz.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		C53BF5BB57F144DFAB286280 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
@@ -434,7 +427,6 @@
 		DE874C2FFBAA49E4B758DA61 /* libRNDeviceInfo.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNDeviceInfo.a; sourceTree = "<group>"; };
 		DEBAFAAA817259C622761D6A /* Pods-Microsurance.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Microsurance.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Microsurance/Pods-Microsurance.debug.xcconfig"; sourceTree = "<group>"; };
 		E33341618CF648D3A0ADF2A6 /* libRNSound.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNSound.a; sourceTree = "<group>"; };
-		E8DFABBD2D5D44C8A6866CFD /* libRNFileOpener.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFileOpener.a; sourceTree = "<group>"; };
 		F943AD42BB094D8DA66761D9 /* RNImagePicker.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNImagePicker.xcodeproj; path = "../node_modules/react-native-image-picker/ios/RNImagePicker.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -470,7 +462,6 @@
 				8F87055EF5FC4D92BC0986CE /* libRNVectorIcons.a in Frameworks */,
 				720DCAAE1BF24E318B0F783D /* libRNSound.a in Frameworks */,
 				7E8BEED215DA41F4B745CEF6 /* libRNImagePicker.a in Frameworks */,
-				CEDA61824C0B4CC49356BCD3 /* libRNFileOpener.a in Frameworks */,
 				B1DAFECC2AC2E5345D912E18 /* libPods-Microsurance.a in Frameworks */,
 				4E8FE7FE56474951B29E7706 /* libRNFS.a in Frameworks */,
 				DDF5132EA03B44B083DF05C5 /* libRCTOneSignal.a in Frameworks */,
@@ -673,14 +664,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		3F88B5901F6097D3000A4EFE /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				3F88B5B01F6097D3000A4EFE /* libRNFileOpener.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		3F8C10941FBEDE4300793122 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -761,7 +744,6 @@
 				6B132F460A6A4B988555A60E /* RNVectorIcons.xcodeproj */,
 				618A298C9BE24EE0850ECE43 /* RNSound.xcodeproj */,
 				F943AD42BB094D8DA66761D9 /* RNImagePicker.xcodeproj */,
-				BE9200FBF7F14AA6A190F7E4 /* RNFileOpener.xcodeproj */,
 				C120EEE839DC417C9C933705 /* RNFS.xcodeproj */,
 				441C0C93F86B4A6B8D63A6C1 /* RCTOneSignal.xcodeproj */,
 				79692138273748879C9C160E /* SMXCrashlytics.xcodeproj */,
@@ -832,6 +814,7 @@
 				45DEFEFB1BC14CA7B6E42C2A /* Octicons.ttf */,
 				A17D6963B4264CDD896BC294 /* SimpleLineIcons.ttf */,
 				5A05141396E742339933A7DE /* Zocial.ttf */,
+				207CDF96078146298C3D938C /* Feather.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -1020,10 +1003,6 @@
 				{
 					ProductGroup = 3F768A081FE05A2B0081A918 /* Products */;
 					ProjectRef = B75B2D65535E499CBE398E06 /* RNDeviceInfo.xcodeproj */;
-				},
-				{
-					ProductGroup = 3F88B5901F6097D3000A4EFE /* Products */;
-					ProjectRef = BE9200FBF7F14AA6A190F7E4 /* RNFileOpener.xcodeproj */;
 				},
 				{
 					ProductGroup = 3FAE0A061F82C29500DAB5C4 /* Products */;
@@ -1257,13 +1236,6 @@
 			remoteRef = 3F768A291FE05A2B0081A918 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		3F88B5B01F6097D3000A4EFE /* libRNFileOpener.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRNFileOpener.a;
-			remoteRef = 3F88B5AF1F6097D3000A4EFE /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		3F88B5B61F6097D3000A4EFE /* libRNSpinkit.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1367,6 +1339,7 @@
 				92AB07F86F4F4486A6979B15 /* SimpleLineIcons.ttf in Resources */,
 				3FF0AD0D1FA3749D008F09E1 /* Lato_Bold.ttf in Resources */,
 				4D2B225A568248F5AA8E5FC1 /* Zocial.ttf in Resources */,
+				4E78FB2A541843B7BF93543B /* Feather.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1579,7 +1552,6 @@
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-fs/**",
-					"$(SRCROOT)/../node_modules/react-native-file-opener/ios/RNFileOpener",
 					"$(SRCROOT)/../node_modules/react-native-fs/**",
 					"$(SRCROOT)/../node_modules/react-native-onesignal/ios/RCTOneSignal/**",
 					"$(SRCROOT)/../node_modules/react-native-fabric/ios/SMXCrashlytics",
@@ -1589,14 +1561,7 @@
 				INFOPLIST_FILE = MicrosuranceTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -1620,7 +1585,6 @@
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-fs/**",
-					"$(SRCROOT)/../node_modules/react-native-file-opener/ios/RNFileOpener",
 					"$(SRCROOT)/../node_modules/react-native-fs/**",
 					"$(SRCROOT)/../node_modules/react-native-onesignal/ios/RCTOneSignal/**",
 					"$(SRCROOT)/../node_modules/react-native-fabric/ios/SMXCrashlytics",
@@ -1630,14 +1594,7 @@
 				INFOPLIST_FILE = MicrosuranceTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -1671,7 +1628,6 @@
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-fs/**",
-					"$(SRCROOT)/../node_modules/react-native-file-opener/ios/RNFileOpener",
 					"$(SRCROOT)/../node_modules/react-native-fs/**",
 					"$(SRCROOT)/../node_modules/react-native-onesignal/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-onesignal/ios/RCTOneSignal/**",
@@ -1720,7 +1676,6 @@
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-fs/**",
-					"$(SRCROOT)/../node_modules/react-native-file-opener/ios/RNFileOpener",
 					"$(SRCROOT)/../node_modules/react-native-fs/**",
 					"$(SRCROOT)/../node_modules/react-native-onesignal/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-onesignal/ios/RCTOneSignal/**",
@@ -1766,7 +1721,6 @@
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-fs/**",
-					"$(SRCROOT)/../node_modules/react-native-file-opener/ios/RNFileOpener",
 					"$(SRCROOT)/../node_modules/react-native-fs/**",
 					"$(SRCROOT)/../node_modules/react-native-onesignal/ios/RCTOneSignal/**",
 					"$(SRCROOT)/../node_modules/react-native-fabric/ios/SMXCrashlytics",
@@ -1775,14 +1729,7 @@
 				);
 				INFOPLIST_FILE = "Microsurance-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -1815,7 +1762,6 @@
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-fs/**",
-					"$(SRCROOT)/../node_modules/react-native-file-opener/ios/RNFileOpener",
 					"$(SRCROOT)/../node_modules/react-native-fs/**",
 					"$(SRCROOT)/../node_modules/react-native-onesignal/ios/RCTOneSignal/**",
 					"$(SRCROOT)/../node_modules/react-native-fabric/ios/SMXCrashlytics",
@@ -1824,14 +1770,7 @@
 				);
 				INFOPLIST_FILE = "Microsurance-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -1857,14 +1796,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "Microsurance-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.Microsurance-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
@@ -1886,14 +1818,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "Microsurance-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.Microsurance-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
