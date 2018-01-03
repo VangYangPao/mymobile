@@ -18,7 +18,7 @@ Installation
 ---
 
 ```
-git clone https://github.com/mavenave/MicroUmbrella.git
+git clone --depth 1 https://github.com/mavenave/MicroUmbrella.git
 npm install
 npm run bootstrap
 
