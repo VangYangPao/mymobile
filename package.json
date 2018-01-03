@@ -1,6 +1,10 @@
 {
+	"private": true,
 	"scripts": {
-		"clean": "rm -rf ./microumbrella-app/node_modules && rm -rf ./microumbrella-core/node_modules"
+		"clean": "lerna exec -- rm -rf node_modules",
+		"clean-locks": "lerna exec -- rm package-lock.json && rm yarn.lock",
+		"bootstrap": "lerna bootstrap",
+		"start": "cd microumbrella-app && ./node_modules/.bin/haul start"
 	},
 	"devDependencies": {
 		"babel-preset-react-native-stage-0": "^1.0.1",
@@ -10,8 +14,6 @@
 		"babel-plugin-flow-react-proptypes": "^1.2.0",
 		"babel-plugin-transform-decorators-legacy": "^1.3.4",
 		"babel-plugin-transform-function-bind": "^6.22.0",
-		"babel-preset-es2015": "^6.24.1",
-		"babel-preset-react-native": "1.9.1",
 		"cheerio-without-node-native": "^0.20.2",
 		"isomorphic-fetch": "^2.2.1",
 		"isomorphic-form-data": "^1.0.0",
