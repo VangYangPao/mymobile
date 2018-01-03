@@ -22,12 +22,6 @@ git clone https://github.com/mavenave/MicroUmbrella.git
 npm install
 npm run bootstrap
 
-# Run the app, either ios or android
-cd microumbrella-app
-npm start -- --platform ios
-npm start -- --platform android
-
-# On another terminal window, run this command
 cd microumbrella-app
 react-native run-ios
 react-native run-android
