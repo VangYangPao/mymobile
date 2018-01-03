@@ -1,9 +1,9 @@
 MicroUmbrella
 ===
 
-MicroUmbrella is a [mono-repo](https://github.com/babel/babel/blob/master/doc/design/monorepo.md) consisting of multiple Node packages. The mono-repo structure is supported with [lerna](https://github.com/lerna/lerna).
+MicroUmbrella is a [mono-repo](https://github.com/babel/babel/blob/master/doc/design/monorepo.md) consisting of multiple Node packages. The mono-repo structure is supported with [Lerna](https://github.com/lerna/lerna).
 
-Please learn about the [mono-repp structure](https://github.com/babel/babel/blob/master/doc/design/monorepo.md), its benefits, and how to use Lerna.
+Please learn about the [mono-repo structure](https://github.com/babel/babel/blob/master/doc/design/monorepo.md), its benefits, and how to use Lerna.
 
 **microumbrella-app**
 
