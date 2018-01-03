@@ -10,7 +10,8 @@ import {
   InteractionManager,
   Dimensions,
   Platform,
-  StatusBar
+  StatusBar,
+  AsyncStorage
 } from "react-native";
 import {
   NavigationActions,
@@ -255,6 +256,9 @@ const MyDrawerNavigator = DrawerNavigator(
     // },
   },
   {
+    drawerOpenRoute: "DrawerOpen",
+    drawerCloseRoute: "DrawerClose",
+    drawerToggleRoute: "DrawerToggle",
     drawerWidth: WINDOW_WIDTH * 0.65,
     contentComponent: props => <DrawerContent {...props} />,
     contentOptions: {
@@ -455,6 +459,7 @@ export default class MicroUmbrellaApp extends Component {
     }
     Parse.initialize(AppStore.parseAppId);
     Parse.serverURL = AppStore.parseServerURL;
+    Parse.setAsyncStorage(AsyncStorage);
     AppStore.Parse = Parse;
 
     Appsee.start(AppStore.appseeId);
