@@ -4,7 +4,7 @@
 		"clean": "lerna exec -- rm -rf node_modules",
 		"clean-locks": "lerna exec -- rm package-lock.json && rm yarn.lock",
 		"bootstrap": "lerna bootstrap",
-		"start": "cd microumbrella-app && ./node_modules/.bin/haul start"
+		"start": "cd microumbrella-app && npm start"
 	},
 	"devDependencies": {
 		"babel-preset-react-native-stage-0": "^1.0.1",
