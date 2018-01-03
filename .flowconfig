@@ -14,6 +14,10 @@
 .*/Libraries/react-native/React.js
 .*/Libraries/react-native/ReactNative.js
 
+<PROJECT_ROOT>/microumbrella-app/node_modules/.*
+; <PROJECT_ROOT>/microumbrella-core/node_modules/.*
+
+
 [include]
 
 [libs]
@@ -22,6 +26,8 @@ node_modules/react-native/flow
 flow/
 
 [options]
+sharedmemory.hash_table_pow=21
+
 emoji=true
 
 module.system=haste
