@@ -10,7 +10,7 @@ Installation
 ---
 
 ```
-git clone 
+git clone https://github.com/mavenave/MicroUmbrella.git
 npm install
 npm run bootstrap
 
@@ -25,3 +25,19 @@ react-native run-ios
 react-native run-android
 ```
 
+Debugging
+---
+
+Most issues arise from problems in installation and setup. The best way to fix this is to re-install all NPM dependencies and re-run the React Native packager.
+
+```
+# delete all node_modules from packages
+npm run clean
+
+# re-install all dependencies in packages
+npm run bootstrap
+
+cd microumbrella-app
+npm start --reset-cache
+
+```
