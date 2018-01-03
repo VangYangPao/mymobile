@@ -37,6 +37,7 @@ npm run clean
 # re-install all dependencies in packages
 npm run bootstrap
 
+watchman watch-del-all
 cd microumbrella-app
 npm start --reset-cache
 
