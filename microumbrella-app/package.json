@@ -26,7 +26,7 @@
     "react-native-modal-picker":
       "https://github.com/mavenave/react-native-modal-picker/tarball/master",
     "react-native-onesignal": "^3.0.7",
-    "react-native-sound": "^0.10.4",
+    "react-native-sound": "^0.9.1",
     "react-native-spinkit": "^1.1.1",
     "react-native-vector-icons": "^4.4.3",
     "react-native-vectordrawable-android":
