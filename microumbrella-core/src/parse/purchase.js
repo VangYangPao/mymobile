@@ -2,6 +2,7 @@
 import Parse from "parse/react-native";
 import moment from "moment";
 import getPolicyEndDate from "./policyEndDate";
+import mappings from "../../data/mappings";
 
 export function saveNewPurchase(
   policyTypeId: string,
@@ -14,7 +15,7 @@ export function saveNewPurchase(
   autoRenew: boolean,
   policyholderIdType: number,
   policyholderIdNo: string,
-  user: any,
+  user: Parse.User,
   tmTxnRef: string,
   tmVerifyEnrolment: string,
   tmPaymentSuccessRes: string,
@@ -44,14 +45,8 @@ export function saveNewPurchase(
     policyTypeId === "pa_wi";
 
   if (isPA) {
-    const termMapping = {
-      1: 1,
-      2: 3,
-      3: 6,
-      4: 12
-    };
     const { commencementDate, policyTermsId } = additionalAttributes;
-    const months = termMapping[policyTermsId];
+    const months = mappings.paTermIdToMonths[policyTermsId];
     const policyExpiryDate = moment(commencementDate)
       .add(months, "months")
       .toDate();

@@ -1,18 +1,14 @@
 // @flow
 import moment from "moment";
 
+import mappings from "../../data/mappings";
+
 export default function getPolicyEndDate(purchase: any, subPurchase: any) {
   const policyTypeId = purchase.get("policyTypeId");
 
   if (policyTypeId === "pa") {
-    const termMapping = {
-      1: 1,
-      2: 3,
-      3: 6,
-      4: 12
-    };
     const policyTermsId = subPurchase.get("policyTermsId");
-    const months = termMapping[policyTermsId];
+    const months = mappings.paTermIdToMonths[policyTermsId];
     const commencementDate = subPurchase.get("commencementDate");
     const endDate = moment(commencementDate)
       .add(months, "months")
