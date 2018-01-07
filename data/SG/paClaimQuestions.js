@@ -1,4 +1,7 @@
-export default (paClaimQuestions = [
+// @flow
+import type { QuestionSetType } from "../../types";
+
+const paClaimQuestions: QuestionSetType = [
   // CLAIM TYPE
   {
     question:
@@ -351,4 +354,5 @@ export default (paClaimQuestions = [
     responseType: null,
     id: "confirm"
   }
-]);
+];
+export default paClaimQuestions;

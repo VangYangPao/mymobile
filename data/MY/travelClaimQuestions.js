@@ -1,4 +1,7 @@
-export default (travelClaimQuestions = [
+// @flow
+import type { QuestionSetType } from "../../types";
+
+const travelClaimQuestions: QuestionSetType = [
   {
     question:
       "I will walk you through step by step. I'll do my best to get your claim paid fast. Firstly, please share with me the coverage that you would like to make a claim",
@@ -548,4 +551,5 @@ export default (travelClaimQuestions = [
       "Thank you for your patience. Please keep this phone with you at all times, as I shall send you notifications and messages on your claim.",
     responseType: null
   }
-]);
+];
+export default travelClaimQuestions;

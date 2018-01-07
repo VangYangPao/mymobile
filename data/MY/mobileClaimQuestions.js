@@ -1,4 +1,7 @@
-export default (mobileClaimQuestions = [
+// @flow
+import type { QuestionSetType } from "../../types";
+
+const mobileClaimQuestions: QuestionSetType = [
   {
     question:
       "Oops… Don’t worry. I will walk you through step by step. I'll do my best to get your claim fast. Please share with me the date and time of the accident",
@@ -88,4 +91,5 @@ We or/ and the workshop personnel will follow up with a call very soon. Thank yo
  `,
     responseType: null
   }
-]);
+];
+export default mobileClaimQuestions;

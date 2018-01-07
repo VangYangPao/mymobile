@@ -263,27 +263,27 @@ export default (policies = [
     covered: ["accidentalDeath", "permanentDisablement", "weeklyIndemnity"],
     notCovered,
     ...paParseData
-  },
-  {
-    id: "mobile",
-    title: "Phone Protect360",
-    imageSource: "ic_phone_protection",
-    from: "1 year",
-    plans: [
-      {
-        id: 99,
-        title: "Annual Plan",
-        coverage: {
-          accidentalDamage: 1000,
-          waterDamage: 1000
-        },
-        premium: 12.84 * 0.9
-      }
-    ],
-    covered: ["phoneDamage", "phoneWet"],
-    notCovered: ["phoneCosmetic", "phoneWearTear", "lossTheftOrDamaged"],
-    subclassName: "PurchasePhone",
-    endorsementFields: [],
-    renewable: true
   }
+  // {
+  //   id: "mobile",
+  //   title: "Phone Protect360",
+  //   imageSource: "ic_phone_protection",
+  //   from: "1 year",
+  //   plans: [
+  //     {
+  //       id: 99,
+  //       title: "Annual Plan",
+  //       coverage: {
+  //         accidentalDamage: 1000,
+  //         waterDamage: 1000
+  //       },
+  //       premium: 12.84 * 0.9
+  //     }
+  //   ],
+  //   covered: ["phoneDamage", "phoneWet"],
+  //   notCovered: ["phoneCosmetic", "phoneWearTear", "lossTheftOrDamaged"],
+  //   subclassName: "PurchasePhone",
+  //   endorsementFields: [],
+  //   renewable: true
+  // }
 ]);

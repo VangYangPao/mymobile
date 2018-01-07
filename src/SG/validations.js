@@ -4,7 +4,9 @@ import INVALID_OCCUPATIONS from "../../data/SG/invalidOccupations";
 
 import AppStore from "../../microumbrella-core/stores/AppStore";
 
-function validatePAOccupation(occupationId) {
+import type { ValidationsType } from "../../types";
+
+function validatePAOccupation(occupationId: number) {
   const foundOccupation = INVALID_OCCUPATIONS.find(
     occupation => occupation.value === occupationId
   );
@@ -21,7 +23,7 @@ function validatePAOccupation(occupationId) {
   };
 }
 
-function validatePhonePurchaseDate(date) {
+function validatePhonePurchaseDate(date: Date) {
   date = moment(date);
   const years = moment.utc().diff(date, "years");
   if (years >= 1) {
@@ -36,7 +38,7 @@ function validatePhonePurchaseDate(date) {
   };
 }
 
-function validatePurchaseIdNumber(idNumber, answers) {
+function validatePurchaseIdNumber(idNumber: string, answers: Object) {
   const Parse = AppStore.Parse;
   const Purchase = Parse.Object.extend("Purchase");
   const policyTypeId = answers.policy.id;
@@ -79,22 +81,25 @@ function validatePurchaseIdNumber(idNumber, answers) {
     query.matchesQuery("purchaseId", innerQuery);
     query.equalTo("commencementDate", todayDate);
   }
-  return query.find().then(results => {
-    if (results.length) {
+  if (query) {
+    return query.find().then(results => {
+      if (results.length) {
+        return {
+          isValid: false,
+          errMessage: `${idNumber} is already used for this policy period.`
+        };
+      }
       return {
-        isValid: false,
-        errMessage: `${idNumber} is already used for this policy period.`
+        isValid: true,
+        errMessage: true
       };
-    }
-    return {
-      isValid: true,
-      errMessage: true
-    };
-  });
+    });
+  }
 }
 
-export default (validations = {
+const validations: ValidationsType = {
   occupation: validatePAOccupation,
   purchaseDate: validatePhonePurchaseDate,
   purchaseIdNumber: validatePurchaseIdNumber
-});
+};
+export default validations;

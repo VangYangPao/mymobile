@@ -1,12 +1,15 @@
+// @flow
 import COUNTRIES from "./countries";
 import PHONE_MAKES from "./phoneMake";
 import PHONE_MODELS from "./phoneModels";
 import OCCUPATIONS from "./occupations";
 import INVALID_OCCUPATIONS from "./invalidOccupations";
 
+import type { QuestionSetType, BuyClaimQuestionSetType } from "../../types";
+
 const ALL_OCCUPATIONS = OCCUPATIONS.concat(INVALID_OCCUPATIONS);
 
-const claimIntro = [
+const claimIntro: QuestionSetType = [
   {
     question:
       "Welcome back <%= firstName %> <%= lastName %>, here are your protection plans. Which policy would you like to make a claim?",
@@ -15,7 +18,7 @@ const claimIntro = [
   }
 ];
 
-export const QUESTION_SETS = {
+export const QUESTION_SETS: BuyClaimQuestionSetType = {
   buy: [
     {
       question:
