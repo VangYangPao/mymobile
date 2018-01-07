@@ -14,11 +14,6 @@
 .*/Libraries/react-native/React.js
 .*/Libraries/react-native/ReactNative.js
 
-<PROJECT_ROOT>/microumbrella-app/node_modules/.*
-<PROJECT_ROOT>/microumbrella-app-sg/node_modules/.*
-; <PROJECT_ROOT>/microumbrella-core/node_modules/.*
-
-
 [include]
 
 [libs]

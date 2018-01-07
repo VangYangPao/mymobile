@@ -1,27 +1,65 @@
 {
-	"private": true,
-	"scripts": {
-		"clean": "lerna exec -- rm -rf node_modules",
-		"clean-locks": "lerna exec -- rm package-lock.json && rm yarn.lock",
-		"bootstrap": "lerna bootstrap",
-		"start": "cd microumbrella-app && npm start"
-	},
-	"devDependencies": {
-		"babel-preset-react-native-stage-0": "^1.0.1",
-		"lerna": "^2.5.1",
-		"babel-jest": "19.0.0",
-		"babel-plugin-add-module-exports": "^0.2.1",
-		"babel-plugin-flow-react-proptypes": "^1.2.0",
-		"babel-plugin-transform-decorators-legacy": "^1.3.4",
-		"babel-plugin-transform-function-bind": "^6.22.0",
-		"cheerio-without-node-native": "^0.20.2",
-		"isomorphic-fetch": "^2.2.1",
-		"isomorphic-form-data": "^1.0.0",
-		"jest": "19.0.2",
-		"react-native-dotenv": "^0.1.0",
-		"react-test-renderer": "16.0.0-alpha.6",
-		"stream-to-array": "^2.3.0",
-		"underscore": "^1.8.3",
-		"mock-async-storage": "^2.0.2"
-	}
+  "name": "microumbrella-app",
+  "version": "0.0.1",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "test": "jest"
+  },
+  "dependencies": {
+    "cheerio-without-node-native": "^0.20.2",
+    "fuse.js": "^3.2.0",
+    "js-sha512": "^0.4.0",
+    "mobx": "^3.4.1",
+    "mobx-react": "^4.3.3",
+    "promise-retry": "^1.1.1",
+    "moment": "^2.18.1",
+    "parse": "^1.10.0",
+    "react": "16.0.0-alpha.6",
+    "react-native": "0.44.0",
+    "react-native-appsee": "^2.3.64",
+    "react-native-device-info": "^0.13.0",
+    "react-native-fabric": "^0.5.1",
+    "react-native-file-opener": "^0.2.0",
+    "react-native-fs": "^2.9.6",
+    "react-native-credit-card-input": "https://github.com/mavenave/react-native-credit-card-input/tarball/master",
+    "react-native-gifted-chat": "https://github.com/mavenave/react-native-gifted-chat/tarball/master",
+    "react-native-htmlview": "^0.12.1",
+    "react-native-image-picker": "^0.26.7",
+    "react-native-keyboard-aware-scroll-view": "^0.3.0",
+    "react-native-modal-picker": "https://github.com/mavenave/react-native-modal-picker/tarball/master",
+    "react-native-datepicker": "https://github.com/mavenave/react-native-datepicker/tarball/master",
+    "react-native-onesignal": "^3.0.7",
+    "react-native-slider": "^0.11.0",
+    "react-native-sound": "^0.9.1",
+    "react-native-spinkit": "^1.1.1",
+    "react-native-vector-icons": "^4.4.3",
+    "react-native-vectordrawable-android": "https://github.com/mavenave/react-native-vectordrawable-android/tarball/master",
+    "react-native-viewpager": "^0.2.13",
+    "react-navigation": "^1.0.0-beta.21",
+    "request": "^2.83.0",
+    "ssh2-sftp-client": "^2.0.1",
+    "tcomb-form-native": "^0.6.8",
+    "uuid": "^3.1.0"
+  },
+  "devDependencies": {
+    "babel-jest": "19.0.0",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-plugin-flow-react-proptypes": "^1.2.0",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-plugin-transform-function-bind": "^6.22.0",
+    "babel-preset-react-native-stage-0": "^1.0.1",
+    "empty-module": "0.0.2",
+    "react-native-dotenv": "^0.1.0"
+  },
+  "jest": {
+    "preset": "react-native",
+    "transformIgnorePatterns": [
+      "node_modules/(?!react-native|react-navigation)/"
+    ]
+  },
+  "resolutions": {
+    "moment-timezone/moment": "2.18.1"
+  }
 }

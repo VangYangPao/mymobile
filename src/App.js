@@ -48,9 +48,9 @@ class MicroUmbrellaApp extends Component {
       }
       this.appOptions = appOptions;
       if (countryCode === "SG") {
-        this.MicroUmbrellaApp = require("microumbrella-core-sg").MicroUmbrellaApp;
+        this.MicroUmbrellaApp = require("../microumbrella-core-sg").MicroUmbrellaApp;
       } else {
-        this.MicroUmbrellaApp = require("microumbrella-core").MicroUmbrellaApp;
+        this.MicroUmbrellaApp = require("../microumbrella-core").MicroUmbrellaApp;
       }
       this.setState({ loadingCountry: false });
     });

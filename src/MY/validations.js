@@ -2,7 +2,7 @@
 import moment from "moment";
 import INVALID_OCCUPATIONS from "../../data/SG/invalidOccupations";
 
-import AppStore from "microumbrella-core/stores/AppStore";
+import AppStore from "../../microumbrella-core/stores/AppStore";
 
 function validatePAOccupation(occupationId) {
   const foundOccupation = INVALID_OCCUPATIONS.find(
