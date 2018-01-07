@@ -326,7 +326,6 @@ export default class MicroUmbrellaApp extends Component {
       notifDevice: null
     };
     this.onIds = this.onIds.bind(this);
-    this.handleReceiveAppOptions = this.handleReceiveAppOptions.bind(this);
 
     this.stackNavigatorScreens = {
       Splash: {
@@ -399,21 +398,6 @@ export default class MicroUmbrellaApp extends Component {
     OneSignal.removeEventListener("ids", this.onIds);
   }
 
-  componentDidMount() {
-    // appOptions is async function
-    let appOptionsPromise;
-    if (typeof this.props.appOptions === "function") {
-      appOptionsPromise = this.props.appOptions();
-    } else {
-      appOptionsPromise = new Promise((resolve, reject) => {
-        resolve(this.props.appOptions);
-      });
-    }
-    InteractionManager.runAfterInteractions(() => {
-      appOptionsPromise.then(this.handleReceiveAppOptions);
-    });
-  }
-
   componentDidUpdate(prevProps, prevState) {
     const { currentUser, notifDevice } = this.state;
 
@@ -435,7 +419,9 @@ export default class MicroUmbrellaApp extends Component {
     }
   }
 
-  handleReceiveAppOptions(appOptions) {
+  componentDidMount() {
+    const { appOptions } = this.props;
+
     if (appOptions.validations !== undefined) {
       for (responseType in appOptions.validations) {
         AppStore.validations[responseType] =
