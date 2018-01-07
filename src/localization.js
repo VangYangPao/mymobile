@@ -1,4 +1,5 @@
 import { AsyncStorage } from "react-native";
+import { COUNTRY_CODE as COUNTRY_CODE_ENV } from "react-native-dotenv";
 
 export const COUNTRY_CODE_KEY = "MU_COUNTRY_CODE";
 
@@ -16,11 +17,16 @@ function cacheCountryCode(countryCode) {
 }
 
 export function getCountryCode() {
-  return AsyncStorage.getItem(COUNTRY_CODE_KEY).then(response => {
-    if (response) {
-      return response;
-    }
+  if (COUNTRY_CODE_ENV === "QUERY") {
+    // return AsyncStorage.getItem(COUNTRY_CODE_KEY).then(response => {
+    //   if (response) {
+    //     return response;
+    //   }
     return fetchCountryCode().then(cacheCountryCode);
+    // });
+  }
+  return new Promise((resolve, reject) => {
+    resolve(COUNTRY_CODE_ENV);
   });
 }
 
