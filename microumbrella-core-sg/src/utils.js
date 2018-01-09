@@ -7,7 +7,16 @@ import {
   PixelRatio,
   Dimensions
 } from "react-native";
+import { Crashlytics } from "react-native-fabric";
 import promiseRetry from "promise-retry";
+
+export function crashlyticsLogError(err: Error) {
+  if (Platform.OS === "android") {
+    Crashlytics.logException(err.message + ": " + err.stack);
+  } else {
+    Crashlytics.recordError(err.message + ": " + err.stack);
+  }
+}
 
 export function objectToUrlParams(data: any): string {
   return Object.keys(data)

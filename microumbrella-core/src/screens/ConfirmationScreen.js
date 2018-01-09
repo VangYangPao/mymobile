@@ -15,7 +15,6 @@ import {
 import moment from "moment";
 import { NavigationActions } from "react-navigation";
 import promiseRetry from "promise-retry";
-import { Crashlytics } from "react-native-fabric";
 
 import type { PolicyHolder, PaymentDetails, MUTraveller } from "../types/hlas";
 import { Text } from "../components/defaultComponents";
@@ -24,7 +23,7 @@ import Page from "../components/Page";
 import Footer from "../components/Footer";
 import PolicyPrice from "../components/PolicyPrice";
 import CheckoutModal from "../components/CheckoutModal";
-import { extractPaRes } from "../utils";
+import { extractPaRes, crashlyticsLogError } from "../utils";
 import MAPPING from "../../data/mappings";
 import {
   getTravelQuote,
@@ -197,8 +196,7 @@ export default class ConfirmationScreen extends Component {
       })
       .catch(err => {
         console.error(err);
-        Crashlytics.logException(err.message + ": " + err.stack);
-        Crashlytics.recordError(err.message + ": " + err.stack);
+        crashlyticsLogError(err);
 
         const { currentUser } = this.props.navigation.state.params;
 
@@ -293,8 +291,7 @@ export default class ConfirmationScreen extends Component {
       })
       .catch(err => {
         console.log(err);
-        Crashlytics.logException(err.message + ": " + err.stack);
-        Crashlytics.recordError(err.message + ": " + err.stack);
+        crashlyticsLogError(err);
 
         const resetAction = NavigationActions.reset({
           index: 0,

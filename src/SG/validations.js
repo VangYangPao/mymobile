@@ -2,9 +2,9 @@
 import moment from "moment";
 import INVALID_OCCUPATIONS from "../../data/SG/invalidOccupations";
 
-import AppStore from "../../microumbrella-core/stores/AppStore";
+import AppStore from "../../microumbrella-core-sg/stores/AppStore";
 
-import type { ValidationsType } from "../../types";
+import type { ValidationsType, ValidationResult } from "../../types";
 
 function validatePAOccupation(occupationId: number) {
   const foundOccupation = INVALID_OCCUPATIONS.find(
@@ -38,7 +38,10 @@ function validatePhonePurchaseDate(date: Date) {
   };
 }
 
-function validatePurchaseIdNumber(idNumber: string, answers: Object) {
+function validatePurchaseIdNumber(
+  idNumber: string,
+  answers: Object
+): Promise<ValidationResult> {
   const Parse = AppStore.Parse;
   const Purchase = Parse.Object.extend("Purchase");
   const policyTypeId = answers.policy.id;
@@ -59,9 +62,11 @@ function validatePurchaseIdNumber(idNumber: string, answers: Object) {
     const PurchaseAccident = Parse.Object.extend("PurchaseAccident");
     // const months = answers.coverageDuration;
     // const policyTermsId = MAPPINGS.paTerms[months];
+    innerQuery.lessThanOrEqualTo("policyExpiryDate", tomorrowDate);
     innerQuery.equalTo("policyTypeId", "pa");
     query = new Parse.Query(PurchaseAccident);
     query.matchesQuery("purchaseId", innerQuery);
+    query.greaterThanOrEqualTo("commencementDate", tomorrowDate);
     // query.equalTo("policyTermsId", policyTermsId);
     query.equalTo("commencementDate", tomorrowDate);
   } else if (policyTypeId === "travel") {
@@ -81,13 +86,15 @@ function validatePurchaseIdNumber(idNumber: string, answers: Object) {
     query.matchesQuery("purchaseId", innerQuery);
     query.equalTo("commencementDate", todayDate);
   }
+  const invalidValidationResult = {
+    isValid: false,
+    errMessage: `${idNumber} is already used for this policy period.`
+  };
+
   if (query) {
     return query.find().then(results => {
       if (results.length) {
-        return {
-          isValid: false,
-          errMessage: `${idNumber} is already used for this policy period.`
-        };
+        return invalidValidationResult;
       }
       return {
         isValid: true,
@@ -95,6 +102,9 @@ function validatePurchaseIdNumber(idNumber: string, answers: Object) {
       };
     });
   }
+  return new Promise((resolve, reject) => {
+    resolve(invalidValidationResult);
+  });
 }
 
 const validations: ValidationsType = {
