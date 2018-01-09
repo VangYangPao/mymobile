@@ -80,6 +80,7 @@ var DefaultViewPageIndicator = React.createClass({
 
   resetToAuth() {
     const resetToAuthAction = NavigationActions.reset({
+      key: null,
       index: 1,
       actions: [
         NavigationActions.navigate({
@@ -98,7 +99,6 @@ var DefaultViewPageIndicator = React.createClass({
         })
       ]
     });
-    console.log(this.props.screenProps);
     this.props.screenProps.rootNavigation.dispatch(resetToAuthAction);
   },
 
@@ -139,7 +139,7 @@ var DefaultViewPageIndicator = React.createClass({
         <View style={styles.buttonsContainer}>
           <TouchableOpacity
             accessibilityLabel="intro__sign-in"
-            onPress={this.resetToAuth.bind(this)}
+            onPress={this.resetToAuth}
             style={[
               styles.button,
               { alignItems: "flex-start", paddingLeft: 20 }

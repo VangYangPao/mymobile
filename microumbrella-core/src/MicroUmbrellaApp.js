@@ -58,6 +58,7 @@ import {
   SERVER_URL,
   SPLASH_LOAD_TIME as _SPLASH_LOAD_TIME
 } from "react-native-dotenv";
+import type { AppOptionsType } from "../../types";
 
 const SPLASH_LOAD_TIME = parseInt(_SPLASH_LOAD_TIME, 10);
 
@@ -313,12 +314,17 @@ const MyStatusBar = ({ backgroundColor, ...props }) => (
   </View>
 );
 
+type NavScreen = {
+  screen: ReactNode
+};
+
 @observer
 export default class MicroUmbrellaApp extends Component {
   props: any;
   state: { loading: boolean, currentUser: any };
+  onIds: Object => void;
 
-  constructor(props: createAppOptionsType) {
+  constructor(props: { appOptions: AppOptionsType }) {
     super(props);
     this.state = {
       loading: true,
@@ -423,7 +429,7 @@ export default class MicroUmbrellaApp extends Component {
     const { appOptions } = this.props;
 
     if (appOptions.validations !== undefined) {
-      for (responseType in appOptions.validations) {
+      for (let responseType in appOptions.validations) {
         AppStore.validations[responseType] =
           appOptions.validations[responseType];
       }
