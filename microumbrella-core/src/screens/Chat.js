@@ -40,7 +40,6 @@ import Fuse from "fuse.js";
 import { template } from "lodash";
 import { NavigationActions } from "react-navigation";
 import Parse from "parse/react-native";
-import { Crashlytics } from "react-native-fabric";
 
 import { computed, isObservableArray } from "mobx";
 import { observer } from "mobx-react";
@@ -73,7 +72,7 @@ import { ValidationResult } from "../models/base-validations";
 import Button from "../components/Button";
 import CHAT_STYLES from "../styles/Chat.styles";
 import { MESSAGE_LOAD_TIME as _MESSAGE_LOAD_TIME } from "react-native-dotenv";
-import { showAlert } from "../utils";
+import { showAlert, crashlyticsLogError } from "../utils";
 import MAPPING from "../../data/mappings";
 
 // Enable playback in silence mode (iOS only)
@@ -682,8 +681,7 @@ class ChatScreen extends Component {
         })
         .catch(err => {
           console.error(err);
-          Crashlytics.logException(err.message + ": " + err.stack);
-          Crashlytics.recordError(err.message + ": " + err.stack);
+          crashlyticsLogError(err);
 
           this.setState({ loadingSave: false });
           showAlert("Sorry, something went wrong with your claim.", () => {
@@ -723,8 +721,7 @@ class ChatScreen extends Component {
                 this.setState({ loadingPolicies: false, policies, messages });
               })
               .catch(err => {
-                Crashlytics.logException(err.message + ": " + err.stack);
-                Crashlytics.recordError(rr.message + ": " + err.stack);
+                crashlyticsLogError(err);
                 this.setState({
                   loadingPolicies: false,
                   errLoadingPoliciesMsg: err
@@ -759,8 +756,7 @@ class ChatScreen extends Component {
       })
       .catch(err => {
         console.error(err);
-        Crashlytics.logException(err.message + ": " + err.stack);
-        Crashlytics.recordError(err.message + ": " + err.stack);
+        crashlyticsLogError(err);
       });
 
     this.keyboardDidShowListener = Keyboard.addListener(
