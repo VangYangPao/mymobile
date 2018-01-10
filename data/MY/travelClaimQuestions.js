@@ -1,7 +1,4 @@
-// @flow
-import type { QuestionSetType } from "../../types";
-
-const travelClaimQuestions: QuestionSetType = [
+export default (travelClaimQuestions = [
   {
     question:
       "I will walk you through step by step. I'll do my best to get your claim paid fast. Firstly, please share with me the coverage that you would like to make a claim",
@@ -282,26 +279,6 @@ const travelClaimQuestions: QuestionSetType = [
     condition: "this.state.answers.hasOtherInsuranceCoverage"
   },
   {
-    question: "Please fill in the details below for us to payout claims to you",
-    responseType: ["string", "string", "string", "string", "string", "string"],
-    id: [
-      "accountHolderName",
-      "bankName",
-      "bankAccountNo",
-      "bankCode",
-      "branchCode",
-      "swiftCode"
-    ],
-    labels: [
-      "Full name",
-      "Bank name",
-      "Account no.",
-      "Bank code",
-      "Branch code",
-      "Swift code"
-    ]
-  },
-  {
     question:
       "We are almost done to get your claim paid fast. I need your help to snap or upload some supporting documents. Do your best to snap or upload the right images for each box",
     responseType: "imageTable",
@@ -525,7 +502,7 @@ const travelClaimQuestions: QuestionSetType = [
   },
   {
     question:
-      "If you are now overseas and require any emergency assistance immediately, please call our 24-Hour HOTLINE +6569226009",
+      "If you are now overseas and require any emergency assistance immediately, please call our 24-Hour HOTLINE +603-76283868",
     responseType: null,
     include: ["others"]
   },
@@ -543,7 +520,7 @@ const travelClaimQuestions: QuestionSetType = [
   },
   {
     question:
-      "<%= firstName %> <%= lastName %>, to complete your claim, I need your help to post all the ORIGINAL RECEIPTS to: HLAS, 11 Keppel Road #11-01 ABI Plaza Singapore 089057, within 48 hours ",
+      "<%= firstName %> <%= lastName %>, to complete your claim, I need your help to post all the ORIGINAL RECEIPTS to: Level 5, Tower B, PJ City Development, No.15A, Jalan 219, Seksyen 51A, 46100 Petaling Jaya, Selangor, Malaysia, within 48 hours ",
     responseType: null
   },
   {
@@ -551,5 +528,4 @@ const travelClaimQuestions: QuestionSetType = [
       "Thank you for your patience. Please keep this phone with you at all times, as I shall send you notifications and messages on your claim.",
     responseType: null
   }
-];
-export default travelClaimQuestions;
+]);

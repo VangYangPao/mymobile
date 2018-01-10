@@ -7,7 +7,11 @@ export default (paClaimQuestions = [
     label: "CHOOSE CLAIM TYPE",
     choices: [
       { label: "Death of Kin", value: "death" },
-      { label: "Permanent Disability", value: "permanentDisability" }
+      { label: "Permanent Disablement", value: "permanentDisablement" },
+      { label: "Medical Reimbursement", value: "medicalReimbursement" },
+      { label: "Weekly Benefit due to Temporary Disablement", value: "weeklyBenefitTemporaryDisablement" },
+      { label: "Loss Cash/Mobile Phone/Laptop due to snach theft", value: "lossSnachTheft" }
+
     ],
     include: ["pa"],
     id: "accidentType"
@@ -202,34 +206,14 @@ export default (paClaimQuestions = [
   // 2nd half
   {
     question:
-      "May I know if <%= firstName %> <%= lastName %> passed away in Singapore or outside of Singapore?",
+      "May I know if <%= firstName %> <%= lastName %> passed away in Malaysia or outside of Malaysia?",
     responseType: ["string", "choice"],
-    id: "deathInSingapore",
+    id: "deathInMalaysia",
     choices: [
-      { label: "In Singapore", value: true },
-      { label: "Outside of Singapore", value: false }
+        { label: "In Malaysia", value: true },
+        { label: "Outside of Malaysia", value: false }
     ],
     include: ["death"]
-  },
-  {
-    question: "Please fill in the details below for us to payout claims to you",
-    responseType: ["string", "string", "string", "string", "string", "string"],
-    id: [
-      "accountHolderName",
-      "bankName",
-      "bankAccountNo",
-      "bankCode",
-      "branchCode",
-      "swiftCode"
-    ],
-    labels: [
-      "Full name",
-      "Bank name",
-      "Account no.",
-      "Bank code",
-      "Branch code",
-      "Swift code"
-    ]
   },
   {
     question:
@@ -262,7 +246,7 @@ export default (paClaimQuestions = [
     ],
     include: ["death"],
     id: "insideSGClaimImages",
-    condition: "this.state.answers.deathInSingapore"
+    condition: "this.state.answers.deathInMalaysia"
   },
 
   {
@@ -295,7 +279,7 @@ export default (paClaimQuestions = [
     ],
     include: ["death"],
     id: "outsideSGClaimImages",
-    condition: "!this.state.answers.deathInSingapore"
+    condition: "!this.state.answers.deathInMalaysia"
   },
 
   {
@@ -339,7 +323,7 @@ export default (paClaimQuestions = [
   },
   {
     question:
-      "<%= firstName %> <%= lastName %>, to complete your claim, I need your help to post the ORIGINAL MEDICAL BILLS AND/OR RECEIPTS to: HLAS, 11 Keppel Road #11-01 ABI Plaza Singapore 089057, within 48 hours",
+      "<%= firstName %> <%= lastName %>, to complete your claim, I need your help to post the ORIGINAL MEDICAL BILLS AND/OR RECEIPTS to: : Level 5, Tower B, PJ City Development, No.15A, Jalan 219, Seksyen 51A, 46100 Petaling Jaya, Selangor, Malaysia, within 48 hours",
     responseType: null,
     exclude: ["death"]
   },
