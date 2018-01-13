@@ -93,8 +93,11 @@ function validatePurchaseIdNumber(idNumber, answers) {
   });
 }
 
+export function validateNRIC(nric: string) {}
+
 export default (validations = {
   occupation: validatePAOccupation,
   purchaseDate: validatePhonePurchaseDate,
-  purchaseIdNumber: validatePurchaseIdNumber
+  purchaseIdNumber: validatePurchaseIdNumber,
+  nric: validateNRIC
 });

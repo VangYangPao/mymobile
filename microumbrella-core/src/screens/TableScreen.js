@@ -1,6 +1,12 @@
 // @flow
 import React, { Component } from "react";
-import { View, TextInput, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  FlatList,
+  View,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity
+} from "react-native";
 import { NavigationActions } from "react-navigation";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import Ionicon from "react-native-vector-icons/Ionicons";
@@ -13,8 +19,13 @@ import AppStore from "../../stores/AppStore";
 const colors = AppStore.colors;
 import { Text } from "../components/defaultComponents";
 import { showAlert } from "../utils";
+import type { QuestionTableColumnType } from "../../../types";
 
 let tableValues = [];
+
+const itemSeparatorComponent = ({ highlighted }) => {
+  return <View style={styles.separator} />;
+};
 
 export default class TableScreen extends Component {
   static navigationOptions = ({ navigation, screenProps }) => {
@@ -57,7 +68,14 @@ export default class TableScreen extends Component {
     }
   }
 
-  renderField(field, index) {
+  renderField({
+    item,
+    index
+  }: {
+    item: QuestionTableColumnType,
+    index: number
+  }) {
+    const field = item;
     let { id, label, choices, responseType, value } = field;
     const { renderError, columns } = this.props.navigation.state.params;
     responseType = [].concat(responseType);
@@ -99,6 +117,7 @@ export default class TableScreen extends Component {
             confirmBtnText="Confirm"
             cancelBtnText="Cancel"
             showIcon={false}
+            style={{ flex: 1 }}
             customStyles={{
               placeholderText: renderError
                 ? styles.inputErr
@@ -185,11 +204,7 @@ export default class TableScreen extends Component {
         />
       );
     }
-    return (
-      <View key={id} style={styles.fieldContainer}>
-        {inputElement}
-      </View>
-    );
+    return <View style={styles.fieldContainer}>{inputElement}</View>;
   }
 
   render() {
@@ -197,7 +212,15 @@ export default class TableScreen extends Component {
     return (
       <KeyboardAwareScrollView>
         <View style={styles.page}>
-          <View style={styles.container}>{columns.map(this.renderField)}</View>
+          <View style={styles.container}>
+            <FlatList
+              keyExtractor={item => item.id}
+              data={columns}
+              renderItem={this.renderField}
+              ItemSeparatorComponent={itemSeparatorComponent}
+              extraData={this.state.values}
+            />
+          </View>
         </View>
       </KeyboardAwareScrollView>
     );
@@ -207,6 +230,10 @@ export default class TableScreen extends Component {
 const fieldInputFontSize = 17.5;
 
 const styles = StyleSheet.create({
+  separator: {
+    borderBottomColor: colors.borderLine,
+    borderBottomWidth: 0.8
+  },
   modalOption: {
     marginHorizontal: 10,
     backgroundColor: "white"
@@ -226,13 +253,12 @@ const styles = StyleSheet.create({
     fontSize: fieldInputFontSize
   },
   selectTextResult: {
-    // flex: 1,
+    flex: 1,
     alignItems: "center",
     textAlign: "right",
     color: colors.primaryText
   },
   selectText: {
-    // flex: 1,
     color: colors.borderLine,
     fontSize: fieldInputFontSize
   },
@@ -258,10 +284,7 @@ const styles = StyleSheet.create({
   },
   fieldContainer: {
     height: 50,
-    alignItems: "stretch",
-    justifyContent: "center",
-    borderBottomWidth: 1,
-    borderBottomColor: colors.softBorderLine
+    alignItems: "stretch"
   },
   page: {
     flex: 1,
