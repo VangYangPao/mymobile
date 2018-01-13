@@ -74,6 +74,7 @@ import CHAT_STYLES from "../styles/Chat.styles";
 import { MESSAGE_LOAD_TIME as _MESSAGE_LOAD_TIME } from "react-native-dotenv";
 import { showAlert, crashlyticsLogError } from "../utils";
 import MAPPING from "../../data/mappings";
+import type { QuestionSetType } from "../../../types";
 
 // Enable playback in silence mode (iOS only)
 Sound.setCategory("Playback");
@@ -157,9 +158,12 @@ const windowDimensions = Dimensions.get("window");
 const WINDOW_HEIGHT = windowDimensions.height;
 const WINDOW_WIDTH = windowDimensions.width;
 
+type ChatScreenProps = {};
+
 @observer
 class ChatScreen extends Component {
-  questions: Array<any>;
+  questions: QuestionSetType;
+  isSkippingQuestion: number => boolean;
 
   @computed
   get questions() {
@@ -238,6 +242,7 @@ class ChatScreen extends Component {
     this.sendNewMessage = this.sendNewMessage.bind(this);
     this.handleProceedButtonPress = this.handleProceedButtonPress.bind(this);
     this.handleBackButtonPress = this.handleBackButtonPress.bind(this);
+    this.isSkippingQuestion = this.isSkippingQuestion.bind(this);
 
     this.concatMessageUpdater = message => {
       return prevState => {
@@ -337,13 +342,6 @@ class ChatScreen extends Component {
       m => m.questionIndex === reverseToQuestionIndex
     );
     const sliceToMessageIndex = reverseToMessageIndex + 1;
-    // console.log(
-    //   message,
-    //   editQuestionIndex,
-    //   reverseToQuestionIndex,
-    //   reverseToMessageIndex,
-    //   sliceToMessageIndex
-    // );
     const messages = this.state.messages.slice(0, sliceToMessageIndex);
     this.setState(
       {
@@ -807,15 +805,8 @@ class ChatScreen extends Component {
     this.setState({ answering: true });
   }
 
-  askNextQuestion() {
-    const currentQuestionIndex = this.state.currentQuestionIndex + 1;
-
-    // end the questionnaire and redirect user to checkout page
-    if (currentQuestionIndex >= this.questions.length) {
-      return;
-    }
-
-    const nextQuestion = this.questions[currentQuestionIndex];
+  isSkippingQuestion(questionIndex) {
+    const question = this.questions[questionIndex];
     let checkAgainst;
     if (this.props.questionSet !== "claim") {
       checkAgainst = this.props.policy.id;
@@ -829,26 +820,43 @@ class ChatScreen extends Component {
           const optionId = policy.get("optionId");
           checkAgainst = MAPPING.paOptionIdToName[optionId] || "pa";
         }
-        if (nextQuestion.id !== "accidentType") {
+        if (question.id !== "accidentType") {
           checkAgainst = this.state.answers.accidentType;
         }
       }
     }
     // skip questions here
     if (
-      nextQuestion.include !== undefined &&
-      nextQuestion.include.indexOf(checkAgainst) === -1
+      question.include !== undefined &&
+      question.include.indexOf(checkAgainst) === -1
     ) {
-      this.setState({ currentQuestionIndex }, this.askNextQuestion);
-      return;
+      return true;
     }
     if (
-      nextQuestion.exclude !== undefined &&
-      nextQuestion.exclude.indexOf(checkAgainst) !== -1
+      question.exclude !== undefined &&
+      question.exclude.indexOf(checkAgainst) !== -1
     ) {
+      return true;
+    }
+    return false;
+  }
+
+  askNextQuestion() {
+    const currentQuestionIndex = this.state.currentQuestionIndex + 1;
+
+    // end the questionnaire and redirect user to checkout page
+    if (currentQuestionIndex >= this.questions.length) {
+      return;
+    }
+
+    const nextQuestion = this.questions[currentQuestionIndex];
+    const isSkippingQuestion = this.isSkippingQuestion(currentQuestionIndex);
+
+    if (isSkippingQuestion) {
       this.setState({ currentQuestionIndex }, this.askNextQuestion);
       return;
     }
+
     // eval only when needed
     if (nextQuestion.condition) {
       if (!eval(nextQuestion.condition)) {
@@ -1298,18 +1306,27 @@ class ChatScreen extends Component {
       );
     }
 
-    if (this.questions[currentQuestionIndex].id === "coverageDuration") {
-      return (
-        <Button
-          onPress={() => this.handleSelectDuration()}
-          containerStyle={{ flex: 1, borderRadius: 0 }}
-          style={{
-            borderRadius: 0
-          }}
-        >
-          CONFIRM DURATION
-        </Button>
-      );
+    // BUG: This causes crash
+    // supposed to pass through
+    // but tries to render
+    // so it crashes
+    // HACK: Check if skipping the question first,
+    // Then just pass it. If you return null, it will crash too
+    if (currentQuestion.id === "coverageDuration") {
+      const isSkippingQuestion = this.isSkippingQuestion(currentQuestionIndex);
+      if (!isSkippingQuestion) {
+        return (
+          <Button
+            onPress={() => this.handleSelectDuration()}
+            containerStyle={{ flex: 1, borderRadius: 0 }}
+            style={{
+              borderRadius: 0
+            }}
+          >
+            CONFIRM DURATION
+          </Button>
+        );
+      }
     }
 
     if (dateIndex !== -1 || dateTimeIndex !== -1) {
@@ -1324,6 +1341,7 @@ class ChatScreen extends Component {
       if (currentQuestion.minDateFrom) {
         minDateFrom = this.state.answers[currentQuestion.minDateFrom];
       }
+
       if (
         !this.state.answering ||
         !this.state.renderInput ||
