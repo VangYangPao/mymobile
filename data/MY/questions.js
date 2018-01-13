@@ -17,19 +17,25 @@ const claimIntro: QuestionSetType = [
 ];
 const questionTravelPA: QuestionSetType = [
   {
-    question: "Is it a return or one-way trip?",
-    responseType: "string",
-    choices: RETURN_SINGLE_TRIP_OPTIONS,
-    id: "tripType"
+    question:
+      "<%= ['Great choice 😄', 'Awesome choice 😄', 'Nice choice 😄', 'Ahh... our most popular choice 😘', 'Fantastic 😉'][Math.floor(Math.random()*5)] %>",
+    responseType: null
   },
   {
-    question: "Choose Plan",
+    question:
+      "I'll walk you through step-by-step. Let's start with the plan you prefer.",
     responseType: "number",
-    exclude: ["mobile"],
     id: "planIndex"
   },
   {
-    question: "Destination (users type in country – no region)",
+    question: "Is it a return or one-way trip?",
+    responseType: ["choice", "string"],
+    choices: RETURN_SINGLE_TRIP_OPTIONS,
+    id: "tripType",
+    include: ["travel"]
+  },
+  {
+    question: "Which country are you travelling to?",
     searchChoices: true,
     responseType: ["string"],
     choices: COUNTRIES,
@@ -43,7 +49,8 @@ const questionTravelPA: QuestionSetType = [
   {
     question: "Coverage Period",
     responseType: "number",
-    id: "coverageDuration"
+    id: "coverageDuration",
+    include: ["pa"]
   },
   {
     question: "Trip Start Date",

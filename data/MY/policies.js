@@ -144,124 +144,124 @@ export default (policies = [
     covered: ["accidentalDeath", "permanentDisablement"],
     notCovered,
     ...paParseData
-  },
-  {
-    id: "pa_mr",
-    title: "Micro Protect360 with Medical Reimbursement",
-    subtitle: "Up to $10,000",
-    imageSource: "ic_ad_pd_medical_reimbursement",
-    from: "1 month",
-    plans: [
-      // {
-      //   title: "Plan A",
-      //   coverage: {
-      //     accidentalDeath: 5000,
-      //     permanentDisablement: 5000,
-      //     medicalReimbursement: 500
-      //   },
-      //   premium: 2.68
-      // },
-      {
-        id: 101,
-        title: "Basic Plan",
-        coverage: {
-          accidentalDeath: 10000,
-          permanentDisablement: 10000,
-          medicalReimbursement: 1000
-        },
-        premium: 5.35
-      },
-      {
-        id: 102,
-        title: "Enhanced Plan",
-        coverage: {
-          accidentalDeath: 20000,
-          permanentDisablement: 20000,
-          medicalReimbursement: 1500
-        },
-        premium: 9.84
-      },
-      {
-        id: 103,
-        title: "Superior Plan",
-        coverage: {
-          accidentalDeath: 40000,
-          permanentDisablement: 40000,
-          medicalReimbursement: 2000
-        },
-        premium: 17.87
-      },
-      {
-        id: 104,
-        title: "Premium Plan",
-        coverage: {
-          accidentalDeath: 100000,
-          permanentDisablement: 100000,
-          medicalReimbursement: 3000
-        },
-        premium: 40.98
-      }
-    ],
-    covered: [
-      "accidentalDeath",
-      "permanentDisablement",
-      "medicalReimbursement",
-      "mrFoodPoisoning",
-      "mrMosquitoBite"
-    ],
-    notCovered,
-    ...paParseData
-  },
-  {
-    id: "pa_wi",
-    title: "Micro Protect360 with Weekly Indemnity",
-    subtitle: "Requires medical record (TCM / Physiotherapy)",
-    imageSource: "ic_ad_pd_weekly_indemnity",
-    from: "1 month",
-    plans: [
-      {
-        id: 101,
-        title: "Basic Plan",
-        coverage: {
-          accidentalDeath: 10000,
-          permanentDisablement: 10000,
-          weeklyIndemnity: 250
-        },
-        premium: 4.09
-      },
-      {
-        id: 102,
-        title: "Enhanced Plan",
-        coverage: {
-          accidentalDeath: 20000,
-          permanentDisablement: 20000,
-          weeklyIndemnity: 300
-        },
-        premium: 7.75
-      },
-      {
-        id: 103,
-        title: "Superior Plan",
-        coverage: {
-          accidentalDeath: 40000,
-          permanentDisablement: 40000,
-          weeklyIndemnity: 350
-        },
-        premium: 14.97
-      },
-      {
-        id: 104,
-        title: "Premium Plan",
-        coverage: {
-          accidentalDeath: 100000,
-          permanentDisablement: 100000,
-          weeklyIndemnity: 400
-        },
-        premium: 36.42
-      }
-    ],
-    covered: ["accidentalDeath", "permanentDisablement", "weeklyIndemnity"],
-    notCovered,
-    ...paParseData
   }
+  // {
+  //   id: "pa_mr",
+  //   title: "Micro Protect360 with Medical Reimbursement",
+  //   subtitle: "Up to $10,000",
+  //   imageSource: "ic_ad_pd_medical_reimbursement",
+  //   from: "1 month",
+  //   plans: [
+  //     // {
+  //     //   title: "Plan A",
+  //     //   coverage: {
+  //     //     accidentalDeath: 5000,
+  //     //     permanentDisablement: 5000,
+  //     //     medicalReimbursement: 500
+  //     //   },
+  //     //   premium: 2.68
+  //     // },
+  //     {
+  //       id: 101,
+  //       title: "Basic Plan",
+  //       coverage: {
+  //         accidentalDeath: 10000,
+  //         permanentDisablement: 10000,
+  //         medicalReimbursement: 1000
+  //       },
+  //       premium: 5.35
+  //     },
+  //     {
+  //       id: 102,
+  //       title: "Enhanced Plan",
+  //       coverage: {
+  //         accidentalDeath: 20000,
+  //         permanentDisablement: 20000,
+  //         medicalReimbursement: 1500
+  //       },
+  //       premium: 9.84
+  //     },
+  //     {
+  //       id: 103,
+  //       title: "Superior Plan",
+  //       coverage: {
+  //         accidentalDeath: 40000,
+  //         permanentDisablement: 40000,
+  //         medicalReimbursement: 2000
+  //       },
+  //       premium: 17.87
+  //     },
+  //     {
+  //       id: 104,
+  //       title: "Premium Plan",
+  //       coverage: {
+  //         accidentalDeath: 100000,
+  //         permanentDisablement: 100000,
+  //         medicalReimbursement: 3000
+  //       },
+  //       premium: 40.98
+  //     }
+  //   ],
+  //   covered: [
+  //     "accidentalDeath",
+  //     "permanentDisablement",
+  //     "medicalReimbursement",
+  //     "mrFoodPoisoning",
+  //     "mrMosquitoBite"
+  //   ],
+  //   notCovered,
+  //   ...paParseData
+  // },
+  // {
+  //   id: "pa_wi",
+  //   title: "Micro Protect360 with Weekly Indemnity",
+  //   subtitle: "Requires medical record (TCM / Physiotherapy)",
+  //   imageSource: "ic_ad_pd_weekly_indemnity",
+  //   from: "1 month",
+  //   plans: [
+  //     {
+  //       id: 101,
+  //       title: "Basic Plan",
+  //       coverage: {
+  //         accidentalDeath: 10000,
+  //         permanentDisablement: 10000,
+  //         weeklyIndemnity: 250
+  //       },
+  //       premium: 4.09
+  //     },
+  //     {
+  //       id: 102,
+  //       title: "Enhanced Plan",
+  //       coverage: {
+  //         accidentalDeath: 20000,
+  //         permanentDisablement: 20000,
+  //         weeklyIndemnity: 300
+  //       },
+  //       premium: 7.75
+  //     },
+  //     {
+  //       id: 103,
+  //       title: "Superior Plan",
+  //       coverage: {
+  //         accidentalDeath: 40000,
+  //         permanentDisablement: 40000,
+  //         weeklyIndemnity: 350
+  //       },
+  //       premium: 14.97
+  //     },
+  //     {
+  //       id: 104,
+  //       title: "Premium Plan",
+  //       coverage: {
+  //         accidentalDeath: 100000,
+  //         permanentDisablement: 100000,
+  //         weeklyIndemnity: 400
+  //       },
+  //       premium: 36.42
+  //     }
+  //   ],
+  //   covered: ["accidentalDeath", "permanentDisablement", "weeklyIndemnity"],
+  //   notCovered,
+  //   ...paParseData
+  // }
 ]);
