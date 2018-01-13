@@ -40,6 +40,7 @@ import Fuse from "fuse.js";
 import { template } from "lodash";
 import { NavigationActions } from "react-navigation";
 import Parse from "parse/react-native";
+import type { NavigationScreenProp } from "react-navigation/src/TypeDefinition";
 
 import { computed, isObservableArray } from "mobx";
 import { observer } from "mobx-react";
@@ -74,7 +75,12 @@ import CHAT_STYLES from "../styles/Chat.styles";
 import { MESSAGE_LOAD_TIME as _MESSAGE_LOAD_TIME } from "react-native-dotenv";
 import { showAlert, crashlyticsLogError } from "../utils";
 import MAPPING from "../../data/mappings";
-import type { QuestionSetType } from "../../../types";
+import type {
+  QuestionSetType,
+  QuestionSetTypeStr,
+  PolicyType,
+  ChatNavigationState
+} from "../../../types";
 
 // Enable playback in silence mode (iOS only)
 Sound.setCategory("Playback");
@@ -104,7 +110,9 @@ function transposePolicyChoiceByTitle() {
 let loggedIn = false;
 
 export default function ChatScreenWrapper() {
-  function wrapper(props: any) {
+  function wrapper(props: {
+    navigation: NavigationScreenProp<ChatNavigationState, *>
+  }) {
     const routeParams = props.navigation.state.params;
     const { questionSet, policy, isStartScreen } = routeParams;
 
@@ -158,12 +166,27 @@ const windowDimensions = Dimensions.get("window");
 const WINDOW_HEIGHT = windowDimensions.height;
 const WINDOW_WIDTH = windowDimensions.width;
 
-type ChatScreenProps = {};
+type ChatScreenProps = {
+  isStartScreen: boolean,
+  questionSet: QuestionSetTypeStr,
+  policy: PolicyType,
+  navigation: NavigationScreenProp<ChatNavigationState, *>
+};
 
 @observer
 class ChatScreen extends Component {
   questions: QuestionSetType;
   isSkippingQuestion: number => boolean;
+  props: ChatScreenProps;
+  renderMessage: Object => Message;
+  renderMessageImage: Object => Image;
+  renderBubble: Object => Bubble;
+  renderMessageText: Object => MessageText;
+  renderComposer: Object => Button | MyDatePicker | Composer;
+  renderSend: Object => Send;
+  renderChatFooter: Object => View | SuggestionList;
+  renderActions: Object => ?View;
+  renderEditButton: () => TouchableOpacity;
 
   @computed
   get questions() {
@@ -172,7 +195,7 @@ class ChatScreen extends Component {
     }
   }
 
-  constructor(props) {
+  constructor(props: ChatScreenProps) {
     super(props);
     this.state = {
       coverageDuration: null,

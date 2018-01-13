@@ -56,6 +56,8 @@ export type QuestionType = {
 
 export type QuestionSetType = Array<QuestionType>;
 
+export type QuestionSetTypeStr = "buy" | "claim";
+
 export type BuyClaimQuestionSetType = {
   buy: QuestionSetType,
   claim: QuestionSetType

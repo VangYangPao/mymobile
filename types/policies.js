@@ -1,3 +1,4 @@
+// @flow
 export type PlanType = {
   title: string,
   coverage: {
