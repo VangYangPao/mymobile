@@ -60,15 +60,11 @@ function validatePurchaseIdNumber(
 
   if (isPA) {
     const PurchaseAccident = Parse.Object.extend("PurchaseAccident");
-    // const months = answers.coverageDuration;
-    // const policyTermsId = MAPPINGS.paTerms[months];
-    innerQuery.lessThanOrEqualTo("policyExpiryDate", tomorrowDate);
+    innerQuery.greaterThanOrEqualTo("policyExpiryDate", tomorrowDate);
     innerQuery.equalTo("policyTypeId", "pa");
     query = new Parse.Query(PurchaseAccident);
     query.matchesQuery("purchaseId", innerQuery);
-    query.greaterThanOrEqualTo("commencementDate", tomorrowDate);
-    // query.equalTo("policyTermsId", policyTermsId);
-    query.equalTo("commencementDate", tomorrowDate);
+    query.lessThanOrEqualTo("commencementDate", tomorrowDate);
   } else if (policyTypeId === "travel") {
     const PurchaseTravel = Parse.Object.extend("PurchaseTravel");
     const startDate = answers.departureDate;
@@ -92,6 +88,7 @@ function validatePurchaseIdNumber(
   };
 
   if (query) {
+    console.log(query);
     return query.find().then(results => {
       if (results.length) {
         return invalidValidationResult;
