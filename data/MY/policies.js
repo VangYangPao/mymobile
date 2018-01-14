@@ -38,17 +38,17 @@ export default (policies = [
         id: 1,
         legacyId: "basic",
         title: "Basic Plan",
-        premium: 35
+        premium: 11
       },
       {
         id: 2,
         legacyId: "enhanced",
-        title: "Enhanced Plan"
+        title: "Premier Plan"
       },
       {
-        id: 84,
+        id: 3,
         legacyId: "superior",
-        title: "Superior Plan"
+        title: "Elite Plan"
       }
       // {
       //   id: 85,
