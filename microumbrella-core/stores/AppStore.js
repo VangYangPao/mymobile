@@ -1,5 +1,6 @@
 // @flow
 import React from "react";
+import { View } from "react-native";
 import { StyleSheet, Image } from "react-native";
 import Parse from "parse/react-native";
 import { observable, computed, asStructure } from "mobx";
@@ -77,6 +78,9 @@ class AppStore {
   }
 
   termsOfUseHTML = termsOfUseHTML;
+
+  screens = {};
+  controllers = {};
 }
 
 const singleton = new AppStore();

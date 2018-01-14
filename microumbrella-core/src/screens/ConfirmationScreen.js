@@ -18,13 +18,13 @@ import promiseRetry from "promise-retry";
 import { Crashlytics } from "react-native-fabric";
 
 import AppStore from "../../stores/AppStore";
+const CheckoutModal = AppStore.screens.CheckoutModal;
 import type { PolicyHolder, PaymentDetails, MUTraveller } from "../types/hlas";
 import { Text } from "../components/defaultComponents";
 import { showAlert, prettifyCamelCase } from "../utils";
 import Page from "../components/Page";
 import Footer from "../components/Footer";
 import PolicyPrice from "../components/PolicyPrice";
-import CheckoutModal from "../components/CheckoutModal";
 import { extractPaRes } from "../utils";
 import MAPPING from "../../data/mappings";
 import {

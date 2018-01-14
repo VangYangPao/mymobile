@@ -19,11 +19,14 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import Ionicon from "react-native-vector-icons/Ionicons";
 import { CreditCardInput } from "react-native-credit-card-input";
 
-import { Text } from "./defaultComponents";
-import AppStore from "../../stores/AppStore";
+import { Text } from "../defaultComponents";
+import AppStore from "../../microumbrella-core/stores/AppStore";
 const colors = AppStore.colors;
-import Button from "./Button";
-import { MENU_ICON_SIZE, navigationStyles } from "../navigations";
+import Button from "../../microumbrella-core/src/components/Button";
+import {
+  MENU_ICON_SIZE,
+  navigationStyles
+} from "../../microumbrella-core/src/navigations";
 
 const windowWidth = Dimensions.get("window").width;
 

@@ -11,6 +11,7 @@ import { coverageDurations } from "../../data/MY/mappings";
 import validations from "./validations";
 import termsOfUseHTML from "../../documents/MY/termsOfUse";
 import * as controllers from "./controllers";
+import * as screens from "./screens";
 
 import type { AppOptionsType } from "../../types";
 
@@ -35,6 +36,7 @@ const appOptions: AppOptionsType = {
   parseAppId: "microumbrella",
   parseServerURL: "https://api-dev-my.microumbrella.com/parse",
   appseeId: "ef742ddea5f2473d8be211c148216f20",
+  screens,
   controllers
 };
 export default appOptions;

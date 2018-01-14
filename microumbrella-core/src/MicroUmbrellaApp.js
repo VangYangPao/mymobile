@@ -436,13 +436,13 @@ export default class MicroUmbrellaApp extends Component {
     }
     delete appOptions.validations;
 
-    if (appOptions.screens !== undefined) {
-      for (let screenName in appOptions.screens) {
-        let screen = appOptions.screens[screenName];
-        AppStore.stackNavigatorScreens[screenName] = { screen };
-      }
-      delete appOptions.screens;
-    }
+    // if (appOptions.screens !== undefined) {
+    //   for (let screenName in appOptions.screens) {
+    //     let screen = appOptions.screens[screenName];
+    //     AppStore.stackNavigatorScreens[screenName] = { screen };
+    //   }
+    //   delete appOptions.screens;
+    // }
 
     for (let i in appOptions) {
       if (typeof appOptions[i] !== "undefined") {

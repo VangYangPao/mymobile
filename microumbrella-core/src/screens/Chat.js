@@ -46,7 +46,6 @@ import { computed, isObservableArray } from "mobx";
 import { observer } from "mobx-react";
 import AppStore from "../../stores/AppStore";
 import { saveNewClaim } from "../parse/claims";
-import CheckoutModal from "../components/CheckoutModal";
 import OverlayModal from "../components/OverlayModal";
 import PolicyDetails from "./PolicyDetails";
 import { showChatScreenExitWarning } from "../navigations";
@@ -1483,7 +1482,6 @@ class ChatScreen extends Component {
   }
 
   render() {
-    // return <CheckoutModal price={0.5} />;
     // return <PolicyDetails policy={{ policyTypeId: "pa" }} />;
     const additionalProps = {};
     let minInputToolbarHeight = 44;
