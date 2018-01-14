@@ -1,6 +1,7 @@
 // @flow
 export { default as occupation } from "./occupations";
 export { default as countries } from "./countries";
+export { default as coverageDurations } from "./coverageDurations";
 
 export const tripType = [
   { label: "One-way trip", value: "SGOW" },

@@ -73,9 +73,16 @@ export type ValidationsType = {
   [string]: ValidationFunctionType
 };
 
+export type ControllerFunctionsType = {
+  getProductQuote: (policy: PolicyType, form: Object) => Promise<number>
+};
+
 export type AppOptionsType = {
+  countryCode: string,
+  currency: string,
   parseAppId: string,
   parseServerURL: string,
+  appseeId: string,
   colors: { [string]: string },
   policies: Array<PolicyType>,
   coverages: { [string]: CoverageType },
@@ -88,7 +95,8 @@ export type AppOptionsType = {
   claimQuestionSets: {
     [string]: Array<QuestionType>
   },
-  fetchPurchases: (parseInstance: Parse, parseUser: Parse.User) => Parse.Query,
-  pushClaimQuestionsOfType: (policyType: string) => void,
-  termsOfUseHTML: string
+  fetchPurchases?: (parseInstance: Parse, parseUser: Parse.User) => Parse.Query,
+  pushClaimQuestionsOfType?: (policyType: string) => void,
+  termsOfUseHTML: string,
+  controllers: ControllerFunctionsType
 };

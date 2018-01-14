@@ -17,6 +17,7 @@ import { NavigationActions } from "react-navigation";
 import promiseRetry from "promise-retry";
 import { Crashlytics } from "react-native-fabric";
 
+import AppStore from "../../stores/AppStore";
 import type { PolicyHolder, PaymentDetails, MUTraveller } from "../types/hlas";
 import { Text } from "../components/defaultComponents";
 import { showAlert, prettifyCamelCase } from "../utils";
@@ -27,9 +28,6 @@ import CheckoutModal from "../components/CheckoutModal";
 import { extractPaRes } from "../utils";
 import MAPPING from "../../data/mappings";
 import {
-  getTravelQuote,
-  getAccidentQuote,
-  getPhoneProtectQuote,
   purchaseTravelPolicy,
   purchaseAccidentPolicy,
   purchasePhonePolicy
@@ -154,46 +152,17 @@ export default class ConfirmationScreen extends Component {
 
   componentDidMount() {
     const { form } = this.props.navigation.state.params;
-    let promise;
-    if (this.policy && this.policy.id === "travel") {
-      const countryid = form.travelDestination;
-      const tripDurationInDays =
-        moment(form.returnDate).diff(form.departureDate, "days") + 1;
-      const planid = form.planIndex;
-      const [hasSpouse, hasChildren] = this.getHasSpouseAndChildren(
-        form.travellers
-      );
-      promise = getTravelQuote(
-        countryid,
-        tripDurationInDays,
-        planid,
-        hasSpouse,
-        hasChildren
-      );
-    } else if (
-      this.policy &&
-      (this.policy.id === "pa" ||
-        this.policy.id === "pa_mr" ||
-        this.policy.id === "pa_wi")
-    ) {
-      const planid = form.planIndex;
-      const termid = MAPPING.paTerms[form.coverageDuration];
-      const optionid = MAPPING.paOptions[this.policy.id];
-      const commencementDate = new Date();
-      promise = getAccidentQuote(planid, termid, optionid, commencementDate);
-    } else if (this.policy && this.policy.id === "mobile") {
-      promise = getPhoneProtectQuote();
-    }
+
+    const promise = AppStore.controllers.getProductQuote(this.policy, form);
+
     // promiseRetry((retry: Function, number: number) => {
     //   if (promise) {
     //     return promise.catch(retry);
     //   }
     // }, RETRY_OPTIONS)
     promise
-      .then(res => {
-        // throw new Error("yolo");
-        console.log(res);
-        this.setState({ totalPremium: parseFloat(res.data) });
+      .then(totalPremium => {
+        this.setState({ totalPremium });
       })
       .catch(err => {
         console.error(err);

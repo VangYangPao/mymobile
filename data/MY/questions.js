@@ -23,6 +23,8 @@ const questionTravelPA: QuestionSetType = [
     responseType: "number",
     id: "planIndex"
   },
+
+  // Travel PA
   {
     question: "Is it a return or one-way trip?",
     responseType: ["choice", "string"],
@@ -41,12 +43,6 @@ const questionTravelPA: QuestionSetType = [
       keys: ["label"],
       threshold: 0.7
     }
-  },
-  {
-    question: "Coverage Period",
-    responseType: "number",
-    id: "coverageDuration",
-    include: ["pa"]
   },
   {
     question: "When are you departing?",
@@ -142,6 +138,80 @@ const questionTravelPA: QuestionSetType = [
       }
     ]
   },
+
+  // Accident PA
+  {
+    question: "Coverage Period",
+    responseType: "number",
+    id: "coverageDuration",
+    include: ["pa"]
+  },
+  {
+    question:
+      "Have you and/or any named person application has been rejected by any Insurance/ Takaful operator before?",
+    responseType: ["boolean", "choice"],
+    id: "hasPerson",
+    label: "REJECTED PERSON",
+    choices: [
+      {
+        label: "Yes",
+        value: true
+      },
+      {
+        label: "No",
+        value: false
+      }
+    ],
+    include: ["pa"]
+  },
+  {
+    question: "Key in your personal details.",
+    responseType: "table",
+    id: "travellers",
+    include: ["travel"],
+    columns: [
+      {
+        label: "First Name",
+        id: "firstName",
+        responseLength: 60,
+        responseType: ["string"]
+      },
+      {
+        label: "Last Name",
+        id: "lastName",
+        responseLength: 60,
+        responseType: ["string"]
+      },
+      {
+        label: "ID Type",
+        id: "idType",
+        responseType: ["choice", "string"],
+        choices: mappings.IDType
+      },
+      {
+        label: "ID Number (NRIC/ Passport)",
+        id: "idType",
+        responseType: "string"
+      },
+      {
+        label: "Date of birth",
+        id: "DOB",
+        responseType: "date",
+        pastOnly: true
+      },
+      {
+        label: "Email",
+        id: "email",
+        responseType: "string"
+      },
+      {
+        question: "Mobile Phone No",
+        responseType: ["string", "mobile"],
+        id: "mobile"
+      }
+    ],
+    include: ["pa"]
+  },
   {
     question:
       "You hereby declare that you are in good health, free from physical deformity, mental or any kind of medical disorder at the commencement date of enrolment.",
@@ -151,6 +221,11 @@ const questionTravelPA: QuestionSetType = [
       { label: "No, I'm not", value: false }
     ],
     id: "healthDeclaration"
+  },
+  {
+    question:
+      "Thank you <%= firstName %> <%= lastName %> for the information. I will now bring you to the confirmation page.",
+    responseType: null
   }
 ];
 

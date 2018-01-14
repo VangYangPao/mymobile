@@ -30,7 +30,6 @@ import ModalPicker from "react-native-modal-picker";
 
 import AppStore from "../../stores/AppStore";
 const colors = AppStore.colors;
-import COVERAGE_DURATIONS from "../../data/coverageDurations";
 import RangeSlider from "./RangeSlider";
 import { Text } from "./defaultComponents";
 import { getDateStr, addCommas, showAlert } from "../utils";
@@ -99,8 +98,8 @@ const SLIDER_RADIUS_PERCENT = 0.15;
 export class CoverageDurationWidget extends Component {
   constructor(props) {
     super(props);
-    this.coverageDurations = COVERAGE_DURATIONS;
-    const initialCoverageDuration = this.coverageDurations[0];
+    const coverageDurations = AppStore.coverageDurations;
+    const initialCoverageDuration = coverageDurations[0];
     this.state = {
       months: initialCoverageDuration
     };
@@ -108,7 +107,7 @@ export class CoverageDurationWidget extends Component {
   }
 
   render() {
-    const elements = this.coverageDurations.map(d => ({
+    const elements = AppStore.coverageDurations.map(d => ({
       label: d + "m",
       value: d
     }));
@@ -1088,7 +1087,7 @@ export class SuggestionList extends Component {
           keyboardShouldPersistTaps="always"
           data={this.props.items}
           renderItem={this.renderSuggestion}
-          keyExtractor={item => item.value}
+          keyExtractor={(item, index) => index}
         />
       );
     } else if (this.props.searchValue && !this.props.items.length) {
