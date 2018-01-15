@@ -18,7 +18,6 @@ import promiseRetry from "promise-retry";
 import { Crashlytics } from "react-native-fabric";
 
 import AppStore from "../../stores/AppStore";
-const CheckoutModal = AppStore.screens.CheckoutModal;
 import type { PolicyHolder, PaymentDetails, MUTraveller } from "../types/hlas";
 import { Text } from "../components/defaultComponents";
 import { showAlert, prettifyCamelCase } from "../utils";
@@ -427,7 +426,7 @@ export default class ConfirmationScreen extends Component {
       formArr.push({ key, value: form[key] });
     }
     const modal = (
-      <CheckoutModal
+      <AppStore.screens.CheckoutModal
         price={this.state.totalPremium}
         purchasing={this.state.purchasing}
         onCheckout={this.handleCheckout}

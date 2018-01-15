@@ -1315,7 +1315,6 @@ class ChatScreen extends Component {
     const dateTimeIndex = responseType.indexOf("datetime");
 
     if (currentQuestionIndex >= this.questions.length - 1) {
-      console.log("pass");
       return (
         <Button
           onPress={this.handleProceedButtonPress}
