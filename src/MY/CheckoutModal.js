@@ -21,6 +21,7 @@ import {
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Ionicon from "react-native-vector-icons/Ionicons";
 import { CreditCardInput } from "react-native-credit-card-input";
+import sha1 from "sha1";
 
 import { Text } from "../defaultComponents";
 import AppStore from "../../microumbrella-core/stores/AppStore";
@@ -30,13 +31,31 @@ import {
   MENU_ICON_SIZE,
   navigationStyles
 } from "../../microumbrella-core/src/navigations";
+import { objectToUrlParams } from "../utils";
 
 const windowWidth = Dimensions.get("window").width;
+
+const CHECKOUT_URL = "https://api-dev-my.microumbrella.com/checkout.php";
+const RETURN_URL = "https://api-dev-my.microumbrella.com/return.php";
+const WEBCASH_STAGING_ENQUIRY = "https://staging.webcash.com.my/enquiry.php";
+const LIVE_MERCHANT_SECRET = "btIgLUk2rtiAnqa5";
+const LIVE_MERCHANT_ID = "80002922";
+const UAT_MERCHANT_SECRET = "123456";
+const UAT_MERCHANT_ID = "80000155";
 
 type WebcashViewProps = {
   orderAmount: number,
   orderPerson: string,
   orderLocation: string
+};
+
+type NavigationStateChangeType = {
+  canGoBack: boolean,
+  canGoForward: boolean,
+  loading: boolean,
+  title: string,
+  url: string,
+  target: number
 };
 
 class WebcashView extends Component {
@@ -47,16 +66,35 @@ class WebcashView extends Component {
   };
   handleLoadError: Error => void;
   handleLoadHTML: string => void;
+  webcashPayload: Object;
 
   constructor(props: WebcashViewProps) {
     super(props);
     this.state = { webcashHTML: null, errMessage: null };
     this.handleLoadError = this.handleLoadError.bind(this);
     this.handleLoadHTML = this.handleLoadHTML.bind(this);
+
+    const random = Math.floor(Math.random() * 999999);
+    const orderRef = "Test" + random;
+
+    const orderAmountStr = this.props.orderAmount.toFixed(2).replace(".", "");
+    const merchantHashValue = sha1(
+      UAT_MERCHANT_SECRET + UAT_MERCHANT_ID + orderRef + orderAmountStr
+    );
+
+    this.webcashPayload = {
+      ord_date: new Date(),
+      ord_totalamt: props.orderAmount.toFixed(2),
+      ord_shipname: props.orderPerson,
+      ord_shipcountry: props.orderLocation,
+      ord_mercref: orderRef,
+      ord_mercID: UAT_MERCHANT_ID,
+      merchant_hashvalue: merchantHashValue,
+      ord_returnURL: RETURN_URL
+    };
   }
 
-  handleLoadError(err) {
-    console.warn(err);
+  handleLoadError() {
     NetInfo.fetch().done(connectionType => {
       if (connectionType === "none") {
         this.setState({
@@ -78,73 +116,62 @@ class WebcashView extends Component {
     }, 500);
   }
 
-  componentDidMount() {
-    const url = "https://webcash.com.my/wcgatewayinit.php";
-    const random = Math.floor(Math.random() * 999999);
-    const ord_mercref = "Test" + random;
-    const ord_mercID = "80000321";
-    const merchant_hashvalue = "ASNXIF(@JDS(80000321Test40190294950";
-    const ord_returnURL = "http://www.scan2fit.com/sftailor/return.php";
+  handleNavigationStateChange(stateChange: NavigationStateChangeType) {
+    if (stateChange.url === WEBCASH_STAGING_ENQUIRY) {
+    }
+  }
 
-    const payload = {
-      ord_date: new Date(),
-      ord_totalamt: this.props.orderAmount,
-      ord_shipname: this.props.orderPerson,
-      ord_shipcountry: this.props.orderLocation,
-      ord_mercref: ord_mercref,
-      ord_mercID: ord_mercID,
-      merchant_hashvalue: merchant_hashvalue,
-      ord_returnURL: ord_returnURL
-    };
-
-    const onLoadHTML = webcashHTML => {};
-
-    fetch(url, {
-      method: "POST",
-      headers: {
-        Accept: "text/html,application/json",
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(payload)
-    })
-      .then(response => response.text())
-      .then(this.handleLoadHTML)
-      .catch(this.handleLoadError)
-      .done();
+  handleWebViewMessage(event: { nativeEvent: { data: string } }) {
+    const responseCode = event.nativeEvent.data;
+    if (responseCode === "S") {
+      console.log("Success!");
+    }
   }
 
   render() {
-    if (!this.state.webcashHTML) {
-      if (this.state.errMessage) {
-        return (
-          <View style={styles.webcashLoading}>
-            <Text
-              style={[styles.purchaseLoadingText, styles.webcashLoadingText]}
-            >
-              {this.state.errMessage}
-            </Text>
-          </View>
-        );
-      }
+    if (this.state.errMessage) {
       return (
         <View style={styles.webcashLoading}>
-          <ActivityIndicator color="black" size="large" />
           <Text style={[styles.purchaseLoadingText, styles.webcashLoadingText]}>
-            Loading payment gateway...
+            {this.state.errMessage}
           </Text>
         </View>
       );
     }
+
+    const loadingView = (
+      <View style={styles.webcashLoading}>
+        <ActivityIndicator color="black" size="large" />
+        <Text style={[styles.purchaseLoadingText, styles.webcashLoadingText]}>
+          Loading payment gateway...
+        </Text>
+      </View>
+    );
+
+    const urlParams = objectToUrlParams(this.webcashPayload);
+    const checkoutURL = `${CHECKOUT_URL}?${urlParams}`;
+
+    // const injectedJavaScript = `if (window.location.href === ${WEBCASH_STAGING_ENQUIRY}) { window.postMessage(document.childNodes[0].innerText) } `;
+    const injectedJavaScript = `setInterval(function() {
+      if (window.location.href === '${WEBCASH_STAGING_ENQUIRY}') {
+        window.postMessage(document.childNodes[0].innerText);
+      }
+    }, 1000)`;
+
     return (
       <WebView
         style={styles.flex1}
         source={{
-          html: this.state.webcashHTML,
-          baseUrl: "https://webcash.com.my"
+          uri: checkoutURL
         }}
         javaScriptEnabled={true}
         domStorageEnabled={true}
-        startInLoadingState={false}
+        startInLoadingState={true}
+        onError={this.handleLoadError}
+        onNavigationStateChange={this.handleNavigationStateChange}
+        renderLoading={() => loadingView}
+        onMessage={this.handleWebViewMessage}
+        injectedJavaScript={injectedJavaScript}
       />
     );
   }
