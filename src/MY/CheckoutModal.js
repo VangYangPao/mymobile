@@ -46,7 +46,8 @@ const UAT_MERCHANT_ID = "80000155";
 type WebcashViewProps = {
   orderAmount: number,
   orderPerson: string,
-  orderLocation: string
+  orderLocation: string,
+  onCheckout: (paymentForm?: Object) => void
 };
 
 type NavigationStateChangeType = {
@@ -62,17 +63,19 @@ class WebcashView extends Component {
   props: WebcashViewProps;
   state: {
     webcashHTML: ?string,
-    errMessage: ?string
+    errMessage: ?string,
+    checkingOut: boolean
   };
   handleLoadError: Error => void;
   handleLoadHTML: string => void;
+  handleWebViewMessage: ({ nativeEvent: { data: string } }) => void;
   webcashPayload: Object;
 
   constructor(props: WebcashViewProps) {
     super(props);
-    this.state = { webcashHTML: null, errMessage: null };
+    this.state = { webcashHTML: null, errMessage: null, checkingOut: false };
     this.handleLoadError = this.handleLoadError.bind(this);
-    this.handleLoadHTML = this.handleLoadHTML.bind(this);
+    this.handleWebViewMessage = this.handleWebViewMessage.bind(this);
 
     const random = Math.floor(Math.random() * 999999);
     const orderRef = "Test" + random;
@@ -116,15 +119,16 @@ class WebcashView extends Component {
     }, 500);
   }
 
-  handleNavigationStateChange(stateChange: NavigationStateChangeType) {
-    if (stateChange.url === WEBCASH_STAGING_ENQUIRY) {
-    }
-  }
-
   handleWebViewMessage(event: { nativeEvent: { data: string } }) {
     const responseCode = event.nativeEvent.data;
     if (responseCode === "S") {
-      console.log("Success!");
+      if (
+        typeof this.props.onCheckout === "function" &&
+        !this.state.checkingOut
+      ) {
+        this.setState({ checkingOut: true });
+        this.props.onCheckout();
+      }
     }
   }
 
@@ -168,7 +172,6 @@ class WebcashView extends Component {
         domStorageEnabled={true}
         startInLoadingState={true}
         onError={this.handleLoadError}
-        onNavigationStateChange={this.handleNavigationStateChange}
         renderLoading={() => loadingView}
         onMessage={this.handleWebViewMessage}
         injectedJavaScript={injectedJavaScript}
@@ -219,6 +222,7 @@ export default class CheckoutModal extends Component {
                 orderAmount={orderAmount}
                 orderPerson={orderPerson}
                 orderLocation={orderLocation}
+                onCheckout={this.props.onCheckout}
               />
             </View>
           </View>

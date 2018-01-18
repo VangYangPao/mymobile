@@ -34,6 +34,7 @@ import {
 import { saveNewPurchase } from "../parse/purchase";
 import { CONFIRMATION_PAGE_LOAD_TIME } from "react-native-dotenv";
 const PAGE_LOAD_TIME = parseInt(CONFIRMATION_PAGE_LOAD_TIME, 10);
+import type { PolicyType } from "../../../types";
 
 type PaymentForm = {
   type: "visa" | "master-card",
@@ -296,113 +297,124 @@ export default class ConfirmationScreen extends Component {
       });
   }
 
-  handleCheckout(paymentForm: PaymentForm) {
-    this.setState({ purchasing: true });
-    const { form } = this.props.navigation.state.params;
-    const idNumberTypeMap = { nric: 0, passport: 1 };
-    const policyHolder = {
-      Surname: form.lastName,
-      GivenName: form.firstName,
-      IDNumber: form.idNumber,
-      IDNumberType: idNumberTypeMap[form.idNumberType],
-      DateOfBirth: "1988-07-22",
-      GenderID: 1,
-      MobileTelephone: "91234567",
-      Email: form.email,
-      UnitNumber: "11",
-      BlockHouseNumber: "11",
-      BuildingName: "sample string 12",
-      StreetName: "sample string 13",
-      PostalCode: "089057"
-    };
-    const cardTypes = { "master-card": 2, visa: 3 };
-    const NameOnCard = paymentForm.name;
-    const CardNumber = paymentForm.number.replace(/ /g, "");
-    const CardType = cardTypes[paymentForm.type];
-    const CardSecurityCode = paymentForm.cvc;
-    let [CardExpiryMonth, CardExpiryYear] = paymentForm.expiry.split("/");
-    CardExpiryMonth = parseInt(CardExpiryMonth, 10);
-    CardExpiryYear = 2000 + parseInt(CardExpiryYear, 10);
-    const paymentDetails: PaymentDetails = {
-      NameOnCard,
-      CardNumber,
-      CardType,
-      CardSecurityCode,
-      CardExpiryYear,
-      CardExpiryMonth
-    };
-    let promise;
-    if (this.policy && this.policy.id === "travel") {
-      const countryid = form.travelDestination;
-      const startDate = form.departureDate;
-      const endDate = form.returnDate;
-      const planid = form.planIndex;
-      const travellers = form.travellers;
-      const [hasSpouse, hasChildren] = this.getHasSpouseAndChildren(
-        form.travellers
+  handleCheckout(policy: PolicyType, premium: number, form: Object) {
+    return (paymentForm: Object) => {
+      // this.setState({ purchasing: true });
+      AppStore.controllers.purchaseProduct(
+        this.policy,
+        this.state.totalPremium,
+        form,
+        paymentForm
       );
-      if (this.state.totalPremium) {
-        promise = purchaseTravelPolicy(
-          this.state.totalPremium,
-          countryid,
-          startDate,
-          endDate,
-          planid,
-          travellers,
-          policyHolder,
-          paymentDetails,
-          extractPaRes
-          // this.handleACSRedirection
-        );
-      }
-    } else if (
-      this.policy &&
-      (this.policy.id === "pa" ||
-        this.policy.id === "pa_mr" ||
-        this.policy.id === "pa_wi")
-    ) {
-      if (this.state.totalPremium) {
-        const planid = form.planIndex;
-        const policytermid = MAPPING.paTerms[form.coverageDuration];
-        const occupationid = form.occupation;
-        const optionid = MAPPING.paOptions[this.policy.id];
-        promise = purchaseAccidentPolicy(
-          this.state.totalPremium,
-          planid,
-          policytermid,
-          optionid,
-          occupationid,
-          policyHolder,
-          paymentDetails,
-          extractPaRes
-          // this.handleACSRedirection
-        );
-      }
-    } else if (this.policy && this.policy.id === "mobile") {
-      if (this.state.totalPremium) {
-        const policyCommencementDate = new Date();
-        const mobileDetails = {
-          brandID: form.brandID,
-          modelID: form.modelID,
-          purchaseDate: form.purchaseDate,
-          serialNo: form.serialNo,
-          purchasePlaceID: 4
-        };
-        promise = purchasePhonePolicy(
-          this.state.totalPremium,
-          policyCommencementDate,
-          mobileDetails,
-          policyHolder,
-          paymentDetails,
-          extractPaRes
-          // this.handleACSRedirection
-        );
-      }
-    }
-    if (promise) {
-      this.handlePurchaseResult(promise);
-    }
+    };
   }
+
+  // handleCheckout(paymentForm: PaymentForm) {
+  //   this.setState({ purchasing: true });
+  //   const idNumberTypeMap = { nric: 0, passport: 1 };
+  //   const policyHolder = {
+  //     Surname: form.lastName,
+  //     GivenName: form.firstName,
+  //     IDNumber: form.idNumber,
+  //     IDNumberType: idNumberTypeMap[form.idNumberType],
+  //     DateOfBirth: "1988-07-22",
+  //     GenderID: 1,
+  //     MobileTelephone: "91234567",
+  //     Email: form.email,
+  //     UnitNumber: "11",
+  //     BlockHouseNumber: "11",
+  //     BuildingName: "sample string 12",
+  //     StreetName: "sample string 13",
+  //     PostalCode: "089057"
+  //   };
+  //   const cardTypes = { "master-card": 2, visa: 3 };
+  //   const NameOnCard = paymentForm.name;
+  //   const CardNumber = paymentForm.number.replace(/ /g, "");
+  //   const CardType = cardTypes[paymentForm.type];
+  //   const CardSecurityCode = paymentForm.cvc;
+  //   let [CardExpiryMonth, CardExpiryYear] = paymentForm.expiry.split("/");
+  //   CardExpiryMonth = parseInt(CardExpiryMonth, 10);
+  //   CardExpiryYear = 2000 + parseInt(CardExpiryYear, 10);
+  //   const paymentDetails: PaymentDetails = {
+  //     NameOnCard,
+  //     CardNumber,
+  //     CardType,
+  //     CardSecurityCode,
+  //     CardExpiryYear,
+  //     CardExpiryMonth
+  //   };
+  //   let promise;
+  //   if (this.policy && this.policy.id === "travel") {
+  //     const countryid = form.travelDestination;
+  //     const startDate = form.departureDate;
+  //     const endDate = form.returnDate;
+  //     const planid = form.planIndex;
+  //     const travellers = form.travellers;
+  //     const [hasSpouse, hasChildren] = this.getHasSpouseAndChildren(
+  //       form.travellers
+  //     );
+  //     if (this.state.totalPremium) {
+  //       promise = purchaseTravelPolicy(
+  //         this.state.totalPremium,
+  //         countryid,
+  //         startDate,
+  //         endDate,
+  //         planid,
+  //         travellers,
+  //         policyHolder,
+  //         paymentDetails,
+  //         extractPaRes
+  //         // this.handleACSRedirection
+  //       );
+  //     }
+  //   } else if (
+  //     this.policy &&
+  //     (this.policy.id === "pa" ||
+  //       this.policy.id === "pa_mr" ||
+  //       this.policy.id === "pa_wi")
+  //   ) {
+  //     if (this.state.totalPremium) {
+  //       const planid = form.planIndex;
+  //       const policytermid = MAPPING.paTerms[form.coverageDuration];
+  //       const occupationid = form.occupation;
+  //       const optionid = MAPPING.paOptions[this.policy.id];
+  //       promise = purchaseAccidentPolicy(
+  //         this.state.totalPremium,
+  //         planid,
+  //         policytermid,
+  //         optionid,
+  //         occupationid,
+  //         policyHolder,
+  //         paymentDetails,
+  //         extractPaRes
+  //         // this.handleACSRedirection
+  //       );
+  //     }
+  //   } else if (this.policy && this.policy.id === "mobile") {
+  //     if (this.state.totalPremium) {
+  //       const policyCommencementDate = new Date();
+  //       const mobileDetails = {
+  //         brandID: form.brandID,
+  //         modelID: form.modelID,
+  //         purchaseDate: form.purchaseDate,
+  //         serialNo: form.serialNo,
+  //         purchasePlaceID: 4
+  //       };
+  //       promise = purchasePhonePolicy(
+  //         this.state.totalPremium,
+  //         policyCommencementDate,
+  //         mobileDetails,
+  //         policyHolder,
+  //         paymentDetails,
+  //         extractPaRes
+  //         // this.handleACSRedirection
+  //       );
+  //     }
+  //   }
+  //   if (promise) {
+  //     this.handlePurchaseResult(promise);
+  //   }
+  // }
 
   renderField(key: string, value: any) {
     const label = MAPPING.fieldMapping[key]
@@ -429,7 +441,11 @@ export default class ConfirmationScreen extends Component {
       <AppStore.screens.CheckoutModal
         price={this.state.totalPremium}
         purchasing={this.state.purchasing}
-        onCheckout={this.handleCheckout}
+        onCheckout={this.handleCheckout(
+          this.policy,
+          this.state.totalPremium,
+          form
+        )}
         onClose={() => this.setState({ renderCheckoutModal: false })}
       />
     );

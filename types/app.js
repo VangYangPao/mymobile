@@ -74,7 +74,13 @@ export type ValidationsType = {
 };
 
 export type ControllerFunctionsType = {
-  getProductQuote: (policy: PolicyType, form: Object) => Promise<number>
+  getProductQuote: (policy: PolicyType, form: Object) => Promise<number>,
+  purchaseProduct: (
+    policy: PolicyType,
+    premium: number,
+    form: Object,
+    paymentForm: Object
+  ) => Promise<Parse.Object>
 };
 
 export type AppOptionsType = {
