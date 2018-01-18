@@ -155,12 +155,13 @@ class WebcashView extends Component {
     const urlParams = objectToUrlParams(this.webcashPayload);
     const checkoutURL = `${CHECKOUT_URL}?${urlParams}`;
 
-    // const injectedJavaScript = `if (window.location.href === ${WEBCASH_STAGING_ENQUIRY}) { window.postMessage(document.childNodes[0].innerText) } `;
+    const pollInterval = 200;
     const injectedJavaScript = `setInterval(function() {
       if (window.location.href === '${WEBCASH_STAGING_ENQUIRY}') {
+        document.childNodes[0].style.display = 'none';
         window.postMessage(document.childNodes[0].innerText);
       }
-    }, 1000)`;
+    }, ${pollInterval})`;
 
     return (
       <WebView

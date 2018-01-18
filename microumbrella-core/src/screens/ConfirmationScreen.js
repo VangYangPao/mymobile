@@ -201,46 +201,48 @@ export default class ConfirmationScreen extends Component {
   }
 
   handlePurchaseResult(promise: Promise<any>) {
+    console.log("entered handlePurchaseResult");
     const { currentUser } = this.props.navigation.state.params;
+    // promise
+    //   .then(res => {
+    //     console.log("purchase complete", JSON.stringify(res));
+    //     const {
+    //       policyTypeId,
+    //       pasAppId,
+    //       policyId,
+    //       webAppId,
+    //       premium,
+    //       planId,
+    //       optionId,
+    //       autoRenew,
+    //       policyholderIdType,
+    //       policyholderIdNo,
+    //       tmTxnRef,
+    //       tmVerifyEnrolment,
+    //       tmPaymentSuccessRes,
+    //       additionalAttributes
+    //     } = res.data;
+    //     return saveNewPurchase(
+    //       policyTypeId,
+    //       pasAppId,
+    //       policyId,
+    //       webAppId,
+    //       premium,
+    //       planId,
+    //       optionId,
+    //       autoRenew,
+    //       policyholderIdType,
+    //       policyholderIdNo,
+    //       currentUser,
+    //       tmTxnRef,
+    //       tmVerifyEnrolment,
+    //       tmPaymentSuccessRes,
+    //       additionalAttributes
+    //     );
+    //   })
     promise
-      .then(res => {
-        console.log("purchase complete", JSON.stringify(res));
-        const {
-          policyTypeId,
-          pasAppId,
-          policyId,
-          webAppId,
-          premium,
-          planId,
-          optionId,
-          autoRenew,
-          policyholderIdType,
-          policyholderIdNo,
-          tmTxnRef,
-          tmVerifyEnrolment,
-          tmPaymentSuccessRes,
-          additionalAttributes
-        } = res.data;
-        return saveNewPurchase(
-          policyTypeId,
-          pasAppId,
-          policyId,
-          webAppId,
-          premium,
-          planId,
-          optionId,
-          autoRenew,
-          policyholderIdType,
-          policyholderIdNo,
-          currentUser,
-          tmTxnRef,
-          tmVerifyEnrolment,
-          tmPaymentSuccessRes,
-          additionalAttributes
-        );
-      })
       .then(purchase => {
-        console.log(purchase);
+        console.log("entered promise");
         const resetToStatusScreen = () =>
           this.props.screenProps.rootNavigation.dispatch(
             redirectToStatus(currentUser)
@@ -300,12 +302,13 @@ export default class ConfirmationScreen extends Component {
   handleCheckout(policy: PolicyType, premium: number, form: Object) {
     return (paymentForm: Object) => {
       // this.setState({ purchasing: true });
-      AppStore.controllers.purchaseProduct(
+      const promise = AppStore.controllers.purchaseProduct(
         this.policy,
         this.state.totalPremium,
         form,
         paymentForm
       );
+      this.handlePurchaseResult(promise);
     };
   }
 

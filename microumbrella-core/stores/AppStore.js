@@ -15,6 +15,7 @@ import travelClaimQuestions from "../../data/SG/travelClaimQuestions";
 import mobileClaimQuestions from "../../data/SG/mobileClaimQuestions";
 import { QUESTION_SETS } from "../../data/SG/questions";
 import termsOfUseHTML from "../../documents/SG/termsOfUse";
+import type { AppOptionsType } from "../../../types";
 
 const styles = StyleSheet.create({
   authBackgroundImage: {
@@ -79,8 +80,8 @@ class AppStore {
 
   termsOfUseHTML = termsOfUseHTML;
 
-  screens = {};
-  controllers = {};
+  screens: { [string]: Object } = {};
+  controllers: { [string]: Function } = {};
 }
 
 const singleton = new AppStore();

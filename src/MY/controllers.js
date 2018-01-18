@@ -21,6 +21,6 @@ export function purchaseProduct(
   paymentForm: Object
 ): Promise<Parse.Object> {
   return new Promise((resolve, reject) => {
-    console.log("pass");
+    resolve();
   });
 }
