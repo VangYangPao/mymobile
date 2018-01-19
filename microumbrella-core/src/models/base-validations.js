@@ -45,16 +45,6 @@ function notEmptyString(str) {
   );
 }
 
-function validatePhoneNumber(phoneNumber) {
-  const isValid =
-    (phoneNumber[0] === "8" || phoneNumber[0] === "9") &&
-    phoneNumber.length === 8;
-  return new ValidationResult(
-    isValid,
-    isValid || "Please enter a valid phone number"
-  );
-}
-
 function validateImages(arr) {
   const isValid = true;
   return new ValidationResult(
@@ -180,7 +170,6 @@ export const baseValidations = {
   email: validateEmail,
   string: notEmptyString,
   number: validateNumber,
-  phoneNumber: validatePhoneNumber,
   images: validateImages,
   imei: validateImei,
   imageTable: () => new ValidationResult(true, true),

@@ -4,7 +4,8 @@ import INVALID_OCCUPATIONS from "../../data/SG/invalidOccupations";
 
 import AppStore from "../../microumbrella-core-sg/stores/AppStore";
 
-import type { ValidationsType, ValidationResult } from "../../types";
+import { ValidationResult } from "../../microumbrella-core-sg/src/models/base-validations";
+import type { ValidationsType } from "../../types";
 
 function validatePAOccupation(occupationId: number) {
   const foundOccupation = INVALID_OCCUPATIONS.find(
@@ -104,9 +105,20 @@ function validatePurchaseIdNumber(
   });
 }
 
+function validatePhoneNumber(phoneNumber) {
+  const isValid =
+    (phoneNumber[0] === "8" || phoneNumber[0] === "9") &&
+    phoneNumber.length === 8;
+  return {
+    isValid,
+    errMessage: isValid || "Please enter a valid phone number"
+  };
+}
+
 const validations: ValidationsType = {
   occupation: validatePAOccupation,
   purchaseDate: validatePhonePurchaseDate,
-  purchaseIdNumber: validatePurchaseIdNumber
+  purchaseIdNumber: validatePurchaseIdNumber,
+  phoneNumber: validatePhoneNumber
 };
 export default validations;

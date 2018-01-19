@@ -37,6 +37,7 @@ class AppStore {
   @observable colors: { [string]: string } = colors;
   policies: Array<PolicyType> = policies;
   coverages: { [string]: CoverageType } = coverages;
+  @observable strings: { [string]: string } = {};
 
   @observable stackNavigatorScreens = {};
   @observable

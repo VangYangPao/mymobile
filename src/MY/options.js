@@ -12,6 +12,7 @@ import validations from "./validations";
 import termsOfUseHTML from "../../documents/MY/termsOfUse";
 import * as controllers from "./controllers";
 import * as screens from "./screens";
+import strings from "../../data/MY/strings";
 
 import type { AppOptionsType } from "../../types";
 
@@ -31,6 +32,7 @@ const appOptions: AppOptionsType = {
   questionSets,
   claimQuestionSets,
   colors,
+  strings,
   validations,
   termsOfUseHTML,
   parseAppId: "microumbrella",

@@ -126,14 +126,13 @@ const ConfirmPasswordType = mysubtype(t.String, p => {
 
 const PhoneType = mysubtype(t.String, p => {
   if (!p) return "Phone number must not be empty";
-  const hasEightOrNine = p[0] === "8" || p[0] === "9";
-  if (!hasEightOrNine) {
-    return "Phone number must begin with 8 or 9";
+  const validationResult = AppStore.validations.phoneNumber(p);
+  if (!validationResult.isValid) {
+    return validationResult.errMessage;
   }
 });
 
 const NameType = mysubtype(t.String, name => {
-  console.log(name, typeof name, !name);
   if (!name) return "Name must not be empty";
   const namePattern = /^([A-Za-z ,\.@/\(\)])+$/;
   const match = name.match(namePattern);

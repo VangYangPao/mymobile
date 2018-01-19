@@ -10,6 +10,10 @@ import {
 import { Crashlytics } from "react-native-fabric";
 import promiseRetry from "promise-retry";
 
+export function capitalizeString(string: string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 export function crashlyticsLogError(err: Error) {
   if (Platform.OS === "android") {
     Crashlytics.logException(err.message + ": " + err.stack);
