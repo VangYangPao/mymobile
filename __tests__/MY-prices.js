@@ -1,6 +1,6 @@
 // @flow
 import moment from "moment";
-import { getTravelPremium } from "../src/MY/controllers";
+import { getTravelPremium } from "../src/MY/premiums";
 
 it("calculates single trip premium for IO correctly", () => {
   const startDate = new Date();
@@ -180,4 +180,64 @@ it("calculates single trip premium for IF correctly", () => {
   expect(premium).toEqual(73 + 18 * 2);
   premium = getTravelPremium(startDate, endDate, false, false, true, 4, 3, 4);
   expect(premium).toEqual(216 + 54 * 2);
+});
+
+it("calculates single trip premium for IF with additional child correctly", () => {
+  const startDate = new Date();
+  let endDate = moment(new Date())
+    .add(1, "day")
+    .toDate();
+  let premium = getTravelPremium(
+    startDate,
+    endDate,
+    false,
+    false,
+    true,
+    5,
+    1,
+    2
+  );
+  expect(premium).toEqual(27 + 4);
+  premium = getTravelPremium(startDate, endDate, false, false, true, 5, 3, 4);
+  expect(premium).toEqual(80 + 10);
+
+  endDate = moment(new Date())
+    .add(6, "day")
+    .toDate();
+  premium = getTravelPremium(startDate, endDate, false, false, true, 5, 1, 2);
+  expect(premium).toEqual(39 + 5);
+  premium = getTravelPremium(startDate, endDate, false, false, true, 5, 3, 4);
+  expect(premium).toEqual(115 + 14);
+
+  endDate = moment(new Date())
+    .add(11, "day")
+    .toDate();
+  premium = getTravelPremium(startDate, endDate, false, false, true, 5, 1, 2);
+  expect(premium).toEqual(59 + 8);
+  premium = getTravelPremium(startDate, endDate, false, false, true, 5, 3, 4);
+  expect(premium).toEqual(173 + 22);
+
+  endDate = moment(new Date())
+    .add(19, "day")
+    .toDate();
+  premium = getTravelPremium(startDate, endDate, false, false, true, 5, 1, 2);
+  expect(premium).toEqual(73 + 9);
+  premium = getTravelPremium(startDate, endDate, false, false, true, 5, 3, 4);
+  expect(premium).toEqual(216 + 27);
+
+  endDate = moment(new Date())
+    .add(31 + 7, "day")
+    .toDate();
+  premium = getTravelPremium(startDate, endDate, false, false, true, 5, 1, 2);
+  expect(premium).toEqual(73 + 18 + 9 + 2);
+  premium = getTravelPremium(startDate, endDate, false, false, true, 5, 3, 4);
+  expect(premium).toEqual(216 + 54 + 27 + 7);
+
+  endDate = moment(new Date())
+    .add(31 + 14, "day")
+    .toDate();
+  premium = getTravelPremium(startDate, endDate, false, false, true, 5, 1, 2);
+  expect(premium).toEqual(73 + 18 * 2 + 9 + 2 * 2);
+  premium = getTravelPremium(startDate, endDate, false, false, true, 5, 3, 4);
+  expect(premium).toEqual(216 + 54 * 2 + 27 + 7 * 2);
 });

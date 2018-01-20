@@ -21,11 +21,10 @@ type PackageType = {
   Annual: PlansType
 };
 
+type PackageNamesType = "IO" | "IS" | "IF" | "IFAC";
+
 export type TRPriceType = {
-  IO: PackageType,
-  IS: PackageType,
-  IF: PackageType,
-  IFAC: PackageType
+  [PackageNamesType]: PackageType
 };
 
 const prices: TRPriceType = {
