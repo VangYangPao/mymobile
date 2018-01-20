@@ -17,7 +17,7 @@ export function getProductQuote(
   form: Object
 ): Promise<number> {
   let promise;
-  if (this.policy && this.policy.id === "travel") {
+  if (policy && policy.id === "travel") {
     const countryid = form.travelDestination;
     const tripDurationInDays =
       moment(form.returnDate).diff(form.departureDate, "days") + 1;
@@ -33,21 +33,19 @@ export function getProductQuote(
       hasChildren
     );
   } else if (
-    this.policy &&
-    (this.policy.id === "pa" ||
-      this.policy.id === "pa_mr" ||
-      this.policy.id === "pa_wi")
+    policy &&
+    (policy.id === "pa" || policy.id === "pa_mr" || policy.id === "pa_wi")
   ) {
     const planid = form.planIndex;
     const termid = mappings.paTerms[form.coverageDuration];
-    const optionid = mappings.paOptions[this.policy.id];
+    const optionid = mappings.paOptions[policy.id];
     const commencementDate = new Date();
     promise = getAccidentQuote(planid, termid, optionid, commencementDate);
-  } else if (this.policy && this.policy.id === "mobile") {
+  } else if (policy && policy.id === "mobile") {
     promise = getPhoneProtectQuote();
   } else {
     promise = new Promise((resolve, reject) =>
-      reject(`Policy type of ${this.policy.id} not found`)
+      reject(`Policy type of ${policy.id} not found`)
     );
   }
   return promise.then(res => {
