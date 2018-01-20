@@ -1,6 +1,7 @@
 // @flow
 import Parse from "parse/react-native";
 
+import { getTravelPremium, getPAPremium } from "./premiums";
 import type { PolicyType } from "../../types";
 
 export function getProductQuote(
@@ -8,9 +9,27 @@ export function getProductQuote(
   form: Object
 ): Promise<number> {
   return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve(17.7);
-    }, 1000);
+    if (policy.id === "travel") {
+      const hasSpouse = !!form.spouse;
+      const noOfChildren = form.children.length;
+      const planType = form.planType;
+      const travelArea = form.travelArea;
+      const premium = getTravelPremium(
+        form.startDate,
+        form.endDate,
+        form.singleTrip,
+        form.annualTrip,
+        hasSpouse,
+        noOfChildren,
+        planType,
+        travelArea
+      );
+      resolve(premium);
+    } else if (policy.id === "pa") {
+      resolve();
+    } else {
+      reject("No found policy type: " + policy.id);
+    }
   });
 }
 

@@ -116,7 +116,7 @@ C = 3 months
 D = 6 months
 E = 1 year
 **/
-function getPAPremium(
+export function getPAPremium(
   planType,
   planDuration,
   medicalReimbursementCoverage,
