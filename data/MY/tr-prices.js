@@ -21,7 +21,7 @@ type PackageType = {
   Annual: PlansType
 };
 
-type PackageNamesType = "IO" | "IS" | "IF" | "IFAC";
+export type PackageNamesType = "IO" | "IS" | "IF" | "IFAC";
 
 export type TRPriceType = {
   [PackageNamesType]: PackageType

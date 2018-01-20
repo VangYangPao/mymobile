@@ -4,6 +4,10 @@ import TRPrices from "../../data/MY/tr-prices";
 import PAPrices from "../../data/MY/pa-prices";
 
 import type { TRPriceType, PackageNamesType } from "../../data/MY/tr-prices";
+import type {
+  PlanNameType,
+  PlanDurationNameType
+} from "../../data/MY/pa-prices";
 
 /*
  * Computes the key for a given duration for Single Trip only
@@ -117,21 +121,25 @@ D = 6 months
 E = 1 year
 **/
 export function getPAPremium(
-  planType,
-  planDuration,
-  medicalReimbursementCoverage,
-  weeklyBenefitCoverage,
-  snatchTheftCoverage
-) {
-  let premium = PA_PACKAGE[planDuration][planType];
+  planDuration: PlanDurationNameType,
+  planType: PlanNameType,
+  medicalReimbursementCoverage: boolean,
+  weeklyBenefitCoverage: boolean,
+  snatchTheftCoverage: boolean
+): number {
+  const BASIC_COVERAGE = "adpd";
+  const MEDICAL_REIMBURSEMENT_COVERAGE = "mr";
+  const WEEKLY_BENEFIT_COVERAGE = "wb";
+  const SNATCH_THEFT_COVERAGE = "st";
+  let premium = PAPrices[planDuration][planType][BASIC_COVERAGE];
   if (medicalReimbursementCoverage) {
-    premium += MEDICAL_REIMBURSEMENT_COVERAGE[planDuration][planType];
+    premium += PAPrices[planDuration][planType][MEDICAL_REIMBURSEMENT_COVERAGE];
   }
   if (weeklyBenefitCoverage) {
-    premium += WEEKLY_BENEFIT_COVERAGE[planDuration][planType];
+    premium += PAPrices[planDuration][planType][WEEKLY_BENEFIT_COVERAGE];
   }
   if (snatchTheftCoverage) {
-    premium += SNATCH_THEFT_COVERAGE[planDuration][planType];
+    premium += PAPrices[planDuration][planType][SNATCH_THEFT_COVERAGE];
   }
   return premium;
 }

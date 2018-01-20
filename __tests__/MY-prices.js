@@ -1,6 +1,6 @@
 // @flow
 import moment from "moment";
-import { getTravelPremium } from "../src/MY/premiums";
+import { getTravelPremium, getPAPremium } from "../src/MY/premiums";
 
 it("calculates single trip premium for IO correctly", () => {
   const startDate = new Date();
@@ -240,4 +240,41 @@ it("calculates single trip premium for IF with additional child correctly", () =
   expect(premium).toEqual(73 + 18 * 2 + 9 + 2 * 2);
   premium = getTravelPremium(startDate, endDate, false, false, true, 5, 3, 4);
   expect(premium).toEqual(216 + 54 * 2 + 27 + 7 * 2);
+});
+
+it("should calculate basic coverage premium for PA", () => {
+  let premium = getPAPremium("A", "1", false, false, false);
+  expect(premium).toEqual(0.5);
+  premium = getPAPremium("E", "5", false, false, false);
+  expect(premium).toEqual(207);
+
+  // ADPD + MR
+  premium = getPAPremium("A", "1", true, false, false);
+  expect(premium).toEqual(0.5 + 3);
+  premium = getPAPremium("E", "5", true, false, false);
+  expect(premium).toEqual(207 + 175);
+
+  // ADPD + MR + WB
+  premium = getPAPremium("A", "1", true, true, false);
+  expect(premium).toEqual(0.5 + 3 + 0.25);
+  premium = getPAPremium("E", "5", true, true, false);
+  expect(premium).toEqual(207 + 175 + 23);
+
+  // ADPD + MR + WB + ST
+  premium = getPAPremium("A", "1", true, true, true);
+  expect(premium).toEqual(0.5 + 3 + 0.25 + 1.25);
+  premium = getPAPremium("E", "5", true, true, true);
+  expect(premium).toEqual(207 + 175 + 23 + 8);
+
+  // ADPD + WB + ST
+  premium = getPAPremium("A", "1", false, true, true);
+  expect(premium).toEqual(0.5 + 0.25 + 1.25);
+  premium = getPAPremium("E", "5", false, true, true);
+  expect(premium).toEqual(207 + 23 + 8);
+
+  // ADPD + ST
+  premium = getPAPremium("A", "1", false, false, true);
+  expect(premium).toEqual(0.5 + 1.25);
+  premium = getPAPremium("E", "5", false, false, true);
+  expect(premium).toEqual(207 + 8);
 });

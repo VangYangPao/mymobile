@@ -1,4 +1,19 @@
-export default {
+// @flow
+export type PlanNameType = "1" | "2" | "3" | "4" | "5";
+export type PlanDurationNameType = "A" | "B" | "C" | "D" | "E";
+type CoverageNameType = "adpd" | "mr" | "wb" | "st";
+
+type PlanType = {
+  [CoverageNameType]: number
+};
+type PlanDurationType = {
+  [PlanNameType]: PlanType
+};
+type PAPriceType = {
+  [PlanDurationNameType]: PlanDurationType
+};
+
+const prices: PAPriceType = {
   A: {
     "1": {
       adpd: 0.5,
@@ -196,3 +211,4 @@ export default {
     }
   }
 };
+export default prices;
