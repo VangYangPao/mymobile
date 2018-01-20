@@ -26,9 +26,16 @@ export function getProductQuote(
       );
       resolve(premium);
     } else if (policy.id === "pa") {
-      resolve();
+      const premium = getPAPremium(
+        form.planDuration,
+        form.planType.toString(),
+        form.medicalReimbursementCoverage,
+        form.weeklyBenefitCoverage,
+        form.snatchTheftCoverage
+      );
+      resolve(premium);
     } else {
-      reject("No found policy type: " + policy.id);
+      reject("Cannot find policy type: " + policy.id);
     }
   });
 }
