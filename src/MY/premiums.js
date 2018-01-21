@@ -65,18 +65,26 @@ export function getTravelPremium(
     throw new Error("Spouse cannot be false if accompanied by children");
   }
   let durationKey = mapDurationToKeys(durationInDays);
-  if (singleTrip) {
+  if (singleTrip && annualTrip) {
+    throw new Error(
+      "Argument 'singleTrip' and 'annualTrip' cannot both be true"
+    );
+  } else if (singleTrip) {
     durationKey = "OWay";
   } else if (annualTrip) {
     durationKey = "Annual";
   }
+  const isSingleTrip = durationKey !== "OWay" && durationKey !== "Annual";
   let premium = TRPrices[packageKey][durationKey][planType][travelArea];
-  premium += calculateAdditionalWeekPremium(
-    durationInDays,
-    packageKey,
-    planType,
-    travelArea
-  );
+
+  if (isSingleTrip) {
+    premium += calculateAdditionalWeekPremium(
+      durationInDays,
+      packageKey,
+      planType,
+      travelArea
+    );
+  }
 
   const CHILD_LIMIT = 4;
   if (noOfChildren > CHILD_LIMIT) {
@@ -84,14 +92,17 @@ export function getTravelPremium(
     const additionalChildren = noOfChildren - CHILD_LIMIT;
     const additionalChildPremium =
       TRPrices[ADD_CHILDREN_PKG][durationKey][planType][travelArea];
-    const additionalWeekPremium = calculateAdditionalWeekPremium(
-      durationInDays,
-      ADD_CHILDREN_PKG,
-      planType,
-      travelArea
-    );
-    premium +=
-      additionalChildren * (additionalChildPremium + additionalWeekPremium);
+    premium += additionalChildren * additionalChildPremium;
+
+    if (isSingleTrip) {
+      const additionalWeekPremium = calculateAdditionalWeekPremium(
+        durationInDays,
+        ADD_CHILDREN_PKG,
+        planType,
+        travelArea
+      );
+      premium += additionalChildren * additionalWeekPremium;
+    }
   }
   return premium;
 }

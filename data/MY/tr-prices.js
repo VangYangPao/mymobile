@@ -254,7 +254,7 @@ const prices: TRPriceType = {
     },
     Annual: {
       "1": {
-        "2": 56,
+        "2": 156,
         "3": 216,
         "4": 264
       },
