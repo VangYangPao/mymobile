@@ -493,6 +493,9 @@ export default class AuthScreen extends Component {
       .then(user => {
         Answers.logSignUp("Email", true);
         this.handleRedirectToPurchase(user);
+      })
+      .catch(err => {
+        console.error(err);
       });
   }
 
@@ -504,7 +507,7 @@ export default class AuthScreen extends Component {
     });
   }
 
-  setCrashlytics(user) {
+  setCrashlytics(user: Parse.User) {
     Crashlytics.setUserName(user.get("email"));
     Crashlytics.setUserEmail(user.get("email"));
     Crashlytics.setUserIdentifier(user.id);

@@ -65,7 +65,7 @@ export const gender = [
 
 export const religion = [
   { label: "Muslim", value: "MUS" },
-  { label: "No-Muslim", value: "NMU" }
+  { label: "Non-Muslim", value: "NMU" }
 ];
 
 export const state = [

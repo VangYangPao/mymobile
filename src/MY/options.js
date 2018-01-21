@@ -35,7 +35,7 @@ const appOptions: AppOptionsType = {
   strings,
   validations,
   termsOfUseHTML,
-  parseAppId: "microumbrella",
+  parseAppId: "microumbrella-my",
   parseServerURL: "https://api-dev-my.microumbrella.com/parse",
   appseeId: "ef742ddea5f2473d8be211c148216f20",
   screens,

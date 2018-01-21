@@ -22,7 +22,7 @@ function mapDurationToKeys(duration: number): string {
   } else if (duration >= 19) {
     return "19-31";
   } else {
-    throw new Error("Duration in days cannot be less than zero");
+    throw new Error("Duration in days cannot be less than or equal zero");
   }
 }
 
@@ -53,7 +53,9 @@ export function getTravelPremium(
   planType: number,
   travelArea: number
 ): number {
-  const durationInDays = moment(endDate).diff(startDate, "days");
+  // 22/11/18 - 22/11/18 = 0 days
+  // hence pad 1 day, to count for one day trips
+  const durationInDays = moment(endDate).diff(startDate, "days") + 1;
   let packageKey;
   if (!spouse && noOfChildren === 0) {
     packageKey = "IO";

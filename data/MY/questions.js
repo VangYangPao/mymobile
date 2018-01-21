@@ -27,9 +27,12 @@ const questionTravelPA: QuestionSetType = [
   // Travel PA
   {
     question: "Is it a return or one-way trip?",
-    responseType: ["choice", "string"],
-    choices: mappings.tripType,
-    id: "tripType",
+    responseType: ["choice", "boolean"],
+    choices: [
+      { label: "Return trip", value: false },
+      { label: "One-way trip", value: true }
+    ],
+    id: "isOneWayTrip",
     include: ["travel"]
   },
   {
@@ -38,7 +41,7 @@ const questionTravelPA: QuestionSetType = [
     responseType: ["string"],
     choices: mappings.countries,
     include: ["travel"],
-    id: "travelDestination",
+    id: "travelArea",
     searchOptions: {
       keys: ["label"],
       threshold: 0.7
@@ -80,14 +83,14 @@ const questionTravelPA: QuestionSetType = [
       },
       {
         label: "Relationship",
-        id: "relationship",
+        id: "travellerType",
         responseLength: 60,
         choices: mappings.travellerType,
         responseType: ["string", "choice"]
       },
       {
         label: "Name (as per IC/other ID/passport)",
-        id: "givenName",
+        id: "fullName",
         responseType: "string"
       },
       {
@@ -134,7 +137,7 @@ const questionTravelPA: QuestionSetType = [
       {
         label: "Mobile Phone No",
         responseType: ["string", "mobile"],
-        id: "mobile"
+        id: "mobilePhoneNo"
       }
     ]
   },
