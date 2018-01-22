@@ -58,6 +58,11 @@ export default (policies = [
     ],
     isTravelInsurance: true,
     from: "1 day",
+    coverageHighlights: [
+      "overseasMedicalExpenses",
+      "postJourneyOverseasMedicalExpenses",
+      "unlimitedEmergencyMedicalEvacuation"
+    ],
     covered: [
       "overseasMedicalExpenses",
       "medicalExpensesInSG",

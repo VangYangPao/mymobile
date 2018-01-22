@@ -142,6 +142,15 @@ export default (coverageItems = {
       "There shall be no repair service or phone replacement, if your mobile phone is damage due to your willful action."
   },
   // Travel Protect360
+  // for coverage highlights only
+  postJourneyOverseasMedicalExpenses: {
+    title: "Post journey medical expenses",
+    icon: "ic_medical_reimbursement"
+  },
+  unlimitedEmergencyMedicalEvacuation: {
+    title: "Unlimited emergency medical evacuation",
+    icon: "ic_emergency_evacuation"
+  },
   overseasMedicalExpenses: {
     title: "Overseas medical expenses",
     icon: "ic_overseas_medical_reimbursement",
