@@ -98,7 +98,7 @@ export default class TableScreen extends Component {
         >
           <Text
             style={[
-              renderError && this.state.values[index] === ""
+              renderError || this.state.values[index] === ""
                 ? styles.inputErr
                 : styles.selectText,
               { flex: 1 }
@@ -163,7 +163,7 @@ export default class TableScreen extends Component {
           <View key={index} style={styles.selectContainer}>
             <Text
               style={[
-                renderError && this.state.values[index] === ""
+                renderError || this.state.values[index] === ""
                   ? styles.inputErr
                   : styles.selectText,
                 { flex: 1 }
@@ -188,7 +188,11 @@ export default class TableScreen extends Component {
           autoCorrect={false}
           placeholder={label}
           placeholderTextColor={
-            renderError ? colors.errorRed : colors.borderLine
+            renderError || this.state.values[index] === "" ? (
+              colors.errorRed
+            ) : (
+              colors.borderLine
+            )
           }
           underlineColorAndroid="transparent"
           onChangeText={text => {

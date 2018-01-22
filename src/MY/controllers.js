@@ -28,16 +28,6 @@ export function getProductQuote(
       const [hasSpouse, noOfChildren] = getTravellerFlags(form.travellers);
       const planType = form.planIndex.toString();
       const travelArea = form.travelArea;
-      console.log(
-        form.departureDate,
-        form.returnDate,
-        form.isOneWayTrip,
-        false, // TMP: DEFAULT TO FALE FIRST form.annualTrip
-        hasSpouse,
-        noOfChildren,
-        planType,
-        travelArea
-      );
       const premium = getTravelPremium(
         form.departureDate,
         form.returnDate,
