@@ -42,8 +42,8 @@ export default (policies = [
       },
       {
         id: 2,
-        legacyId: "enhanced",
-        title: "Enhanced Plan"
+        legacyId: "premium",
+        title: "Premium Plan"
       },
       {
         id: 84,
@@ -274,6 +274,7 @@ export default (policies = [
     title: "Phone Protect360",
     imageSource: "ic_phone_protection",
     from: "1 year",
+    doNotRenderFromInSummary: true,
     plans: [
       {
         id: 99,

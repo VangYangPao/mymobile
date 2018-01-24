@@ -26,7 +26,9 @@ function validatePAOccupation(occupationId: number) {
 
 function validatePhonePurchaseDate(date: Date) {
   date = moment(date);
-  const years = moment.utc().diff(date, "years");
+  const years = moment()
+    .utcOffset(8)
+    .diff(date, "years");
   if (years >= 1) {
     return {
       isValid: false,

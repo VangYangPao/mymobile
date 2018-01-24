@@ -158,7 +158,13 @@ function validateImei(s) {
   if (s.length !== 15) {
     return new ValidationResult(
       false,
-      "IMEI number must only be 15-characters long"
+      `IMEI number must only be 15-characters long, you entered ${s.length} characters`
+    );
+  }
+  if (isNaN(s)) {
+    return new ValidationResult(
+      false,
+      "IMEI number can only consist of numbers"
     );
   }
   return new ValidationResult(true, true);

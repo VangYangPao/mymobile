@@ -71,12 +71,13 @@ export default class PolicyOverview extends Component {
     const { policy } = this.props.screenProps;
     const showPerMonth = policy.title !== "Travel Protection";
     const pricePerMonth = policy.plans[0].premium;
+    console.log(policy.doNotRenderFromInSummary);
     return (
       <Page>
         <Text style={styles.policyTitle}>{policy.title}</Text>
         <PolicyPrice
           pricePerMonth={pricePerMonth}
-          showFrom={true}
+          showFrom={!policy.doNotRenderFromInSummary}
           showDuration={true}
           minimumCoverage={policy.from}
         />

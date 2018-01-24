@@ -77,15 +77,8 @@ export default (mobileClaimQuestions = [
     id: "hasMadeClaim"
   },
   {
-    question: `Please select your preferred workshops;
- 
-1) Workshop ABC - Pasir Ris
-2) Workshop EDP - Ang Mo Kio
-3) Workshop EEE - Woodlands
- 
-Your choice of workshop and the time required to repair the phone are subject to parts availability and complexity of repair.  Please take note that only simple repair can be done on site. 
-We or/ and the workshop personnel will follow up with a call very soon. Thank you. 
- `,
+    question:
+      "Thank you for the claim. We and/or the workshop personnel will follow up with a call very soon.",
     responseType: null
   }
 ]);

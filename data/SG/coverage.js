@@ -9,7 +9,7 @@ export default (coverageItems = {
   permanentDisablement: {
     title: "Permanent Disablement",
     shortTitle: "Permanent Disability",
-    title: "Accidental Permanent Disability",
+    title: "Permanent Disability",
     icon: "ic_permanent_disability",
     description:
       "The amount of beneﬁt will be paid to you, when you sustained disability (i.e. the loss of use of any limb, eye, ear, speech or third degree burn) that lasts for a continuous period of 12 months. "
@@ -121,13 +121,13 @@ export default (coverageItems = {
     title: "Cosmetic",
     icon: "ic_phone_wear_tear",
     description:
-      "There shall be no repair service or phone replacement, if your mobile phone sustained cosmetic damage (for example dent, discoloration, scratch)."
+      "There shall be no repair service or phone replacement, if your mobile phone sustained cosmetic damage (for example dent, discoloration, or scratch)."
   },
   phoneWearTear: {
     title: "Wear and Tear",
     icon: "ic_phone_wear_tear",
     description:
-      "There shall be no repair service or phone replacement, if your mobile phone sustained gradual deterioration, normal aging, or your phone model became has become obsolete. "
+      "There shall be no repair service or phone replacement, if your mobile phone sustained gradual deterioration, normal aging, or your phone model becoming obsolete. "
   },
   lossTheftOrDamaged: {
     title: "Loss, Theft or Damaged",
@@ -155,10 +155,10 @@ export default (coverageItems = {
     title: "Overseas medical expenses",
     icon: "ic_overseas_medical_reimbursement",
     description:
-      "The amount of reimbursement will be paid to you, while travelling overseas you sustained injury or sickness, and you sought medical treatments. The medical bills, additional accommodation and travelling expenses incurred will be reimbursed."
+      "The amount of reimbursement for the necessary medical expenses, and/or additional accommodation/travel expenses (if any) that are incurred when you are traveling overseas due to the result of a bodily injury or sickness, up to the benefit limit."
   },
   medicalExpensesInSG: {
-    title: "Medical expenses",
+    title: "Medical expenses in Singapore",
     icon: "ic_medical_reimbursement",
     description:
       "The amount of reimbursement will be paid to you, while travelling overseas you sustained injury or sickness, and sought first-time medical treatments or follow-up treatments when you returned to Singapore. The medical bills incurred will be reimbursed."
