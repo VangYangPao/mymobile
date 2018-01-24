@@ -39,6 +39,7 @@ class AppStore {
   coverages: { [string]: CoverageType } = coverages;
   @observable strings: { [string]: string } = {};
 
+  currency = null;
   @observable stackNavigatorScreens = {};
   @observable
   authBackgroundImage = (
@@ -83,6 +84,9 @@ class AppStore {
 
   screens: { [string]: Object } = {};
   controllers: { [string]: Function } = {};
+  data: {
+    travelBenefits?: Object
+  } = {};
 }
 
 const singleton = new AppStore();

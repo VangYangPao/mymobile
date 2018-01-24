@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import { PlansTabNavigator } from "../components/chatWidgets";
 
-import _TRAVEL_BENEFITS from "../../data/travelBenefits";
 import { Text } from "./defaultComponents";
 import AppStore from "../../stores/AppStore";
 const colors = AppStore.colors;
@@ -25,44 +24,13 @@ type Coverage = {
   benefitPayable?: BenefitPayable
 };
 type Benefit = { title: string, coverage: Array<Coverage> };
-type TravelBenefits = Array<Benefit>;
-const TRAVEL_BENEFITS: TravelBenefits = _TRAVEL_BENEFITS;
+type TravelBenefits = { expanded: Array<Benefit>, unexpanded: Benefit };
+const TRAVEL_BENEFITS: TravelBenefits = AppStore.data.travelBenefits;
 const itemSeparatorComponent = () => <View style={styles.separator} />;
 const patchCoverageWithKey = coverage => ({
   key: coverage.title,
   ...coverage
 });
-
-const coverageSummary = {
-  title: "Coverage Summary",
-  coverage: [
-    {
-      title: "Overseas Medical Expenses",
-      benefitPayable: {
-        basic: "$150,000",
-        enhanced: "$250,000",
-        superior: "$500,000"
-      }
-    },
-    {
-      title: "Accidental Death &\nPermanent Disablement",
-      benefitPayable: {
-        basic: "$200,000",
-        enhanced: "$250,000",
-        superior: "$300,000"
-      }
-    },
-    {
-      title:
-        "Loss of Baggage and Personal Effects\n($500 for each article or\npair or set of article)",
-      benefitPayable: {
-        basic: "$3,000",
-        enhanced: "$5,000",
-        superior: "$7,000"
-      }
-    }
-  ]
-};
 
 class TravelPlanTab extends Component {
   renderBenefit: Function;
@@ -149,7 +117,12 @@ class TravelPlanTab extends Component {
 
   renderBenefitPayable(benefitPayable: BenefitPayable, plan: TravelPlans) {
     const coverageAmt = benefitPayable[plan.legacyId];
-    return <Text style={styles.benefitPayable}>{coverageAmt}</Text>;
+    return (
+      <Text style={styles.benefitPayable}>
+        {AppStore.currency}
+        {coverageAmt}
+      </Text>
+    );
   }
 
   renderSectionHeader({ section }) {
@@ -169,7 +142,12 @@ class TravelPlanTab extends Component {
   }
 
   renderUnexpanded() {
-    const listSections = [coverageSummary].map(benefit => ({
+    if (!AppStore.data.travelBenefits) {
+      throw new Error("AppStore.data.travelBenefits is undefined");
+    }
+    const listSections = [
+      AppStore.data.travelBenefits.unexpanded
+    ].map(benefit => ({
       data: benefit.coverage.map(patchCoverageWithKey),
       title: benefit.title.toUpperCase(),
       key: benefit.title,

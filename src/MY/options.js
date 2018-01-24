@@ -13,6 +13,7 @@ import termsOfUseHTML from "../../documents/MY/termsOfUse";
 import * as controllers from "./controllers";
 import * as screens from "./screens";
 import strings from "../../data/MY/strings";
+import * as data from "./data";
 
 import type { AppOptionsType } from "../../types";
 
@@ -39,6 +40,7 @@ const appOptions: AppOptionsType = {
   parseServerURL: "https://api-dev-my.microumbrella.com/parse",
   appseeId: "ef742ddea5f2473d8be211c148216f20",
   screens,
-  controllers
+  controllers,
+  data
 };
 export default appOptions;

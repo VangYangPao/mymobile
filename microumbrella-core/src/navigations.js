@@ -45,7 +45,7 @@ export const navigationStyles = StyleSheet.create({
     backgroundColor: colors.primaryAccent
   },
   header: {
-    height: 58,
+    height: normalize(55),
     backgroundColor: "white",
     flexDirection: "row"
   },
