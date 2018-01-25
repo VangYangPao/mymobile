@@ -509,7 +509,7 @@ export default class ConfirmationScreen extends Component {
         }
       })
       .catch(err => {
-        showAlert("Oops... Can't open policy jacket");
+        showAlert("Oops… Can't open policy jacket");
         console.log(err);
       });
   }
