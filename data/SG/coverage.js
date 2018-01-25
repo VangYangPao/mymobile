@@ -16,7 +16,7 @@ export default (coverageItems = {
   },
   medicalReimbursement: {
     shortTitle: "Medical Reimbursement",
-    title: "Medical Reimbursement (Medical Benefit)",
+    title: "Medical Reimbursement",
     icon: "ic_medical_reimbursement",
     description:
       "The amount of reimbursement will be paid to you, when you sustained injury (caused by accidental, unforeseen or unexpected event) and you sought medical treatments from registered medical practitioner or licensed Chinese physician/chiropractor."

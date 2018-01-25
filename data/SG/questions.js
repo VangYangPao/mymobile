@@ -222,6 +222,12 @@ export const QUESTION_SETS: BuyClaimQuestionSetType = {
       id: "purchaseDate"
     },
     {
+      question: "Where did you buy it?",
+      responseType: "string",
+      id: "purchaseLocation",
+      include: ["mobile"]
+    },
+    {
       question: "What do you work as?",
       searchChoices: true,
       responseType: ["string", "occupation"],

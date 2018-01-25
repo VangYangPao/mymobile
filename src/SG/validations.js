@@ -32,7 +32,7 @@ function validatePhonePurchaseDate(date: Date) {
   if (years >= 1) {
     return {
       isValid: false,
-      errMessage: "Phone must be less than 1 year old"
+      errMessage: "Please provide a phone that is less than 1 year old"
     };
   }
   return {
