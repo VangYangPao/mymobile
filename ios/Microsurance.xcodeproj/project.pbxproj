@@ -60,9 +60,11 @@
 		7BE20A1CA3B6416FB559C1C9 /* libSMXCrashlytics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A9AC432BD52431592DB7B06 /* libSMXCrashlytics.a */; };
 		7E8BEED215DA41F4B745CEF6 /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CEB51F606D0E4A60B3CC7EAA /* libRNImagePicker.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
+		8489A86B59B642B3A297AE92 /* libRNFileOpener.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3939A001D7ED4A2AB4CFD06E /* libRNFileOpener.a */; };
 		8D5DAED3BDA34E349D725094 /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DE874C2FFBAA49E4B758DA61 /* libRNDeviceInfo.a */; };
 		8F87055EF5FC4D92BC0986CE /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E97F22A96254686B1113A30 /* libRNVectorIcons.a */; };
 		92AB07F86F4F4486A6979B15 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A17D6963B4264CDD896BC294 /* SimpleLineIcons.ttf */; };
+		9E77338EF6C146CDB76053C6 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CD6D232BBF3F4BBB9996FF0A /* libRCTActionSheet.a */; };
 		B1DAFECC2AC2E5345D912E18 /* libPods-Microsurance.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6894FC422D05E5532B3BC8BC /* libPods-Microsurance.a */; };
 		B70F8D03D32B4062B6B40EA5 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C2BA7C78843D4C26AFCE55CC /* libz.tbd */; };
 		CE4F8FACBB844A56948B34A7 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C53BF5BB57F144DFAB286280 /* EvilIcons.ttf */; };
@@ -233,6 +235,27 @@
 			remoteGlobalIDString = 3D3CD9181DE5FBD800167DC4;
 			remoteInfo = "jschelpers-tvOS";
 		};
+		3F095340201873FE00B2C7B0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A54EA5004C246DC87CEC20D /* datepicker.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 13B07F961A680F5B00A75B9A;
+			remoteInfo = datepicker;
+		};
+		3F095342201873FE00B2C7B0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A54EA5004C246DC87CEC20D /* datepicker.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 00E356EE1AD99517003FC87E;
+			remoteInfo = datepickerTests;
+		};
+		3F095362201873FE00B2C7B0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AE5ED1F793E84B25B7CC6BC0 /* RNFileOpener.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = DB8F70EF1CD3047700E71D6D;
+			remoteInfo = RNFileOpener;
+		};
 		3F4102021EFF268D001B4303 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F943AD42BB094D8DA66761D9 /* RNImagePicker.xcodeproj */;
@@ -364,6 +387,7 @@
 		00E356EE1AD99517003FC87E /* MicrosuranceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MicrosuranceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* MicrosuranceTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MicrosuranceTests.m; sourceTree = "<group>"; };
+		0A54EA5004C246DC87CEC20D /* datepicker.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = datepicker.xcodeproj; path = "../node_modules/react-native-datepicker/ios/datepicker.xcodeproj"; sourceTree = "<group>"; };
 		0A9AC432BD52431592DB7B06 /* libSMXCrashlytics.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libSMXCrashlytics.a; sourceTree = "<group>"; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
 		139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebSocket.xcodeproj; path = "../node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj"; sourceTree = "<group>"; };
@@ -379,6 +403,7 @@
 		26EEA7131B3C4C4C9B28E87C /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* Microsurance-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Microsurance-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* Microsurance-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Microsurance-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3939A001D7ED4A2AB4CFD06E /* libRNFileOpener.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFileOpener.a; sourceTree = "<group>"; };
 		3E97F22A96254686B1113A30 /* libRNVectorIcons.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNVectorIcons.a; sourceTree = "<group>"; };
 		3F06AD341EFF449F0028DA38 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		3F06AD351EFF449F0028DA38 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
@@ -418,11 +443,13 @@
 		A84A572B524647C497DCAF43 /* libRCTOneSignal.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTOneSignal.a; sourceTree = "<group>"; };
 		AC883382BA9C47A69E3330A3 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		AD7312CFCBC04F76AA556D73 /* libRNSpinkit.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNSpinkit.a; sourceTree = "<group>"; };
+		AE5ED1F793E84B25B7CC6BC0 /* RNFileOpener.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFileOpener.xcodeproj; path = "../node_modules/react-native-file-opener/ios/RNFileOpener.xcodeproj"; sourceTree = "<group>"; };
 		B75B2D65535E499CBE398E06 /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNDeviceInfo.xcodeproj; path = "../node_modules/react-native-device-info/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; };
 		BAF774C3E1EE4CB8B5FF25FE /* libRNAppsee.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNAppsee.a; sourceTree = "<group>"; };
 		C120EEE839DC417C9C933705 /* RNFS.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFS.xcodeproj; path = "../node_modules/react-native-fs/RNFS.xcodeproj"; sourceTree = "<group>"; };
 		C2BA7C78843D4C26AFCE55CC /* libz.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		C53BF5BB57F144DFAB286280 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
+		CD6D232BBF3F4BBB9996FF0A /* libRCTActionSheet.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTActionSheet.a; sourceTree = "<group>"; };
 		CEB51F606D0E4A60B3CC7EAA /* libRNImagePicker.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNImagePicker.a; sourceTree = "<group>"; };
 		DE874C2FFBAA49E4B758DA61 /* libRNDeviceInfo.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNDeviceInfo.a; sourceTree = "<group>"; };
 		DEBAFAAA817259C622761D6A /* Pods-Microsurance.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Microsurance.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Microsurance/Pods-Microsurance.debug.xcconfig"; sourceTree = "<group>"; };
@@ -469,6 +496,8 @@
 				F1B7384332814E71A8EBA590 /* libRNAppsee.a in Frameworks */,
 				B70F8D03D32B4062B6B40EA5 /* libz.tbd in Frameworks */,
 				8D5DAED3BDA34E349D725094 /* libRNDeviceInfo.a in Frameworks */,
+				9E77338EF6C146CDB76053C6 /* libRCTActionSheet.a in Frameworks */,
+				8489A86B59B642B3A297AE92 /* libRNFileOpener.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -614,6 +643,23 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		3F09533A201873FE00B2C7B0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3F095341201873FE00B2C7B0 /* datepicker.app */,
+				3F095343201873FE00B2C7B0 /* datepickerTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3F09533C201873FE00B2C7B0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3F095363201873FE00B2C7B0 /* libRNFileOpener.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		3F4101E01EFF268D001B4303 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -749,6 +795,8 @@
 				79692138273748879C9C160E /* SMXCrashlytics.xcodeproj */,
 				2555A9A495694C2DA43F3950 /* RNAppsee.xcodeproj */,
 				B75B2D65535E499CBE398E06 /* RNDeviceInfo.xcodeproj */,
+				0A54EA5004C246DC87CEC20D /* datepicker.xcodeproj */,
+				AE5ED1F793E84B25B7CC6BC0 /* RNFileOpener.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -949,6 +997,10 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
+					ProductGroup = 3F09533A201873FE00B2C7B0 /* Products */;
+					ProjectRef = 0A54EA5004C246DC87CEC20D /* datepicker.xcodeproj */;
+				},
+				{
 					ProductGroup = 00C302A81ABCB8CE00DB3ED1 /* Products */;
 					ProjectRef = 00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */;
 				},
@@ -1003,6 +1055,10 @@
 				{
 					ProductGroup = 3F768A081FE05A2B0081A918 /* Products */;
 					ProjectRef = B75B2D65535E499CBE398E06 /* RNDeviceInfo.xcodeproj */;
+				},
+				{
+					ProductGroup = 3F09533C201873FE00B2C7B0 /* Products */;
+					ProjectRef = AE5ED1F793E84B25B7CC6BC0 /* RNFileOpener.xcodeproj */;
 				},
 				{
 					ProductGroup = 3FAE0A061F82C29500DAB5C4 /* Products */;
@@ -1185,6 +1241,27 @@
 			fileType = archive.ar;
 			path = libjschelpers.a;
 			remoteRef = 3DAD3EAE1DF850E9000B6D8A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		3F095341201873FE00B2C7B0 /* datepicker.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = datepicker.app;
+			remoteRef = 3F095340201873FE00B2C7B0 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		3F095343201873FE00B2C7B0 /* datepickerTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = datepickerTests.xctest;
+			remoteRef = 3F095342201873FE00B2C7B0 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		3F095363201873FE00B2C7B0 /* libRNFileOpener.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNFileOpener.a;
+			remoteRef = 3F095362201873FE00B2C7B0 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		3F4102031EFF268D001B4303 /* libRNImagePicker.a */ = {
@@ -1557,11 +1634,17 @@
 					"$(SRCROOT)/../node_modules/react-native-fabric/ios/SMXCrashlytics",
 					"$(SRCROOT)/../node_modules/react-native-appsee/ios",
 					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",
+					"$(SRCROOT)/../node_modules/react-native-datepicker/ios/datepicker",
+					"$(SRCROOT)/../node_modules/react-native-file-opener/ios/RNFileOpener",
 				);
 				INFOPLIST_FILE = MicrosuranceTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -1590,11 +1673,17 @@
 					"$(SRCROOT)/../node_modules/react-native-fabric/ios/SMXCrashlytics",
 					"$(SRCROOT)/../node_modules/react-native-appsee/ios",
 					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",
+					"$(SRCROOT)/../node_modules/react-native-datepicker/ios/datepicker",
+					"$(SRCROOT)/../node_modules/react-native-file-opener/ios/RNFileOpener",
 				);
 				INFOPLIST_FILE = MicrosuranceTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -1634,6 +1723,8 @@
 					"$(SRCROOT)/../node_modules/react-native-fabric/ios/SMXCrashlytics",
 					"$(SRCROOT)/../node_modules/react-native-appsee/ios",
 					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",
+					"$(SRCROOT)/../node_modules/react-native-datepicker/ios/datepicker",
+					"$(SRCROOT)/../node_modules/react-native-file-opener/ios/RNFileOpener",
 				);
 				INFOPLIST_FILE = Microsurance/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -1682,6 +1773,8 @@
 					"$(SRCROOT)/../node_modules/react-native-fabric/ios/SMXCrashlytics",
 					"$(SRCROOT)/../node_modules/react-native-appsee/ios",
 					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",
+					"$(SRCROOT)/../node_modules/react-native-datepicker/ios/datepicker",
+					"$(SRCROOT)/../node_modules/react-native-file-opener/ios/RNFileOpener",
 				);
 				INFOPLIST_FILE = Microsurance/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -1726,10 +1819,16 @@
 					"$(SRCROOT)/../node_modules/react-native-fabric/ios/SMXCrashlytics",
 					"$(SRCROOT)/../node_modules/react-native-appsee/ios",
 					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",
+					"$(SRCROOT)/../node_modules/react-native-datepicker/ios/datepicker",
+					"$(SRCROOT)/../node_modules/react-native-file-opener/ios/RNFileOpener",
 				);
 				INFOPLIST_FILE = "Microsurance-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -1767,10 +1866,16 @@
 					"$(SRCROOT)/../node_modules/react-native-fabric/ios/SMXCrashlytics",
 					"$(SRCROOT)/../node_modules/react-native-appsee/ios",
 					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",
+					"$(SRCROOT)/../node_modules/react-native-datepicker/ios/datepicker",
+					"$(SRCROOT)/../node_modules/react-native-file-opener/ios/RNFileOpener",
 				);
 				INFOPLIST_FILE = "Microsurance-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -1796,7 +1901,11 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "Microsurance-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.Microsurance-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
@@ -1818,7 +1927,11 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "Microsurance-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.Microsurance-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;

@@ -3,6 +3,7 @@ package com.microumbrella.app;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.fileopener.FileOpenerPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.appsee.reactnative.AppseeReactPackage;
 import com.smixx.fabric.FabricPackage;
@@ -38,6 +39,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new FileOpenerPackage(),
             new RNDeviceInfo(),
             new AppseeReactPackage(),
             new FabricPackage(),
