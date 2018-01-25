@@ -22,6 +22,7 @@ const claimQuestionSets = {
 };
 
 const appOptions: AppOptionsType = {
+  appName: "MicroUmbrella",
   countryCode: "SG",
   currency: "$",
   policies,

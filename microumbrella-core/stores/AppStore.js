@@ -32,11 +32,12 @@ const styles = StyleSheet.create({
 });
 
 class AppStore {
+  @observable appName: string = "MicroUmbrella";
   parseAppId: string = "microumbrella";
   parseServerURL: string = "https://api-dev.microumbrella.com/parse";
   @observable colors: { [string]: string } = colors;
-  policies: Array<PolicyType> = policies;
-  coverages: { [string]: CoverageType } = coverages;
+  @observable policies: Array<PolicyType> = policies;
+  @observable coverages: { [string]: CoverageType } = coverages;
   @observable strings: { [string]: string } = {};
 
   currency = null;
