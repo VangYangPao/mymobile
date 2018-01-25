@@ -41,12 +41,20 @@ class Policy extends Component {
             />
           </View>
           <View style={styles.detailContainer}>
-            <Text style={styles.title}>
+            <Text
+              style={[
+                styles.title,
+                this.props.subtitle ? styles.boldedText : {}
+              ]}
+            >
               {titleSplit[0]}
               {titleSplit[1] ? (
                 <Text style={styles.boldedText}> with {titleSplit[1]}</Text>
               ) : null}
             </Text>
+            {this.props.subtitle ? (
+              <Text style={styles.subtitle}>{this.props.subtitle}</Text>
+            ) : null}
           </View>
         </View>
       </TouchableOpacity>
@@ -136,10 +144,10 @@ const styles = StyleSheet.create({
     width: 65
   },
   title: {
-    fontSize: 18,
-    color: colors.primaryText
+    fontSize: 18
   },
   subtitle: {
+    fontSize: 14,
     marginTop: 4
   },
   container: {

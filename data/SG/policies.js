@@ -153,7 +153,6 @@ export default (policies = [
   {
     id: "pa_mr",
     title: "Micro Protect360 with Medical Reimbursement",
-    subtitle: "Up to $10,000",
     imageSource: "ic_ad_pd_medical_reimbursement",
     from: "1 month",
     plans: [
@@ -220,7 +219,6 @@ export default (policies = [
   {
     id: "pa_wi",
     title: "Micro Protect360 with Weekly Indemnity",
-    subtitle: "Requires medical record (TCM / Physiotherapy)",
     imageSource: "ic_ad_pd_weekly_indemnity",
     from: "1 month",
     plans: [
