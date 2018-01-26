@@ -351,7 +351,7 @@ class LoginScreen extends Component {
             {AppStore.authLogo || (
               <VectorDrawableView
                 accessibilityLabel="auth__logo"
-                resourceName="ic_microumbrella_word_white"
+                resourceName="microumbrella_word_white"
                 style={styles.logo}
               />
             )}
@@ -421,7 +421,7 @@ class ForgotPasswordScreen extends Component {
     return (
       <View style={[styles.container, { justifyContent: "center" }]}>
         <VectorDrawableView
-          resourceName="ic_microumbrella_word_white"
+          resourceName="microumbrella_word_white"
           style={styles.logo}
         />
         <Form
