@@ -1,0 +1,23 @@
+{
+ "images": [
+  {
+   "idiom": "universal", 
+   "scale": "1x", 
+   "filename": "emergency-medical-evacuation.png"
+  }, 
+  {
+   "idiom": "universal", 
+   "scale": "2x", 
+   "filename": "emergency-medical-evacuation@2x.png"
+  }, 
+  {
+   "idiom": "universal", 
+   "scale": "3x", 
+   "filename": "emergency-medical-evacuation@3x.png"
+  }
+ ], 
+ "info": {
+  "version": 1, 
+  "author": "xcode"
+ }
+}
