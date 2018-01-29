@@ -67,11 +67,13 @@ export default class TableScreen extends Component {
       responseType.indexOf("date") !== -1 ||
       responseType.indexOf("datetime") !== -1
     ) {
-      // const eighteenYearsAgo = moment(new Date()).subtract(18, "years");
+      const eighteenYearsAgo = moment(new Date())
+        .subtract(99, "years")
+        .toDate();
       const today = moment(new Date());
       const todayStr = today.format("YYYY-MM-DD");
       const maxDate = field.pastOnly ? value || today.toDate() : null;
-      const minDate = field.futureOnly ? value : null;
+      const minDate = field.futureOnly ? value : eighteenYearsAgo;
       inputElement = (
         <TouchableOpacity
           accessibilityLabel={"table__field-" + id}

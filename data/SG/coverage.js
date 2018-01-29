@@ -8,8 +8,8 @@ export default (coverageItems = {
   },
   permanentDisablement: {
     title: "Permanent Disablement",
-    shortTitle: "Permanent Disability",
-    title: "Permanent Disability",
+    shortTitle: "Permanent Disablement",
+    title: "Permanent Disablement",
     icon: "permanent_disablement_1",
     description:
       "The amount of beneﬁt will be paid to you, when you sustained disability (i.e. the loss of use of any limb, eye, ear, speech or third degree burn) that lasts for a continuous period of 12 months. "
@@ -94,7 +94,7 @@ export default (coverageItems = {
   },
   dangerousSports: {
     title: "Dangerous Sports",
-    icon: "dangerous_sport",
+    icon: "dangerous_sports",
     description:
       "There shall be no compensation or benefit payable, if the injury is caused by any form of risky activities (for example bungee jumping, scuba diving, hunting, racing, sky diving)."
   },
@@ -127,7 +127,7 @@ export default (coverageItems = {
     title: "Wear and Tear",
     icon: "wear_and_tear",
     description:
-      "There shall be no repair service or phone replacement, if your mobile phone sustained gradual deterioration, normal aging, or your phone model becoming obsolete. "
+      "There shall be no repair service or phone replacement if your mobile phone sustained cosmetic damage (for example dent, discoloration, or scratch etc)."
   },
   lossTheftOrDamaged: {
     title: "Loss, Theft or Damaged",
@@ -165,7 +165,7 @@ export default (coverageItems = {
   },
   repatriationOfMortalRemains: {
     title: "Repatriation of Mortal Remains",
-    icon: "repatration_mortal_remains",
+    icon: "repatriation_mortal_remains",
     description:
       "In the event of death, due to injury or sickness while travelling out of Singapore, your mortal remains will be transported back to Singapore, at no cost to your family."
   },
@@ -183,7 +183,7 @@ export default (coverageItems = {
   },
   hospitalCashBenefitInSG: {
     title: "Hospital Cash Benefit in Singapore",
-    icon: "sg_medical_expenses",
+    icon: "medical_reimbursement_sg",
     description:
       "The amount of beneﬁt will be paid to you, while travelling overseas you sustained injury or sickness, and you sought first-time medical treatments or follow-up treatments when you returned to Singapore, which results in you being confined in a hospital for more than 24 hours."
   },
@@ -219,7 +219,7 @@ export default (coverageItems = {
   },
   travelCancellation: {
     title: "Travel Cancellation and Travel Postponement",
-    icon: "flight_delay",
+    icon: "flight_postpone_cancel",
     description:
       "The amount of benefit will be paid to you, before travelling overseas, you suffered loss of deposit (or charges paid in advance) in the event of unavoidable cancellation or travel postponement of the whole trip due to (i) death/serious injury/serious sickness to you, your travel companion or your immediate family member (ii) serious damage to your home caused by natural disaster or burglary (iii) the issuance of Travel Alert for the planned destination."
   },
