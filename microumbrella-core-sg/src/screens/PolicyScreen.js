@@ -4,6 +4,7 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
+  ScrollView,
   View,
   TextInput,
   Dimensions,
@@ -30,7 +31,7 @@ import Button from "../components/Button";
 
 import { MENU_ICON_SIZE, navigationStyles } from "../navigations";
 const windowWidth = Dimensions.get("window").width;
-import { showAlert } from "../utils";
+import { showAlert, normalizeFont } from "../utils";
 
 class DeclarationModal extends Component {
   declineDeclaration() {
@@ -57,7 +58,7 @@ class DeclarationModal extends Component {
         onRequestClose={this.props.onClose}
       >
         <View style={styles.modalContainer}>
-          <View style={styles.modalContentContainer}>
+          <ScrollView contentContainerStyle={styles.modalContentContainer}>
             <View style={styles.checkoutHeader}>
               <TouchableOpacity onPress={this.props.onClose}>
                 <Ionicon
@@ -71,7 +72,7 @@ class DeclarationModal extends Component {
               <Text style={styles.checkoutTitle}>
                 Customer Consent and Declaration
               </Text>
-              <Text>{declarationText}</Text>
+              <Text style={styles.declarationText}>{declarationText}</Text>
               <View style={styles.buttonContainer}>
                 <Button
                   onPress={this.props.onAcceptDeclaration}
@@ -84,7 +85,7 @@ class DeclarationModal extends Component {
                 </InsideOutButton>
               </View>
             </View>
-          </View>
+          </ScrollView>
         </View>
       </Modal>
     );
@@ -189,8 +190,14 @@ export default class PolicyScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+  declarationText: {
+    fontSize: normalizeFont(1.7)
+  },
   yesButton: {
     marginBottom: 10
+  },
+  buttonContainer: {
+    marginTop: 10
   },
   insideOutButtonText: {
     color: colors.primaryAccent,

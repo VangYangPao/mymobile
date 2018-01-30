@@ -107,9 +107,9 @@ export default (coverageItems = {
   // Phone Protect360
   phoneDamage: {
     title: "Damage",
-    icon: "phone_damage_1",
+    icon: "phone_damage_2",
     description:
-      "This covers your mobile phone from physical damage or failure to operate correctly. You shall enjoy door-to-door phone repair service or phone replacement."
+      "This covers your mobile phone from physical damage of a cracked screen or failure to operate correctly."
   },
   phoneWet: {
     title: "Water",
@@ -121,13 +121,13 @@ export default (coverageItems = {
     title: "Cosmetic",
     icon: "phone_cosmetic",
     description:
-      "There shall be no repair service or phone replacement, if your mobile phone sustained cosmetic damage (for example dent, discoloration, or scratch)."
+      "There shall be no repair service or phone replacement if your mobile phone sustained cosmetic damage (for example dent, discoloration, or scratch etc)."
   },
   phoneWearTear: {
     title: "Wear and Tear",
     icon: "wear_and_tear",
     description:
-      "There shall be no repair service or phone replacement if your mobile phone sustained cosmetic damage (for example dent, discoloration, or scratch etc)."
+      "There shall be no repair service or phone replacement if your mobile phone sustained gradual deterioration, normal aging, or your phone become obsolete."
   },
   lossTheftOrDamaged: {
     title: "Loss, Theft or Damaged",
