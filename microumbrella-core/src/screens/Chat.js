@@ -90,11 +90,6 @@ const POLICIES_FADE_IN_TIME = 400;
 const AGENT_USER_ID = 0;
 const CUSTOMER_USER_ID = 1;
 
-const AGENT_USER = {
-  _id: AGENT_USER_ID,
-  name: "Eve",
-  avatar: require("../../images/eve-avatar.png")
-};
 const CUSTOMER_USER = {
   _id: CUSTOMER_USER_ID
 };
@@ -300,6 +295,12 @@ class ChatScreen extends Component {
         }
       });
     };
+
+    this.AGENT_USER = {
+      _id: AGENT_USER_ID,
+      name: "Eve",
+      avatar: AppStore.chatAvatar
+    };
   }
 
   renderStartScreenMessages() {
@@ -310,7 +311,7 @@ class ChatScreen extends Component {
           _id: 0,
           text: "loading",
           createdAt: new Date(),
-          user: AGENT_USER
+          user: this.AGENT_USER
         }
       ]
     });
@@ -319,7 +320,7 @@ class ChatScreen extends Component {
       this.concatMessage({
         type: "policies",
         _id: 1,
-        user: AGENT_USER
+        user: this.AGENT_USER
       });
     };
 
@@ -333,7 +334,7 @@ class ChatScreen extends Component {
               _id: 0,
               text: `Hello, I'm Eve. Welcome to ${APP_NAME}. I'll be your host and here are the protection plans that may interest you. 😄`,
               createdAt: new Date(),
-              user: AGENT_USER
+              user: this.AGENT_USER
             }
           ]
         },
@@ -388,7 +389,7 @@ class ChatScreen extends Component {
       _id: uuid.v4(),
       text: "loading",
       createdAt: new Date(),
-      user: AGENT_USER
+      user: this.AGENT_USER
     };
     let messageIndex;
     const afterLoading = () => {
@@ -815,7 +816,7 @@ class ChatScreen extends Component {
         type: "text",
         text,
         createdAt: new Date(),
-        user: AGENT_USER,
+        user: this.AGENT_USER,
         image
       },
       cb
@@ -898,7 +899,7 @@ class ChatScreen extends Component {
           messages: this.state.messages.concat({
             type: key,
             _id: uuid.v4(),
-            user: AGENT_USER,
+            user: this.AGENT_USER,
             ...additionalProps
           })
         },
