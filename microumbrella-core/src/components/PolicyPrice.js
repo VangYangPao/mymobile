@@ -39,7 +39,7 @@ export default class PolicyPrice extends Component {
             <Text style={styles.pricePerMonth}>FROM</Text>
           ) : null}
           <View style={styles.price}>
-            <Text style={styles.priceCurrency}>$</Text>
+            <Text style={styles.priceCurrency}>{AppStore.currency}</Text>
             <Text style={[styles.priceAmount, additionalStyle]}>
               {intPricePart + ""}
             </Text>

@@ -40,7 +40,7 @@ const coverageSummary = {
       title: "Overseas Medical Expenses",
       benefitPayable: {
         basic: "$150,000",
-        enhanced: "$250,000",
+        premium: "$250,000",
         superior: "$500,000"
       }
     },
@@ -48,7 +48,7 @@ const coverageSummary = {
       title: "Accidental Death &\nPermanent Disablement",
       benefitPayable: {
         basic: "$200,000",
-        enhanced: "$250,000",
+        premium: "$250,000",
         superior: "$300,000"
       }
     },
@@ -57,7 +57,7 @@ const coverageSummary = {
         "Loss of Baggage and Personal Effects\n($500 for each article or\npair or set of article)",
       benefitPayable: {
         basic: "$3,000",
-        enhanced: "$5,000",
+        premium: "$5,000",
         superior: "$7,000"
       }
     }

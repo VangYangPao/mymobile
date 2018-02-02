@@ -1,6 +1,6 @@
 // @flow
 import { Image } from "react-native";
-import { Policy } from "./policies";
+import type { PolicyType } from "./policies";
 import Parse from "parse/react-native";
 import type { CoverageType } from "./policies";
 
@@ -9,7 +9,7 @@ export type ValidationResult = {
   isValid: boolean
 };
 
-export type QuestionResponseType = string | Array<string> | null;
+export type QuestionResponseType = string;
 
 export type QuestionChoiceType = {
   label: string,
@@ -28,6 +28,7 @@ export type QuestionTableColumnType = {
   responseLength?: number,
   responseType?: QuestionResponseType,
   choices?: Array<QuestionChoiceType>,
+  value?: any,
   ...DateTimePropType
 };
 
@@ -42,13 +43,13 @@ export type QuestionType = {
   id: MultiResponseType,
   labels?: MultiResponseType,
   question: string,
-  responseType: QuestionResponseType,
+  responseType: Array<string>,
   responseLength?: number,
-  include?: Array<string>,
-  exclude?: Array<string>,
+  include?: string,
+  exclude?: string,
   condition?: string,
   defaultValue?: string,
-  columns?: Array<QuestionResponseType>,
+  columns?: Array<QuestionTableColumnType>,
   searchChoices?: boolean,
   searchOptions?: SearchOptionsType,
   ...DateTimePropType
@@ -72,11 +73,24 @@ export type ValidationsType = {
   [string]: ValidationFunctionType
 };
 
+export type ControllerFunctionsType = {
+  getProductQuote: (policy: PolicyType, form: Object) => Promise<number>,
+  purchaseProduct: (
+    policy: PolicyType,
+    premium: number,
+    form: Object,
+    paymentForm: Object
+  ) => Promise<Parse.Object>
+};
+
 export type AppOptionsType = {
+  countryCode: string,
+  currency: string,
   parseAppId: string,
   parseServerURL: string,
+  appseeId: string,
   colors: { [string]: string },
-  policies: Array<Policy>,
+  policies: Array<PolicyType>,
   coverages: { [string]: CoverageType },
   authBackgroundImage?: Image,
   validations: { [string]: ValidationResult },
@@ -87,7 +101,8 @@ export type AppOptionsType = {
   claimQuestionSets: {
     [string]: Array<QuestionType>
   },
-  fetchPurchases: (parseInstance: Parse, parseUser: Parse.User) => Parse.Query,
-  pushClaimQuestionsOfType: (policyType: string) => void,
-  termsOfUseHTML: string
+  fetchPurchases?: (parseInstance: Parse, parseUser: Parse.User) => Parse.Query,
+  pushClaimQuestionsOfType?: (policyType: string) => void,
+  termsOfUseHTML: string,
+  controllers: ControllerFunctionsType
 };

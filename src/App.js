@@ -4,10 +4,12 @@ import { AppRegistry, View, Text } from "react-native";
 import { getCountryCode } from "./localization";
 import SG_APP_OPTIONS from "./SG/options";
 import MY_APP_OPTIONS from "./MY/options";
+import GX_APP_OPTIONS from "./GX/options";
 
 const appMapping = {
   SG: SG_APP_OPTIONS,
-  MY: MY_APP_OPTIONS
+  MY: MY_APP_OPTIONS,
+  GX: GX_APP_OPTIONS
 };
 
 const DEFAULT_COUNTRY_CODE = "SG";
@@ -46,6 +48,7 @@ class MicroUmbrellaApp extends Component {
       if (!appOptions) {
         appOptions = appMapping[DEFAULT_COUNTRY_CODE];
       }
+
       this.appOptions = appOptions;
       if (countryCode === "SG") {
         this.MicroUmbrellaApp = require("../microumbrella-core-sg").MicroUmbrellaApp;

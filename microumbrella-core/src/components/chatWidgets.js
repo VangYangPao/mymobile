@@ -30,7 +30,6 @@ import ModalPicker from "react-native-modal-picker";
 
 import AppStore from "../../stores/AppStore";
 const colors = AppStore.colors;
-import COVERAGE_DURATIONS from "../../data/coverageDurations";
 import RangeSlider from "./RangeSlider";
 import { Text } from "./defaultComponents";
 import { getDateStr, addCommas, showAlert } from "../utils";
@@ -99,8 +98,8 @@ const SLIDER_RADIUS_PERCENT = 0.15;
 export class CoverageDurationWidget extends Component {
   constructor(props) {
     super(props);
-    this.coverageDurations = COVERAGE_DURATIONS;
-    const initialCoverageDuration = this.coverageDurations[0];
+    const coverageDurations = AppStore.coverageDurations;
+    const initialCoverageDuration = coverageDurations[0];
     this.state = {
       months: initialCoverageDuration
     };
@@ -108,7 +107,7 @@ export class CoverageDurationWidget extends Component {
   }
 
   render() {
-    const elements = this.coverageDurations.map(d => ({
+    const elements = AppStore.coverageDurations.map(d => ({
       label: d + "m",
       value: d
     }));
@@ -595,47 +594,48 @@ export class TravellerTableInput extends Component {
       navigation.setParams({ renderError: true, ...currentParams });
       return;
     }
-    const dobIndex = columns.findIndex(c => c.id === "DOB");
-    const relationshipIndex = columns.findIndex(c => c.id === "relationship");
-    const dob = tableValues[dobIndex];
-    const relationshipId = tableValues[relationshipIndex];
-    const ageInMonths = moment(new Date()).diff(dob, "months");
-    if (relationshipId === CHILD_ID && ageInMonths < 3) {
-      showAlert("Child cannot be less than 3 months old");
-      navigation.setParams({ renderError: true, ...currentParams });
-      return;
-    }
-    if (relationshipId === CHILD_ID && ageInMonths > 12 * 18) {
-      showAlert("Child cannot be older than 18 years old");
-      navigation.setParams({ renderError: true, ...currentParams });
-      return;
-    }
-    if (relationshipId === SPOUSE_ID && ageInMonths < 12 * 18) {
-      showAlert("Adult must be older than 18 years old");
-      navigation.setParams({ renderError: true, ...currentParams });
-      return;
-    }
-    const firstNameIndex = columns.findIndex(c => c.id === "firstName");
-    const lastNameIndex = columns.findIndex(c => c.id === "lastName");
-    const firstName = tableValues[firstNameIndex];
-    const lastName = tableValues[lastNameIndex];
-    const namePattern = /^([A-Za-z ,\.@/\(\)])+$/;
-    const firstNameMatch = firstName.match(namePattern);
-    const lastNameMatch = lastName.match(namePattern);
-    if (!firstNameMatch) {
-      showAlert(
-        "First name must only contain alphabets and these symbols: @, / and ()"
-      );
-      navigation.setParams({ renderError: true, ...currentParams });
-      return;
-    }
-    if (!lastNameMatch) {
-      showAlert(
-        "Last name must only contain alphabets and these symbols: @, / and ()"
-      );
-      navigation.setParams({ renderError: true, ...currentParams });
-      return;
-    }
+    // const dobIndex = columns.findIndex(c => c.id === "DOB");
+    // const relationshipIndex = columns.findIndex(c => c.id === "relationship");
+    // const dob = tableValues[dobIndex];
+    // const relationshipId = tableValues[relationshipIndex];
+    // const ageInMonths = moment(new Date()).diff(dob, "months");
+    // if (relationshipId === CHILD_ID && ageInMonths < 3) {
+    //   showAlert("Child cannot be less than 3 months old");
+    //   navigation.setParams({ renderError: true, ...currentParams });
+    //   return;
+    // }
+    // if (relationshipId === CHILD_ID && ageInMonths > 12 * 18) {
+    //   showAlert("Child cannot be older than 18 years old");
+    //   navigation.setParams({ renderError: true, ...currentParams });
+    //   return;
+    // }
+    // if (relationshipId === SPOUSE_ID && ageInMonths < 12 * 18) {
+    //   showAlert("Adult must be older than 18 years old");
+    //   navigation.setParams({ renderError: true, ...currentParams });
+    //   return;
+    // }
+    // const firstNameIndex = columns.findIndex(c => c.id === "firstName");
+    // const lastNameIndex = columns.findIndex(c => c.id === "lastName");
+    // const firstName = tableValues[firstNameIndex];
+    // const lastName = tableValues[lastNameIndex];
+    // const namePattern = /^([A-Za-z ,\.@/\(\)])+$/;
+    // const firstNameMatch = firstName.match(namePattern);
+    // const lastNameMatch = lastName.match(namePattern);
+    // if (!firstNameMatch) {
+    //   showAlert(
+    //     "First name must only contain alphabets and these symbols: @, / and ()"
+    //   );
+    //   navigation.setParams({ renderError: true, ...currentParams });
+    //   return;
+    // }
+    // if (!lastNameMatch) {
+    //   showAlert(
+    //     "Last name must only contain alphabets and these symbols: @, / and ()"
+    //   );
+    //   navigation.setParams({ renderError: true, ...currentParams });
+    //   return;
+    // }
+
     navigation.dispatch(NavigationActions.back());
 
     let item = {};
@@ -1088,7 +1088,7 @@ export class SuggestionList extends Component {
           keyboardShouldPersistTaps="always"
           data={this.props.items}
           renderItem={this.renderSuggestion}
-          keyExtractor={item => item.value}
+          keyExtractor={(item, index) => index}
         />
       );
     } else if (this.props.searchValue && !this.props.items.length) {

@@ -6,7 +6,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
-  Button,
   ToastAndroid,
   Alert,
   Platform,
@@ -16,14 +15,17 @@ import moment from "moment";
 import { NavigationActions } from "react-navigation";
 import promiseRetry from "promise-retry";
 import { Crashlytics } from "react-native-fabric";
+import RNFS from "react-native-fs";
+import FileOpener from "react-native-file-opener";
 
 import type { PolicyHolder, PaymentDetails, MUTraveller } from "../types/hlas";
 import { Text } from "../components/defaultComponents";
-import { showAlert, prettifyCamelCase } from "../utils";
+import { normalize, showAlert, prettifyCamelCase } from "../utils";
 import Page from "../components/Page";
 import Footer from "../components/Footer";
 import PolicyPrice from "../components/PolicyPrice";
 import CheckoutModal from "../components/CheckoutModal";
+import Button from "../components/Button";
 import { extractPaRes } from "../utils";
 import MAPPING from "../../data/mappings";
 import {
@@ -37,6 +39,8 @@ import {
 import { saveNewPurchase } from "../parse/purchase";
 import { CONFIRMATION_PAGE_LOAD_TIME } from "react-native-dotenv";
 const PAGE_LOAD_TIME = parseInt(CONFIRMATION_PAGE_LOAD_TIME, 10);
+import AppStore from "../../stores/AppStore";
+const colors = AppStore.colors;
 
 type PaymentForm = {
   type: "visa" | "master-card",
@@ -51,7 +55,8 @@ type State = {
   loading: boolean,
   purchasing: boolean,
   totalPremium: ?number,
-  acsRedirectionHTML: ?string
+  acsRedirectionHTML: ?string,
+  downloadingPolicy: boolean
 };
 
 const redirectToStatus = currentUser =>
@@ -123,6 +128,8 @@ export default class ConfirmationScreen extends Component {
   handlePurchaseResult: Function;
   handleACSRedirection: Function;
   fieldMapping: { [string]: string };
+  renderField: (key: string, value: any) => View;
+  handleViewPolicy: () => void;
 
   constructor(props: {
     navigation: any,
@@ -135,6 +142,7 @@ export default class ConfirmationScreen extends Component {
     this.handleACSRedirection = this.handleACSRedirection.bind(this);
     // this.handleACSResult = this.handleACSResult.bind(this);
     this.renderField = this.renderField.bind(this);
+    this.handleViewPolicy = this.handleViewPolicy.bind(this);
     const { form } = this.props.navigation.state.params;
     this.policy = form.policy;
     delete form.policy;
@@ -143,7 +151,8 @@ export default class ConfirmationScreen extends Component {
       loading: true,
       purchasing: false,
       totalPremium: null,
-      acsRedirectionHTML: null
+      acsRedirectionHTML: null,
+      downloadingPolicy: false
     };
   }
 
@@ -436,6 +445,75 @@ export default class ConfirmationScreen extends Component {
     }
   }
 
+  handleViewPolicy() {
+    if (this.state.downloadingPolicy) {
+      return;
+    }
+    this.setState({ downloadingPolicy: true });
+
+    let policyTypeId;
+    const isPA =
+      this.policy.id === "pa" ||
+      this.policy.id === "pa_wi" ||
+      this.policy.id === "pa_mr";
+    if (isPA) {
+      policyTypeId = "pa";
+    } else if (this.policy.id === "travel" || this.policy.id === "mobile") {
+      policyTypeId = this.policy.id;
+    } else {
+      throw new Error(`No policy type of ${this.policy.id} found`);
+    }
+    const filename = `${policyTypeId}_PolicyJacket.pdf`;
+    const filedir = Platform.select({
+      ios: RNFS.DocumentDirectoryPath,
+      android: RNFS.ExternalDirectoryPath
+    });
+    const filepath = filedir + "/" + filename;
+    const pdfMimeType = "application/pdf";
+
+    const options = {
+      fromUrl: "https://microumbrella.com/assets/" + filename,
+      toFile: filepath
+    };
+
+    const openPolicyPDFFile = () => {
+      FileOpener.open(filepath, pdfMimeType).then(
+        msg => {
+          this.setState({ downloadingPolicy: false });
+          console.log("success!!");
+        },
+        err => {
+          this.setState({ downloadingPolicy: false });
+          console.error(err);
+        }
+      );
+    };
+
+    RNFS.exists(filepath)
+      .then(fileExists => {
+        if (fileExists) {
+          openPolicyPDFFile();
+          return;
+        }
+        const { jobId, promise } = RNFS.downloadFile(options);
+        return promise;
+      })
+      .then(res => {
+        if (!res) {
+          console.log("Exit promise chain early");
+          return;
+        }
+        const { statusCode } = res;
+        if (statusCode === 200) {
+          openPolicyPDFFile();
+        }
+      })
+      .catch(err => {
+        showAlert("Oops… Can't open policy jacket");
+        console.log(err);
+      });
+  }
+
   renderField(key: string, value: any) {
     const label = MAPPING.fieldMapping[key]
       ? MAPPING.fieldMapping[key]
@@ -473,6 +551,25 @@ export default class ConfirmationScreen extends Component {
           {this.state.totalPremium ? (
             <PolicyPrice pricePerMonth={this.state.totalPremium} />
           ) : null}
+          <TouchableOpacity
+            onPress={this.handleViewPolicy}
+            style={styles.insideOutButton}
+          >
+            {this.state.downloadingPolicy ? (
+              <View style={styles.loadingPolicyView}>
+                <Text style={styles.insideOutButtonText}>
+                  LOADING POLICY JACKET
+                </Text>
+                <ActivityIndicator
+                  style={styles.loadingIndicator}
+                  size="small"
+                  color={colors.primaryAccent}
+                />
+              </View>
+            ) : (
+              <Text style={styles.insideOutButtonText}>VIEW POLICY JACKET</Text>
+            )}
+          </TouchableOpacity>
           {formArr.map(f => this.renderField(f.key, f.value))}
         </Page>
       );
@@ -509,6 +606,33 @@ export default class ConfirmationScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+  loadingIndicator: {
+    marginLeft: 10
+  },
+  loadingPolicyView: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  insideOutButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 15,
+    paddingHorizontal: 10,
+    marginTop: 5,
+    marginBottom: 25,
+    borderRadius: 5,
+    borderWidth: normalize(1.5),
+    borderColor: colors.primaryAccent,
+    backgroundColor: "white"
+  },
+  insideOutButtonText: {
+    color: colors.primaryAccent,
+    textAlign: "center",
+    fontSize: 16,
+    fontWeight: "500"
+  },
   fieldKey: {
     flex: 1,
     alignSelf: "flex-start",

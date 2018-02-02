@@ -121,7 +121,11 @@ android {
         }
     }
     buildTypes {
+        debug {
+            manifestPlaceholders = [excludeSystemAlertWindowPermission: "false"]
+        }
         release {
+            manifestPlaceholders = [excludeSystemAlertWindowPermission: "true"]
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
             signingConfig signingConfigs.release
@@ -164,6 +168,7 @@ repositories {
 }
 
 dependencies {
+    compile project(':react-native-file-opener')
     compile project(':react-native-device-info')
     compile project(':react-native-appsee')
     compile project(':react-native-fabric')

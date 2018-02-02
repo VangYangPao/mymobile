@@ -46,7 +46,6 @@ import { computed, isObservableArray } from "mobx";
 import { observer } from "mobx-react";
 import AppStore from "../../stores/AppStore";
 import { saveNewClaim } from "../parse/claims";
-import CheckoutModal from "../components/CheckoutModal";
 import OverlayModal from "../components/OverlayModal";
 import PolicyDetails from "./PolicyDetails";
 import { showChatScreenExitWarning } from "../navigations";
@@ -151,7 +150,7 @@ export default function ChatScreenWrapper() {
       drawerIcon = "attach-money";
     }
     return {
-      title: isStartScreen ? "MicroUmbrella" : drawerLabel,
+      title: isStartScreen ? AppStore.appName : drawerLabel,
       drawerLabel,
       drawerIcon: ({ tintColor }) => (
         <Icon name={drawerIcon} size={22} color={tintColor} />
@@ -325,14 +324,14 @@ class ChatScreen extends Component {
     };
 
     const sendFirstMessage = setTimeout(() => {
+      const APP_NAME = AppStore.appName;
       this.setState(
         {
           messages: [
             {
               type: "text",
               _id: 0,
-              text:
-                "Hello, I'm Eve. Welcome to MicroUmbrella. I'll be your host and here are the protection plans that may interest you. 😄",
+              text: `Hello, I'm Eve. Welcome to ${APP_NAME}. I'll be your host and here are the protection plans that may interest you. 😄`,
               createdAt: new Date(),
               user: AGENT_USER
             }
@@ -1482,7 +1481,6 @@ class ChatScreen extends Component {
   }
 
   render() {
-    // return <CheckoutModal price={0.5} />;
     // return <PolicyDetails policy={{ policyTypeId: "pa" }} />;
     const additionalProps = {};
     let minInputToolbarHeight = 44;

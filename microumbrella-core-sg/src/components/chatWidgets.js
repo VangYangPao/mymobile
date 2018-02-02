@@ -1094,7 +1094,9 @@ export class SuggestionList extends Component {
     } else if (this.props.searchValue && !this.props.items.length) {
       scrollView = (
         <View style={styles.emptyContainer}>
-          <Text>No matching result. Please try other phrases.</Text>
+          <Text>
+            Could not find ‘{this.props.searchValue.trim()}’, try other keywords
+          </Text>
         </View>
       );
     }

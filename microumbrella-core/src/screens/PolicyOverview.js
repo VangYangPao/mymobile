@@ -46,21 +46,21 @@ class CoverageItem extends Component {
 
 class PolicyCoverages extends Component {
   render() {
+    const coverageHighlights =
+      this.props.coverageHighlights || this.props.covered.slice(0, 3);
+    const coverageItems = coverageHighlights.map(item => (
+      <CoverageItem
+        key={item}
+        navigation={this.props.navigation}
+        covered={true}
+        {...AppStore.coverages[item]}
+      />
+    ));
+
     return (
       <View style={styles.configContainer}>
         <Text style={styles.configTitle}>COVERAGE HIGHLIGHTS</Text>
-        <View style={styles.coverage}>
-          {this.props.covered
-            .slice(0, 3)
-            .map(item => (
-              <CoverageItem
-                key={item}
-                navigation={this.props.navigation}
-                covered={true}
-                {...AppStore.coverages[item]}
-              />
-            ))}
-        </View>
+        <View style={styles.coverage}>{coverageItems}</View>
       </View>
     );
   }

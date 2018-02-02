@@ -1,12 +1,8 @@
 ﻿// @flow
-import COUNTRIES from "./countries";
-import OCCUPATIONS from "./occupations";
-import INVALID_OCCUPATIONS from "./invalidOccupations";
-import RETURN_SINGLE_TRIP_OPTIONS from "./return-single-trip";
+import * as mappings from "./mappings";
 
 import type { QuestionSetType, BuyClaimQuestionSetType } from "../../types";
 
-const ALL_OCCUPATIONS = OCCUPATIONS.concat(INVALID_OCCUPATIONS);
 const claimIntro: QuestionSetType = [
   {
     question:
@@ -27,40 +23,39 @@ const questionTravelPA: QuestionSetType = [
     responseType: "number",
     id: "planIndex"
   },
+
+  // Travel PA
   {
     question: "Is it a return or one-way trip?",
-    responseType: ["choice", "string"],
-    choices: RETURN_SINGLE_TRIP_OPTIONS,
-    id: "tripType",
+    responseType: ["choice", "boolean"],
+    choices: [
+      { label: "Return trip", value: false },
+      { label: "One-way trip", value: true }
+    ],
+    id: "isOneWayTrip",
     include: ["travel"]
   },
   {
     question: "Which country are you travelling to?",
     searchChoices: true,
     responseType: ["string"],
-    choices: COUNTRIES,
+    choices: mappings.countries,
     include: ["travel"],
-    id: "travelDestination",
+    id: "travelArea",
     searchOptions: {
       keys: ["label"],
-      threshold: 0.2
+      threshold: 0.7
     }
   },
   {
-    question: "Coverage Period",
-    responseType: "number",
-    id: "coverageDuration",
-    include: ["pa"]
-  },
-  {
-    question: "Trip Start Date",
+    question: "When are you departing?",
     responseType: ["date", "travelStartDate"],
     futureOnly: true,
     id: "departureDate",
     include: ["travel"]
   },
   {
-    question: "Trip End Date",
+    question: "When are you returning?",
     responseType: ["date", "travelEndDate"],
     futureOnly: true,
     minDateFrom: "departureDate",
@@ -69,280 +64,171 @@ const questionTravelPA: QuestionSetType = [
     defaultValue: "this.state.answers.departureDate"
   },
   {
-    question: "Emergency Email Address ✉️",
-    responseType: ["string", "email"],
-    id: "email"
+    question:
+      "What are the details of your spouse or children travelling with you?",
+    responseType: "table",
+    id: "travellers",
+    include: ["travel"],
+    columns: [
+      {
+        label: "Address (with postcode, state, city)",
+        id: "address",
+        responseLength: 250,
+        responseType: ["string"]
+      },
+      {
+        label: "Email",
+        responseType: ["string", "email"],
+        id: "email"
+      },
+      {
+        label: "Relationship",
+        id: "travellerType",
+        responseLength: 60,
+        choices: mappings.travellerType,
+        responseType: ["string", "choice"]
+      },
+      {
+        label: "Name (as per IC/other ID/passport)",
+        id: "fullName",
+        responseType: "string"
+      },
+      {
+        label: "ID Type",
+        id: "idType",
+        responseType: ["choice", "string"],
+        choices: mappings.IDType
+      },
+      {
+        label: "ID Number",
+        id: "idNumber",
+        responseType: "string"
+      },
+      {
+        label: "Gender",
+        id: "gender",
+        responseType: ["choice", "string"],
+        choices: mappings.gender
+      },
+      {
+        label: "Nationality",
+        id: "nationality",
+        responseType: ["choice", "string"],
+        choices: mappings.nationality
+      },
+      {
+        label: "Marital Status",
+        id: "maritalStatus",
+        responseType: ["choice", "string"],
+        choices: mappings.maritalStatus
+      },
+      {
+        label: "Date of birth",
+        id: "DOB",
+        responseType: "date",
+        pastOnly: true
+      },
+      {
+        label: "Occupation",
+        id: "occupation",
+        responseType: ["choice", "string"],
+        choices: mappings.occupation
+      },
+      {
+        label: "Mobile Phone No",
+        responseType: ["string", "mobile"],
+        id: "mobilePhoneNo"
+      }
+    ]
   },
+
+  // Accident PA
   {
-    question: "Do you want to include coverage for your Spouse?",
-    responseType: ["boolean", "choice"],
-    choices: [
-      { label: "Yes, I want", value: true },
-      { label: "No, I do not want", value: false }
-    ],
-    id: "yesWantToAdd"
+    question: "Coverage Period",
+    responseType: "number",
+    id: "coverageDuration",
+    include: ["pa"]
   },
   {
     question:
-      "Do you want to include coverage for your children (Maximum up to 4)?",
+      "Have you and/or any named person application has been rejected by any Insurance/ Takaful operator before?",
+    responseType: ["boolean", "choice"],
+    id: "hasPerson",
+    label: "REJECTED PERSON",
+    choices: [
+      {
+        label: "Yes",
+        value: true
+      },
+      {
+        label: "No",
+        value: false
+      }
+    ],
+    include: ["pa"]
+  },
+  {
+    question: "Key in your personal details.",
+    responseType: "table",
+    id: "travellers",
+    include: ["travel"],
+    columns: [
+      {
+        label: "First Name",
+        id: "firstName",
+        responseLength: 60,
+        responseType: ["string"]
+      },
+      {
+        label: "Last Name",
+        id: "lastName",
+        responseLength: 60,
+        responseType: ["string"]
+      },
+      {
+        label: "ID Type",
+        id: "idType",
+        responseType: ["choice", "string"],
+        choices: mappings.IDType
+      },
+      {
+        label: "ID Number (NRIC/ Passport)",
+        id: "idType",
+        responseType: "string"
+      },
+      {
+        label: "Date of birth",
+        id: "DOB",
+        responseType: "date",
+        pastOnly: true
+      },
+      {
+        label: "Email",
+        id: "email",
+        responseType: "string"
+      },
+      {
+        question: "Mobile Phone No",
+        responseType: ["string", "mobile"],
+        id: "mobile"
+      }
+    ],
+    include: ["pa"]
+  },
+  {
+    question:
+      "You hereby declare that you are in good health, free from physical deformity, mental or any kind of medical disorder at the commencement date of enrolment.",
     responseType: ["boolean", "choice"],
     choices: [
-      { label: "Yes, I want", value: true },
-      { label: "No, I do not want", value: false }
+      { label: "Yes, I'm fine", value: true },
+      { label: "No, I'm not", value: false }
     ],
-    id: "yesWantToAdd"
+    id: "healthDeclaration"
   },
   {
-    question: "Who is your beneficiary? NRIC?",
-    responseType: ["purchaseIdNumber", "string", "nric"],
-    responseLength: 15,
-    id: "idNumber"
-  },
-  {
-    question: "Insured Person (Traveller A) details",
-    responseType: "table",
-    id: "travellers",
-    include: ["travel"],
-    columns: [
-      {
-        label: "Surname",
-        id: "surName",
-        responseLength: 60,
-        responseType: ["string"]
-      },
-      {
-        label: "Given Name",
-        id: "givenName",
-        responseLength: 60,
-        responseType: ["string"]
-      },
-      {
-        label: "ID Type ID Number",
-        id: "idNumber",
-        responseType: "string"
-      },
-      {
-        label: "Date of birth",
-        id: "DOB",
-        responseType: "date",
-        pastOnly: true
-      },
-      {
-        label: "Gender",
-        id: "gender",
-        responseType: ["choice", "number"],
-        choices: [{ label: "Male", value: 1 }, { label: "Female", value: 2 }]
-      },
-      {
-        question: "Email",
-        responseType: ["string", "email"],
-        id: "email"
-      },
-      {
-        question: "Mobile Phone No",
-        responseType: ["string", "mobile"],
-        id: "mobile"
-      }
-    ]
-  },
-
-  {
-    question: "Traveller B - Spouse of Policy Holder",
-    responseType: "table",
-    id: "travellers",
-    include: ["travel"],
-    columns: [
-      {
-        label: "Surname",
-        id: "surName",
-        responseLength: 60,
-        responseType: ["string"]
-      },
-      {
-        label: "Given Name",
-        id: "givenName",
-        responseLength: 60,
-        responseType: ["string"]
-      },
-      {
-        label: "ID Type ID Number",
-        id: "idNumber",
-        responseType: "string"
-      },
-      {
-        label: "Date of birth",
-        id: "DOB",
-        responseType: "date",
-        pastOnly: true
-      },
-      {
-        label: "Gender",
-        id: "gender",
-        responseType: ["choice", "number"],
-        choices: [{ label: "Male", value: 1 }, { label: "Female", value: 2 }]
-      },
-      {
-        question: "Email",
-        responseType: ["string", "email"],
-        id: "email"
-      },
-      {
-        question: "Mobile Phone No",
-        responseType: ["string", "mobile"],
-        id: "mobile"
-      }
-    ]
-  },
-
-  {
-    question: "Traveller 1- Child of Policy Holder",
-    responseType: "table",
-    id: "travellers",
-    include: ["travel"],
-    columns: [
-      {
-        label: "Surname",
-        id: "surName",
-        responseLength: 60,
-        responseType: ["string"]
-      },
-      {
-        label: "Given Name",
-        id: "givenName",
-        responseLength: 60,
-        responseType: ["string"]
-      },
-      {
-        label: "ID Type ID Number",
-        id: "idNumber",
-        responseType: "string"
-      },
-      {
-        label: "Date of birth",
-        id: "DOB",
-        responseType: "date",
-        pastOnly: true
-      },
-      {
-        label: "Gender",
-        id: "gender",
-        responseType: ["choice", "number"],
-        choices: [{ label: "Male", value: 1 }, { label: "Female", value: 2 }]
-      }
-    ]
-  },
-
-  {
-    question: "Traveller 2- Child of Policy Holder",
-    responseType: "table",
-    id: "travellers",
-    include: ["travel"],
-    columns: [
-      {
-        label: "Surname",
-        id: "surName",
-        responseLength: 60,
-        responseType: ["string"]
-      },
-      {
-        label: "Given Name",
-        id: "givenName",
-        responseLength: 60,
-        responseType: ["string"]
-      },
-      {
-        label: "ID Type ID Number",
-        id: "idNumber",
-        responseType: "string"
-      },
-      {
-        label: "Date of birth",
-        id: "DOB",
-        responseType: "date",
-        pastOnly: true
-      },
-      {
-        label: "Gender",
-        id: "gender",
-        responseType: ["choice", "number"],
-        choices: [{ label: "Male", value: 1 }, { label: "Female", value: 2 }]
-      }
-    ]
-  },
-  {
-    question: "Traveller 3- Child of Policy Holder",
-    responseType: "table",
-    id: "travellers",
-    include: ["travel"],
-    columns: [
-      {
-        label: "Surname",
-        id: "surName",
-        responseLength: 60,
-        responseType: ["string"]
-      },
-      {
-        label: "Given Name",
-        id: "givenName",
-        responseLength: 60,
-        responseType: ["string"]
-      },
-      {
-        label: "ID Type ID Number",
-        id: "idNumber",
-        responseType: "string"
-      },
-      {
-        label: "Date of birth",
-        id: "DOB",
-        responseType: "date",
-        pastOnly: true
-      },
-      {
-        label: "Gender",
-        id: "gender",
-        responseType: ["choice", "number"],
-        choices: [{ label: "Male", value: 1 }, { label: "Female", value: 2 }]
-      }
-    ]
-  },
-
-  {
-    question: "Traveller 4- Child of Policy Holder",
-    responseType: "table",
-    id: "travellers",
-    include: ["travel"],
-    columns: [
-      {
-        label: "Surname",
-        id: "surName",
-        responseLength: 60,
-        responseType: ["string"]
-      },
-      {
-        label: "Given Name",
-        id: "givenName",
-        responseLength: 60,
-        responseType: ["string"]
-      },
-      {
-        label: "ID Type ID Number",
-        id: "idNumber",
-        responseType: "string"
-      },
-      {
-        label: "Date of birth",
-        id: "DOB",
-        responseType: "date",
-        pastOnly: true
-      },
-      {
-        label: "Gender",
-        id: "gender",
-        responseType: ["choice", "number"],
-        choices: [{ label: "Male", value: 1 }, { label: "Female", value: 2 }]
-      }
-    ]
+    question:
+      "Thank you <%= firstName %> <%= lastName %> for the information. I will now bring you to the confirmation page.",
+    responseType: null
   }
 ];
 

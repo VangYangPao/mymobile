@@ -3,6 +3,7 @@ import moment from "moment";
 import INVALID_OCCUPATIONS from "../../data/SG/invalidOccupations";
 
 import AppStore from "../../microumbrella-core/stores/AppStore";
+import { ValidationResult } from "../../microumbrella-core/src/models/base-validations";
 
 function validatePAOccupation(occupationId) {
   const foundOccupation = INVALID_OCCUPATIONS.find(
@@ -21,7 +22,7 @@ function validatePAOccupation(occupationId) {
   };
 }
 
-function validatePhonePurchaseDate(date) {
+function validatePhonePurchaseDate(date: Date) {
   date = moment(date);
   const years = moment.utc().diff(date, "years");
   if (years >= 1) {
@@ -36,7 +37,7 @@ function validatePhonePurchaseDate(date) {
   };
 }
 
-function validatePurchaseIdNumber(idNumber, answers) {
+function validatePurchaseIdNumber(idNumber: string, answers: Object) {
   const Parse = AppStore.Parse;
   const Purchase = Parse.Object.extend("Purchase");
   const policyTypeId = answers.policy.id;
@@ -93,8 +94,26 @@ function validatePurchaseIdNumber(idNumber, answers) {
   });
 }
 
-export default (validations = {
+export function validatePhoneNumber(phoneNumber: string) {
+  const prefix = phoneNumber.slice(0, 2);
+  if (prefix !== "01") {
+    return new ValidationResult(false, "Phone number must begin with 01");
+  }
+  if (phoneNumber.length >= 15) {
+    return new ValidationResult(
+      false,
+      "Phone number cannot be longer than 15 numbers"
+    );
+  }
+  return new ValidationResult(true, true);
+}
+
+export function validateNRIC(nric: string) {}
+
+export default {
   occupation: validatePAOccupation,
   purchaseDate: validatePhonePurchaseDate,
-  purchaseIdNumber: validatePurchaseIdNumber
-});
+  purchaseIdNumber: validatePurchaseIdNumber,
+  nric: validateNRIC,
+  phoneNumber: validatePhoneNumber
+};

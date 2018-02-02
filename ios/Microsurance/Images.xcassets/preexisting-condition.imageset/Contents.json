@@ -1,0 +1,23 @@
+{
+ "images": [
+  {
+   "idiom": "universal", 
+   "scale": "1x", 
+   "filename": "preexisting-condition.png"
+  }, 
+  {
+   "idiom": "universal", 
+   "scale": "2x", 
+   "filename": "preexisting-condition@2x.png"
+  }, 
+  {
+   "idiom": "universal", 
+   "scale": "3x", 
+   "filename": "preexisting-condition@3x.png"
+  }
+ ], 
+ "info": {
+  "version": 1, 
+  "author": "xcode"
+ }
+}

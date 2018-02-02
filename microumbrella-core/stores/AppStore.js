@@ -1,18 +1,21 @@
+// @flow
 import React from "react";
+import { View } from "react-native";
 import { StyleSheet, Image } from "react-native";
+import Parse from "parse/react-native";
 import { observable, computed, asStructure } from "mobx";
 import colors from "../src/styles/colors";
 import { baseValidations } from "../src/models/base-validations";
-import policies from "../data/policies";
-import coverages from "../data/coverage";
-import type { Policy, Coverage } from "../src/types/policy";
+import policies from "../../data/SG/policies";
+import coverages from "../../data/SG/coverage";
+import type { PolicyType, CoverageType } from "../../types";
 
-import paClaimQuestions from "../data/paClaimQuestions";
-import travelClaimQuestions from "../data/travelClaimQuestions";
-import mobileClaimQuestions from "../data/mobileClaimQuestions";
-import { QUESTION_SETS } from "../data/questions";
-
-import termsOfUseHTML from "../documents/termsOfUse";
+import paClaimQuestions from "../../data/SG/paClaimQuestions";
+import travelClaimQuestions from "../../data/SG/travelClaimQuestions";
+import mobileClaimQuestions from "../../data/SG/mobileClaimQuestions";
+import { QUESTION_SETS } from "../../data/SG/questions";
+import termsOfUseHTML from "../../documents/SG/termsOfUse";
+import type { AppOptionsType } from "../../../types";
 
 const styles = StyleSheet.create({
   authBackgroundImage: {
@@ -29,12 +32,15 @@ const styles = StyleSheet.create({
 });
 
 class AppStore {
+  @observable appName: string = "MicroUmbrella";
   parseAppId: string = "microumbrella";
   parseServerURL: string = "https://api-dev.microumbrella.com/parse";
   @observable colors: { [string]: string } = colors;
-  policies: Array<Policy> = policies;
-  coverages: { [string]: Coverage } = coverages;
+  @observable policies: Array<PolicyType> = policies;
+  @observable coverages: { [string]: CoverageType } = coverages;
+  @observable strings: { [string]: string } = {};
 
+  currency = null;
   @observable stackNavigatorScreens = {};
   @observable
   authBackgroundImage = (
@@ -61,7 +67,7 @@ class AppStore {
     mobile: mobileClaimQuestions
   };
 
-  fetchPurchases(Parse, currentUser) {
+  fetchPurchases(Parse: Parse, currentUser: Parse.User) {
     const Purchase = Parse.Object.extend("Purchase");
     const query = new Parse.Query(Purchase);
     query.equalTo("user", currentUser);
@@ -76,7 +82,13 @@ class AppStore {
   }
 
   termsOfUseHTML = termsOfUseHTML;
+
+  screens: { [string]: Object } = {};
+  controllers: { [string]: Function } = {};
+  data: {
+    travelBenefits?: Object
+  } = {};
 }
 
-singleton = new AppStore();
+const singleton = new AppStore();
 export default singleton;

@@ -2,6 +2,7 @@ import "react-native";
 import "isomorphic-fetch";
 import "isomorphic-form-data";
 import * as cheerio from "cheerio";
+import "./mocks";
 import { createPromiseRetry } from "../src/utils";
 
 import {
@@ -12,7 +13,7 @@ import {
   performPaymentAuthRequest,
   doFull3DSTransaction,
   tokenizeTransaction
-} from "../src/models/telemoney";
+} from "../microumbrella-core-sg/src/models/telemoney";
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 100000;
 
