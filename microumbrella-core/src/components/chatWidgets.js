@@ -658,8 +658,14 @@ export class TravellerTableInput extends Component {
   //   this.setState({ items });
   // }
 
-  renderItem({ item, index }) {
-    const { firstName, lastName } = item;
+  renderItem({ item, index }: { item: Object, index: number }) {
+    let fullName;
+    if (AppStore.countryCode !== "MY") {
+      const { firstName, lastName } = item;
+      fullName = `${firstName} ${lastName}`;
+    } else {
+      fullName = item.fullName;
+    }
     return (
       <View
         style={{
@@ -686,9 +692,7 @@ export class TravellerTableInput extends Component {
             name="remove-circle-outline"
           />
         </TouchableOpacity>
-        <Text style={{ fontSize: 17.5 }}>
-          {firstName} {lastName}
-        </Text>
+        <Text style={{ fontSize: 17.5 }}>{fullName}</Text>
       </View>
     );
   }
@@ -731,17 +735,19 @@ export class TravellerTableInput extends Component {
             <Text style={{ flex: 1, fontSize: 16 }}>ADD NEW TRAVELLER</Text>
           </View>
         </TouchableOpacity>
-        <Button
-          accessibilityLabel="chat__submit-traveller"
-          style={{
-            height: 60,
-            borderTopLeftRadius: 0,
-            borderTopRightRadius: 0
-          }}
-          onPress={() => this.props.onSubmit(this.state.items)}
-        >
-          {this.state.items.length ? "SEND" : "I'M TRAVELLING ALONE"}
-        </Button>
+        {AppStore.countryCode === "MY" && !this.state.items.length ? null : (
+          <Button
+            accessibilityLabel="chat__submit-traveller"
+            style={{
+              height: 60,
+              borderTopLeftRadius: 0,
+              borderTopRightRadius: 0
+            }}
+            onPress={() => this.props.onSubmit(this.state.items)}
+          >
+            {this.state.items.length ? "SEND" : "I'M TRAVELLING ALONE"}
+          </Button>
+        )}
       </View>
     );
   }
