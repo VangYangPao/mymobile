@@ -1,26 +1,6 @@
 // @flow
 import Parse from "parse/react-native";
-
-type Policyholder = {
-  idNumber: string,
-  idNumberType: string,
-  DOB: Date,
-  mobilePhone: string,
-  housePhone: string,
-  officePhone: string,
-  salutation: string,
-  gender: string,
-  maritalStatus: string,
-  race: string,
-  religion: string,
-  nationality: string,
-  designation: string,
-  address1: string,
-  address2: string,
-  postcode: string,
-  state: string,
-  relationship: string
-};
+import type { Policyholder } from "../../../types/MY/policies";
 
 function saveUserAttributes(user: Parse.User, policyholder: Policyholder) {
   user.set("idNumber", policyholder.idNumber);
