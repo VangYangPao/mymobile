@@ -72,18 +72,18 @@ export const state = [
   { label: "Johor", value: "JOH" },
   { label: "Kedah", value: "KED" },
   { label: "Kelantan", value: "KEL" },
-  { label: "WP KL", value: "KL" },
+  { label: "WP Kuala Lumpur", value: "KL" },
   { label: "Melaka", value: "MK" },
-  { label: "NS", value: "NS" },
+  { label: "Negeri Sembilan", value: "NS" },
   { label: "Pahang", value: "PAH" },
   { label: "Perlis", value: "PER" },
-  { label: "PPinang", value: "PG" },
+  { label: "Pulau Pinang", value: "PG" },
   { label: "Perak", value: "PRK" },
-  { label: "WP Pjaya", value: "PTJY" },
+  { label: "WP Putrajaya", value: "PTJY" },
   { label: "Sabah", value: "SAB" },
   { label: "Sarawak", value: "SARA" },
   { label: "Selangor", value: "SGOR" },
-  { label: "Terenganu", value: "TREN" }
+  { label: "Terengganu", value: "TREN" }
 ];
 
 export const travellerType = [
