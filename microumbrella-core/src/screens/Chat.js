@@ -298,7 +298,7 @@ class ChatScreen extends Component {
 
     this.AGENT_USER = {
       _id: AGENT_USER_ID,
-      name: "Eve",
+      name: AppStore.chatAgentName,
       avatar: AppStore.chatAvatar
     };
   }
@@ -325,6 +325,7 @@ class ChatScreen extends Component {
     };
 
     const sendFirstMessage = setTimeout(() => {
+      const CHAT_AGENT_NAME = AppStore.chatAgentName;
       const APP_NAME = AppStore.appName;
       this.setState(
         {
@@ -332,7 +333,7 @@ class ChatScreen extends Component {
             {
               type: "text",
               _id: 0,
-              text: `Hello, I'm Eve. Welcome to ${APP_NAME}. I'll be your host and here are the protection plans that may interest you. 😄`,
+              text: `Hello, I'm ${CHAT_AGENT_NAME}. Welcome to ${APP_NAME}. I'll be your host and here are the protection plans that may interest you. 😄`,
               createdAt: new Date(),
               user: this.AGENT_USER
             }
