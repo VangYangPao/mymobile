@@ -10,8 +10,7 @@ export default class VectorDrawableView extends Component {
         <AndroidVectorDrawableView resourceName={resourceName} style={style} />
       );
     }
-    const iosResourceUri =
-      resourceName.replace("ic_", "").replace(/_/g, "-") + ".png";
+    const iosResourceUri = resourceName.replace(/_/g, "-") + ".png";
     return (
       <Image
         source={{ uri: iosResourceUri }}

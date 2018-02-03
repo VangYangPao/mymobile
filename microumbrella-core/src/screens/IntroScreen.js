@@ -71,15 +71,15 @@ export default class IntroScreen extends Component {
     );
 
     const benefits = [
-      { title: "Low Price", resourceName: "ic_low_price" },
+      { title: "Low Price", resourceName: "low_price" },
       {
         title: "Comprehensive Coverage",
-        resourceName: "ic_comprehensive_coverage"
+        resourceName: "comprehensive_coverage"
       },
-      { title: "User Friendly App", resourceName: "ic_user_friendly" },
-      { title: "Simple Terms", resourceName: "ic_simple_terms" },
-      { title: "Algorithm Powered", resourceName: "ic_algorithm_powered" },
-      { title: "Click to Claim", resourceName: "ic_click_to_claim" }
+      { title: "User Friendly App", resourceName: "user_friendly" },
+      { title: "Simple Terms", resourceName: "simple_terms" },
+      { title: "Algorithm Powered", resourceName: "algorithm_powered" },
+      { title: "Click to Claim", resourceName: "click_to_claim" }
     ];
     const renderBenefit = b => (
       <View style={styles.benefit} key={b.resourceName}>
@@ -104,7 +104,7 @@ export default class IntroScreen extends Component {
       <View style={styles.page}>
         <View accessibilityLabel="intro__logo" style={styles.appNameContainer}>
           <VectorDrawableView
-            resourceName="ic_microumbrella_word"
+            resourceName="microumbrella_word"
             style={styles.appName}
           />
         </View>
