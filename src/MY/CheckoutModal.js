@@ -97,7 +97,8 @@ class WebcashView extends Component {
     };
   }
 
-  handleLoadError() {
+  handleLoadError(e) {
+    console.error(e);
     NetInfo.fetch().done(connectionType => {
       if (connectionType === "none") {
         this.setState({
@@ -121,15 +122,19 @@ class WebcashView extends Component {
 
   handleWebViewMessage(event: { nativeEvent: { data: string } }) {
     const responseCode = event.nativeEvent.data;
-    if (responseCode === "S") {
-      if (
-        typeof this.props.onCheckout === "function" &&
-        !this.state.checkingOut
-      ) {
-        this.setState({ checkingOut: true });
-        this.props.onCheckout();
-      }
+    if (!this.state.checkingOut) {
+      this.setState({ checkingOut: true });
+    } else {
+      return;
     }
+    const promise = new Promise((resolve, reject) => {
+      if (responseCode === "S") {
+        resolve({ responseCode });
+      } else {
+        reject({ responseCode });
+      }
+    });
+    this.props.onCheckout(promise);
   }
 
   render() {
