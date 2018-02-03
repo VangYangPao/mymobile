@@ -29,7 +29,7 @@ export default (policies = [
   {
     id: "travel",
     title: "Travel Umbrella",
-    imageSource: "ic_travel_protection",
+    imageSource: "travel_protection",
     description:
       "At a super-low price, this is a super-big comprehensive plan that covers most of your financial loss and unforeseen expenses when you travel overseas. It covers you and your family's medical expenses, loss of baggage, loss of cash, and loss of home contents. You and your family enjoy unlimited emergency medical evacuation, cash compensation for flight delay, diversion or cancellation. In the event accidental death or permanent disability, your loved ones will receive a lump sum cash within days. These are just some highlights, and we are constantly adding more benefits and coverage to make you travel happily and peacefully!",
     // plans: [{ 0: 50000, premium: 35 }], // hardcoded for display purposes only
@@ -98,7 +98,7 @@ export default (policies = [
   // {
   //   id: "pa",
   //   title: "Micro PA Takaful",
-  //   imageSource: "ic_ad_pd",
+  //   imageSource: "ad_pd",
   //   from: "2 weeks",
   //   plans: [
   //     // {
