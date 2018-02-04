@@ -388,7 +388,10 @@ export class ClaimPolicyChoice extends Component {
               </View>
             </View>
           ) : null*/}
-          <Text style={styles.policyDetailText}>Premium: ${premium}</Text>
+          <Text style={styles.policyDetailText}>
+            Premium: {AppStore.currency}
+            {premium.toFixed(2)}
+          </Text>
         </View>
       </TouchableOpacity>
     );
