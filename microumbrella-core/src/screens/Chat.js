@@ -72,7 +72,7 @@ import { ValidationResult } from "../models/base-validations";
 import Button from "../components/Button";
 import CHAT_STYLES from "../styles/Chat.styles";
 import { MESSAGE_LOAD_TIME as _MESSAGE_LOAD_TIME } from "react-native-dotenv";
-import { showAlert, crashlyticsLogError } from "../utils";
+import { showAlert, crashlyticsLogError } from "../../src/utils";
 import MAPPING from "../../data/mappings";
 import type {
   QuestionSetType,
@@ -640,6 +640,8 @@ class ChatScreen extends Component {
     );
   }
 
+  handleOnClaimSubmitted() {}
+
   handleProceedButtonPress() {
     const { questionSet, policy } = this.props;
     if (questionSet === "buy") {
@@ -661,12 +663,13 @@ class ChatScreen extends Component {
         currentUser
       });
     } else if (questionSet === "claim") {
+      let savedClaim = null;
+      let saveClaimResponse = null;
+      let loadLimitPassed = false;
+
       this.setState({ loadingSave: true });
-      const purchase = this.state.policies.find(
-        p => p.get("policyId") === this.state.answers.claimPolicyNo
-      );
       const { currentUser } = this.state;
-      const policyTypeId = purchase.get("policyTypeId");
+
       const navigateToPoliciesAction = NavigationActions.reset({
         key: null,
         index: 0,
@@ -682,6 +685,48 @@ class ChatScreen extends Component {
           })
         ]
       });
+
+      const onSuccess = () => {
+        console.log("success", saveClaimResponse);
+        showAlert(
+          "Your claim has been submitted. You will be notified on this app for updates",
+          () => {
+            this.props.screenProps.rootNavigation.dispatch(
+              navigateToPoliciesAction
+            );
+          }
+        );
+      };
+
+      const onError = () => {
+        console.error(saveClaimResponse);
+        crashlyticsLogError(saveClaimResponse);
+
+        showAlert("Sorry, something went wrong with your claim.", () => {
+          this.props.screenProps.rootNavigation.dispatch(
+            navigateToPoliciesAction
+          );
+        });
+      };
+
+      // fake the progress if save is too fast
+      setTimeout(() => {
+        if (savedClaim !== null) {
+          if (savedClaim) {
+            onSuccess();
+          } else {
+            onError();
+          }
+        } else {
+          loadLimitPassed = true;
+        }
+      }, 2000);
+
+      const purchase = this.state.policies.find(
+        p => p.get("policyId") === this.state.answers.claimPolicyNo
+      );
+      const policyTypeId = purchase.get("policyTypeId");
+
       saveNewClaim(
         policyTypeId,
         this.state.answers,
@@ -690,27 +735,20 @@ class ChatScreen extends Component {
         this.state.currentUser
       )
         .then(res => {
-          console.log(res);
-          showAlert(
-            "Your claim has been submitted. You will be notified on this app for updates",
-            () => {
-              this.setState({ loadingSave: false });
-              this.props.screenProps.rootNavigation.dispatch(
-                navigateToPoliciesAction
-              );
-            }
-          );
+          savedClaim = true;
+          saveClaimResponse = res;
+
+          if (loadLimitPassed) {
+            onSuccess(res);
+          }
         })
         .catch(err => {
-          console.error(err);
-          crashlyticsLogError(err);
+          savedClaim = false;
+          saveClaimResponse = err;
 
-          this.setState({ loadingSave: false });
-          showAlert("Sorry, something went wrong with your claim.", () => {
-            this.props.screenProps.rootNavigation.dispatch(
-              navigateToPoliciesAction
-            );
-          });
+          if (loadLimitPassed) {
+            onError(err);
+          }
         });
     }
   }
