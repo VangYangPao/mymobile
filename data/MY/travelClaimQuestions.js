@@ -1,29 +1,29 @@
-export default (travelClaimQuestions = [
+// @flow
+import type { QuestionSetType, BuyClaimQuestionSetType } from "../../types";
+// const
+
+const travelClaimQuestions: QuestionSetType = [
   {
     question:
       "I will walk you through step by step. I'll do my best to get your claim paid fast. Firstly, please share with me the coverage that you would like to make a claim",
     responseType: ["string", "choice"],
     choices: [
-      { label: "Death", value: "death" },
+      { label: "Death of Kin", value: "death" },
       {
-        label: "Personal Accident / Medical Reimbursement",
+        label: "Permanent Disablement",
+        value: "permanentDisability"
+      },
+      {
+        label: "Medical and Hospitalisation",
         value: "medicalReimbursement"
       },
-      {
-        label:
-          "Loss or Damage of Baggage, Personal Belongings, Personal Documents or Money",
-        value: "lossOfPersonalDocument"
-      },
-      { label: "Delay or Flight Misconnection", value: "travelDelay" },
-      {
-        label: "Trip Curtailment / Cancellation or Loss of Deposit",
-        value: "tripCurtailment"
-      },
-      { label: "Personal Liability", value: "personalLiability" },
+      { label: "Travel Inconvenience", value: "travelInconveniece" },
       { label: "Others", value: "others" }
     ],
     id: "accidentType"
   },
+
+  // ACCIDENT_DATE
   {
     question:
       "You must be <%= firstName %> <%= lastName %>’s claimant/next of kin. I am so sorry for your loss. My deepest condolences to you and your family! Please share with me the date and time of the accident",
@@ -33,15 +33,16 @@ export default (travelClaimQuestions = [
     include: ["death"]
   },
   {
-    question: "Share with me the cause of the accident?",
-    responseType: "string",
-    id: "accidentCause",
-    include: ["death"]
+    question:
+      "Oh… I am sad to hear that. I’ll do my best to get your claim paid fast. Please share with me the date and time of the accident",
+    responseType: "datetime",
+    pastOnly: true,
+    id: "accidentDate",
+    include: ["permanentDisability"]
   },
-  // causes crash
   {
     question:
-      "<%= firstName %> <%= lastName %>, I wish you a complete recovery. I’ll do my best to get your claim paid fast. Please share with me the date and time of the accident",
+      "<%= firstName %> <%= lastName %>, I wish you a complete recovery. Please share with me the date and time of the accident",
     responseType: "datetime",
     pastOnly: true,
     id: "accidentDate",
@@ -49,226 +50,106 @@ export default (travelClaimQuestions = [
   },
   {
     question:
-      "Please share with me the cause of the accident, injury, or illness?  ",
-    responseType: "string",
-    responseLength: 600,
-    id: "accidentCause",
-    include: ["medicalReimbursement"]
-  },
-  {
-    question:
-      "<%= firstName %> <%= lastName %>, I wish you get well soon. Let me help out on the claim fast. Please share with me the date and time of the accident",
+      "<%= firstName %> <%= lastName %>, please share with me the date and time of loss or damage",
     responseType: "datetime",
     pastOnly: true,
     id: "accidentDate",
-    include: ["medicalReimbursement"]
-  },
-  // causes crash
-  {
-    question:
-      "<%= firstName %> <%= lastName %>, you just selected the option to claim for loss or damaged items",
-    responseType: "datetime",
-    pastOnly: true,
-    id: "accidentDate",
-    include: ["lossOfPersonalDocument"]
-  },
-  {
-    question: "Please share with me the flight details",
-    responseType: ["string", "string"],
-    labels: ["Airline company", "Flight number"],
-    id: ["airlineCompany", "flightNo"],
-    include: ["travelDelay"]
-  },
-  {
-    question:
-      "Oh, I am so sorry to hear about the inconvenience! Will you share with me the cause of this travel delay, baggage delay, or flight misconnection? ",
-    responseType: "string",
-    id: "accidentCause",
-    include: ["travelDelay"]
-  },
-  {
-    question:
-      "<%= firstName %> <%= lastName %>, share with me what had happened?  ",
-    responseType: "string",
-    responseLength: 600,
-    id: "details",
-    include: ["personalLiability", "others"]
+    include: ["travelInconveniece"]
   },
 
-  {
-    question:
-      "What is the amount you claimed from the airline or other source? ",
-    responseType: "number",
-    id: "claimAmountFromOtherSource",
-    include: ["travelDelay"]
-  },
-  {
-    question:
-      "What is the ORIGINAL departure date, time and departing airport?",
-    responseType: ["datetime", "string"],
-    labels: ["Original Departure Date", "Departure Airport"],
-    id: ["originalFlightDepartureDate", "originalFlightDepartureAirport"],
-    include: ["travelDelay"]
-  },
-  {
-    question: "What is the ACTUAL departure date, time and departing airport?",
-    responseType: ["datetime", "string"],
-    labels: ["Actual Departure Date", "Departure Airport"],
-    id: ["actualFlightDepartureDate", "actualFlightDepartureAirport"],
-    include: ["travelDelay"]
-  },
-  {
-    question:
-      "I am so sorry to hear about this.  Please share with me the cause of your trip curtailment or cancellation? ",
-    responseType: "string",
-    responseLength: 600,
-    id: "accidentCause",
-    include: ["tripCurtailment"]
-  },
-  {
-    question:
-      "Please share with me the date of trip curtailment or cancellation",
-    responseType: "date",
-    pastOnly: true,
-    id: "accidentDate",
-    include: ["tripCurtailment"]
-  },
-  {
-    question:
-      "If the trip curtailment or cancellation was caused by your medical condition, or your family member’s medical condition, have you or your family member suffered from this condition before? ",
-    responseType: ["boolean", "choice"],
-    choices: [
-      {
-        label: "Yes",
-        value: true
-      },
-      { label: "No", value: false }
-    ],
-    id: "recurrence",
-    include: ["tripCurtailment"]
-  },
-  {
-    question: "Please explain the medical condition in detail",
-    responseType: "string",
-    id: "recurrenceDetail",
-    include: ["tripCurtailment"],
-    condition: "this.state.answers.sufferedFromConditionBefore"
-  },
-  {
-    question:
-      "Please share with me the NAME, ADDRESS and CONTACT of the attending physician",
-    responseType: ["string", "string", ["string", "phoneNumber"]],
-    labels: ["Name", "Address", "Contact number"],
-    id: ["physicianName", "physicianAddress", "physicianContact"],
-    include: ["tripCurtailment"],
-    condition: "this.state.answers.sufferedFromConditionBefore"
-  },
-  {
-    question: "Have you admitted fault? ",
-    responseType: ["boolean", "choice"],
-    choices: [
-      {
-        label: "Yes",
-        value: true
-      },
-      { label: "No", value: false }
-    ],
-    id: "hasAdmittedFault",
-    include: ["personalLiability"]
-  },
-  // {
-  //   question: "Please provide the name and contact of witness",
-  //   responseType: "table",
-  //   columns: [
-  //     { label: "Name", id: "name", type: "string" },
-  //     { label: "Contact", id: "contact", type: "string" }
-  //   ],
-  //   id: "witnesses",
-  //   include: ["personalLiability"]
-  // },
-
-  // causes crash
-  {
-    question:
-      "What is your baggage's ORIGINAL arrival date, time and arriving airport? ",
-    responseType: ["datetime", "string"],
-    labels: ["Original Departure Date", "Departure Airport"],
-    id: ["originalBaggageArrivalDate", "originalBaggageArrivalAirport"],
-    include: ["travelDelay"]
-  },
-  {
-    question:
-      "What is your baggage's ACTUAL arrival date, time and arriving airport? ",
-    responseType: ["datetime", "string"],
-    labels: ["Actual Departure Date", "Departure Airport"],
-    id: ["actualBaggageArrivalDate", "actualBaggageArrivalAirport"],
-    include: ["travelDelay"]
-  },
+  // ACCIDENT_LOCATION
   {
     question: "Where did it happen?",
     responseType: "string",
     id: "accidentLocation",
-    include: ["death", "medicalReimbursement", "lossOfPersonalDocument"]
+    include: [
+      "medicalReimbursement",
+      "permanentDisability",
+      "travelInconveniece"
+    ]
+  },
+
+  // ACCIDENT_CAUSE
+  {
+    question: "Share with me the cause of the accident?",
+    responseType: "string",
+    responseLength: 600,
+    id: "accidentCause",
+    include: ["death"]
   },
   {
-    question:
-      "Oh, I am so sorry to hear this!  Please share with me the full details of the situation leading to loss or damage?",
+    question: "Share with me how did you sustain your injury?",
+    responseType: "string",
+    responseLength: 600,
+    id: "accidentCause",
+    include: ["permanentDisability"]
+  },
+  {
+    question: "Share with me the cause of the accident, injury, or illness?",
+    responseType: "string",
+    responseLength: 600,
+    id: "accidentCause",
+    include: ["medicalReimbursement"]
+  },
+
+  // ACCIDENT_DETAILS
+  {
+    question: "Oh, I am concerned… May I know the extent of your injury?",
     responseType: "string",
     responseLength: 600,
     id: "details",
-    include: ["lossOfPersonalDocument"]
+    include: ["permanentDisability"]
   },
   {
     question:
-      "Oh, I am concerned! May I know the extent of your injury/illness?",
+      "Oh, I am concerned… May I know the extent of your injury/illness?",
     responseType: "string",
     responseLength: 600,
     id: "details",
     include: ["medicalReimbursement"]
   },
   {
-    question: "Have you suffered the same injury/illness before?",
+    question:
+      "Oh, I am so sorry to hear this! Please share with me the full details of the situation leading to loss or damage?",
+    responseType: "string",
+    responseLength: 600,
+    id: "details",
+    include: ["travelInconveniece"]
+  },
+  {
+    question:
+      "<%= firstName %> <%= lastName %>, share with me what had happened?",
+    responseType: "string",
+    responseLength: 600,
+    id: "details",
+    include: ["others"]
+  },
+
+  // ACCIDENT_RECURRENCE & OTHER_INSURANCE_COMPANY
+  {
+    question: "Have you suffered the same injury before?",
     responseType: ["boolean", "choice"],
     choices: [
       { label: "Yes, I have", value: true },
       { label: "No, I have not", value: false }
     ],
     id: "recurrence",
-    include: ["medicalReimbursement"]
+    include: ["permanentDisability", "medicalReimbursement"]
   },
   {
-    question: "Please explain the injury in detail",
+    question: "Please explain the injury in detail?",
     responseType: "string",
     id: "recurrenceDetail",
-    include: ["medicalReimbursement"],
-    condition: "this.state.answers.hasSufferedSameInjury"
-  },
-  // FIX: THIS QUESTION CRASHES APP WHEN UNCOMMENTED
-  {
-    question: "When did the symptoms first appear?",
-    responseType: "date",
-    pastOnly: true,
-    id: "symptomsAppearDate",
-    include: ["medicalReimbursement"],
-    condition: "this.state.answers.hasSufferedSameInjury"
-  },
-
-  {
-    question:
-      "Does <%= firstName %> <%= lastName %> have other insurance coverage for this accident?",
-    responseType: ["boolean", "choice"],
-    id: "hasOtherInsuranceCoverage",
-    choices: [{ label: "Yes", value: true }, { label: "No", value: false }],
-    include: ["death"]
-  },
-  {
-    question:
-      "Try to recall, do you have other insurance coverage for this accident? ",
-    responseType: ["boolean", "choice"],
-    id: "hasOtherInsuranceCoverage",
-    choices: [{ label: "Yes", value: true }, { label: "No", value: false }],
     include: ["permanentDisability", "medicalReimbursement"],
-    condition: "this.state.answers.hasSufferedSameInjury"
+    condition: "this.state.answers.recurrence"
+  },
+  {
+    question:
+      "Does <%= firstName %> <%= lastName %> have other takaful/insurance coverage for this accident?",
+    responseType: ["boolean", "choice"],
+    id: "hasOtherInsuranceCoverage",
+    choices: [{ label: "Yes", value: true }, { label: "No", value: false }],
+    include: ["death", "permanentDisability"]
   },
   {
     question: "What is the insurance company and policy number?",
@@ -278,6 +159,23 @@ export default (travelClaimQuestions = [
     include: ["death", "permanentDisability", "medicalReimbursement"],
     condition: "this.state.answers.hasOtherInsuranceCoverage"
   },
+
+  // TABLES
+  {
+    question:
+      "Thank you for bearing with us. I need your help to itemise what are lost or damaged",
+    responseType: "table",
+    columns: [
+      { label: "Description", id: "description", type: "string" },
+      { label: "Date of Purchase", id: "dateOfPurchase", type: "date" },
+      { label: "Place of Purchase", id: "placeOfPurchase", type: "string" },
+      { label: "Original Price", id: "originalPrice", type: "number" }
+    ],
+    id: "lostOrDamagedItems",
+    include: ["travelInconveniece"]
+  },
+
+  // DOCUMENTS & IMAGES
   {
     question:
       "We are almost done to get your claim paid fast. I need your help to snap or upload some supporting documents. Do your best to snap or upload the right images for each box",
@@ -298,6 +196,10 @@ export default (travelClaimQuestions = [
         id: "repatriationReport"
       },
       {
+        label: "Police report (if accidental event)",
+        id: "policeReport"
+      },
+      {
         label:
           "Letter from Immigration and Checkpoint Authority (ICA) (if death occurs overseas)",
         id: "immigrationLetter"
@@ -316,12 +218,12 @@ export default (travelClaimQuestions = [
     responseType: "imageTable",
     columns: [
       {
-        label: "Original medical bills/receipts (if any)",
+        label: "Original medical bills/receipts",
         id: "medicalBill"
       },
       {
         label:
-          "If original bills/receipts submitted to other insurer or your employer, snap/upload the reimbursement letter, or discharge voucher from insurer, or letter from employer indicating the amount paid to you",
+          "If original bills/receipts submitted to other takaful operator/ insurer or your employer, snap/upload the reimbursement letter, or discharge voucher from takaful operator/ insurer, or letter from employer indicating the amount paid to you",
         id: "reimbursementLetter"
       },
       {
@@ -337,7 +239,40 @@ export default (travelClaimQuestions = [
         id: "dischargeSummary"
       },
 
-      { label: "Boarding pass/Flight itinerary", id: "boardingPass" }
+      { label: "Medical leave certificate", id: "medicalLeaveCertificate" },
+      { label: "Work permit (if any)", id: "workPermit" }
+    ],
+    include: ["permanentDisability"],
+    id: "claimImages"
+  },
+  {
+    question:
+      "We are almost done to get your claim paid fast. I need your help to snap or upload some supporting documents. Do your best to snap or upload the right images for each box",
+    responseType: "imageTable",
+    columns: [
+      {
+        label: "Original medical bills/receipts",
+        id: "medicalBill"
+      },
+      {
+        label:
+          "If original bills/receipts submitted to other takaful operator/ insurer or your employer, snap/upload the reimbursement letter, or discharge voucher from takaful operator/ insurer, or letter from employer indicating the amount paid to you",
+        id: "reimbursementLetter"
+      },
+      {
+        label: "Medical report (if you are admitted to hospital)",
+        id: "medicalReport"
+      },
+      {
+        label: "Police report (if accidental)",
+        id: "policeReport"
+      },
+      {
+        label: "Inpatient discharge summary (if you are admitted to hospital)",
+        id: "dischargeSummary"
+      },
+
+      { label: "Boarding pass / Flight itinerary", id: "boardingPass" }
     ],
     include: ["medicalReimbursement"],
     id: "claimImages"
@@ -350,20 +285,27 @@ export default (travelClaimQuestions = [
       {
         label:
           "Original receipts for replacement of personal documents (if any)",
-        id: "originalReceiptForReplacement"
+        id: "receipts"
       },
       {
         label:
           "Original receipts for additional travelling/accommodation expenses (if any)",
-        id: "originalReceiptForAccomodation"
+        id: "travelReceipt"
       },
-      { label: "Boarding pass/ Flight itinerary ", id: "boardingPass" },
-      { label: "Original purchase receipts", id: "originalPurchaseReceipt" },
+      {
+        label: "Boarding pass/ Flight itinerary",
+        id: "boardingPass"
+      },
+      {
+        label: "Original purchase receipts",
+        id: "originalPurchaseReceipt"
+      },
       {
         label:
           "Photos showing the damage for each and every item (for damage cases)",
         id: "photosOfDamaged"
       },
+      { label: "Boarding pass/ Flight itinerary", id: "boardingPass" },
       {
         label:
           "Document stating the compensation from airlines and/or other sources (for loss or damage by carrier)",
@@ -378,154 +320,31 @@ export default (travelClaimQuestions = [
         id: "policeReport"
       }
     ],
-    include: ["lossOfPersonalDocument"],
+    include: ["travelInconveniece"],
     id: "claimImages"
   },
   {
     question:
-      "We are almost done to get your claim paid fast. I need your help to snap or upload some supporting documents. Do your best to snap or upload the right images for each box",
-    responseType: "imageTable",
-    columns: [
-      {
-        label: "Scheduled and revised flight itinerary, or boarding pass",
-        id: "boardingPass"
-      },
-      {
-        label:
-          "Written document from airline company stating the duration and cause of travel and/or baggage delay (for delays)",
-        id: "delayDocumentFromAirline"
-      },
-      {
-        label:
-          "Original receipt for additional travelling and/or hotel accommodation (if any)",
-        id: "travelReceipt"
-      },
-      {
-        label:
-          "Document stating the compensation from airlines and/or other sources (if any)",
-        id: "compensationDocument"
-      },
-      {
-        label:
-          "Written document from airline company stating the cause of flight misconnection and stating there is no onward transportation available to you within 6 consecutive hours of your arrival time (for flight misconnection)",
-        id: "flightMisconnectionDocument"
-      },
-      {
-        label:
-          "Property irregularity report and acknowledgement receipt of baggage received (for baggage delay)",
-        id: "irregularityReport"
-      }
-    ],
-    id: "claimImages",
-    include: ["travelDelay"]
-  },
-  {
-    question:
-      "We are almost done to get your claim paid fast. I need your help to snap or upload some supporting documents. Do your best to snap or upload the right images for each box",
-    responseType: "imageTable",
-    columns: [
-      {
-        label: "Original receipt or invoice of deposit paid in advance by you ",
-        id: "originalReceipt"
-      },
-      {
-        label:
-          "Original receipt for additional travelling and/or hotel accommodation (if any)",
-        id: "travelReceipt"
-      },
-      {
-        label:
-          "Terms and conditions from airline, or hotel, or travel agency, or service provider indicating non-refundable clause",
-        id: "termsAndCondition"
-      },
-      {
-        label:
-          "Relationship proof of immediate family member if postponement of trip is due to serious injury/illness/death of immediate family member",
-        id: "relationshipProof"
-      },
-      {
-        label:
-          "Written confirmation from airline, or hotel, or travel agency, or, service provider indicating non-refundable amount due to unavoidable trip cancellation by you",
-        id: "writtenConfirmation"
-      },
-      {
-        label: "Death certificate of immediate family member (if any)",
-        id: "familyDeathCertificate"
-      },
-      {
-        label:
-          "Original receipt for additional travelling and/or hotel accommodation (if any)",
-        id: "travelReceipt"
-      },
-      {
-        label:
-          "Memo/letter from registered medical practitioner certifying your travel companion or immediate family member injury/illness is critical or life-threatening (if any)",
-        id: "letterForTravelCompanion"
-      },
-      {
-        label:
-          "Memo/letter from registered medical practitioner certifying you are unfit to travel (if any)",
-        id: "letterForSelf"
-      },
-      {
-        label: "Boarding pass/Flight itinerary",
-        id: "boardingPass"
-      },
-      {
-        label: "Tour itinerary and tour booking receipt",
-        id: "tourItinerary"
-      }
-    ],
-    id: "claimImages",
-    include: ["tripCurtailment"]
-  },
-  {
-    question:
-      "We are almost done to get your claim paid fast. I need your help to snap or upload some supporting documents. Do your best to snap or upload the right images for each box",
-    responseType: "imageTable",
-    columns: [
-      { label: "Boarding pass / Flight itinerary", id: "boardingPass" },
-      { label: "Tour itinerary", id: "tourItinerary" },
-      { label: "Police report", id: "policeReport" },
-      {
-        label:
-          "Document proof by third party for claiming bodily injury or property damage against you",
-        id: "documentProof"
-      },
-      {
-        label: "Any document that would help with this case (if any)",
-        id: "anyDocuments"
-      }
-    ],
-    id: "claimImages",
-    include: ["personalLiability"]
-  },
-  {
-    question:
-      "If you are now overseas and require any emergency assistance immediately, please call our 24-Hour HOTLINE +603-76283868",
-    responseType: null,
-    include: ["others"]
-  },
-  {
-    question:
-      "We are almost done to get your claim paid fast. I need your help to snap or upload some supporting documents. Do your best to snap or upload the right images for each box",
-    responseType: "imageTable",
-    columns: [
-      { label: "Boarding pass / Flight itinerary", id: "boardingPass" },
-      { label: "Tour itinerary", id: "tourItinerary" },
-      { label: "Police report", id: "policeReport" }
-    ],
-    id: "claimImages",
-    include: ["others"]
-  },
-  {
-    question:
       "<%= firstName %> <%= lastName %>, to complete your claim, I need your help to post all the ORIGINAL RECEIPTS to: Level 5, Tower B, PJ City Development, No.15A, Jalan 219, Seksyen 51A, 46100 Petaling Jaya, Selangor, Malaysia, within 48 hours ",
+    include: [
+      "permanentDisability",
+      "medicalReimbursement",
+      "travelInconveniece"
+    ],
     responseType: null
   },
   {
     question:
       "Thank you for your patience. Please keep this phone with you at all times, as I shall send you notifications and messages on your claim.",
-    responseType: null
+    responseType: null,
+    exclude: ["others"]
+  },
+  {
+    question:
+      "We shall divert your claim information to HLM Takaful respective department. . Please keep this phone with you at all times, as I shall send you notifications/ email and messages on your claim.",
+    responseType: null,
+    include: ["others"]
   }
-]);
+];
+
+export default travelClaimQuestions;
