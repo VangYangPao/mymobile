@@ -69,14 +69,17 @@ export default class PolicyDetails extends Component {
       policy: purchase,
       policyMetadata
     } = this.props.navigation.state.params;
-    InteractionManager.runAfterInteractions(() => {
-      const Class = Parse.Object.extend(policyMetadata.subclassName);
-      const query = new Parse.Query(Class);
-      query.equalTo("purchaseId", purchase);
-      query.first().then(subPurchase => {
-        this.setState({ loadingSubPurchase: false, subPurchase });
+
+    if (typeof policyMetadata.subclassName === "string") {
+      InteractionManager.runAfterInteractions(() => {
+        const Class = Parse.Object.extend(policyMetadata.subclassName);
+        const query = new Parse.Query(Class);
+        query.equalTo("purchaseId", purchase);
+        query.first().then(subPurchase => {
+          this.setState({ loadingSubPurchase: false, subPurchase });
+        });
       });
-    });
+    }
   }
 
   handleSaveUpdates(navigation: any, values: Array<any>) {

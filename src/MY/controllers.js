@@ -6,6 +6,8 @@ import { purchaseTravelPolicy, purchasePAPolicy } from "./parse/purchase";
 import type { PolicyType } from "../../types";
 import type { TravellerType } from "./types.my";
 
+const Purchase = Parse.Object.extend("Purchase");
+
 function getTravellerFlags(
   travellers: Array<TravellerType>
 ): [boolean, number] {
@@ -53,6 +55,10 @@ export function getProductQuote(
       reject("Cannot find policy type: " + policy.id);
     }
   });
+}
+
+export function getPolicyEndDate(purchase: Purchase, subpurchase: null) {
+  return purchase.get("expiryDate");
 }
 
 export function purchaseProduct(

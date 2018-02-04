@@ -84,14 +84,14 @@ export default (policies = [
       "lossOfHomeContents"
     ],
     notCovered,
-    subclassName: "PurchaseTravel",
+    subclassName: null,
     endorsementFields: [
-      {
-        label: "End Date",
-        id: "endDate",
-        responseType: "date",
-        futureOnly: true
-      }
+      // {
+      //   label: "End Date",
+      //   id: "endDate",
+      //   responseType: "date",
+      //   futureOnly: true
+      // }
     ],
     renewable: false
   }
