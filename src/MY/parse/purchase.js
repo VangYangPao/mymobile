@@ -48,7 +48,7 @@ export function purchaseTravelPolicy(
   purchase.set("tripType", isOneWayTrip ? "SGOW" : "SGRT");
   purchase.set("webcashReturnCode", webcashReturnCode);
   purchase.set("webcashMercRef", webcashMercRef);
-  purchase.set("policyholder", user);
+  purchase.set("user", user);
 
   const policyholder: Policyholder = travellers.find(traveller => {
     return traveller.travellerType === "IWB";
@@ -56,11 +56,9 @@ export function purchaseTravelPolicy(
 
   return saveUserAttributes(user, policyholder)
     .then(user => {
-      console.log(user);
       return purchase.save();
     })
     .then(purchase => {
-      console.log(purchase);
       return purchase;
     })
     .catch(err => console.log(err));
