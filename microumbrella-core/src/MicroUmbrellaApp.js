@@ -163,6 +163,9 @@ const ClaimStackNavigator = StackNavigator(
         headerLeft: renderMenuButton(navigation),
         headerRight: headerContainer
       })
+    },
+    Table: {
+      screen: TableScreen
     }
   },
   {

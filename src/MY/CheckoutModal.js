@@ -31,7 +31,7 @@ import {
   MENU_ICON_SIZE,
   navigationStyles
 } from "../../microumbrella-core/src/navigations";
-import { objectToUrlParams } from "../utils";
+import { objectToUrlParams, generateID } from "../utils";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -97,7 +97,8 @@ class WebcashView extends Component {
     };
   }
 
-  handleLoadError() {
+  handleLoadError(e) {
+    console.error(e);
     NetInfo.fetch().done(connectionType => {
       if (connectionType === "none") {
         this.setState({
@@ -120,16 +121,21 @@ class WebcashView extends Component {
   }
 
   handleWebViewMessage(event: { nativeEvent: { data: string } }) {
+    const merchantRef = "TR" + generateID();
     const responseCode = event.nativeEvent.data;
-    if (responseCode === "S") {
-      if (
-        typeof this.props.onCheckout === "function" &&
-        !this.state.checkingOut
-      ) {
-        this.setState({ checkingOut: true });
-        this.props.onCheckout();
-      }
+    if (!this.state.checkingOut) {
+      this.setState({ checkingOut: true });
+    } else {
+      return;
     }
+    const promise = new Promise((resolve, reject) => {
+      if (responseCode === "S") {
+        resolve({ responseCode, merchantRef });
+      } else {
+        reject({ responseCode, merchantRef });
+      }
+    });
+    this.props.onCheckout(promise);
   }
 
   render() {

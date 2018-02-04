@@ -18,7 +18,7 @@ import { backButtonNavOptions } from "../navigations";
 import AppStore from "../../stores/AppStore";
 const colors = AppStore.colors;
 import { Text } from "../components/defaultComponents";
-import { showAlert } from "../utils";
+import { showAlert, getKeyboardType } from "../../../src/utils";
 import type { QuestionTableColumnType } from "../../../types";
 
 let tableValues = [];
@@ -98,9 +98,7 @@ export default class TableScreen extends Component {
         >
           <Text
             style={[
-              renderError || this.state.values[index] === ""
-                ? styles.inputErr
-                : styles.selectText,
+              renderError ? styles.inputErr : styles.selectText,
               { flex: 1 }
             ]}
           >
@@ -163,9 +161,7 @@ export default class TableScreen extends Component {
           <View key={index} style={styles.selectContainer}>
             <Text
               style={[
-                renderError || this.state.values[index] === ""
-                  ? styles.inputErr
-                  : styles.selectText,
+                renderError ? styles.inputErr : styles.selectText,
                 { flex: 1 }
               ]}
             >
@@ -180,19 +176,17 @@ export default class TableScreen extends Component {
         </ModalPicker>
       );
     } else {
+      const keyboardType = getKeyboardType(responseType);
       inputElement = (
         <TextInput
+          keyboardType={keyboardType}
           accessibilityLabel={"table__field-" + id}
           ref={ti => (this.inputRefs[index] = ti)}
           style={styles.input}
           autoCorrect={false}
           placeholder={label}
           placeholderTextColor={
-            renderError || this.state.values[index] === "" ? (
-              colors.errorRed
-            ) : (
-              colors.borderLine
-            )
+            renderError ? colors.errorRed : colors.borderLine
           }
           underlineColorAndroid="transparent"
           onChangeText={text => {

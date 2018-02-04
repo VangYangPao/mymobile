@@ -71,12 +71,6 @@ const questionTravelPA: QuestionSetType = [
     include: ["travel"],
     columns: [
       {
-        label: "Address (with postcode, state, city)",
-        id: "address",
-        responseLength: 250,
-        responseType: ["string"]
-      },
-      {
         label: "Email",
         responseType: ["string", "email"],
         id: "email"
@@ -95,7 +89,7 @@ const questionTravelPA: QuestionSetType = [
       },
       {
         label: "ID Type",
-        id: "idType",
+        id: "idNumberType",
         responseType: ["choice", "string"],
         choices: mappings.IDType
       },
@@ -137,7 +131,32 @@ const questionTravelPA: QuestionSetType = [
       {
         label: "Mobile Phone No",
         responseType: ["string", "mobile"],
-        id: "mobilePhoneNo"
+        id: "mobilePhone"
+      },
+      {
+        label: "Address 1",
+        id: "address1",
+        responseLength: 250,
+        responseType: ["string"]
+      },
+      {
+        label: "Address 2",
+        id: "address2",
+        responseLength: 250,
+        responseType: ["string"]
+      },
+      {
+        label: "Postcode",
+        id: "postcode",
+        responseLength: 7,
+        responseType: ["string"]
+      },
+      {
+        label: "State",
+        id: "state",
+        responseLength: 7,
+        responseType: ["string", "choice"],
+        choices: mappings.state
       }
     ]
   },

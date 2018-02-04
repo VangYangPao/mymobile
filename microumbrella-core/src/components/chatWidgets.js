@@ -39,6 +39,9 @@ import { validateOneAnswer } from "../models/validations";
 import tabStyles from "../styles/TabBar.styles";
 import { saveNewDocument } from "../parse/claims";
 
+import type { QuestionTableColumnType } from "../../../types/app";
+import type { NavigationScreenProp } from "react-navigation/src/TypeDefinition";
+
 const imageHeight = 150;
 const imageWidth = 100;
 const itemSeparatorComponent = () => <View style={styles.separator} />;
@@ -388,7 +391,10 @@ export class ClaimPolicyChoice extends Component {
               </View>
             </View>
           ) : null*/}
-          <Text style={styles.policyDetailText}>Premium: ${premium}</Text>
+          <Text style={styles.policyDetailText}>
+            Premium: {AppStore.currency}
+            {premium.toFixed(2)}
+          </Text>
         </View>
       </TouchableOpacity>
     );
@@ -572,8 +578,31 @@ class ErrorMessages extends Component {
 
 const sideIconSize = 30;
 
-export class TravellerTableInput extends Component {
-  constructor(props) {
+type TableInputProps = {
+  screenTitle: string,
+  renderItemText: Object => string,
+  addButtonText: string,
+  sendButtonText: string,
+  sendButtonTextWhenEmpty: string,
+  columns: Array<QuestionTableColumnType>,
+  onSubmit: (items: Array<Object>) => void,
+  navigation: TableInputNavigation
+};
+
+type TableInputNavigationState = {
+  params: Object
+};
+type TableInputNavigation = NavigationScreenProp<TableInputNavigationState, *>;
+
+export class TableInput extends Component {
+  handleSaveNewItem: (
+    navigation: TableInputNavigation,
+    tableValues: Object
+  ) => void;
+  renderItem: ({ item: Object, index: number }) => View;
+  multiInputRefs: Array<Object>;
+
+  constructor(props: TableInputProps) {
     super(props);
     this.handleSaveNewItem = this.handleSaveNewItem.bind(this);
     this.renderItem = this.renderItem.bind(this);
@@ -583,7 +612,7 @@ export class TravellerTableInput extends Component {
     };
   }
 
-  handleSaveNewItem(navigation, tableValues) {
+  handleSaveNewItem(navigation: TableInputNavigation, tableValues: Object) {
     const { columns } = this.props;
     const SPOUSE_ID = 1;
     const CHILD_ID = 2;
@@ -658,20 +687,10 @@ export class TravellerTableInput extends Component {
   //   this.setState({ items });
   // }
 
-  renderItem({ item, index }) {
-    const { firstName, lastName } = item;
+  renderItem({ item, index }: { item: Object, index: number }) {
+    const itemText = this.props.renderItemText(item);
     return (
-      <View
-        style={{
-          alignItems: "center",
-          justifyContent: "flex-start",
-          flexDirection: "row",
-          paddingVertical: 15,
-          paddingHorizontal: 10,
-          borderRadius: 0,
-          backgroundColor: "white"
-        }}
-      >
+      <View style={styles.tableItemContainer}>
         <TouchableOpacity
           accessibilityLabel="purchase__remove-traveller"
           onPress={() => {
@@ -682,69 +701,126 @@ export class TravellerTableInput extends Component {
         >
           <Icon
             size={sideIconSize}
-            style={{ color: colors.errorRed, marginRight: 15 }}
+            style={styles.removeItemIcon}
             name="remove-circle-outline"
           />
         </TouchableOpacity>
-        <Text style={{ fontSize: 17.5 }}>
-          {firstName} {lastName}
-        </Text>
+        <Text style={styles.tableItemText}>{itemText}</Text>
       </View>
     );
   }
 
   render() {
     const itemSeparatorComponent = () => <View style={styles.separator} />;
+    const shouldRenderSendButton =
+      (typeof this.props.sendButtonTextWhenEmpty === "string" &&
+        !this.state.items.length) ||
+      this.state.items.length;
     return (
-      <View style={{ marginLeft: 50, marginRight: 60 }}>
+      <View style={styles.tableContainer}>
         <FlatList
           data={this.state.items}
           renderItem={this.renderItem}
           ItemSeparatorComponent={itemSeparatorComponent}
         />
         <TouchableOpacity />
+        {this.state.items.length ? itemSeparatorComponent() : null}
         <TouchableOpacity
           accessibilityLabel="purchase__add-traveller"
           onPress={() =>
             this.props.navigation.navigate("Table", {
-              title: "Add New Traveller",
+              title: this.props.screenTitle,
               columns: this.props.columns,
               onSaveTable: this.handleSaveNewItem
             })}
         >
-          <View
-            style={{
-              alignItems: "center",
-              justifyContent: "flex-start",
-              flexDirection: "row",
-              paddingVertical: 15,
-              paddingHorizontal: 10,
-              borderRadius: 0,
-              backgroundColor: "white"
-            }}
-          >
+          <View style={styles.addTableItem}>
             <Icon
               size={sideIconSize}
-              style={{ color: colors.primaryAccent, marginRight: 15 }}
+              style={styles.addTableItemIcon}
               name="add-circle-outline"
             />
-            <Text style={{ flex: 1, fontSize: 16 }}>ADD NEW TRAVELLER</Text>
+            <Text style={styles.addTable}>{this.props.addButtonText}</Text>
           </View>
         </TouchableOpacity>
-        <Button
-          accessibilityLabel="chat__submit-traveller"
-          style={{
-            height: 60,
-            borderTopLeftRadius: 0,
-            borderTopRightRadius: 0
-          }}
-          onPress={() => this.props.onSubmit(this.state.items)}
-        >
-          {this.state.items.length ? "SEND" : "I'M TRAVELLING ALONE"}
-        </Button>
+        {shouldRenderSendButton ? (
+          <Button
+            accessibilityLabel="chat__submit-traveller"
+            style={styles.tableSendButton}
+            onPress={() => this.props.onSubmit(this.state.items)}
+          >
+            {this.state.items.length ? (
+              this.props.sendButtonText
+            ) : (
+              this.props.sendButtonTextWhenEmpty
+            )}
+          </Button>
+        ) : null}
       </View>
     );
   }
+}
+
+export function TravellerTableInput({
+  columns,
+  onSubmit,
+  navigation
+}: {
+  columns: Array<QuestionTableColumnType>,
+  onSubmit: (items: Array<Object>) => void,
+  navigation: TableInputNavigationState
+}) {
+  const isNotMYApp = AppStore.countryCode !== "MY";
+
+  const renderItemText = item => {
+    let fullName;
+    if (isNotMYApp) {
+      const { firstName, lastName } = item;
+      fullName = `${firstName} ${lastName}`;
+    } else {
+      fullName = item.fullName;
+    }
+  };
+
+  return (
+    <TableInput
+      validate={() => {}}
+      renderItemText={renderItemText}
+      screenTitle="Add New Traveller"
+      addButtonText="ADD NEW TRAVELLER"
+      sendButtonText="SEND"
+      sendButtonTextWhenEmpty={isNotMYApp ? "I'M TRAVELLING ALONE" : null}
+      columns={columns}
+      onSubmit={onSubmit}
+      navigation={navigation}
+    />
+  );
+}
+
+export function LostOrDamagedItemsTableInput({
+  columns,
+  onSubmit,
+  navigation
+}: {
+  columns: Array<QuestionTableColumnType>,
+  onSubmit: (items: Array<Object>) => void,
+  navigation: TableInputNavigationState
+}) {
+  const renderItemText = item => item.description;
+
+  return (
+    <TableInput
+      validate={() => {}}
+      renderItemText={renderItemText}
+      screenTitle="Add New Item"
+      addButtonText="ADD NEW ITEM"
+      sendButtonText="SEND"
+      sendButtonTextWhenEmpty={null}
+      columns={columns}
+      onSubmit={onSubmit}
+      navigation={navigation}
+    />
+  );
 }
 
 export class MultiInput extends Component {
@@ -1257,6 +1333,44 @@ const multiInputPlaceholderSize = 16;
 const iconSize = 50;
 
 const styles = StyleSheet.create({
+  tableContainer: {
+    marginLeft: 50,
+    marginRight: 60
+  },
+  tableSendButton: {
+    height: 60,
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0
+  },
+  tableItemText: {
+    fontSize: 17.5
+  },
+  removeItemIcon: {
+    color: colors.errorRed,
+    marginRight: 15
+  },
+  tableItemContainer: {
+    alignItems: "center",
+    justifyContent: "flex-start",
+    flexDirection: "row",
+    paddingVertical: 15,
+    paddingHorizontal: 10,
+    borderRadius: 0,
+    backgroundColor: "white"
+  },
+  addTableItemIcon: {
+    color: colors.primaryAccent,
+    marginRight: 15
+  },
+  addTableItem: {
+    alignItems: "center",
+    justifyContent: "flex-start",
+    flexDirection: "row",
+    paddingVertical: 15,
+    paddingHorizontal: 10,
+    borderRadius: 0,
+    backgroundColor: "white"
+  },
   dateInputContainer: {
     flex: 1,
     padding: 10

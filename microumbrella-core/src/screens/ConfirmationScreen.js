@@ -201,7 +201,6 @@ export default class ConfirmationScreen extends Component {
   }
 
   handlePurchaseResult(promise: Promise<any>) {
-    console.log("entered handlePurchaseResult");
     const { currentUser } = this.props.navigation.state.params;
     // promise
     //   .then(res => {
@@ -300,15 +299,21 @@ export default class ConfirmationScreen extends Component {
   }
 
   handleCheckout(policy: PolicyType, premium: number, form: Object) {
-    return (paymentForm: Object) => {
-      // this.setState({ purchasing: true });
-      const promise = AppStore.controllers.purchaseProduct(
-        this.policy,
-        this.state.totalPremium,
-        form,
-        paymentForm
-      );
-      this.handlePurchaseResult(promise);
+    const { currentUser } = this.props.navigation.state.params;
+
+    return (promise: Promise<Object>) => {
+      promise
+        .then(paymentForm => {
+          const promise = AppStore.controllers.purchaseProduct(
+            currentUser,
+            this.policy,
+            this.state.totalPremium,
+            form,
+            paymentForm
+          );
+          this.handlePurchaseResult(promise);
+        })
+        .catch(err => {});
     };
   }
 

@@ -1,7 +1,6 @@
 // @flow
 import Parse from "parse/react-native";
 import moment from "moment";
-import getPolicyEndDate from "./policyEndDate";
 import mappings from "../../data/mappings";
 
 export function saveNewPurchase(
