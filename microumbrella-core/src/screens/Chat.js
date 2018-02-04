@@ -59,7 +59,8 @@ import {
   ChoiceList,
   SuggestionList,
   PlansTabView,
-  TravellerTableInput
+  TravellerTableInput,
+  LostOrDamagedItemsTableInput
 } from "../components/chatWidgets";
 import TravelPlansView from "../components/TravelPlansView";
 // import PlanCarousel from "./PlanCarousel";
@@ -1153,9 +1154,10 @@ class ChatScreen extends Component {
     const { currentMessage } = props;
     const { currentQuestionIndex } = this.state;
     let currentQuestion;
-    if (currentQuestionIndex >= 0) {
+    if (currentQuestionIndex >= 0 && this.questions) {
       currentQuestion = this.questions[currentQuestionIndex];
     }
+
     switch (currentMessage.type) {
       case "claimPolicyNo":
         const { policies } = currentMessage;
@@ -1171,12 +1173,21 @@ class ChatScreen extends Component {
           />
         );
       case "table":
+        const { id: questionId } = currentQuestion;
+        if (!questionId) {
+          throw new Error("Question ID not found, is this a null message?");
+        }
+        let TableInput;
+        if (questionId === "travellers") {
+          TableInput = TravellerTableInput;
+        } else if (questionId === "lostOrDamagedItems") {
+          TableInput = LostOrDamagedItemsTableInput;
+        } else {
+          throw new Error("No such table input for id of " + questionId);
+        }
         return (
-          <TravellerTableInput
-            itemName="traveller"
+          <TableInput
             navigation={this.props.navigation}
-            keyboardHeight={this.state.keyboardHeight}
-            question={currentQuestion}
             onSubmit={this.handleTableInputSubmit}
             columns={currentMessage.columns}
           />

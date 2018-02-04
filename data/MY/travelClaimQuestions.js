@@ -166,10 +166,19 @@ const travelClaimQuestions: QuestionSetType = [
       "Thank you for bearing with us. I need your help to itemise what are lost or damaged",
     responseType: "table",
     columns: [
-      { label: "Description", id: "description", type: "string" },
-      { label: "Date of Purchase", id: "dateOfPurchase", type: "date" },
-      { label: "Place of Purchase", id: "placeOfPurchase", type: "string" },
-      { label: "Original Price", id: "originalPrice", type: "number" }
+      { label: "Description", id: "description", responseType: "string" },
+      {
+        label: "Purchase Date",
+        id: "purchaseDate",
+        responseType: "date",
+        pastOnly: true
+      },
+      {
+        label: "Place of Purchase",
+        id: "placeOfPurchase",
+        responseType: "string"
+      },
+      { label: "Original Price", id: "originalPrice", responseType: "number" }
     ],
     id: "lostOrDamagedItems",
     include: ["travelInconveniece"]

@@ -18,7 +18,7 @@ import { backButtonNavOptions } from "../navigations";
 import AppStore from "../../stores/AppStore";
 const colors = AppStore.colors;
 import { Text } from "../components/defaultComponents";
-import { showAlert } from "../utils";
+import { showAlert, getKeyboardType } from "../../../src/utils";
 import type { QuestionTableColumnType } from "../../../types";
 
 let tableValues = [];
@@ -176,8 +176,10 @@ export default class TableScreen extends Component {
         </ModalPicker>
       );
     } else {
+      const keyboardType = getKeyboardType(responseType);
       inputElement = (
         <TextInput
+          keyboardType={keyboardType}
           accessibilityLabel={"table__field-" + id}
           ref={ti => (this.inputRefs[index] = ti)}
           style={styles.input}
