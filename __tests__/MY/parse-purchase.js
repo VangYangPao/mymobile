@@ -73,7 +73,7 @@ function validatePurchase(
 
 it("should purchase travel correctly", () => {
   const premium = 17;
-  const planType = "IO";
+  const planType = "1";
   const isOneWayTrip = false;
   const travelStartDate = new Date();
   const travelEndDate = new Date();

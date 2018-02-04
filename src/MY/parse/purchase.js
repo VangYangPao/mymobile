@@ -2,6 +2,14 @@
 import Parse from "parse/react-native";
 import type { Policyholder } from "../../../types/MY/policies";
 
+const BASE_NO = 300000;
+const PURCHASE_CLASS_NAME = "Purchase";
+const Purchase = Parse.Object.extend(PURCHASE_CLASS_NAME);
+
+// TRAVEL
+const TRAVEL_POLICY_PREFIX = "TR";
+const TRAVEL_POLICY_TYPE_ID = "travel";
+
 function saveUserAttributes(user: Parse.User, policyholder: Policyholder) {
   user.set("idNumber", policyholder.idNumber);
   user.set("idNumberType", policyholder.idNumberType);
@@ -23,6 +31,15 @@ function saveUserAttributes(user: Parse.User, policyholder: Policyholder) {
   return user.save();
 }
 
+function getPolicyRunningNumber(policyTypeId: string) {
+  const query = new Parse.Query(Purchase);
+  query.equalTo("policyTypeId", policyTypeId);
+  return query.count().then(count => {
+    const policyNumber = BASE_NO + count;
+    return `${TRAVEL_POLICY_PREFIX}${policyNumber}`;
+  });
+}
+
 export function purchaseTravelPolicy(
   user: Parse.User,
   premium: number,
@@ -35,11 +52,11 @@ export function purchaseTravelPolicy(
   webcashMercRef: string,
   travellers: Array<Policyholder>
 ) {
-  const Purchase = Parse.Object.extend("Purchase");
+  const POLICY_TYPE_ID = "travel";
   const purchase = new Purchase();
   purchase.setACL(new Parse.ACL(user));
 
-  purchase.set("policyTypeId", "travel");
+  purchase.set("policyTypeId", POLICY_TYPE_ID);
   purchase.set("commencementDate", travelStartDate);
   purchase.set("expiryDate", travelEndDate);
   purchase.set("premium", premium);
@@ -54,7 +71,11 @@ export function purchaseTravelPolicy(
     return traveller.travellerType === "IWB";
   });
 
-  return saveUserAttributes(user, policyholder)
+  return getPolicyRunningNumber(POLICY_TYPE_ID)
+    .then(policyId => {
+      purchase.set("policyId", policyId);
+      return saveUserAttributes(user, policyholder);
+    })
     .then(user => {
       return purchase.save();
     })
