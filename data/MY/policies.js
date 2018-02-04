@@ -35,18 +35,18 @@ export default (policies = [
     // plans: [{ 0: 50000, premium: 35 }], // hardcoded for display purposes only
     plans: [
       {
-        id: 1,
+        id: "1",
         legacyId: "basic",
         title: "Basic Plan",
         premium: 11
       },
       {
-        id: 2,
+        id: "2",
         legacyId: "enhanced",
         title: "Premier Plan"
       },
       {
-        id: 3,
+        id: "3",
         legacyId: "superior",
         title: "Elite Plan"
       }

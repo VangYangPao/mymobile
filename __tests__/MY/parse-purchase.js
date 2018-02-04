@@ -47,7 +47,7 @@ function validatePurchase(
   expect(purchase.get("webcashMercRef")).toEqual(webcashMercRef);
 
   const policyholder: Policyholder = travellers.find(traveller => {
-    return traveller.relationship === "IWB";
+    return traveller.travellerType === "IWB";
   });
   expect(user.get("idNumber")).toEqual(policyholder.idNumber);
   expect(user.get("idNumberType")).toEqual(policyholder.idNumberType);
@@ -98,7 +98,7 @@ it("should purchase travel correctly", () => {
       address2: "string",
       postcode: "string",
       state: "JOH",
-      relationship: "IWB"
+      travellerType: "IWB"
     }
   ];
   const args = [

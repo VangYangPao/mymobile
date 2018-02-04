@@ -17,5 +17,5 @@ export type Policyholder = {
   address2: string,
   postcode: string,
   state: string,
-  relationship: string
+  travellerType: string
 };

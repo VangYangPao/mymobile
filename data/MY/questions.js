@@ -131,7 +131,7 @@ const questionTravelPA: QuestionSetType = [
       {
         label: "Mobile Phone No",
         responseType: ["string", "mobile"],
-        id: "mobilePhoneNo"
+        id: "mobilePhone"
       },
       {
         label: "Address 1",

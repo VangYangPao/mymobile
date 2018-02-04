@@ -20,7 +20,7 @@ function saveUserAttributes(user: Parse.User, policyholder: Policyholder) {
   user.set("address2", policyholder.address2);
   user.set("postcode", policyholder.postcode);
   user.set("state", policyholder.state);
-  return user.save(null, { useMasterKey: true });
+  return user.save();
 }
 
 export function purchaseTravelPolicy(
@@ -51,12 +51,17 @@ export function purchaseTravelPolicy(
   purchase.set("policyholder", user);
 
   const policyholder: Policyholder = travellers.find(traveller => {
-    return traveller.relationship === "IWB";
+    return traveller.travellerType === "IWB";
   });
 
   return saveUserAttributes(user, policyholder)
     .then(user => {
+      console.log(user);
       return purchase.save();
+    })
+    .then(purchase => {
+      console.log(purchase);
+      return purchase;
     })
     .catch(err => console.log(err));
 }

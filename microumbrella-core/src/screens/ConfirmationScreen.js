@@ -201,7 +201,6 @@ export default class ConfirmationScreen extends Component {
   }
 
   handlePurchaseResult(promise: Promise<any>) {
-    console.log("entered handlePurchaseResult");
     const { currentUser } = this.props.navigation.state.params;
     // promise
     //   .then(res => {
@@ -312,7 +311,6 @@ export default class ConfirmationScreen extends Component {
             form,
             paymentForm
           );
-          console.log("pass");
           this.handlePurchaseResult(promise);
         })
         .catch(err => {});

@@ -58,9 +58,9 @@ export const salutation = [
 ];
 
 export const gender = [
-  { label: "Company", value: "C" },
+  { label: "Male", value: "M" },
   { label: "Female", value: "F" },
-  { label: "Male", value: "M" }
+  { label: "Company", value: "C" }
 ];
 
 export const religion = [

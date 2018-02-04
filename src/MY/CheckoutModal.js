@@ -31,7 +31,7 @@ import {
   MENU_ICON_SIZE,
   navigationStyles
 } from "../../microumbrella-core/src/navigations";
-import { objectToUrlParams } from "../utils";
+import { objectToUrlParams, generateID } from "../utils";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -121,6 +121,7 @@ class WebcashView extends Component {
   }
 
   handleWebViewMessage(event: { nativeEvent: { data: string } }) {
+    const merchantRef = "TR" + generateID();
     const responseCode = event.nativeEvent.data;
     if (!this.state.checkingOut) {
       this.setState({ checkingOut: true });
@@ -129,9 +130,9 @@ class WebcashView extends Component {
     }
     const promise = new Promise((resolve, reject) => {
       if (responseCode === "S") {
-        resolve({ responseCode });
+        resolve({ responseCode, merchantRef });
       } else {
-        reject({ responseCode });
+        reject({ responseCode, merchantRef });
       }
     });
     this.props.onCheckout(promise);
