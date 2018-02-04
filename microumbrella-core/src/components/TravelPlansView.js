@@ -193,31 +193,35 @@ class TravelPlanTab extends Component {
       return this.renderUnexpanded();
     }
     const planId = this.props.plan.legacyId;
-
-    const listSections = TRAVEL_BENEFITS.map(benefit => ({
-      data: benefit.coverage.map(patchCoverageWithKey),
-      title: benefit.title.toUpperCase(),
-      key: benefit.title,
-      renderItem: this.renderCoverage
-    }));
-    return (
-      <View>
-        <SectionList
-          scrollEnabled={false}
-          removeClippedSubviews={false}
-          ItemSeparatorComponent={itemSeparatorComponent}
-          renderSectionHeader={this.renderSectionHeader}
-          sections={listSections}
-        />
-        <Button
-          accessibilityLabel={"chat__select-plan_" + planId}
-          onPress={() => this.props.onSelectPlan(this.props.planIndex)}
-          style={styles.selectPlanButton}
-        >
-          SELECT PLAN
-        </Button>
-      </View>
-    );
+    if (AppStore.data.travelBenefits) {
+      const listSections = AppStore.data.travelBenefits.expanded.map(
+        benefit => ({
+          data: benefit.coverage.map(patchCoverageWithKey),
+          title: benefit.title.toUpperCase(),
+          key: benefit.title,
+          renderItem: this.renderCoverage
+        })
+      );
+      return (
+        <View>
+          <SectionList
+            scrollEnabled={false}
+            removeClippedSubviews={false}
+            ItemSeparatorComponent={itemSeparatorComponent}
+            renderSectionHeader={this.renderSectionHeader}
+            sections={listSections}
+          />
+          <Button
+            accessibilityLabel={"chat__select-plan_" + planId}
+            onPress={() => this.props.onSelectPlan(this.props.planIndex)}
+            style={styles.selectPlanButton}
+          >
+            SELECT PLAN
+          </Button>
+        </View>
+      );
+    }
+    return null;
   }
 }
 
