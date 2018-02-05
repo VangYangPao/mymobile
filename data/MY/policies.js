@@ -29,24 +29,24 @@ export default (policies = [
   {
     id: "travel",
     title: "Travel Umbrella",
-    imageSource: "ic_travel_protection",
+    imageSource: "travel_protection",
     description:
       "At a super-low price, this is a super-big comprehensive plan that covers most of your financial loss and unforeseen expenses when you travel overseas. It covers you and your family's medical expenses, loss of baggage, loss of cash, and loss of home contents. You and your family enjoy unlimited emergency medical evacuation, cash compensation for flight delay, diversion or cancellation. In the event accidental death or permanent disability, your loved ones will receive a lump sum cash within days. These are just some highlights, and we are constantly adding more benefits and coverage to make you travel happily and peacefully!",
     // plans: [{ 0: 50000, premium: 35 }], // hardcoded for display purposes only
     plans: [
       {
-        id: 1,
+        id: "1",
         legacyId: "basic",
         title: "Basic Plan",
         premium: 11
       },
       {
-        id: 2,
+        id: "2",
         legacyId: "enhanced",
         title: "Premier Plan"
       },
       {
-        id: 3,
+        id: "3",
         legacyId: "superior",
         title: "Elite Plan"
       }
@@ -58,6 +58,11 @@ export default (policies = [
     ],
     isTravelInsurance: true,
     from: "1 day",
+    coverageHighlights: [
+      "overseasMedicalExpenses",
+      "postJourneyOverseasMedicalExpenses",
+      "unlimitedEmergencyMedicalEvacuation"
+    ],
     covered: [
       "overseasMedicalExpenses",
       "medicalExpensesInSG",
@@ -79,21 +84,21 @@ export default (policies = [
       "lossOfHomeContents"
     ],
     notCovered,
-    subclassName: "PurchaseTravel",
+    subclassName: null,
     endorsementFields: [
-      {
-        label: "End Date",
-        id: "endDate",
-        responseType: "date",
-        futureOnly: true
-      }
+      // {
+      //   label: "End Date",
+      //   id: "endDate",
+      //   responseType: "date",
+      //   futureOnly: true
+      // }
     ],
     renewable: false
   }
   // {
   //   id: "pa",
   //   title: "Micro PA Takaful",
-  //   imageSource: "ic_ad_pd",
+  //   imageSource: "ad_pd",
   //   from: "2 weeks",
   //   plans: [
   //     // {

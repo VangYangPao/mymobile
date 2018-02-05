@@ -12,6 +12,8 @@ import {
 } from "./hlas";
 import mappings from "../../data/SG/mappings";
 
+export { default as getPolicyEndDate } from "./policyEndDate";
+
 export function getProductQuote(
   policy: PolicyType,
   form: Object

@@ -25,7 +25,6 @@ export function getCountryCode() {
     return fetchCountryCode().then(cacheCountryCode);
     // });
   }
-
   return new Promise((resolve, reject) => {
     resolve(COUNTRY_CODE_ENV);
   });

@@ -163,10 +163,11 @@ export default class StatusScreen extends Component {
     const policyTypeTitle = policyMetadata.title;
 
     let amount;
+    const currency = AppStore.currency || "$";
     if (section === "policies") {
       const _amount = item.get("premium");
       policyId = item.get("policyId");
-      amount = `Premium: $${_amount.toFixed(2)}`;
+      amount = `Premium: ${currency}${_amount.toFixed(2)}`;
     } else if (section === "claims") {
       const _amount = item.get("claimAmount");
       policyId = item.get("purchase").get("policyId");
@@ -174,7 +175,7 @@ export default class StatusScreen extends Component {
         policyStatus = "pending";
         amount = "";
       } else {
-        amount = `Claim amount: $${_amount.toFixed(2)}`;
+        amount = `Claim amount: ${currency}${_amount.toFixed(2)}`;
       }
     }
     const navigateToPolicyDetails = () =>

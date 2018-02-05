@@ -10,6 +10,14 @@ import {
 import { Crashlytics } from "react-native-fabric";
 import promiseRetry from "promise-retry";
 
+export function getKeyboardType(responseType: Array<string>) {
+  let keyboardType = "default";
+  if (responseType.indexOf("email") !== -1) keyboardType = "email-address";
+  if (responseType.indexOf("number") !== -1) keyboardType = "numeric";
+  if (responseType.indexOf("phoneNumber") !== -1) keyboardType = "phone-pad";
+  return keyboardType;
+}
+
 export function capitalizeString(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }

@@ -59,7 +59,8 @@ import {
   ChoiceList,
   SuggestionList,
   PlansTabView,
-  TravellerTableInput
+  TravellerTableInput,
+  LostOrDamagedItemsTableInput
 } from "../components/chatWidgets";
 import TravelPlansView from "../components/TravelPlansView";
 // import PlanCarousel from "./PlanCarousel";
@@ -72,7 +73,7 @@ import { ValidationResult } from "../models/base-validations";
 import Button from "../components/Button";
 import CHAT_STYLES from "../styles/Chat.styles";
 import { MESSAGE_LOAD_TIME as _MESSAGE_LOAD_TIME } from "react-native-dotenv";
-import { showAlert, crashlyticsLogError } from "../utils";
+import { showAlert, crashlyticsLogError } from "../../src/utils";
 import MAPPING from "../../data/mappings";
 import type {
   QuestionSetType,
@@ -90,11 +91,6 @@ const POLICIES_FADE_IN_TIME = 400;
 const AGENT_USER_ID = 0;
 const CUSTOMER_USER_ID = 1;
 
-const AGENT_USER = {
-  _id: AGENT_USER_ID,
-  name: "Eve",
-  avatar: require("../../images/eve-avatar.png")
-};
 const CUSTOMER_USER = {
   _id: CUSTOMER_USER_ID
 };
@@ -300,6 +296,12 @@ class ChatScreen extends Component {
         }
       });
     };
+
+    this.AGENT_USER = {
+      _id: AGENT_USER_ID,
+      name: AppStore.chatAgentName,
+      avatar: AppStore.chatAvatar
+    };
   }
 
   renderStartScreenMessages() {
@@ -310,7 +312,7 @@ class ChatScreen extends Component {
           _id: 0,
           text: "loading",
           createdAt: new Date(),
-          user: AGENT_USER
+          user: this.AGENT_USER
         }
       ]
     });
@@ -319,11 +321,12 @@ class ChatScreen extends Component {
       this.concatMessage({
         type: "policies",
         _id: 1,
-        user: AGENT_USER
+        user: this.AGENT_USER
       });
     };
 
     const sendFirstMessage = setTimeout(() => {
+      const CHAT_AGENT_NAME = AppStore.chatAgentName;
       const APP_NAME = AppStore.appName;
       this.setState(
         {
@@ -331,9 +334,9 @@ class ChatScreen extends Component {
             {
               type: "text",
               _id: 0,
-              text: `Hello, I'm Eve. Welcome to ${APP_NAME}. I'll be your host and here are the protection plans that may interest you. 😄`,
+              text: `Hello, I'm ${CHAT_AGENT_NAME}. Welcome to ${APP_NAME}. I'll be your host and here are the protection plans that may interest you. 😄`,
               createdAt: new Date(),
-              user: AGENT_USER
+              user: this.AGENT_USER
             }
           ]
         },
@@ -388,7 +391,7 @@ class ChatScreen extends Component {
       _id: uuid.v4(),
       text: "loading",
       createdAt: new Date(),
-      user: AGENT_USER
+      user: this.AGENT_USER
     };
     let messageIndex;
     const afterLoading = () => {
@@ -638,6 +641,8 @@ class ChatScreen extends Component {
     );
   }
 
+  handleOnClaimSubmitted() {}
+
   handleProceedButtonPress() {
     const { questionSet, policy } = this.props;
     if (questionSet === "buy") {
@@ -659,12 +664,13 @@ class ChatScreen extends Component {
         currentUser
       });
     } else if (questionSet === "claim") {
+      let savedClaim = null;
+      let saveClaimResponse = null;
+      let loadLimitPassed = false;
+
       this.setState({ loadingSave: true });
-      const purchase = this.state.policies.find(
-        p => p.get("policyId") === this.state.answers.claimPolicyNo
-      );
       const { currentUser } = this.state;
-      const policyTypeId = purchase.get("policyTypeId");
+
       const navigateToPoliciesAction = NavigationActions.reset({
         key: null,
         index: 0,
@@ -680,6 +686,48 @@ class ChatScreen extends Component {
           })
         ]
       });
+
+      const onSuccess = () => {
+        console.log("success", saveClaimResponse);
+        showAlert(
+          "Your claim has been submitted. You will be notified on this app for updates",
+          () => {
+            this.props.screenProps.rootNavigation.dispatch(
+              navigateToPoliciesAction
+            );
+          }
+        );
+      };
+
+      const onError = () => {
+        console.error(saveClaimResponse);
+        crashlyticsLogError(saveClaimResponse);
+
+        showAlert("Sorry, something went wrong with your claim.", () => {
+          this.props.screenProps.rootNavigation.dispatch(
+            navigateToPoliciesAction
+          );
+        });
+      };
+
+      // fake the progress if save is too fast
+      setTimeout(() => {
+        if (savedClaim !== null) {
+          if (savedClaim) {
+            onSuccess();
+          } else {
+            onError();
+          }
+        } else {
+          loadLimitPassed = true;
+        }
+      }, 2000);
+
+      const purchase = this.state.policies.find(
+        p => p.get("policyId") === this.state.answers.claimPolicyNo
+      );
+      const policyTypeId = purchase.get("policyTypeId");
+
       saveNewClaim(
         policyTypeId,
         this.state.answers,
@@ -688,27 +736,20 @@ class ChatScreen extends Component {
         this.state.currentUser
       )
         .then(res => {
-          console.log(res);
-          showAlert(
-            "Your claim has been submitted. You will be notified on this app for updates",
-            () => {
-              this.setState({ loadingSave: false });
-              this.props.screenProps.rootNavigation.dispatch(
-                navigateToPoliciesAction
-              );
-            }
-          );
+          savedClaim = true;
+          saveClaimResponse = res;
+
+          if (loadLimitPassed) {
+            onSuccess(res);
+          }
         })
         .catch(err => {
-          console.error(err);
-          crashlyticsLogError(err);
+          savedClaim = false;
+          saveClaimResponse = err;
 
-          this.setState({ loadingSave: false });
-          showAlert("Sorry, something went wrong with your claim.", () => {
-            this.props.screenProps.rootNavigation.dispatch(
-              navigateToPoliciesAction
-            );
-          });
+          if (loadLimitPassed) {
+            onError(err);
+          }
         });
     }
   }
@@ -815,7 +856,7 @@ class ChatScreen extends Component {
         type: "text",
         text,
         createdAt: new Date(),
-        user: AGENT_USER,
+        user: this.AGENT_USER,
         image
       },
       cb
@@ -898,7 +939,7 @@ class ChatScreen extends Component {
           messages: this.state.messages.concat({
             type: key,
             _id: uuid.v4(),
-            user: AGENT_USER,
+            user: this.AGENT_USER,
             ...additionalProps
           })
         },
@@ -1113,9 +1154,10 @@ class ChatScreen extends Component {
     const { currentMessage } = props;
     const { currentQuestionIndex } = this.state;
     let currentQuestion;
-    if (currentQuestionIndex >= 0) {
+    if (currentQuestionIndex >= 0 && this.questions) {
       currentQuestion = this.questions[currentQuestionIndex];
     }
+
     switch (currentMessage.type) {
       case "claimPolicyNo":
         const { policies } = currentMessage;
@@ -1131,12 +1173,21 @@ class ChatScreen extends Component {
           />
         );
       case "table":
+        const { id: questionId } = currentQuestion;
+        if (!questionId) {
+          throw new Error("Question ID not found, is this a null message?");
+        }
+        let TableInput;
+        if (questionId === "travellers") {
+          TableInput = TravellerTableInput;
+        } else if (questionId === "lostOrDamagedItems") {
+          TableInput = LostOrDamagedItemsTableInput;
+        } else {
+          throw new Error("No such table input for id of " + questionId);
+        }
         return (
-          <TravellerTableInput
-            itemName="traveller"
+          <TableInput
             navigation={this.props.navigation}
-            keyboardHeight={this.state.keyboardHeight}
-            question={currentQuestion}
             onSubmit={this.handleTableInputSubmit}
             columns={currentMessage.columns}
           />

@@ -1,7 +1,7 @@
 // @flow
 import moment from "moment";
 
-import mappings from "../../data/mappings";
+import mappings from "../../data/SG/mappings";
 
 export default function getPolicyEndDate(purchase: any, subPurchase: any) {
   const policyTypeId = purchase.get("policyTypeId");

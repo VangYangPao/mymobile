@@ -39,6 +39,8 @@ class AppStore {
   @observable policies: Array<PolicyType> = policies;
   @observable coverages: { [string]: CoverageType } = coverages;
   @observable strings: { [string]: string } = {};
+  chatAvatar: ?number = null;
+  chatAgentName: string = "Eve";
 
   currency = null;
   @observable stackNavigatorScreens = {};

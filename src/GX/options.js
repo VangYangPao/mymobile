@@ -25,6 +25,7 @@ const appOptions: AppOptionsType = {
   appName: "MicroAssure",
   countryCode: "GX",
   currency: "$",
+  chatAvatar: require("../../images/chat-avatar-sg.png"),
   policies,
   coverages,
   questionSets,

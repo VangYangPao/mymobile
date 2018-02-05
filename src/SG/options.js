@@ -25,6 +25,8 @@ const appOptions: AppOptionsType = {
   appName: "MicroUmbrella",
   countryCode: "SG",
   currency: "$",
+  chatAgentName: "Eve",
+  chatAvatar: require("../../images/chat-avatar-sg.png"),
   policies,
   coverages,
   questionSets,

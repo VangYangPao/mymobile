@@ -2,8 +2,11 @@
 import Parse from "parse/react-native";
 
 import { getTravelPremium, getPAPremium } from "./premiums";
+import { purchaseTravelPolicy, purchasePAPolicy } from "./parse/purchase";
 import type { PolicyType } from "../../types";
 import type { TravellerType } from "./types.my";
+
+const Purchase = Parse.Object.extend("Purchase");
 
 function getTravellerFlags(
   travellers: Array<TravellerType>
@@ -25,7 +28,7 @@ export function getProductQuote(
 ): Promise<number> {
   return new Promise((resolve, reject) => {
     if (policy.id === "travel") {
-      const [hasSpouse, noOfChildren] = getTravellerFlags(form.travellers);
+      const [hasSpouse, noOfChildren] = getTravellerFlags([]);
       const planType = form.planIndex.toString();
       const travelArea = form.travelArea;
       const premium = getTravelPremium(
@@ -54,13 +57,36 @@ export function getProductQuote(
   });
 }
 
+export function getPolicyEndDate(purchase: Purchase, subpurchase: null) {
+  return purchase.get("expiryDate");
+}
+
 export function purchaseProduct(
+  user: Parse.User,
   policy: PolicyType,
   premium: number,
   form: Object,
   paymentForm: Object
 ): Promise<Parse.Object> {
-  return new Promise((resolve, reject) => {
-    resolve();
-  });
+  let promise;
+  if (policy.id === "travel") {
+    return purchaseTravelPolicy(
+      user,
+      premium,
+      form.planIndex,
+      form.isOneWayTrip,
+      form.departureDate,
+      form.returnDate,
+      form.travelArea,
+      paymentForm.responseCode,
+      paymentForm.merchantRef,
+      form.travellers
+    );
+  } else if (policy.id === "pa") {
+    return purchasePAPolicy();
+  } else {
+    return new Promise((resolve, reject) =>
+      reject("Cannot find policy type: " + policy.id)
+    );
+  }
 }
