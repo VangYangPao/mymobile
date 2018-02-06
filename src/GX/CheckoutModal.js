@@ -107,7 +107,14 @@ export default class CheckoutModal extends Component {
       return;
     }
     if (this.state.form.valid && typeof this.props.onCheckout === "function") {
-      this.props.onCheckout(this.state.form.values);
+      const promise = new Promise((resolve, reject) => {
+        if (this.state.form) {
+          resolve(this.state.form.values);
+        } else {
+          reject("this.state.form is undefined");
+        }
+      });
+      this.props.onCheckout(promise);
     }
   }
 

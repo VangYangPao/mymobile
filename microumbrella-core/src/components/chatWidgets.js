@@ -1309,11 +1309,18 @@ export class PlansTabNavigator extends Component {
 }
 
 export class PlansTabView extends Component {
+  constructor(props) {
+    super(props);
+    const allPlansHaveCoverage = props.plans.every(plan => plan.coverage);
+    if (!allPlansHaveCoverage) {
+      throw new Error("All plans must have coverage");
+    }
+  }
+
   render() {
     const { plans } = this.props;
     let tabRoutes = {};
-    Object.keys(plans).forEach((key, idx) => {
-      const plan = plans[key];
+    plans.forEach((plan, idx) => {
       const planTitle = plan.title.split(" ").join("\n");
       tabRoutes[planTitle] = {
         screen: () => (
