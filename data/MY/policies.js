@@ -94,69 +94,61 @@ export default (policies = [
       // }
     ],
     renewable: false
+  },
+  {
+    id: "pa",
+    title: "Micro PA Takaful",
+    imageSource: "ad_pd",
+    from: "2 weeks",
+    plans: [
+      {
+        id: 1,
+        title: "Plan 1",
+        premium: 0.5,
+        coverage: {
+          accidentalDeath: 10000,
+          permanentDisablement: 10000
+        }
+      },
+      {
+        id: 2,
+        title: "Plan 2",
+        premium: 9.84,
+        coverage: {
+          accidentalDeath: 20000,
+          permanentDisablement: 20000
+        }
+      },
+      {
+        id: 3,
+        title: "Plan 3",
+        premium: 17.87,
+        coverage: {
+          accidentalDeath: 40000,
+          permanentDisablement: 40000
+        }
+      },
+      {
+        id: 4,
+        title: "Plan 4",
+        premium: 17.87,
+        coverage: {
+          accidentalDeath: 100000,
+          permanentDisablement: 100000
+        }
+      },
+      {
+        id: 5,
+        title: "Plan 5",
+        premium: 17.87,
+        coverage: {
+          accidentalDeath: 100000,
+          permanentDisablement: 100000
+        }
+      }
+    ],
+    covered: ["accidentalDeath", "permanentDisablement"],
+    notCovered,
+    ...paParseData
   }
-  // {
-  //   id: "pa",
-  //   title: "Micro PA Takaful",
-  //   imageSource: "ad_pd",
-  //   from: "2 weeks",
-  //   plans: [
-  //     // {
-  //     //   title: "Plan A",
-  //     //   premium: 2.68,
-  //     //   coverage: {
-  //     //     accidentalDeath: 5000,
-  //     //     permanentDisablement: 5000
-  //     //   }
-  //     // },
-  //     {
-  //       id: 1,
-  //       title: "Plan 1",
-  //       premium: 0.5,
-  //       coverage: {
-  //         accidentalDeath: 10000,
-  //         permanentDisablement: 10000
-  //       }
-  //     },
-  //     {
-  //       id: 2,
-  //       title: "Plan 2",
-  //       premium: 9.84,
-  //       coverage: {
-  //         accidentalDeath: 20000,
-  //         permanentDisablement: 20000
-  //       }
-  //     },
-  //     {
-  //       id: 3,
-  //       title: "Plan 3",
-  //       premium: 17.87,
-  //       coverage: {
-  //         accidentalDeath: 40000,
-  //         permanentDisablement: 40000
-  //       }
-  //     },
-  //     {
-  //       id: 4,
-  //       title: "Plan 4",
-  //       premium: 17.87,
-  //       coverage: {
-  //         accidentalDeath: 100000,
-  //         permanentDisablement: 100000
-  //       }
-  //     },
-  //     {
-  //       id: 5,
-  //       title: "Plan 5",
-  //       premium: 17.87,
-  //       coverage: {
-  //         accidentalDeath: 100000,
-  //         permanentDisablement: 100000
-  //       }
-  //     }
-  //   ],
-  //   covered: ["accidentalDeath", "permanentDisablement"],
-  //   notCovered,
-  //   ...paParseData
-  // }
 ]);
