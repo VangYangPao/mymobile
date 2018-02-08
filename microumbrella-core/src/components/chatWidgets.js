@@ -780,6 +780,7 @@ export function TravellerTableInput({
     } else {
       fullName = item.fullName;
     }
+    return fullName;
   };
 
   return (
