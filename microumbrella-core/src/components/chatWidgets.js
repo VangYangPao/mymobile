@@ -618,11 +618,11 @@ export class TableInput extends Component {
     const CHILD_ID = 2;
     const isValid = tableValues.every(v => v !== "");
     const currentParams = navigation.state.params;
-    // if (!isValid) {
-    //   showAlert("The form is incomplete");
-    //   navigation.setParams({ renderError: true, ...currentParams });
-    //   return;
-    // }
+    if (!isValid) {
+      showAlert("The form is incomplete");
+      navigation.setParams({ renderError: true, ...currentParams });
+      return;
+    }
     // const dobIndex = columns.findIndex(c => c.id === "DOB");
     // const relationshipIndex = columns.findIndex(c => c.id === "relationship");
     // const dob = tableValues[dobIndex];
