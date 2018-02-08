@@ -30,7 +30,7 @@ export default (policies = [
     id: "mining",
     title: "Mining360",
     subtitle: "Mining Machine Insurance",
-    imageSource: "ic_travel_protection",
+    imageSource: "travel_protection",
     description:
       "At a super-low price, this is a super-big comprehensive plan that covers most of your financial loss and unforeseen expenses when you travel overseas. It covers you and your family's medical expenses, loss of baggage, loss of cash, and loss of home contents. You and your family enjoy unlimited emergency medical evacuation, cash compensation for flight delay, diversion or cancellation. In the event accidental death or permanent disability, your loved ones will receive a lump sum cash within days. These are just some highlights, and we are constantly adding more benefits and coverage to make you travel happily and peacefully!",
     // plans: [{ 0: 50000, premium: 35 }], // hardcoded for display purposes only
@@ -57,7 +57,6 @@ export default (policies = [
       //   title: "Premium Plan"
       // }
     ],
-    isTravelInsurance: true,
     from: "1 day",
     coverageHighlights: [
       "overseasMedicalExpenses",
@@ -100,7 +99,7 @@ export default (policies = [
     id: "wallet",
     title: "Wallet360",
     subtitle: "Cryptocurrency Insurance",
-    imageSource: "ic_ad_pd",
+    imageSource: "ad_pd",
     from: "1 month",
     plans: [
       // {
@@ -156,7 +155,7 @@ export default (policies = [
   //   id: "pa_mr",
   //   title: "Micro Protect360 with Medical Reimbursement",
   //   subtitle: "Up to $10,000",
-  //   imageSource: "ic_ad_pd_medical_reimbursement",
+  //   imageSource: "ad_pd_medical_reimbursement",
   //   from: "1 month",
   //   plans: [
   //     // {
@@ -223,7 +222,7 @@ export default (policies = [
   //   id: "pa_wi",
   //   title: "Micro Protect360 with Weekly Indemnity",
   //   subtitle: "Requires medical record (TCM / Physiotherapy)",
-  //   imageSource: "ic_ad_pd_weekly_indemnity",
+  //   imageSource: "ad_pd_weekly_indemnity",
   //   from: "1 month",
   //   plans: [
   //     {
@@ -274,7 +273,7 @@ export default (policies = [
   // {
   //   id: "mobile",
   //   title: "Phone Protect360",
-  //   imageSource: "ic_phone_protection",
+  //   imageSource: "phone_protection",
   //   from: "1 year",
   //   doNotRenderFromInSummary: true,
   //   plans: [
