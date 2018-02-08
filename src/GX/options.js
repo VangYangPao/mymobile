@@ -9,6 +9,7 @@ import travelClaimQuestions from "../../data/GX/travelClaimQuestions";
 import mobileClaimQuestions from "../../data/GX/mobileClaimQuestions";
 import validations from "./validations";
 import termsOfUseHTML from "../../documents/GX/termsOfUse";
+import * as screens from "./screens";
 import * as controllers from "./controllers";
 
 import type { AppOptionsType } from "../../types";
@@ -36,6 +37,7 @@ const appOptions: AppOptionsType = {
   parseAppId: "microumbrella",
   parseServerURL: "https://api-dev.microumbrella.com/parse",
   appseeId: "ef742ddea5f2473d8be211c148216f20",
+  screens,
   controllers
 };
 export default appOptions;
