@@ -110,7 +110,7 @@ export class CoverageDurationWidget extends Component {
     this.state = {
       coverageDuration: initialCoverageDuration
     };
-    // props.onChangeDuration(initialCoverageDuration);
+    props.onChangeDuration(initialCoverageDuration);
   }
 
   render() {

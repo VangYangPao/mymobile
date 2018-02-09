@@ -117,6 +117,7 @@ export function validateDeclaration(response: boolean) {
       "You are not allowed to buy the takaful."
     );
   }
+  return new ValidationResult(true, true);
 }
 
 export default {
