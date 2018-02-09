@@ -110,10 +110,21 @@ export function validatePhoneNumber(phoneNumber: string) {
 
 export function validateNRIC(nric: string) {}
 
+export function validateDeclaration(response: boolean) {
+  if (!response) {
+    return new ValidationResult(
+      false,
+      "You are not allowed to buy the takaful."
+    );
+  }
+}
+
 export default {
   occupation: validatePAOccupation,
   purchaseDate: validatePhonePurchaseDate,
   purchaseIdNumber: validatePurchaseIdNumber,
   nric: validateNRIC,
-  phoneNumber: validatePhoneNumber
+  phoneNumber: validatePhoneNumber,
+  coverageAddon: () => new ValidationResult(true, true),
+  healthDeclaration: validateDeclaration
 };

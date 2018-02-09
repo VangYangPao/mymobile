@@ -987,6 +987,7 @@ class ChatScreen extends Component {
           ? currentQuestion.responseType.slice()
           : currentQuestion.responseType
       );
+      const components = AppStore.components.chatWidgets.responseTypes;
       responseTypes.forEach(type => {
         if (type === "images") appendWidget("images");
         if (type === "choice") {
@@ -1003,6 +1004,12 @@ class ChatScreen extends Component {
         if (type === "table") {
           const { columns } = currentQuestion;
           appendWidget("table", { columns });
+        }
+        const componentExists = Object.keys(components).indexOf(type) !== -1;
+        if (componentExists) {
+          const { currentUser } = this.props.navigation.state.params;
+          const ChatWidget = components[type];
+          appendWidget(type);
         }
         // appendWidget(type, currentQuestion);
       });
@@ -1156,6 +1163,21 @@ class ChatScreen extends Component {
     let currentQuestion;
     if (currentQuestionIndex >= 0 && this.questions) {
       currentQuestion = this.questions[currentQuestionIndex];
+    }
+
+    const components = AppStore.components.chatWidgets.responseTypes;
+    const componentExists =
+      Object.keys(components).indexOf(currentMessage.type) !== -1;
+    if (componentExists) {
+      const { currentUser } = this.props.navigation.state.params;
+      const ChatWidget = components[currentMessage.type];
+      return (
+        <ChatWidget
+          chatScreen={this}
+          currentUser={currentUser}
+          answers={this.state.answers}
+        />
+      );
     }
 
     switch (currentMessage.type) {

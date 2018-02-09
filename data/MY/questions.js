@@ -169,6 +169,12 @@ const questionTravelPA: QuestionSetType = [
   //   include: ["pa"]
   // },
   {
+    question: "Which coverage do you want to be added to your PA?",
+    responseType: "coverageAddon",
+    id: "coverageAddon",
+    include: ["pa"]
+  },
+  {
     question:
       "Have you and/or any named person application has been rejected by any Insurance/ Takaful operator before?",
     responseType: ["boolean", "choice"],
@@ -244,7 +250,7 @@ const questionTravelPA: QuestionSetType = [
   {
     question:
       "You hereby declare that you are in good health, free from physical deformity, mental or any kind of medical disorder at the commencement date of enrolment.",
-    responseType: ["boolean", "choice"],
+    responseType: ["boolean", "choice", "healthDeclaration"],
     choices: [
       { label: "Yes, I'm fine", value: true },
       { label: "No, I'm not", value: false }
