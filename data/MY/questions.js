@@ -192,59 +192,59 @@ const questionTravelPA: QuestionSetType = [
     ],
     include: ["pa"]
   },
-  // {
-  //   question: "Key in your personal details.",
-  //   responseType: "table",
-  //   id: "travellers",
-  //   columns: [
-  //     {
-  //       label: "First Name",
-  //       id: "firstName",
-  //       responseLength: 60,
-  //       responseType: ["string"]
-  //     },
-  //     {
-  //       label: "Last Name",
-  //       id: "lastName",
-  //       responseLength: 60,
-  //       responseType: ["string"]
-  //     },
-  //     {
-  //       label: "ID Type",
-  //       id: "idType",
-  //       responseType: ["choice", "string"],
-  //       choices: mappings.IDType
-  //     },
-  //     {
-  //       label: "ID Number (NRIC/ Passport)",
-  //       id: "idType",
-  //       responseType: "string"
-  //     },
-  //     {
-  //       label: "Date of birth",
-  //       id: "DOB",
-  //       responseType: "date",
-  //       pastOnly: true
-  //     },
-  //     {
-  //       label: "Gender",
-  //       id: "gender",
-  //       responseType: ["choice", "string"],
-  //       choices: mappings.gender
-  //     },
-  //     {
-  //       label: "Email",
-  //       id: "email",
-  //       responseType: "string"
-  //     },
-  //     {
-  //       responseType: ["string", "mobile"],
-  //       label: "Mobile Phone No",
-  //       id: "mobile"
-  //     }
-  //   ],
-  //   include: ["pa"]
-  // },
+  {
+    question: "Key in your personal details.",
+    responseType: "table",
+    id: "personalDetails",
+    columns: [
+      {
+        label: "First Name",
+        id: "firstName",
+        responseLength: 60,
+        responseType: ["string"]
+      },
+      {
+        label: "Last Name",
+        id: "lastName",
+        responseLength: 60,
+        responseType: ["string"]
+      },
+      {
+        label: "ID Type",
+        id: "idType",
+        responseType: ["choice", "string"],
+        choices: mappings.IDType
+      },
+      {
+        label: "ID Number (NRIC/ Passport)",
+        id: "idType",
+        responseType: "string"
+      },
+      {
+        label: "Date of birth",
+        id: "DOB",
+        responseType: "date",
+        pastOnly: true
+      },
+      {
+        label: "Gender",
+        id: "gender",
+        responseType: ["choice", "string"],
+        choices: mappings.gender
+      },
+      {
+        label: "Email",
+        id: "email",
+        responseType: "string"
+      },
+      {
+        responseType: ["string", "phoneNumber"],
+        label: "Mobile Phone No",
+        id: "mobile"
+      }
+    ],
+    include: ["pa"]
+  },
 
   // declaration & conclusion
   {

@@ -23,15 +23,15 @@ import Ionicon from "react-native-vector-icons/Ionicons";
 import { CreditCardInput } from "react-native-credit-card-input";
 import sha1 from "sha1";
 
-import { Text } from "../defaultComponents";
-import AppStore from "../../microumbrella-core/stores/AppStore";
+import { Text } from "../../defaultComponents";
+import AppStore from "../../../microumbrella-core/stores/AppStore";
 const colors = AppStore.colors;
-import Button from "../../microumbrella-core/src/components/Button";
+import Button from "../../../microumbrella-core/src/components/Button";
 import {
   MENU_ICON_SIZE,
   navigationStyles
-} from "../../microumbrella-core/src/navigations";
-import { objectToUrlParams, generateID } from "../utils";
+} from "../../../microumbrella-core/src/navigations";
+import { objectToUrlParams, generateID } from "../../utils";
 
 const windowWidth = Dimensions.get("window").width;
 

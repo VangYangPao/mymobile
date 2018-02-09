@@ -1,22 +1,22 @@
 // @flow
 import React, { Component } from "react";
 import { View, StyleSheet } from "react-native";
-import { Text } from "../defaultComponents";
-import Button from "../../microumbrella-core/src/components/Button";
+import { Text } from "../../defaultComponents";
+import Button from "../../../microumbrella-core/src/components/Button";
 import CheckBox from "react-native-check-box";
-import colors from "./colors";
+import colors from "../colors";
 import type {
   PlanNameType,
   PlanDurationNameType,
   AdditionalCoverageType
-} from "../../data/MY/pa-prices";
+} from "../../../data/MY/pa-prices";
 import {
   MEDICAL_REIMBURSEMENT_KEY,
   WEEKLY_BENEFIT_KEY,
   SNATCH_THEFT_KEY,
   coverageDescriptions
-} from "../../data/MY/pa-prices";
-import PA_PRICES from "../../data/MY/pa-prices";
+} from "../../../data/MY/pa-prices";
+import PA_PRICES from "../../../data/MY/pa-prices";
 
 type AdditionalCoveragesType = {
   [AdditionalCoverageType]: boolean

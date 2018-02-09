@@ -94,7 +94,8 @@ class AppStore {
   components = {
     chatWidgets: {
       responseTypes: {}
-    }
+    },
+    tableInputs: {}
   };
 }
 

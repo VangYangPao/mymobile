@@ -1198,12 +1198,17 @@ class ChatScreen extends Component {
         if (!questionId) {
           throw new Error("Question ID not found, is this a null message?");
         }
-        let TableInput;
-        if (questionId === "travellers") {
-          TableInput = TravellerTableInput;
-        } else if (questionId === "lostOrDamagedItems") {
-          TableInput = LostOrDamagedItemsTableInput;
-        } else {
+        const TableInputs = AppStore.components.tableInputs;
+        console.log(TableInputs);
+        const TableInput = TableInputs[questionId];
+        // if (questionId === "travellers") {
+        //   TableInput = TravellerTableInput;
+        // } else if (questionId === "lostOrDamagedItems") {
+        //   TableInput = LostOrDamagedItemsTableInput;
+        // } else {
+        //   throw new Error("No such table input for id of " + questionId);
+        // }
+        if (!TableInput) {
           throw new Error("No such table input for id of " + questionId);
         }
         return (

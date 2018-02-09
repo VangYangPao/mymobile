@@ -48,7 +48,6 @@ export function getProductQuote(
       );
       resolve(premium);
     } else if (policy.id === "pa") {
-      console.log(form);
       const premium = getPAPremium(
         form.coverageDuration,
         form.planIndex.toString(),
