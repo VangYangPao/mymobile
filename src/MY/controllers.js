@@ -3,6 +3,11 @@ import Parse from "parse/react-native";
 
 import { getTravelPremium, getPAPremium } from "./premiums";
 import { purchaseTravelPolicy, purchasePAPolicy } from "./parse/purchase";
+import {
+  MEDICAL_REIMBURSEMENT_KEY,
+  WEEKLY_BENEFIT_KEY,
+  SNATCH_THEFT_KEY
+} from "../../data/MY/pa-prices";
 import type { PolicyType } from "../../types";
 import type { TravellerType } from "./types.my";
 
@@ -43,12 +48,13 @@ export function getProductQuote(
       );
       resolve(premium);
     } else if (policy.id === "pa") {
+      console.log(form);
       const premium = getPAPremium(
-        form.planDuration,
-        form.planType.toString(),
-        form.medicalReimbursementCoverage,
-        form.weeklyBenefitCoverage,
-        form.snatchTheftCoverage
+        form.coverageDuration,
+        form.planIndex.toString(),
+        form.coverageAddon[MEDICAL_REIMBURSEMENT_KEY],
+        form.coverageAddon[WEEKLY_BENEFIT_KEY],
+        form.coverageAddon[SNATCH_THEFT_KEY]
       );
       resolve(premium);
     } else {
