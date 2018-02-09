@@ -92,7 +92,9 @@ export default class CoverageAddonPicker extends Component {
     ];
     return (
       <View style={styles.coverageAddonContainer}>
-        {coverageRenderOrder.map(this.renderCoverage)}
+        <View style={styles.coveragesContainer}>
+          {coverageRenderOrder.map(this.renderCoverage)}
+        </View>
         <Button
           accessibilityLabel={"chat__select-plan_"}
           onPress={this.handleSubmitCoverageAddon}
@@ -109,12 +111,28 @@ const styles = StyleSheet.create({
   leftTextStyle: {
     color: colors.primaryText
   },
+  coveragesContainer: {
+    marginVertical: 5,
+    paddingHorizontal: 7
+  },
   coverageCheckbox: {
     flex: 1,
     padding: 10
   },
+  coverageContainer: {
+    paddingVertical: 5
+  },
   coverageAddonContainer: {
-    backgroundColor: "white"
+    marginTop: 10,
+    marginBottom: 10,
+    marginHorizontal: 7,
+    borderRadius: 5,
+    backgroundColor: "white",
+    shadowColor: "#424242",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 5
   },
   selectCoverage: {
     borderRadius: 0
