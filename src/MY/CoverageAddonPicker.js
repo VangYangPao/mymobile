@@ -1,6 +1,7 @@
 // @flow
 import React, { Component } from "react";
 import { View, StyleSheet } from "react-native";
+import { Text } from "../defaultComponents";
 import Button from "../../microumbrella-core/src/components/Button";
 import CheckBox from "react-native-check-box";
 import colors from "./colors";
@@ -70,14 +71,23 @@ export default class CoverageAddonPicker extends Component {
       coverages[coverageKey] = !coverages[coverageKey];
       this.setState({ coverages });
     };
+    const coverageName = coverageDescriptions[coverageKey].name;
+    const { planIndex, coverageDuration } = this.props.chatScreen.state.answers;
+    const coveragePremium = PA_PRICES[coverageDuration][planIndex][coverageKey];
     return (
-      <View style={styles.coverageContainer}>
+      <View key={coverageKey} style={styles.coverageContainer}>
         <CheckBox
           style={styles.coverageCheckbox}
           onClick={handlePress}
           isChecked={this.state.coverages[coverageKey]}
-          leftText={coverageDescriptions[coverageKey].name}
-          leftTextStyle={styles.leftTextStyle}
+          leftText={
+            <Text style={styles.coverageName}>
+              {coverageName}
+              {"\n"}
+              <Text style={styles.coveragePremium}>RM{coveragePremium}</Text>
+            </Text>
+          }
+          leftTextStyle={StyleSheet.flatten(styles.leftTextStyle)}
           checkBoxColor={colors.primaryAccent}
         />
       </View>
@@ -108,6 +118,12 @@ export default class CoverageAddonPicker extends Component {
 }
 
 const styles = StyleSheet.create({
+  coveragePremium: {
+    fontWeight: "normal"
+  },
+  coverageName: {
+    fontWeight: "bold"
+  },
   leftTextStyle: {
     color: colors.primaryText
   },
