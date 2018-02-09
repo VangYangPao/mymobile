@@ -208,10 +208,11 @@ export default class TableScreen extends Component {
   render() {
     const { columns } = this.props.navigation.state.params;
     return (
-      <KeyboardAwareScrollView>
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
         <View style={styles.page}>
           <View style={styles.container}>
             <FlatList
+              keyboardShouldPersistTaps="always"
               keyExtractor={item => item.id}
               data={columns}
               renderItem={this.renderField}
