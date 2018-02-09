@@ -1199,7 +1199,6 @@ class ChatScreen extends Component {
           throw new Error("Question ID not found, is this a null message?");
         }
         const TableInputs = AppStore.components.tableInputs;
-        console.log(TableInputs);
         const TableInput = TableInputs[questionId];
         // if (questionId === "travellers") {
         //   TableInput = TravellerTableInput;

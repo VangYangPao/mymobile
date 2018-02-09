@@ -1,6 +1,15 @@
 // @flow
+import moment from "moment";
 import Parse from "parse/react-native";
-import type { Policyholder } from "../../../types/MY/policies";
+import type {
+  Policyholder,
+  PersonalDetailsType
+} from "../../../types/MY/policies";
+import type {
+  PlanNameType,
+  PlanDurationNameType
+} from "../../../data/MY/pa-prices";
+import { calculatePAPolicyExpiry } from "./utils";
 
 const BASE_NO = 300000;
 const PURCHASE_CLASS_NAME = "Purchase";
@@ -85,4 +94,49 @@ export function purchaseTravelPolicy(
     .catch(err => console.log(err));
 }
 
-export function purchasePAPolicy(user: Parse.User) {}
+export function purchasePAPolicy(
+  user: Parse.User,
+  premium: number,
+  planType: PlanNameType,
+  planDurationType: PlanDurationNameType,
+  medicalReimbursementCoverage: boolean,
+  weeklyBenefitCoverage: boolean,
+  snatchTheftCoverage: boolean,
+  personalDetails: PersonalDetailsType,
+  beneficiaries: Array<Policyholder>,
+  webcashReturnCode: string,
+  webcashMercRef: string
+) {
+  const POLICY_TYPE_ID = "pa";
+  const purchase = new Purchase();
+  purchase.setACL(new Parse.ACL(user));
+
+  const todayDate = moment
+    .utc()
+    .startOf("day")
+    .toDate();
+  const expiryDate = calculatePAPolicyExpiry(todayDate, planDurationType);
+  purchase.set("policyTypeId", POLICY_TYPE_ID);
+  purchase.set("commencementDate", todayDate);
+  purchase.set("expiryDate", expiryDate);
+  purchase.set("premium", premium);
+  purchase.set("planType", planType);
+  purchase.set("webcashReturnCode", webcashReturnCode);
+  purchase.set("webcashMercRef", webcashMercRef);
+  purchase.set("user", user);
+
+  user.set("idNumberType", personalDetails.idNumberType);
+  user.set("idNumber", personalDetails.idNumber);
+  user.set("DOB", personalDetails.DOB);
+  user.set("gender", personalDetails.gender);
+  user.set("mobilePhone", personalDetails.mobilePhone);
+
+  return getPolicyRunningNumber(POLICY_TYPE_ID)
+    .then(policyId => {
+      purchase.set("policyId", policyId);
+      return user.save();
+    })
+    .then(user => {
+      return purchase.save();
+    });
+}

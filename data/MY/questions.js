@@ -83,8 +83,13 @@ const questionTravelPA: QuestionSetType = [
         responseType: ["string", "choice"]
       },
       {
-        label: "Name (as per IC/other ID/passport)",
-        id: "fullName",
+        label: "First name",
+        id: "firstName",
+        responseType: "string"
+      },
+      {
+        label: "Last name (Surname)",
+        id: "lastName",
         responseType: "string"
       },
       {
@@ -198,26 +203,14 @@ const questionTravelPA: QuestionSetType = [
     id: "personalDetails",
     columns: [
       {
-        label: "First Name",
-        id: "firstName",
-        responseLength: 60,
-        responseType: ["string"]
-      },
-      {
-        label: "Last Name",
-        id: "lastName",
-        responseLength: 60,
-        responseType: ["string"]
-      },
-      {
         label: "ID Type",
-        id: "idType",
+        id: "idNumberType",
         responseType: ["choice", "string"],
         choices: mappings.IDType
       },
       {
         label: "ID Number (NRIC/ Passport)",
-        id: "idType",
+        id: "idNumber",
         responseType: "string"
       },
       {
@@ -233,14 +226,9 @@ const questionTravelPA: QuestionSetType = [
         choices: mappings.gender
       },
       {
-        label: "Email",
-        id: "email",
-        responseType: "string"
-      },
-      {
         responseType: ["string", "phoneNumber"],
         label: "Mobile Phone No",
-        id: "mobile"
+        id: "mobilePhone"
       }
     ],
     include: ["pa"]

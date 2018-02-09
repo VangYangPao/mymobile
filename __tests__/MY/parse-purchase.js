@@ -1,20 +1,22 @@
 // @flow
-import "../mocks";
+import "./mocks.my";
 import Parse from "parse/react-native";
-
-import type { Policyholder } from "../../types/MY/policies";
-import { MY as secrets } from "../../secrets/secrets";
-
-Parse.initialize(secrets.appName);
-Parse.serverURL = secrets.serverURL;
-Parse.masterKey = secrets.masterKey;
-Parse.Cloud.useMasterKey();
-
+import type {
+  Policyholder,
+  PersonalDetailsType
+} from "../../types/MY/policies";
+import type {
+  PlanNameType,
+  PlanDurationNameType
+} from "../../data/MY/pa-prices";
 import {
   purchaseTravelPolicy,
   purchasePAPolicy
 } from "../../src/MY/parse/purchase";
+import { calculatePAPolicyExpiry } from "../../src/MY/parse/utils";
 import moment from "moment";
+
+// jasmine.DEFAULT_TIMEOUT_INTERVAL = 5000;
 
 const USER_EMAIL = "hello@microumbrella.com";
 const USER_PASSWORD = "1234abcd";
@@ -25,7 +27,7 @@ function cleanupPurchase(purchase: Purchase) {
   return purchase.destroy({ useMasterKey: true });
 }
 
-function validatePurchase(
+function validateTravelPurchase(
   purchase,
   user: Parse.User,
   premium: number,
@@ -122,7 +124,82 @@ it("should purchase travel correctly", () => {
       return purchaseTravelPolicy(user, ...args);
     })
     .then(purchase => {
-      return validatePurchase(purchase, user, ...args);
+      return validateTravelPurchase(purchase, user, ...args);
     })
     .then(cleanupPurchase);
+});
+
+function validatePAPurchase(
+  purchase: Purchase,
+  user: Parse.User,
+  premium: number,
+  planType: PlanNameType,
+  planDurationType: PlanDurationNameType,
+  medicalReimbursementCoverage: boolean,
+  weeklyBenefitCoverage: boolean,
+  snatchTheftCoverage: boolean,
+  personalDetails: PersonalDetailsType,
+  beneficiaries: Array<Policyholder>,
+  webcashReturnCode: string,
+  webcashMercRef: string
+) {
+  const today = moment
+    .utc()
+    .startOf("day")
+    .toDate();
+  const expiryDate = calculatePAPolicyExpiry(today, planDurationType);
+  expect(purchase.get("premium")).toEqual(premium);
+  expect(purchase.get("planType")).toEqual(planType);
+  expect(purchase.get("commencementDate")).toEqual(today);
+  expect(purchase.get("expiryDate")).toEqual(expiryDate);
+  expect(purchase.get("webcashReturnCode")).toEqual(webcashReturnCode);
+  expect(purchase.get("webcashMercRef")).toEqual(webcashMercRef);
+
+  expect(user.get("idNumber")).toEqual(personalDetails.idNumber);
+  expect(user.get("idNumberType")).toEqual(personalDetails.idNumberType);
+  expect(user.get("DOB")).toEqual(personalDetails.DOB);
+  expect(user.get("mobilePhone")).toEqual(personalDetails.mobilePhone);
+
+  return purchase;
+}
+
+it("should purchase pa correctly", () => {
+  let user;
+  const premium = 17;
+  const planType = "1";
+  const planDuration = "A";
+  const medicalReimbursementCoverage = false;
+  const weeklybenefitCoverage = false;
+  const snatchTheftCoverage = false;
+  const policyholder = {
+    idNumber: "960909-10-5893",
+    idNumberType: "New",
+    DOB: new Date(),
+    mobilePhone: "017-6994800",
+    gender: "F"
+  };
+  const beneficiaries = [];
+  const webcashReturnCode = "S";
+  const webcashMercRef = "TR000001";
+  const args = [
+    premium,
+    planType,
+    planDuration,
+    medicalReimbursementCoverage,
+    weeklybenefitCoverage,
+    snatchTheftCoverage,
+    policyholder,
+    beneficiaries,
+    webcashReturnCode,
+    webcashMercRef
+  ];
+
+  return Parse.User.logIn(USER_EMAIL, USER_PASSWORD).then(_user => {
+    user = _user;
+    return purchasePAPolicy(user, ...args)
+      .then(purchase => {
+        return validatePAPurchase(purchase, user, ...args);
+      })
+      .then(cleanupPurchase);
+  });
 });
