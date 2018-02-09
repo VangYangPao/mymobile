@@ -36,7 +36,6 @@ import { objectToUrlParams, generateID } from "../utils";
 const windowWidth = Dimensions.get("window").width;
 
 const CHECKOUT_URL = "https://api-dev-my.microumbrella.com/index2.php";
-const PAYPAL_SUCCESSFUL = "https://api-dev-my.microumbrella.com/payment-successful.html";
 
 type PaypalViewProps = {
   orderAmount: number,
@@ -80,11 +79,9 @@ class PaypalView extends Component {
     // );
 
     this.payaplPayload = {
-      lc: 'UK',
-      currency_code: 'GBP',
-      first_name: 'AAA',
-      last_name: 'BBB',
-      payer_email: 'asd@asd.com',
+      currency_code: 'USD',
+      city: props.orderLocation,
+      first_name: props.orderPerson,
       item_number: orderRef,
       item_name: orderRef,
       amount: props.orderAmount.toFixed(2),
@@ -107,21 +104,17 @@ class PaypalView extends Component {
   }
 
   handleWebViewMessage(event: { nativeEvent: { data: string } }) {
-    // const merchantRef = "TR" + generateID();
-    // const responseCode = event.nativeEvent.data;
-    // if (!this.state.checkingOut) {
-    //   this.setState({ checkingOut: true });
-    // } else {
-    //   return;
-    // }
-    // const promise = new Promise((resolve, reject) => {
-    //   if (responseCode === "S") {
-    //     resolve({ responseCode, merchantRef });
-    //   } else {
-    //     reject({ responseCode, merchantRef });
-    //   }
-    // });
-    // this.props.onCheckout(promise);
+    const merchantRef = "TR" + generateID();
+    const responseCode = event.nativeEvent.data;
+
+    const promise = new Promise((resolve, reject) => {
+      if (responseCode === "S") {
+        resolve({ responseCode, merchantRef });
+      } else {
+        reject({ responseCode, merchantRef });
+      }
+    });
+    this.props.onCheckout(promise);
   }
 
   render() {
@@ -138,13 +131,16 @@ class PaypalView extends Component {
     const urlParams = objectToUrlParams(this.payaplPayload);
     const checkoutURL = `${CHECKOUT_URL}?${urlParams}`;
 
-    const pollInterval = 200;
-    const injectedJavaScript = `setInterval(function() {
-      if (window.location.href === '${PAYPAL_SUCCESSFUL}') {
-        document.childNodes[0].style.display = 'none';
-        window.postMessage(document.childNodes[0].innerText);
+    const patchPostMessageJsCode = `(${String(function() {
+      var originalPostMessage = window.postMessage
+      var patchedPostMessage = function(message, targetOrigin, transfer) {
+        originalPostMessage(message, targetOrigin, transfer)
       }
-    }, ${pollInterval})`;
+      patchedPostMessage.toString = function() {
+        return String(Object.hasOwnProperty).replace('hasOwnProperty', 'postMessage')
+      }
+      window.postMessage = patchedPostMessage
+    })})();`
 
     return (
       <WebView
@@ -158,13 +154,13 @@ class PaypalView extends Component {
         onError={this.handleLoadError}
         renderLoading={() => loadingView}
         onMessage={this.handleWebViewMessage}
-        injectedJavaScript={injectedJavaScript}
+        injectedJavaScript={patchPostMessageJsCode}
       />
     );
   }
 }
 
-type CheckoutModalProps = {
+type PaypalCheckoutModalProps = {
   price: number,
   purchasing: boolean,
   onCheckout: (form: Object) => void,

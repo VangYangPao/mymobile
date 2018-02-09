@@ -300,29 +300,23 @@ export default class ConfirmationScreen extends Component {
       });
   }
 
-  // handleCheckout(policy: PolicyType, premium: number, form: Object) {
-  //   const { currentUser } = this.props.navigation.state.params;
-  //
-  //   return (promise: Promise<Object>) => {
-  //     promise
-  //       .then(paymentForm => {
-  //         const promise = AppStore.controllers.purchaseProduct(
-  //           currentUser,
-  //           this.policy,
-  //           this.state.totalPremium,
-  //           form,
-  //           paymentForm
-  //         );
-  //         this.handlePurchaseResult(promise);
-  //       })
-  //       .catch(err => {});
-  //   };
-  // }
-
   handleCheckout(policy: PolicyType, premium: number, form: Object) {
     const { currentUser } = this.props.navigation.state.params;
 
-    console.log('paypal')
+    return (promise: Promise<Object>) => {
+      promise
+        .then(paymentForm => {
+          const promise = AppStore.controllers.purchaseProduct(
+            currentUser,
+            this.policy,
+            this.state.totalPremium,
+            form,
+            paymentForm
+          );
+          this.handlePurchaseResult(promise);
+        })
+        .catch(err => {});
+    };
   }
 
 
