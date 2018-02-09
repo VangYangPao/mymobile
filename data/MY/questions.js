@@ -162,12 +162,12 @@ const questionTravelPA: QuestionSetType = [
   },
 
   // Accident PA
-  // {
-  //   question: "How long do you want to be covered?",
-  //   responseType: "number",
-  //   id: "coverageDuration",
-  //   include: ["pa"]
-  // },
+  {
+    question: "How long do you want to be covered?",
+    responseType: "string",
+    id: "coverageDuration",
+    include: ["pa"]
+  },
   {
     question: "Which coverage do you want to be added to your PA?",
     responseType: "coverageAddon",

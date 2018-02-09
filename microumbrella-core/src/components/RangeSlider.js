@@ -47,7 +47,7 @@ export default class RangeSlider extends Component {
       idx <= this.state.currentIndex ? styles.activeTrackStep : null;
     return (
       <TouchableOpacity
-        key={value}
+        key={idx}
         activeOpacity={0.8}
         onPress={() => this.handleValueChange(idx)}
       >

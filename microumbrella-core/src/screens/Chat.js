@@ -469,16 +469,15 @@ class ChatScreen extends Component {
   }
 
   handleSelectDuration() {
-    const months = this.state.coverageDuration;
+    const { coverageDuration } = this.state;
     const currentQuestion = this.questions[this.state.currentQuestionIndex];
     if (currentQuestion.id !== "coverageDuration") return;
-    const s = months > 1 ? "s" : "";
     this.setState(
       this.concatMessageUpdater({
         type: "text",
         _id: uuid.v4(),
-        text: `I want to be covered for ${months} month${s}`,
-        value: months,
+        text: `I want to be covered for ${coverageDuration.label}`,
+        value: coverageDuration.id,
         user: CUSTOMER_USER
       }),
       () => this.setState({ answering: false, renderInput: true })
