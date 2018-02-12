@@ -35,7 +35,7 @@ import { objectToUrlParams, generateID } from "../utils";
 
 const windowWidth = Dimensions.get("window").width;
 
-const CHECKOUT_URL = "https://api-dev-my.microumbrella.com/index2.php";
+const CHECKOUT_URL = "https://api-dev-my.microumbrella.com/index3.php";
 
 type PaypalViewProps = {
   orderAmount: number,
