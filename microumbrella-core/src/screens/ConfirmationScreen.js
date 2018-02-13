@@ -303,9 +303,7 @@ export default class ConfirmationScreen extends Component {
   handleCheckout(policy: PolicyType, premium: number, form: Object) {
     const { currentUser } = this.props.navigation.state.params;
 
-    console.log('ccccc');
     return (promise: Promise<Object>) => {
-      console.log('bbbb');
       promise
         .then(paymentForm => {
           const promise = AppStore.controllers.purchaseProduct(
