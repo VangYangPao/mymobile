@@ -35,13 +35,15 @@ import { objectToUrlParams, generateID } from "../utils";
 
 const windowWidth = Dimensions.get("window").width;
 
-const CHECKOUT_URL = "https://api-dev-my.microumbrella.com/index2.php";
+const CHECKOUT_URL = "https://api-dev-my.microumbrella.com/index3.php";
 
 type PaypalViewProps = {
   orderAmount: number,
   orderPerson: string,
   orderLocation: string,
-  onCheckout: (paymentForm?: Object) => void
+  onCheckout: (paymentForm?: Object) => void,
+  onClose: () => void
+
 };
 
 type NavigationStateChangeType = {
@@ -106,6 +108,11 @@ class PaypalView extends Component {
   handleWebViewMessage(event: { nativeEvent: { data: string } }) {
     const merchantRef = "TR" + generateID();
     const responseCode = event.nativeEvent.data;
+
+    if (responseCode === "E" || responseCode === "C") {
+      this.props.onClose();
+      return;
+    }
 
     const promise = new Promise((resolve, reject) => {
       if (responseCode === "S") {
@@ -203,6 +210,7 @@ export default class PaypalCheckoutModal extends Component {
                 orderPerson={orderPerson}
                 orderLocation={orderLocation}
                 onCheckout={this.props.onCheckout}
+                onClose={this.props.onClose}
                />
             </View>
           </View>
