@@ -23,7 +23,7 @@ import {
 } from "./telemoney";
 import { createPromiseRetry, objectToUrlParams } from "../utils";
 
-const HLAS_URL = "http://42.61.99.229:8080";
+const HLAS_URL = "http://202.73.50.105:8080";
 const AGENT_CODE = "MIC00002"; // just to track microassurce account
 const AGENT_WCC = "MIC"; // // just to track the sale from microassurance . please use “MIC” – should be the same in the production.
 const REFERRAL_SOURCE_ID = 75;
