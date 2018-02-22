@@ -46,7 +46,6 @@ type PaymentForm = {
 
 type State = {
   renderCheckoutModal: boolean,
-  renderPaypalCheckoutModal: boolean,
   loading: boolean,
   purchasing: boolean,
   totalPremium: ?number,
@@ -319,8 +318,6 @@ export default class ConfirmationScreen extends Component {
     };
   }
 
-
-
   // handleCheckout(paymentForm: PaymentForm) {
   //   this.setState({ purchasing: true });
   //   const idNumberTypeMap = { nric: 0, passport: 1 };
@@ -450,7 +447,7 @@ export default class ConfirmationScreen extends Component {
       formArr.push({ key, value: form[key] });
     }
     const modal = (
-      <AppStore.screens.PaypalCheckoutModal
+      <AppStore.screens.CheckoutModal
         price={this.state.totalPremium}
         purchasing={this.state.purchasing}
         onCheckout={this.handleCheckout(
@@ -458,7 +455,7 @@ export default class ConfirmationScreen extends Component {
           this.state.totalPremium,
           form
         )}
-        onClose={() => this.setState({ renderPaypalCheckoutModal: false })}
+        onClose={() => this.setState({ renderCheckoutModal: false })}
       />
     );
     let pageContent;
@@ -477,7 +474,7 @@ export default class ConfirmationScreen extends Component {
     }
     return (
       <View style={styles.container}>
-        {this.state.renderPaypalCheckoutModal ? modal : null}
+        {this.state.renderCheckoutModal ? modal : null}
         <View
           style={[
             styles.pageContainer,
@@ -494,7 +491,7 @@ export default class ConfirmationScreen extends Component {
               !this.state.loading &&
               typeof this.state.totalPremium === "number"
             ) {
-              this.setState({ renderPaypalCheckoutModal: true });
+              this.setState({ renderCheckoutModal: true });
             }
           }}
           text="ENTER BILLING DETAILS"

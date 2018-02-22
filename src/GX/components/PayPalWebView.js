@@ -16,22 +16,22 @@ import {
   StatusBar,
   WebView,
   InteractionManager,
-  NetInfo,
+  NetInfo
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Ionicon from "react-native-vector-icons/Ionicons";
 import { CreditCardInput } from "react-native-credit-card-input";
 import sha1 from "sha1";
 
-import { Text } from "../defaultComponents";
-import AppStore from "../../microumbrella-core/stores/AppStore";
+import { Text } from "../../defaultComponents";
+import AppStore from "../../../microumbrella-core/stores/AppStore";
 const colors = AppStore.colors;
-import Button from "../../microumbrella-core/src/components/Button";
+import Button from "../../../microumbrella-core/src/components/Button";
 import {
   MENU_ICON_SIZE,
   navigationStyles
-} from "../../microumbrella-core/src/navigations";
-import { objectToUrlParams, generateID } from "../utils";
+} from "../../../microumbrella-core/src/navigations";
+import { objectToUrlParams, generateID } from "../../utils";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -43,7 +43,6 @@ type PaypalViewProps = {
   orderLocation: string,
   onCheckout: (paymentForm?: Object) => void,
   onClose: () => void
-
 };
 
 type NavigationStateChangeType = {
@@ -55,7 +54,7 @@ type NavigationStateChangeType = {
   target: number
 };
 
-class PaypalView extends Component {
+export default class PaypalView extends Component {
   props: PaypalViewProps;
   state: {
     paypalHTML: ?string,
@@ -81,12 +80,12 @@ class PaypalView extends Component {
     // );
 
     this.payaplPayload = {
-      currency_code: 'USD',
+      currency_code: "USD",
       city: props.orderLocation,
       first_name: props.orderPerson,
       item_number: orderRef,
       item_name: orderRef,
-      amount: props.orderAmount.toFixed(2),
+      amount: props.orderAmount.toFixed(2)
     };
   }
 
@@ -125,7 +124,6 @@ class PaypalView extends Component {
   }
 
   render() {
-
     const loadingView = (
       <View style={styles.webcashLoading}>
         <ActivityIndicator color="black" size="large" />
@@ -139,21 +137,24 @@ class PaypalView extends Component {
     const checkoutURL = `${CHECKOUT_URL}?${urlParams}`;
 
     const patchPostMessageJsCode = `(${String(function() {
-      var originalPostMessage = window.postMessage
+      var originalPostMessage = window.postMessage;
       var patchedPostMessage = function(message, targetOrigin, transfer) {
-        originalPostMessage(message, targetOrigin, transfer)
-      }
+        originalPostMessage(message, targetOrigin, transfer);
+      };
       patchedPostMessage.toString = function() {
-        return String(Object.hasOwnProperty).replace('hasOwnProperty', 'postMessage')
-      }
-      window.postMessage = patchedPostMessage
-    })})();`
+        return String(Object.hasOwnProperty).replace(
+          "hasOwnProperty",
+          "postMessage"
+        );
+      };
+      window.postMessage = patchedPostMessage;
+    })})();`;
 
     return (
       <WebView
         style={styles.flex1}
         source={{
-          uri: checkoutURL,
+          uri: checkoutURL
         }}
         javaScriptEnabled={true}
         domStorageEnabled={true}
@@ -163,59 +164,6 @@ class PaypalView extends Component {
         onMessage={this.handleWebViewMessage}
         injectedJavaScript={patchPostMessageJsCode}
       />
-    );
-  }
-}
-
-type PaypalCheckoutModalProps = {
-  price: number,
-  purchasing: boolean,
-  onCheckout: (form: Object) => void,
-  onClose: () => void
-};
-
-export default class PaypalCheckoutModal extends Component {
-  props: PaypalCheckoutModalProps;
-
-  render() {
-    const iconName = (Platform.OS === "ios" ? "ios" : "md") + "-arrow-back";
-    const { price: orderAmount } = this.props;
-    const orderPerson = "hello";
-    const orderLocation = "kuala lumpur";
-
-    return (
-      <Modal
-        animationType={"slide"}
-        transparent={true}
-        visible={true}
-        onRequestClose={this.props.onClose}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContentContainer}>
-            <View style={styles.checkoutHeader}>
-              <TouchableOpacity onPress={this.props.onClose}>
-                <Ionicon
-                  name={iconName}
-                  size={MENU_ICON_SIZE}
-                  style={navigationStyles.headerLeftIcon}
-                />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.checkoutContent}>
-              {/*<Text style={styles.checkoutTitle}>
-                Enter your credit card details
-              </Text>*/}
-              <PaypalView
-                orderAmount={orderAmount}
-                orderPerson={orderPerson}
-                orderLocation={orderLocation}
-                onCheckout={this.props.onCheckout}
-                onClose={this.props.onClose}
-               />
-            </View>
-          </View>
-        </View>
-      </Modal>
     );
   }
 }
