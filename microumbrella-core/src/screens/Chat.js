@@ -469,16 +469,15 @@ class ChatScreen extends Component {
   }
 
   handleSelectDuration() {
-    const months = this.state.coverageDuration;
+    const { coverageDuration } = this.state;
     const currentQuestion = this.questions[this.state.currentQuestionIndex];
     if (currentQuestion.id !== "coverageDuration") return;
-    const s = months > 1 ? "s" : "";
     this.setState(
       this.concatMessageUpdater({
         type: "text",
         _id: uuid.v4(),
-        text: `I want to be covered for ${months} month${s}`,
-        value: months,
+        text: `I want to be covered for ${coverageDuration.label}`,
+        value: coverageDuration.id,
         user: CUSTOMER_USER
       }),
       () => this.setState({ answering: false, renderInput: true })
@@ -987,6 +986,7 @@ class ChatScreen extends Component {
           ? currentQuestion.responseType.slice()
           : currentQuestion.responseType
       );
+      const components = AppStore.components.chatWidgets.responseTypes;
       responseTypes.forEach(type => {
         if (type === "images") appendWidget("images");
         if (type === "choice") {
@@ -1003,6 +1003,12 @@ class ChatScreen extends Component {
         if (type === "table") {
           const { columns } = currentQuestion;
           appendWidget("table", { columns });
+        }
+        const componentExists = Object.keys(components).indexOf(type) !== -1;
+        if (componentExists) {
+          const { currentUser } = this.props.navigation.state.params;
+          const ChatWidget = components[type];
+          appendWidget(type);
         }
         // appendWidget(type, currentQuestion);
       });
@@ -1158,6 +1164,21 @@ class ChatScreen extends Component {
       currentQuestion = this.questions[currentQuestionIndex];
     }
 
+    const components = AppStore.components.chatWidgets.responseTypes;
+    const componentExists =
+      Object.keys(components).indexOf(currentMessage.type) !== -1;
+    if (componentExists) {
+      const { currentUser } = this.props.navigation.state.params;
+      const ChatWidget = components[currentMessage.type];
+      return (
+        <ChatWidget
+          chatScreen={this}
+          currentUser={currentUser}
+          answers={this.state.answers}
+        />
+      );
+    }
+
     switch (currentMessage.type) {
       case "claimPolicyNo":
         const { policies } = currentMessage;
@@ -1177,12 +1198,16 @@ class ChatScreen extends Component {
         if (!questionId) {
           throw new Error("Question ID not found, is this a null message?");
         }
-        let TableInput;
-        if (questionId === "travellers") {
-          TableInput = TravellerTableInput;
-        } else if (questionId === "lostOrDamagedItems") {
-          TableInput = LostOrDamagedItemsTableInput;
-        } else {
+        const TableInputs = AppStore.components.tableInputs;
+        const TableInput = TableInputs[questionId];
+        // if (questionId === "travellers") {
+        //   TableInput = TravellerTableInput;
+        // } else if (questionId === "lostOrDamagedItems") {
+        //   TableInput = LostOrDamagedItemsTableInput;
+        // } else {
+        //   throw new Error("No such table input for id of " + questionId);
+        // }
+        if (!TableInput) {
           throw new Error("No such table input for id of " + questionId);
         }
         return (

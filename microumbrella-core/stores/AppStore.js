@@ -88,8 +88,15 @@ class AppStore {
   screens: { [string]: Object } = {};
   controllers: { [string]: Function } = {};
   data: {
-    travelBenefits?: Object
+    travelBenefits?: Object,
+    coverageDurations?: Object
   } = {};
+  components = {
+    chatWidgets: {
+      responseTypes: {}
+    },
+    tableInputs: {}
+  };
 }
 
 const singleton = new AppStore();

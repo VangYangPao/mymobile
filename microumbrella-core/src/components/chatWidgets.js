@@ -99,35 +99,38 @@ const SLOT_RADIUS_PERCENT = 0.075;
 const SLIDER_RADIUS_PERCENT = 0.15;
 
 export class CoverageDurationWidget extends Component {
+  state: {
+    coverageDuration: Object
+  };
+
   constructor(props) {
     super(props);
-    const coverageDurations = AppStore.coverageDurations;
+    const coverageDurations = AppStore.data.coverageDurations;
     const initialCoverageDuration = coverageDurations[0];
     this.state = {
-      months: initialCoverageDuration
+      coverageDuration: initialCoverageDuration
     };
     props.onChangeDuration(initialCoverageDuration);
   }
 
   render() {
-    const elements = AppStore.coverageDurations.map(d => ({
-      label: d + "m",
+    const elements = AppStore.data.coverageDurations.map(d => ({
+      label: d.shortLabel,
       value: d
     }));
-    const { months } = this.state;
-    const s = months > 1 ? "S" : "";
-    const totalPremium = (this.props.monthlyPremium * months).toFixed(2);
-    const buttonText = `CHOOSE ${months + ""} MONTH${s} - $${totalPremium}`;
+    // const s = months > 1 ? "S" : "";
+    // const totalPremium = (this.props.monthlyPremium * months).toFixed(2);
+    // const buttonText = `CHOOSE ${months + ""} MONTH${s} - $${totalPremium}`;
     return (
       <View style={styles.durationContainer}>
         <Text style={styles.durationText}>
-          {months} MONTH{s}
+          {this.state.coverageDuration.label}
         </Text>
         <RangeSlider
           elements={elements}
-          onValueChange={months => {
-            this.props.onChangeDuration(months);
-            this.setState({ months });
+          onValueChange={coverageDuration => {
+            this.props.onChangeDuration(coverageDuration);
+            this.setState({ coverageDuration });
           }}
           containerStyle={{
             marginBottom: 20
@@ -1301,7 +1304,7 @@ export class PlansTabNavigator extends Component {
       }
     });
     return (
-      <View style={[styles.plansTabContainer]}>
+      <View style={styles.plansTabContainer}>
         <_PlansTabNavigator />
       </View>
     );
@@ -1427,7 +1430,7 @@ const styles = StyleSheet.create({
   },
   durationText: {
     marginBottom: 20,
-    fontSize: 17,
+    fontSize: 19,
     fontWeight: "bold",
     textAlign: "center"
   },

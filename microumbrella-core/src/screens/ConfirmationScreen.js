@@ -46,6 +46,7 @@ type PaymentForm = {
 
 type State = {
   renderCheckoutModal: boolean,
+  renderPaypalCheckoutModal: boolean,
   loading: boolean,
   purchasing: boolean,
   totalPremium: ?number,
@@ -138,6 +139,7 @@ export default class ConfirmationScreen extends Component {
     delete form.policy;
     this.state = {
       renderCheckoutModal: false,
+      renderPaypalCheckoutModal: false,
       loading: true,
       purchasing: false,
       totalPremium: null,
@@ -317,6 +319,8 @@ export default class ConfirmationScreen extends Component {
     };
   }
 
+
+
   // handleCheckout(paymentForm: PaymentForm) {
   //   this.setState({ purchasing: true });
   //   const idNumberTypeMap = { nric: 0, passport: 1 };
@@ -446,7 +450,7 @@ export default class ConfirmationScreen extends Component {
       formArr.push({ key, value: form[key] });
     }
     const modal = (
-      <AppStore.screens.CheckoutModal
+      <AppStore.screens.PaypalCheckoutModal
         price={this.state.totalPremium}
         purchasing={this.state.purchasing}
         onCheckout={this.handleCheckout(
@@ -454,7 +458,7 @@ export default class ConfirmationScreen extends Component {
           this.state.totalPremium,
           form
         )}
-        onClose={() => this.setState({ renderCheckoutModal: false })}
+        onClose={() => this.setState({ renderPaypalCheckoutModal: false })}
       />
     );
     let pageContent;
@@ -473,7 +477,7 @@ export default class ConfirmationScreen extends Component {
     }
     return (
       <View style={styles.container}>
-        {this.state.renderCheckoutModal ? modal : null}
+        {this.state.renderPaypalCheckoutModal ? modal : null}
         <View
           style={[
             styles.pageContainer,
@@ -490,7 +494,7 @@ export default class ConfirmationScreen extends Component {
               !this.state.loading &&
               typeof this.state.totalPremium === "number"
             ) {
-              this.setState({ renderCheckoutModal: true });
+              this.setState({ renderPaypalCheckoutModal: true });
             }
           }}
           text="ENTER BILLING DETAILS"

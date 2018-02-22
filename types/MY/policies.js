@@ -19,3 +19,11 @@ export type Policyholder = {
   state: string,
   travellerType: string
 };
+
+export type PersonalDetailsType = {
+  idNumber: string,
+  idNumberType: string,
+  DOB: Date,
+  gender: string,
+  mobilePhone: string
+};

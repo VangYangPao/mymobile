@@ -1,7 +1,8 @@
 // @flow
 export type PlanNameType = "1" | "2" | "3" | "4" | "5";
 export type PlanDurationNameType = "A" | "B" | "C" | "D" | "E";
-type CoverageNameType = "adpd" | "mr" | "wb" | "st";
+export type AdditionalCoverageType = "mr" | "wb" | "st";
+export type CoverageNameType = "adpd" | AdditionalCoverageType;
 
 type PlanType = {
   [CoverageNameType]: number
@@ -11,6 +12,21 @@ type PlanDurationType = {
 };
 type PAPriceType = {
   [PlanDurationNameType]: PlanDurationType
+};
+
+export const MEDICAL_REIMBURSEMENT_KEY = "mr";
+export const WEEKLY_BENEFIT_KEY = "wb";
+export const SNATCH_THEFT_KEY = "st";
+
+export const coverageDescriptions = {};
+coverageDescriptions[MEDICAL_REIMBURSEMENT_KEY] = {
+  name: "Medical Reimbursement due to Accident"
+};
+coverageDescriptions[WEEKLY_BENEFIT_KEY] = {
+  name: "Weekly Benefit due to Temporary Disablement (up to maximum 4 weeks)"
+};
+coverageDescriptions[SNATCH_THEFT_KEY] = {
+  name: "Snatch Theft"
 };
 
 const prices: PAPriceType = {
