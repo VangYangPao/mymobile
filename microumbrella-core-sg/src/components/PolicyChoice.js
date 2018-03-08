@@ -5,11 +5,11 @@ import {
   StyleSheet,
   TouchableOpacity,
   Animated,
-  Platform
+  Platform,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import VectorDrawableView from "./VectorDrawableView";
-
+import Constants from '../../constants';
 import { Text } from "./defaultComponents";
 import AppStore from "../../stores/AppStore";
 const colors = AppStore.colors;
@@ -111,11 +111,14 @@ const styles = StyleSheet.create({
     fontWeight: "bold"
   },
   policyContainer: {
-    flexDirection: "row",
+    //flexDirection: "row",
+    //flex:1,
+    justifyContent:'center',
+    alignItems:'center',
     backgroundColor: "white",
     marginHorizontal: 10,
     marginVertical: 6,
-    padding: 6,
+    padding: Constants.BaseStyle.DEVICE_WIDTH/100 * 12,
     borderRadius: 3,
     elevation: 3,
     shadowColor: colors.borderLine,
@@ -125,15 +128,15 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     justifyContent: "center",
-    paddingRight: 18
+    //paddingRight: 18
   },
   detailContainer: {
     flex: 1,
-    justifyContent: "center"
+    justifyContent: "center",
   },
   icon: {
-    height: 65,
-    width: 65
+    height: 100,
+    width: 100
   },
   title: {
     fontSize: 18,

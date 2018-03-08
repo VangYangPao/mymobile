@@ -33,16 +33,16 @@ export const QUESTION_SETS: BuyClaimQuestionSetType = {
       id: "planIndex"
     },
     {
-      question: "Which country are you travelling to?",
-      searchChoices: true,
-      responseType: ["string"],
-      choices: COUNTRIES,
-      include: ["travel"],
-      id: "travelDestination",
-      searchOptions: {
-        keys: ["label"],
-        threshold: 0.2
-      }
+      question: "How many ASIC hardware unit you want to insure?",
+      //searchChoices: true,
+      responseType: ["number"],
+      //choices: COUNTRIES,
+      //include: ["travel"],
+      id: "asicHardware",
+      // searchOptions: {
+      //   keys: ["label"],
+      //   threshold: 0.2
+      // }
     },
     // {
     //   question: "Which region are you travelling to?",
@@ -57,22 +57,22 @@ export const QUESTION_SETS: BuyClaimQuestionSetType = {
     //   include: ["travel"],
     //   id: "travelDestination"
     // },
-    {
-      question: "When are you departing?",
-      responseType: ["date", "travelStartDate"],
-      futureOnly: true,
-      id: "departureDate",
-      include: ["travel"]
-    },
-    {
-      question: "When are you returning?",
-      responseType: ["date", "travelEndDate"],
-      futureOnly: true,
-      minDateFrom: "departureDate",
-      id: "returnDate",
-      include: ["travel"],
-      defaultValue: "this.state.answers.departureDate"
-    },
+    // {
+    //   question: "When are you departing?",
+    //   responseType: ["date", "travelStartDate"],
+    //   futureOnly: true,
+    //   id: "departureDate",
+    //   include: ["travel"]
+    // },
+    // {
+    //   question: "When are you returning?",
+    //   responseType: ["date", "travelEndDate"],
+    //   futureOnly: true,
+    //   minDateFrom: "departureDate",
+    //   id: "returnDate",
+    //   include: ["travel"],
+    //   defaultValue: "this.state.answers.departureDate"
+    // },
     // {
     //   question: "Nice. Who do you want to insure?",
     //   responseType: ["string", "choice"],
@@ -86,7 +86,7 @@ export const QUESTION_SETS: BuyClaimQuestionSetType = {
     //   include: ["travel"]
     // },
     {
-      question: "How long do you want to be covered for?",
+      question: "How long do you want your hardware to be covered for?",
       responseType: "number",
       id: "coverageDuration",
       exclude: ["mobile", "travel"]

@@ -1,7 +1,7 @@
 export default (coverageItems = {
   // Micro Protect360
   accidentalDeath: {
-    title: "Accidental Death",
+    title: "Accidental Damage",
     icon: "accidental_death_1",
     description:
       "The amount of beneﬁt will be paid to you, when you sustained injury (caused by accidental, unforeseen or unexpected event) which results in death."
@@ -51,12 +51,19 @@ export default (coverageItems = {
   //     "There shall be no deposit guarantee on your behalf, or no immediate hospital bills settlement (upon discharge) with any clinic or hospital."
   // },
 
-  // naturalDisaster: {
-  //   title: "Natural Disaster",
-  //   icon: "natural_disaster",
-  //   description:
-  //     "There shall be no compensation or benefit payable, if the injury is caused by natural disaster (for example flood, volcanic eruption, fire, earthquake)."
-  // },
+  naturalDisaster: {
+    title: "Fire",
+    icon: "natural_disaster",
+    description:
+      "There shall be no compensation or benefit payable, if the injury is caused by natural disaster (for example flood, volcanic eruption, fire, earthquake)."
+  },
+
+  shortCircuit: {
+    title: "Short Circuit",
+    icon: "natural_disaster",
+    description:
+      "There shall be no compensation or benefit payable, if the injury is caused by natural disaster (for example flood, volcanic eruption, fire, earthquake)."
+  },
   war: {
     title: "War",
     icon: "war_or_terrorism",
@@ -98,6 +105,12 @@ export default (coverageItems = {
     description:
       "There shall be no compensation or benefit payable, if the injury is caused by any form of risky activities (for example bungee jumping, scuba diving, hunting, racing, sky diving)."
   },
+  cryptoCurrencyExchange: {
+    title: "Cryptocurrency Exchange Hack",
+    icon: "dangerous_sports",
+    description:
+      "There shall be no compensation or benefit payable, if the injury is caused by any form of risky activities (for example bungee jumping, scuba diving, hunting, racing, sky diving)."
+  },
   preExistingConditions: {
     title: "Pre-Existing Conditions",
     icon: "preexisting_condition",
@@ -112,7 +125,7 @@ export default (coverageItems = {
       "This covers your mobile phone from physical damage of a cracked screen or failure to operate correctly."
   },
   phoneWet: {
-    title: "Water",
+    title: "Liquid Damage",
     icon: "phone_highlights_3",
     description:
       "This covers your mobile phone from any form of water damage (i.e. black screen error). You shall enjoy door-to-door phone repair service or phone replacement."
@@ -131,6 +144,12 @@ export default (coverageItems = {
   },
   lossTheftOrDamaged: {
     title: "Loss, Theft or Damaged",
+    icon: "loss_theft_damaged",
+    description:
+      "There shall be no phone replacement or compensation, if your mobile phone is stolen, lost or if your phone is damaged due to your willful action."
+  },
+  theftByEmployee: {
+    title: "Theft by Wallet Operator’s Employee",
     icon: "loss_theft_damaged",
     description:
       "There shall be no phone replacement or compensation, if your mobile phone is stolen, lost or if your phone is damaged due to your willful action."
@@ -206,7 +225,7 @@ export default (coverageItems = {
       "The amount of beneﬁt will be paid to you, while travelling overseas you suffered loss or damage to your baggage/personal effects."
   },
   lossOfMoney: {
-    title: "Loss of Money",
+    title: "Theft",
     icon: "loss_of_money",
     description:
       "The amount of benefit will be paid to you, while travelling overseas you suffered loss of money due to theft, burglary or robbery."
@@ -242,7 +261,13 @@ export default (coverageItems = {
       "In the event of that your scheduled flight had been diverted due to bad weather, or medical emergency of a passenger, you will be paid S$100 for every continuous 6 hours delay."
   },
   insolvencyOfTravelAgency: {
-    title: "Insolvency of Travel Agency",
+    title: "Wallet Operator Insolvency",
+    icon: "insolvency_travel_agency",
+    description:
+      "The amount of benefit will be paid to you, before travelling overseas, you suffered loss of deposit (or charges paid in advance) in the event of unavoidable cancellation of the whole trip due to insolvency of a registered travel agent."
+  },
+  exchangeInsolvency: {
+    title: "Exchange Insolvency",
     icon: "insolvency_travel_agency",
     description:
       "The amount of benefit will be paid to you, before travelling overseas, you suffered loss of deposit (or charges paid in advance) in the event of unavoidable cancellation of the whole trip due to insolvency of a registered travel agent."

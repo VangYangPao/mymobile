@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View
 } from "react-native";
-
+import Constants from '../../constants';
 import { Text } from "./defaultComponents";
 import AppStore from "../../stores/AppStore";
 const colors = AppStore.colors;
@@ -16,11 +16,12 @@ export default class PolicyPrice extends Component {
   props: {
     pricePerMonth: number,
     minimumCoverage: number,
+    coverUpto:number,
     showFrom: boolean
   };
 
   render() {
-    const { pricePerMonth, minimumCoverage } = this.props;
+    const { pricePerMonth, minimumCoverage, coverUpto } = this.props;
     const [intPricePart, decimalPricePart] = pricePerMonth
       .toFixed(2)
       .split(".");
@@ -36,18 +37,16 @@ export default class PolicyPrice extends Component {
       <View style={styles.circlesContainer}>
         <View style={styles.priceContainer}>
           {this.props.showFrom ? (
-            <Text style={styles.pricePerMonth}>FROM</Text>
+            <Text style={styles.pricePerMonth}>COVER UP TO</Text>
           ) : null}
           <View style={styles.price}>
-            <Text style={styles.priceCurrency}>$</Text>
+            <Text style={styles.priceCurrency}>USD </Text>
             <Text style={[styles.priceAmount, additionalStyle]}>
-              {intPricePart + ""}
-            </Text>
-            <Text style={[styles.priceAmount, styles.priceAmountDecimal]}>
-              .{decimalPricePart + ""}
+              {coverUpto}
             </Text>
           </View>
         </View>
+
         {this.props.showDuration ? (
           <View style={styles.priceContainer}>
             {this.props.showFrom ? (
@@ -66,12 +65,25 @@ export default class PolicyPrice extends Component {
             </View>
           </View>
         ) : null}
+
+        <View style={styles.priceContainer}>
+          {this.props.showFrom ? (
+            <Text style={styles.pricePerMonth}>FROM</Text>
+          ) : null}
+          <View style={styles.price}>
+            <Text style={styles.priceCurrency}>USD </Text>
+            <Text style={[styles.priceAmount, additionalStyle]}>
+              {intPricePart + ""}
+            </Text>
+          </View>
+        </View>
+
       </View>
     );
   }
 }
 
-const PRICE_CONTAINER_SIZE = 125;
+//const PRICE_CONTAINER_SIZE = 125;
 const PRICE_DECIMAL_CONTAINER_SIZE = 20;
 
 const styles = StyleSheet.create({
@@ -82,13 +94,12 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
   priceContainer: {
-    alignSelf: "center",
     alignItems: "center",
     justifyContent: "center",
-    height: PRICE_CONTAINER_SIZE,
-    width: PRICE_CONTAINER_SIZE,
+    height: Constants.BaseStyle.DEVICE_HEIGHT/100*16,
+    width: Constants.BaseStyle.DEVICE_HEIGHT/100*16,
     marginVertical: 13,
-    borderRadius: PRICE_CONTAINER_SIZE / 2,
+    borderRadius: Constants.BaseStyle.DEVICE_HEIGHT/100*8,
     backgroundColor: colors.primaryAccent
   },
   price: {
@@ -96,8 +107,8 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   priceCurrency: {
-    paddingBottom: 10,
-    fontSize: 20,
+    //paddingBottom: 10,
+    fontSize: 16,
     color: "white"
   },
   priceAmountDecimal: {
@@ -114,10 +125,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primaryAccent
   },
   priceDuration: {
-    fontSize: 25
+    fontSize: 22
   },
   priceAmount: {
-    fontSize: 40,
+    fontSize: 25,
     color: "white"
   },
   pricePerMonth: {

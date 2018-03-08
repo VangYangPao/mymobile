@@ -8,7 +8,7 @@ const colors = AppStore.colors;
 import Page from "../components/Page";
 import PolicyPrice from "../components/PolicyPrice";
 import { Text } from "../components/defaultComponents";
-
+import Constants from '../../constants';
 class CoverageItem extends Component {
   constructor(props) {
     super(props);
@@ -79,6 +79,7 @@ export default class PolicyOverview extends Component {
           showFrom={!policy.doNotRenderFromInSummary}
           showDuration={true}
           minimumCoverage={policy.from}
+          coverUpto={policy.coverUpto}
         />
         <PolicyCoverages {...policy} />
       </Page>
@@ -112,11 +113,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#F5F5F5"
   },
   coverageItem: {
-    flex: 0.25,
-    alignItems: "center"
+    width:Constants.BaseStyle.DEVICE_WIDTH/100*25,
+    alignItems:'center',
+    marginTop:Constants.BaseStyle.DEVICE_HEIGHT/100*.5
   },
   coverage: {
-    flexDirection: "row"
+    flexDirection: "row",
+    justifyContent:'center',
+    flexWrap: 'wrap'
   },
   configTitle: {
     color: colors.primaryText,

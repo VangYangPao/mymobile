@@ -34,31 +34,46 @@ const patchCoverageWithKey = coverage => ({
 });
 
 const coverageSummary = {
-  title: "Coverage Summary",
+  title: "Coverage for each unit",
   coverage: [
     {
-      title: "Overseas Medical Expenses",
+      title: "Accidental Damage",
       benefitPayable: {
-        basic: "$150,000",
-        premium: "$250,000",
-        superior: "$500,000"
+        basic: "USD 1000",
+        premium: "USD 2000",
+        superior: "USD 3000"
       }
     },
     {
-      title: "Accidental Death &\nPermanent Disablement",
+      title: "Theft",
       benefitPayable: {
-        basic: "$200,000",
-        premium: "$250,000",
-        superior: "$300,000"
+        basic: "USD 1000",
+        premium: "USD 2000",
+        superior: "USD 3000"
       }
     },
     {
-      title:
-        "Loss of Baggage and Personal Effects\n($500 for each article or\npair or set of article)",
+      title:"Liquid Damage",
       benefitPayable: {
-        basic: "$3,000",
-        premium: "$5,000",
-        superior: "$7,000"
+        basic: "USD 1000",
+        premium: "USD 2000",
+        superior: "USD 3000"
+      }
+    },
+    {
+      title: "Fire",
+      benefitPayable: {
+        basic: "USD 1000",
+        premium: "USD 2000",
+        superior: "USD 3000"
+      }
+    },
+    {
+      title: "Short Circuit by Lightning",
+      benefitPayable: {
+        basic: "USD 1000",
+        premium: "USD 2000",
+        superior: "USD 3000"
       }
     }
   ]
@@ -185,11 +200,11 @@ class TravelPlanTab extends Component {
           sections={listSections}
         />
         {itemSeparatorComponent()}
-        <TouchableOpacity onPress={this.props.onExpand}>
-          <View>
-            <Text style={styles.readMoreText}>Read more...</Text>
-          </View>
-        </TouchableOpacity>
+        {/*<TouchableOpacity onPress={this.props.onExpand}>
+                  <View>
+                    <Text style={styles.readMoreText}>Read more...</Text>
+                  </View>
+                </TouchableOpacity>*/}
         <Button
           accessibilityLabel={"chat__select-plan_" + this.props.plan.legacyId}
           onPress={() => this.props.onSelectPlan(this.props.planIndex)}
