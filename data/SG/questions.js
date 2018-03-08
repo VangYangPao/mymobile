@@ -89,7 +89,7 @@ export const QUESTION_SETS: BuyClaimQuestionSetType = {
       question: "How long do you want your hardware to be covered for?",
       responseType: "number",
       id: "coverageDuration",
-      exclude: ["mobile", "travel"]
+     // exclude: ["mobile", "travel"]
     },
     // {
     //   question:
@@ -97,12 +97,12 @@ export const QUESTION_SETS: BuyClaimQuestionSetType = {
     //   responseType: null,
     //   exclude: ["travel"]
     // },
-    {
-      question:
-        "For the next steps, I will be asking you some questions to get you covered instantly. Please be patient with my questions. 😬",
-      responseType: null,
-      exclude: ["mobile"]
-    },
+    // {
+    //   question:
+    //     "For the next steps, I will be asking you some questions to get you covered instantly. Please be patient with my questions. 😬",
+    //   responseType: null,
+    //   exclude: ["mobile"]
+    // },
     // {
     //   question: "May I know your full name?",
     //   responseType: "multiInput",
@@ -121,62 +121,94 @@ export const QUESTION_SETS: BuyClaimQuestionSetType = {
     //     }
     //   ]
     // },
-    {
-      question:
-        "What's your Singaporean NRIC? Or if you're a non-Singaporean, what's your Passport number?",
-      responseType: ["purchaseIdNumber", "string", "nric"],
-      responseLength: 15,
-      id: "idNumber"
-    },
+    // {
+    //   question:
+    //     "What's your Singaporean NRIC? Or if you're a non-Singaporean, what's your Passport number?",
+    //   responseType: ["purchaseIdNumber", "string", "nric"],
+    //   responseLength: 15,
+    //   id: "idNumber"
+    // },
     // {
     //   question: "What's your email address? ✉️",
     //   responseType: ["string", "email"],
     //   id: "email"
     // },
+
+
     {
       question:
-        "What are the details of your spouse or children travelling with you?",
-      responseType: "table",
-      id: "travellers",
+        "Please fill up the ASIC mining hardware details here.",
+      responseType: "multiInput",
+      id: "asicDetails",
       include: ["travel"],
+      //exclude:["travel"],
       columns: [
         {
-          label: "First name",
-          id: "firstName",
+          label: "Mining hardware serial number,or product ID, or mining chip serial number:",
+          id: "productId",
           responseLength: 60,
           responseType: ["string"]
         },
         {
-          label: "Last name",
-          id: "lastName",
+          label: "Manufacturer Name, or Brand:",
+          id: "brand",
           responseLength: 60,
           responseType: ["string"]
         },
         {
-          label: "NRIC/FIN or Passport",
-          id: "idNumber",
+          label: "Model Name:",
+          id: "model",
           responseType: "string"
-        },
-        {
-          label: "Date of birth",
-          id: "DOB",
-          responseType: "date",
-          pastOnly: true
-        },
-        {
-          label: "Gender",
-          id: "gender",
-          responseType: ["choice", "number"],
-          choices: [{ label: "Male", value: 1 }, { label: "Female", value: 2 }]
-        },
-        {
-          label: "Relationship",
-          id: "relationship",
-          responseType: ["choice", "number"],
-          choices: [{ label: "Spouse", value: 1 }, { label: "Child", value: 2 }]
         }
       ]
     },
+
+
+
+    // {
+    //   question:
+    //     "What are the details of your spouse or children travelling with you?",
+    //   responseType: "table",
+    //   id: "travellers",
+    //   include: ["travel"],
+    //   columns: [
+    //     {
+    //       label: "First name",
+    //       id: "firstName",
+    //       responseLength: 60,
+    //       responseType: ["string"]
+    //     },
+    //     {
+    //       label: "Last name",
+    //       id: "lastName",
+    //       responseLength: 60,
+    //       responseType: ["string"]
+    //     },
+    //     {
+    //       label: "NRIC/FIN or Passport",
+    //       id: "idNumber",
+    //       responseType: "string"
+    //     },
+    //     {
+    //       label: "Date of birth",
+    //       id: "DOB",
+    //       responseType: "date",
+    //       pastOnly: true
+    //     },
+    //     {
+    //       label: "Gender",
+    //       id: "gender",
+    //       responseType: ["choice", "number"],
+    //       choices: [{ label: "Male", value: 1 }, { label: "Female", value: 2 }]
+    //     },
+    //     {
+    //       label: "Relationship",
+    //       id: "relationship",
+    //       responseType: ["choice", "number"],
+    //       choices: [{ label: "Spouse", value: 1 }, { label: "Child", value: 2 }]
+    //     }
+    //   ]
+    // },
     // {
     //   question: "What's your mailing address?",
     //   responseType: "string",
@@ -247,7 +279,7 @@ export const QUESTION_SETS: BuyClaimQuestionSetType = {
     // },
     {
       question:
-        "Thank you <%= firstName %> <%= lastName %> for the information. I will now bring you to the confirmation page.",
+        "Thank you for choosing MicroAssure. Your hardware insurance will commence once the policy is issued on this mobile app.",
       responseType: null
     }
   ],
