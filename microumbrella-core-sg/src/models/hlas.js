@@ -597,7 +597,7 @@ export function verifyApplicationAccident(
       Surname: PolicyHolder.Surname,
       GivenName: PolicyHolder.GivenName,
       IDNumber: PolicyHolder.IDNumber,
-      IDNumberType: 0,
+      IDNumberType: PolicyHolder.IDNumberType,
       TelephoneNumber: PolicyHolder.MobileTelephone,
       TelemoneyTransactionResponse: "sample string 13",
       ...PaymentDetails

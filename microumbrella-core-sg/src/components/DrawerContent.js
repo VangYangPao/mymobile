@@ -10,40 +10,63 @@ import {
 import { DrawerItems, NavigationActions } from "react-navigation";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Parse from "parse/react-native";
+import { showAlert } from "../utils";
 
 import AppStore from "../../stores/AppStore";
 const colors = AppStore.colors;
 import { Text } from "./defaultComponents";
+import { validateOneAnswer } from "../models/validations";
 
 function resetToProfileAction(currentUser) {
   const columns = [
     {
       label: "First Name",
       id: "firstName",
-      value: currentUser.get("firstName")
+      value: currentUser.get("firstName"),
+      responseType: ["name"]
     },
     {
       label: "Last Name",
       id: "lastName",
-      value: currentUser.get("lastName")
+      value: currentUser.get("lastName"),
+      responseType: ["name"]
     },
     {
       label: "Email",
       id: "email",
-      value: currentUser.get("email")
+      value: currentUser.get("email"),
+      responseType: ["email"]
     }
   ];
   const handleSaveTable = (navigation, values) => {
-    values.forEach((value, idx) => {
+    let validationResponse;
+
+    const promises = values.map((value, idx) => {
       const column = columns[idx];
-      if (column.value && column.value !== value) {
-        currentUser.set(column.id, value);
-      }
+      validationResponse = validateOneAnswer(column.responseType, value);
+      return validationResponse;
     });
-    currentUser
-      .save()
-      .then(() => {
-        navigation.goBack(null);
+
+    Promise.all(promises)
+      .then(validationResponses => {
+        for (var idx = 0; idx < validationResponses.length; idx++) {
+          const validationResponse = validationResponses[idx];
+          if (!validationResponse.isValid) {
+            showAlert(validationResponse.errMessage, () => {});
+            break;
+          }
+          const column = columns[idx];
+          const value = values[idx];
+          currentUser.set(column.id, value);
+        }
+        if (idx === validationResponses.length) {
+          return currentUser.save();
+        }
+      })
+      .then(user => {
+        if (user) {
+          navigation.goBack(null);
+        }
       })
       .catch(err => {
         console.error(err);
